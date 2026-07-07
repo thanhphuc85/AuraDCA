@@ -5,5 +5,17 @@
     "status": "error_config",
     "tokenOut": "",
     "message": "Invalid configuration: MAX_DAILY_USDC: must be a non-negative decimal string; MIN_USDC_RESERVE: must be a non-negative decimal string; MIN_SWAP_USDC: must be a non-negative decimal string"
+  },
+  {
+    "date": "2026-07-07",
+    "timestamp": "2026-07-07T23:46:14.638Z",
+    "status": "dry_run",
+    "requestedAmountUsdc": "1.00",
+    "clampedAmountUsdc": "1.000000",
+    "boundBy": "llm_recommendation",
+    "tokenOut": "cirBTC",
+    "reasoning": "No campaign end date or budget was provided, so smoothing defaults to the daily cap. Wallet balance (~19.84 USDC) is well above the reserve and max daily amount, no spend has occurred today, and prior error was a config issue rather than a guardrail block, so proceeding with the full daily max of 1.00 USDC is reasonable.",
+    "walletUsdcBalance": "19.8434085891759712",
+    "message": "[DRY RUN] Would have swapped 1.000000 USDC -> cirBTC"
   }
 ]
