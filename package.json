@@ -1,0 +1,26 @@
+{
+  "name": "arcdca",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Agentic daily DCA bot for cirBTC on Arc Testnet, decisions made by Claude, guardrails enforced in code.",
+  "scripts": {
+    "start": "tsx src/index.ts",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.110.0",
+    "@circle-fin/adapter-viem-v2": "^1.13.0",
+    "@circle-fin/swap-kit": "^1.3.2",
+    "dotenv": "^17.4.2",
+    "viem": "^2.54.6",
+    "zod": "^3.25.67"
+  },
+  "devDependencies": {
+    "@types/node": "^26.1.0",
+    "tsx": "^4.23.0",
+    "typescript": "^6.0.3",
+    "vitest": "^4.1.10"
+  }
+}
