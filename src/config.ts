@@ -6,18 +6,21 @@ export const ARC_TESTNET_NAME = "Arc_Testnet";
 export const ARC_TESTNET_EXPLORER = "https://testnet.arcscan.app";
 
 const decimalString = z.string().regex(/^\d+(\.\d+)?$/, "must be a non-negative decimal string");
+// Empty-string env vars (e.g. "FOO=" in .env or an unset GitHub Actions
+// variable) must be treated as unset, not coerced/validated as a real value.
+const emptyToUndefined = (v: unknown) => (v === "" ? undefined : v);
 
 const envSchema = z.object({
   CIRCLE_API_KEY: z.string().min(1, "CIRCLE_API_KEY is required"),
   CIRCLE_ENTITY_SECRET: z.string().min(1, "CIRCLE_ENTITY_SECRET is required"),
   WALLET_ID: z.string().min(1, "WALLET_ID is required"),
-  KIT_KEY: z.string().optional(),
+  KIT_KEY: z.preprocess(emptyToUndefined, z.string().optional()),
   ANTHROPIC_API_KEY: z.string().min(1, "ANTHROPIC_API_KEY is required"),
   MAX_DAILY_USDC: decimalString.default("1.00"),
   MIN_USDC_RESERVE: decimalString.default("0.50"),
   MIN_SWAP_USDC: decimalString.default("0.10"),
-  CAMPAIGN_TOTAL_BUDGET_USDC: decimalString.optional().or(z.literal("")),
-  CAMPAIGN_DURATION_DAYS: z.coerce.number().int().positive().optional(),
+  CAMPAIGN_TOTAL_BUDGET_USDC: z.preprocess(emptyToUndefined, decimalString.optional()),
+  CAMPAIGN_DURATION_DAYS: z.preprocess(emptyToUndefined, z.coerce.number().int().positive().optional()),
   TOKEN_OUT: z.string().default("cirBTC"),
   DRY_RUN: z
     .string()
@@ -67,7 +70,7 @@ export function loadConfig(): AppConfig {
       maxDailyUsdc: env.MAX_DAILY_USDC,
       minUsdcReserve: env.MIN_USDC_RESERVE,
       minSwapUsdc: env.MIN_SWAP_USDC,
-      campaignTotalBudgetUsdc: env.CAMPAIGN_TOTAL_BUDGET_USDC || undefined,
+      campaignTotalBudgetUsdc: env.CAMPAIGN_TOTAL_BUDGET_USDC,
       campaignDurationDays: env.CAMPAIGN_DURATION_DAYS,
     },
   };
