@@ -1,6 +1,14 @@
 # Arc DCA Agent
 
-An agentic daily dollar-cost-averaging (DCA) bot for **cirBTC** on [Arc Testnet](https://docs.arc.io) (Circle's stablecoin-native L1). Built for the Encode Club x Circle Programmable Money Hackathon.
+[![Daily DCA Bot](https://github.com/thanhphuc85/ArcDCA/actions/workflows/dca.yml/badge.svg)](https://github.com/thanhphuc85/ArcDCA/actions/workflows/dca.yml)
+[![Arc Testnet](https://img.shields.io/badge/Arc-Testnet-2ea44f)](https://testnet.arcscan.app)
+[![Decisions by Claude](https://img.shields.io/badge/decisions%20by-Claude-8A2BE2)](https://www.anthropic.com)
+[![Circle Swap Kit](https://img.shields.io/badge/swaps%20via-Circle%20Swap%20Kit-2775CA)](https://docs.arc.io/app-kit/swap.md)
+[![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?logo=typescript&logoColor=white)](https://www.typescriptlang.org)
+
+> **An LLM-driven dollar-cost-averaging agent that runs itself.** Every day a GitHub Actions cron wakes up, asks **Claude** how much USDC to allocate, enforces hard spend guardrails in code, executes a real **USDC → cirBTC** swap on **Arc Testnet** via Circle's official Swap Kit, and commits the audit trail back to this repo — no server, no human in the loop.
+
+Built for the **Encode Club × Circle Programmable Money Hackathon** — see [`SUBMISSION.md`](SUBMISSION.md) for the full write-up.
 
 Every day, a GitHub Actions cron job:
 
@@ -13,6 +21,45 @@ Every day, a GitHub Actions cron job:
 Arc Testnet only supports Swap Kit swaps between USDC, EURC, and cirBTC — third-party community DEXs on Arc were deliberately avoided since they don't have publicly verified contract addresses.
 
 The wallet is a Circle **Developer-Controlled Wallet**: Circle custodies the signing key server-side (via your API key + entity secret), so there's no raw private key to manage or leak in a GitHub Actions secret.
+
+## Live demo — verified on-chain
+
+This isn't a mockup. The agent has executed a **real swap on Arc Testnet**:
+
+- **Transaction:** [`0x83097f…50933`](https://testnet.arcscan.app/tx/0x83097f432db9c013b3f8d7748b58f18484c2a5fde4ce500c221ee38524250933) — swapped `0.10 USDC → cirBTC`
+- **The daily cron runs autonomously in CI:** see the green [Actions runs](https://github.com/thanhphuc85/ArcDCA/actions/workflows/dca.yml) and the bot's own `chore: record DCA run …` commits to [`data/history.json`](data/history.json).
+
+A real audit-trail entry the agent wrote (`data/history.json`), showing Claude's own reasoning:
+
+```jsonc
+{
+  "date": "2026-07-07",
+  "status": "success",
+  "requestedAmountUsdc": "0.10",   // what Claude proposed
+  "clampedAmountUsdc": "0.100000", // what the code guardrails allowed
+  "boundBy": "llm_recommendation", // which constraint bound the amount
+  "tokenOut": "cirBTC",
+  "reasoning": "Wallet balance (20 USDC) is well above the minimum reserve, no spend has occurred today, and this is day 1 with no campaign budget constraints noted. Proceeding with the max daily allowance of 0.10 USDC keeps a steady, smoothed pace without front-loading beyond guardrails.",
+  "txHash": "0x83097f432db9c013b3f8d7748b58f18484c2a5fde4ce500c221ee38524250933",
+  "explorerUrl": "https://testnet.arcscan.app/tx/0x83097f...50933",
+  "amountOut": "0.00000012"
+}
+```
+
+The agent also demonstrably **respects its own budget**: on a second same-day run it declined to trade — *"Already spent … today, which exceeds the maxDailyUsdc guardrail … Daily budget is exhausted"* — reading its own history and reasoning about it, not blindly firing.
+
+## Why this is "agentic" (and safe)
+
+The core design tension in an autonomous money bot: you want the flexibility of an LLM, but you cannot let an LLM be the final authority on how much to spend. This project resolves it with a strict split:
+
+| | Claude (the agent) | `clampDecision()` (the code) |
+|---|---|---|
+| Role | **Recommends** an amount + reasoning | **Decides** the amount actually swapped |
+| Input | Balance, day count, budget, recent history | Claude's recommendation + hard guardrails |
+| Output | `{ proceed, amountUsdc, reasoning }` (validated via forced tool-use) | Clamped amount, or a skip with a recorded reason |
+| Trust | Never trusted with the final number | Sole authority; pure function; unit-tested |
+
+Every run records *which* constraint bound the outcome (`boundBy`), so the audit trail is transparent about whether Claude's own judgment or a hard cap drove the result. See [`src/decision/guardrails.ts`](src/decision/guardrails.ts).
 
 ## Architecture
 
