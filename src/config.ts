@@ -2,23 +2,15 @@ import "dotenv/config";
 import { z } from "zod";
 import type { GuardrailConfig } from "./types.js";
 
-export const ARC_TESTNET_CHAIN_ID = 5042002;
 export const ARC_TESTNET_NAME = "Arc_Testnet";
 export const ARC_TESTNET_EXPLORER = "https://testnet.arcscan.app";
-// USDC's ERC-20 interface address on Arc Testnet (6 decimals). Native gas
-// balance is the SAME underlying USDC but reported with 18 decimals via
-// eth_getBalance -- the two must never be summed as separate pools.
-export const USDC_TOKEN_ADDRESS = "0x3600000000000000000000000000000000000000" as const;
-export const USDC_TOKEN_DECIMALS = 6;
 
 const decimalString = z.string().regex(/^\d+(\.\d+)?$/, "must be a non-negative decimal string");
 
 const envSchema = z.object({
-  RPC_URL: z.string().url().default("https://rpc.testnet.arc.network"),
-  PRIVATE_KEY: z
-    .string()
-    .min(1, "PRIVATE_KEY is required")
-    .transform((key) => (key.startsWith("0x") ? key : `0x${key}`)),
+  CIRCLE_API_KEY: z.string().min(1, "CIRCLE_API_KEY is required"),
+  CIRCLE_ENTITY_SECRET: z.string().min(1, "CIRCLE_ENTITY_SECRET is required"),
+  WALLET_ID: z.string().min(1, "WALLET_ID is required"),
   KIT_KEY: z.string().optional(),
   ANTHROPIC_API_KEY: z.string().min(1, "ANTHROPIC_API_KEY is required"),
   MAX_DAILY_USDC: decimalString.default("1.00"),
@@ -34,8 +26,9 @@ const envSchema = z.object({
 });
 
 export interface AppConfig {
-  rpcUrl: string;
-  privateKey: `0x${string}`;
+  circleApiKey: string;
+  circleEntitySecret: string;
+  walletId: string;
   kitKey?: string;
   anthropicApiKey: string;
   tokenOut: string;
@@ -63,8 +56,9 @@ export function loadConfig(): AppConfig {
   }
 
   return {
-    rpcUrl: env.RPC_URL,
-    privateKey: env.PRIVATE_KEY as `0x${string}`,
+    circleApiKey: env.CIRCLE_API_KEY,
+    circleEntitySecret: env.CIRCLE_ENTITY_SECRET,
+    walletId: env.WALLET_ID,
     kitKey: env.KIT_KEY,
     anthropicApiKey: env.ANTHROPIC_API_KEY,
     tokenOut: env.TOKEN_OUT,

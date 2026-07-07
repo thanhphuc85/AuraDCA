@@ -35,8 +35,9 @@ jobs:
       - name: Run daily DCA
         id: run
         env:
-          RPC_URL: ${{ vars.RPC_URL }}
-          PRIVATE_KEY: ${{ secrets.PRIVATE_KEY }}
+          CIRCLE_API_KEY: ${{ secrets.CIRCLE_API_KEY }}
+          CIRCLE_ENTITY_SECRET: ${{ secrets.CIRCLE_ENTITY_SECRET }}
+          WALLET_ID: ${{ secrets.WALLET_ID }}
           KIT_KEY: ${{ secrets.KIT_KEY }}
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
           MAX_DAILY_USDC: ${{ vars.MAX_DAILY_USDC }}

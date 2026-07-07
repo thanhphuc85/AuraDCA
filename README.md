@@ -4,7 +4,7 @@ An agentic daily dollar-cost-averaging (DCA) bot for **cirBTC** on [Arc Testnet]
 
 Every day, a GitHub Actions cron job:
 
-1. Checks the bot wallet's USDC balance on Arc Testnet.
+1. Checks the bot's Circle **Developer-Controlled Wallet** USDC balance on Arc Testnet.
 2. Calls **Claude** (Anthropic API) to decide how much USDC to allocate to today's buy, given the remaining budget, day count, and recent trade history.
 3. Clamps that recommendation against hard-coded guardrails in code (max per day, minimum reserve, minimum swap size, optional total campaign budget) — **Claude only recommends, the code decides**.
 4. Executes a USDC → cirBTC swap via Circle's official [Swap Kit](https://docs.arc.io/app-kit/swap.md) SDK (the only officially documented swap path on Arc Testnet today).
@@ -12,28 +12,33 @@ Every day, a GitHub Actions cron job:
 
 Arc Testnet only supports Swap Kit swaps between USDC, EURC, and cirBTC — third-party community DEXs on Arc were deliberately avoided since they don't have publicly verified contract addresses.
 
+The wallet is a Circle **Developer-Controlled Wallet**: Circle custodies the signing key server-side (via your API key + entity secret), so there's no raw private key to manage or leak in a GitHub Actions secret.
+
 ## Architecture
 
 ```
 src/
   config.ts        env parsing (zod) + guardrail defaults
-  wallet.ts         viem clients + USDC balance getters
+  wallet.ts         Circle Developer-Controlled Wallets client + USDC balance getter
   decision/
     prompt.ts        context + system prompt sent to Claude
     client.ts         Anthropic tool-use call, zod-validated
     guardrails.ts     clampDecision() -- the real spending authority
-  swap/swapKit.ts    Circle Swap Kit execution (+ dry-run stub)
+  swap/swapKit.ts    Circle Swap Kit execution via the Circle Wallets adapter (+ dry-run stub)
   history/store.ts   data/history.json read/append + budget math
   run.ts             orchestrator for one daily run
   index.ts           entrypoint, exit-code handling
+scripts/
+  create-arc-wallet.mjs   one-off setup script: creates the wallet the bot signs with
 ```
 
 ## Prerequisites
 
 - Node.js 20+
-- A wallet private key (EOA). You can generate one with `node -e "console.log(require('viem/accounts').generatePrivateKey())"` after `npm install`.
-- Testnet USDC for that wallet from the [Circle faucet](https://faucet.circle.com) (select Arc Testnet).
-- A Swap Kit `kitKey` from the [Circle Developer Console](https://console.circle.com) (only required for real swaps, not for dry runs).
+- A [Circle Developer Console](https://console.circle.com) account:
+  - An **API key** (console.circle.com/api-keys).
+  - An **entity secret** for Developer-Controlled Wallets, generated and registered from the console's Developer-Controlled Wallets setup screen.
+- A Swap Kit `kitKey` from the Circle Developer Console (only required for real swaps, not for dry runs).
 - An [Anthropic API key](https://console.anthropic.com).
 
 ## Local setup
@@ -41,7 +46,12 @@ src/
 ```bash
 npm install
 cp .env.example .env
-# fill in PRIVATE_KEY, KIT_KEY, ANTHROPIC_API_KEY
+# fill in CIRCLE_API_KEY, CIRCLE_ENTITY_SECRET, KIT_KEY, ANTHROPIC_API_KEY
+
+# create the wallet the bot will sign with, on Arc Testnet
+npm run create-wallet
+# copy the printed WALLET_ID into .env, then fund the printed address at
+# https://faucet.circle.com (select Arc Testnet)
 
 npm run typecheck
 npm test
@@ -69,10 +79,12 @@ All guardrails live in environment variables (see `.env.example`) and are enforc
 
 1. **Settings → Actions → General → Workflow permissions** → select **Read and write permissions** (required for the bot's history commit-back push).
 2. **Settings → Secrets and variables → Actions → Secrets**, add:
-   - `PRIVATE_KEY`
+   - `CIRCLE_API_KEY`
+   - `CIRCLE_ENTITY_SECRET`
+   - `WALLET_ID` (from `npm run create-wallet`)
    - `KIT_KEY`
    - `ANTHROPIC_API_KEY`
-3. **Settings → Secrets and variables → Actions → Variables** (optional, all have code defaults), add any of `RPC_URL`, `MAX_DAILY_USDC`, `MIN_USDC_RESERVE`, `MIN_SWAP_USDC`, `CAMPAIGN_TOTAL_BUDGET_USDC`, `CAMPAIGN_DURATION_DAYS`, `TOKEN_OUT`.
+3. **Settings → Secrets and variables → Actions → Variables** (optional, all have code defaults), add any of `MAX_DAILY_USDC`, `MIN_USDC_RESERVE`, `MIN_SWAP_USDC`, `CAMPAIGN_TOTAL_BUDGET_USDC`, `CAMPAIGN_DURATION_DAYS`, `TOKEN_OUT`.
 4. Set the `LIVE_TRADING_ENABLED` variable to `true` only when you're ready for the scheduled job to spend real testnet funds. Until then, both the scheduled and manual runs default to dry run — this is a deliberate second safety switch on top of the `dry_run` workflow input.
 
 ### Manual dry run
@@ -85,6 +97,6 @@ Each entry has a `status` field: `success` / `dry_run` for completed runs, `skip
 
 ## Safety notes
 
-- **Testnet only.** This targets Arc Testnet (chain ID `5042002`); there is no mainnet USDC or cirBTC at risk.
-- The wallet is **self-custodied** via a plain EOA private key — never commit `.env` or a real key to the repo.
+- **Testnet only.** This targets Arc Testnet; there is no mainnet USDC or cirBTC at risk.
+- The wallet is **Circle-custodied** (Developer-Controlled Wallet) — never commit `.env` or a real `CIRCLE_ENTITY_SECRET` to the repo.
 - Guardrails (`clampDecision`) are the sole authority on spend amounts; Claude's output is only ever a recommendation.

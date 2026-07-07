@@ -1,8 +1,6 @@
 import { SwapKit } from "@circle-fin/swap-kit";
-import { createViemAdapterFromPrivateKey } from "@circle-fin/adapter-viem-v2";
-import { createPublicClient, createWalletClient, http } from "viem";
+import { createCircleWalletsAdapter } from "@circle-fin/adapter-circle-wallets";
 import { ARC_TESTNET_EXPLORER } from "../config.js";
-import { arcTestnetChain } from "../wallet.js";
 
 export class SwapExecutionError extends Error {
   constructor(message: string, options?: { cause?: unknown }) {
@@ -19,8 +17,9 @@ export interface SwapExecutionResult {
 }
 
 export interface SwapParamsInput {
-  privateKey: `0x${string}`;
-  rpcUrl: string;
+  circleApiKey: string;
+  circleEntitySecret: string;
+  walletAddress: `0x${string}`;
   kitKey?: string;
   tokenOut: string;
   amountUsdc: string;
@@ -37,17 +36,14 @@ export async function executeSwap(params: SwapParamsInput): Promise<SwapExecutio
   }
 
   try {
-    const chain = { ...arcTestnetChain, rpcUrls: { default: { http: [params.rpcUrl] } } };
-    const adapter = createViemAdapterFromPrivateKey({
-      privateKey: params.privateKey,
-      getPublicClient: ({ chain: c }) => createPublicClient({ chain: c ?? chain, transport: http(params.rpcUrl) }),
-      getWalletClient: ({ chain: c, account }) =>
-        createWalletClient({ chain: c ?? chain, account, transport: http(params.rpcUrl) }),
+    const adapter = createCircleWalletsAdapter({
+      apiKey: params.circleApiKey,
+      entitySecret: params.circleEntitySecret,
     });
 
     const kit = new SwapKit();
     const result = await kit.swap({
-      from: { adapter, chain: "Arc_Testnet" },
+      from: { adapter, chain: "Arc_Testnet", address: params.walletAddress },
       tokenIn: "USDC",
       tokenOut: params.tokenOut,
       amountIn: params.amountUsdc,

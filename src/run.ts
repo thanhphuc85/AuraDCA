@@ -29,10 +29,11 @@ export async function runDailyDca(config: AppConfig): Promise<RunOutcome> {
   const date = today();
   const timestamp = nowIso();
 
-  const wallet = createWallet(config.privateKey, config.rpcUrl);
-
   let usdcBalance: string;
+  let walletAddress: `0x${string}`;
   try {
+    const wallet = await createWallet(config.circleApiKey, config.circleEntitySecret, config.walletId);
+    walletAddress = wallet.address;
     usdcBalance = await wallet.getUsdcTokenBalance();
   } catch (err) {
     logger.error("Failed to read wallet USDC balance", err);
@@ -41,7 +42,7 @@ export async function runDailyDca(config: AppConfig): Promise<RunOutcome> {
       timestamp,
       status: "error_rpc",
       tokenOut: config.tokenOut,
-      message: `RPC balance check failed: ${(err as Error).message}`,
+      message: `Circle Wallets balance check failed: ${(err as Error).message}`,
     });
   }
 
@@ -117,8 +118,9 @@ export async function runDailyDca(config: AppConfig): Promise<RunOutcome> {
 
   try {
     const swapResult = await executeSwap({
-      privateKey: config.privateKey,
-      rpcUrl: config.rpcUrl,
+      circleApiKey: config.circleApiKey,
+      circleEntitySecret: config.circleEntitySecret,
+      walletAddress,
       kitKey: config.kitKey,
       tokenOut: config.tokenOut,
       amountUsdc: clamped.amountUsdc,
