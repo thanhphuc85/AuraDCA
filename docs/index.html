@@ -121,6 +121,7 @@
       <p class="sub">Connect MetaMask (or any EIP-1193 wallet). We'll add / switch to Arc Testnet and read your on-chain USDC balance — read-only, no transaction is ever sent from this page.</p>
       <div class="wallet-row" id="walletBody">
         <button class="btn" id="connectBtn2">Connect Wallet</button>
+        <a class="btn secondary" href="https://faucet.circle.com" target="_blank" rel="noopener">Get testnet USDC ↗</a>
       </div>
       <div class="status-note" id="walletStatus"></div>
     </div>
@@ -179,7 +180,9 @@
     chainName: "Arc Testnet",
     rpc: "https://rpc.testnet.arc.network",
     explorer: "https://testnet.arcscan.app",
-    usdc: "0x3600000000000000000000000000000000000000", // ERC-20 USDC, 6 decimals
+    faucet: "https://faucet.circle.com",
+    usdc: "0x3600000000000000000000000000000000000000",   // ERC-20 USDC, 6 decimals
+    cirbtc: "0xf0c4a4ce82a5746abaad9425360ab04fbba432bf", // cirBTC, 8 decimals
   };
   var HISTORY_URL = "https://raw.githubusercontent.com/thanhphuc85/ArcDCA/main/data/history.json";
 
@@ -212,20 +215,29 @@
         });
       } catch (e) { /* user may already be on Arc */ }
 
-      status.textContent = "Reading USDC balance…";
-      var data = "0x70a08231" + account.slice(2).toLowerCase().padStart(64, "0"); // balanceOf(address)
-      var raw = await window.ethereum.request({
-        method: "eth_call",
-        params: [{ to: ARC.usdc, data: data }, "latest"],
-      });
-      var bal = BigInt(raw || "0x0");
-      var usdc = Number(bal) / 1e6; // 6 decimals
+      status.textContent = "Reading balances…";
+      async function tokenBalance(token) {
+        var data = "0x70a08231" + account.slice(2).toLowerCase().padStart(64, "0"); // balanceOf(address)
+        var raw = await window.ethereum.request({ method: "eth_call", params: [{ to: token, data: data }, "latest"] });
+        return BigInt(raw || "0x0");
+      }
+      var usdc = Number(await tokenBalance(ARC.usdc)) / 1e6;    // 6 decimals
+      var cirbtc = Number(await tokenBalance(ARC.cirbtc)) / 1e8; // 8 decimals
 
       $("walletBody").innerHTML =
         '<div class="kv">Address<span class="addr">' + short(account) + '</span></div>' +
-        '<div class="kv" style="margin-left:8px">USDC on Arc<b>' + fmt(usdc, 4) + '</b></div>' +
-        '<a class="btn secondary" href="' + ARC.explorer + '/address/' + account + '" target="_blank" rel="noopener">View on ArcScan ↗</a>';
-      status.textContent = "Connected to Arc Testnet · read-only.";
+        '<div class="kv" style="margin-left:8px">USDC<b>' + fmt(usdc, 4) + '</b></div>' +
+        '<div class="kv" style="margin-left:8px">cirBTC<b>' + fmt(cirbtc, 8) + '</b></div>' +
+        '<button class="btn secondary" id="copyAddr">Copy address</button>' +
+        '<a class="btn secondary" href="' + ARC.explorer + '/address/' + account + '" target="_blank" rel="noopener">ArcScan ↗</a>' +
+        '<a class="btn" href="' + ARC.faucet + '" target="_blank" rel="noopener">Get testnet USDC ↗</a>';
+      var copyBtn = $("copyAddr");
+      if (copyBtn) copyBtn.addEventListener("click", function () {
+        (navigator.clipboard ? navigator.clipboard.writeText(account) : Promise.reject())
+          .then(function () { copyBtn.textContent = "Copied ✓"; setTimeout(function () { copyBtn.textContent = "Copy address"; }, 1500); })
+          .catch(function () { status.textContent = "Your address: " + account; });
+      });
+      status.textContent = "Connected to Arc Testnet · read-only. Fund your wallet at faucet.circle.com, then it'll show up above.";
     } catch (err) {
       status.textContent = "Connection cancelled or failed: " + (err && err.message ? err.message : err);
     }
