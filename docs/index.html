@@ -6,6 +6,9 @@
 <title>Aura DCA Agent — autonomous daily DCA on Arc Testnet</title>
 <meta name="description" content="An LLM-driven daily dollar-cost-averaging agent on Arc Testnet. Connect your wallet to view your Arc balance and the agent's live on-chain track record." />
 <link rel="icon" href="logo.svg" />
+<script>
+(function(){var t=localStorage.getItem("aura-theme");if(t)document.documentElement.setAttribute("data-theme",t);})();
+</script>
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
@@ -255,6 +258,53 @@
 
   .reveal { opacity: 0; transform: translateY(18px); transition: opacity .7s ease, transform .7s ease; }
   .reveal.in { opacity: 1; transform: none; }
+
+  /* ---------- theme toggle ---------- */
+  .theme-toggle { background: var(--glass); border: 1px solid var(--glass-brd); cursor: pointer; width: 40px; height: 40px; border-radius: 12px; display: grid; place-items: center; font-size: 19px; color: var(--text); transition: background .18s, border-color .18s, transform .18s; flex-shrink: 0; }
+  .theme-toggle:hover { background: rgba(255,255,255,.1); transform: scale(1.08); }
+  .hd-right { display: flex; align-items: center; gap: 10px; }
+
+  /* ---------- light theme ---------- */
+  [data-theme="light"] {
+    --bg: #f0f3f9; --text: #1a1f36; --muted: #5e6880;
+    --glass: rgba(255,255,255,.72); --glass-brd: rgba(0,0,0,.09);
+  }
+  [data-theme="light"] a { color: #2563eb; }
+  [data-theme="light"] a:hover { color: #1d4ed8; }
+  [data-theme="light"] .blob { opacity: .1 !important; }
+  [data-theme="light"] .b1 { background: #93b5e8; }
+  [data-theme="light"] .b2 { background: #c4a8f8; }
+  [data-theme="light"] .b3 { background: #7acce0; }
+  [data-theme="light"] .grain { opacity: .04; }
+  [data-theme="light"] header { background: linear-gradient(180deg, rgba(240,243,249,.88), rgba(240,243,249,.4)); border-bottom-color: rgba(0,0,0,.07); }
+  [data-theme="light"] .chip { background: rgba(47,134,230,.08); color: #1d4ed8; border-color: rgba(47,134,230,.22); }
+  [data-theme="light"] .btn { box-shadow: 0 8px 26px -8px rgba(93,72,246,.3); }
+  [data-theme="light"] .btn.ghost { background: rgba(0,0,0,.04); color: var(--text); border-color: rgba(0,0,0,.1); }
+  [data-theme="light"] .btn.ghost:hover { background: rgba(0,0,0,.08); }
+  [data-theme="light"] .theme-toggle:hover { background: rgba(0,0,0,.06); }
+  [data-theme="light"] .card { box-shadow: 0 24px 60px -30px rgba(0,0,0,.12); }
+  [data-theme="light"] .tile::after { background: radial-gradient(300px 120px at 100% 0, rgba(138,92,246,.06), transparent 70%); }
+  [data-theme="light"] .addr,
+  [data-theme="light"] .agent-addr-box,
+  [data-theme="light"] .deposit-form input { background: rgba(0,0,0,.035); border-color: rgba(0,0,0,.1); color: var(--text); }
+  [data-theme="light"] .tok { background: rgba(0,0,0,.025); border-color: rgba(0,0,0,.08); }
+  [data-theme="light"] .wp-bal { background: rgba(0,0,0,.02); border-color: rgba(0,0,0,.06); }
+  [data-theme="light"] .wp-header { border-bottom-color: rgba(0,0,0,.07); }
+  [data-theme="light"] .wp-portfolio, [data-theme="light"] .wp-disconnect { border-top-color: rgba(0,0,0,.07); }
+  [data-theme="light"] .wp-copy:hover { color: var(--text); background: rgba(0,0,0,.06); }
+  [data-theme="light"] .deposit-stat { background: rgba(0,0,0,.025); border-color: rgba(0,0,0,.06); }
+  [data-theme="light"] th, [data-theme="light"] td { border-bottom-color: rgba(0,0,0,.06); }
+  [data-theme="light"] tbody tr:hover { background: rgba(0,0,0,.025); }
+  [data-theme="light"] .tag { background: rgba(138,92,246,.07); border-color: rgba(138,92,246,.2); color: #7c3aed; }
+  [data-theme="light"] .ref-item { border-bottom-color: rgba(0,0,0,.06); }
+  [data-theme="light"] .perf-tile { box-shadow: 0 8px 30px -12px rgba(0,0,0,.1); }
+  [data-theme="light"] .step:hover { border-color: rgba(138,92,246,.35); }
+  [data-theme="light"] .note { background: rgba(245,165,36,.05); border-color: rgba(245,165,36,.2); color: var(--text); }
+  [data-theme="light"] footer { border-top-color: rgba(0,0,0,.07); }
+  [data-theme="light"] .btn-disconnect { background: rgba(251,113,133,.08); }
+  [data-theme="light"] .btn-disconnect:hover { background: rgba(251,113,133,.15); }
+  [data-theme="light"] .memory-latest .strategy { color: #0e7490; }
+  [data-theme="light"] .grad { background-image: linear-gradient(100deg, #2563eb, #7c3aed 45%, #0e7490); }
 </style>
 </head>
 <body>
@@ -268,7 +318,10 @@
       <img src="logo.svg" alt="Aura DCA Agent logo" />
       <div><b>Aura DCA Agent</b><span>Autonomous daily DCA · Arc Testnet</span></div>
     </div>
-    <button class="btn" id="connectBtn">Connect Wallet</button>
+    <div class="hd-right">
+      <button class="theme-toggle" id="themeToggle" title="Toggle light/dark mode">🌙</button>
+      <button class="btn" id="connectBtn">Connect Wallet</button>
+    </div>
   </div>
 </header>
 
@@ -460,6 +513,26 @@
 <script>
 (function () {
   "use strict";
+
+  // ---------- theme ----------
+  var savedTheme = localStorage.getItem("aura-theme");
+  var prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+  var theme = savedTheme || (prefersDark ? "dark" : "dark");
+  document.documentElement.setAttribute("data-theme", theme);
+  function applyThemeIcon() {
+    var btn = document.getElementById("themeToggle");
+    if (btn) btn.textContent = document.documentElement.getAttribute("data-theme") === "light" ? "☀️" : "🌙";
+  }
+  applyThemeIcon();
+  document.addEventListener("click", function (e) {
+    if (e.target && e.target.id === "themeToggle") {
+      var next = document.documentElement.getAttribute("data-theme") === "light" ? "dark" : "light";
+      document.documentElement.setAttribute("data-theme", next);
+      localStorage.setItem("aura-theme", next);
+      applyThemeIcon();
+    }
+  });
+
   var ARC = {
     chainIdHex: "0x4cef52",           // 5042002
     chainName: "Arc Testnet",
