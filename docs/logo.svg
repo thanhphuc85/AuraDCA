@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" role="img" aria-label="Arc DCA Agent logo">
+  <defs>
+    <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#2775ca"/>
+      <stop offset="1" stop-color="#8a5cf6"/>
+    </linearGradient>
+  </defs>
+
+  <!-- rounded app-icon tile -->
+  <rect x="4" y="4" width="112" height="112" rx="28" fill="#0d1424"/>
+  <rect x="4" y="4" width="112" height="112" rx="28" fill="none" stroke="url(#g)" stroke-width="2" opacity="0.6"/>
+
+  <!-- the Arc: an upward sweeping arc -->
+  <path d="M26 86 A40 40 0 0 1 94 58" fill="none" stroke="url(#g)" stroke-width="7" stroke-linecap="round"/>
+
+  <!-- DCA accumulation: ascending coin dots along the baseline -->
+  <circle cx="34" cy="86" r="5" fill="#2775ca"/>
+  <circle cx="52" cy="80" r="6" fill="#4f83d8"/>
+  <circle cx="70" cy="72" r="7" fill="#6f6ee6"/>
+  <circle cx="90" cy="60" r="8.5" fill="#8a5cf6"/>
+
+  <!-- agent spark at the leading edge -->
+  <path d="M90 60 l3.2 -9 l3.2 9 l9 3.2 l-9 3.2 l-3.2 9 l-3.2 -9 l-9 -3.2 z" fill="#f2b705"/>
+</svg>
