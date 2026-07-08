@@ -259,6 +259,28 @@
   .reveal { opacity: 0; transform: translateY(18px); transition: opacity .7s ease, transform .7s ease; }
   .reveal.in { opacity: 1; transform: none; }
 
+  /* ---------- skeleton loading ---------- */
+  @keyframes shimmer { to { background-position: -200% 0; } }
+  .skel { background: linear-gradient(90deg, rgba(255,255,255,.04) 25%, rgba(255,255,255,.1) 50%, rgba(255,255,255,.04) 75%); background-size: 200% 100%; animation: shimmer 1.6s ease infinite; border-radius: 8px; }
+  [data-theme="light"] .skel { background: linear-gradient(90deg, rgba(0,0,0,.04) 25%, rgba(0,0,0,.08) 50%, rgba(0,0,0,.04) 75%); background-size: 200% 100%; }
+  .skel-line { height: 14px; margin: 6px 0; }
+  .skel-line.w60 { width: 60%; }
+  .skel-line.w40 { width: 40%; }
+  .skel-line.w80 { width: 80%; }
+  .skel-num { height: 28px; width: 70px; margin: 4px 0; }
+  .skel-chart { height: 170px; border-radius: 12px; }
+  .skel-row { display: flex; gap: 10px; padding: 12px 0; border-bottom: 1px solid var(--glass-brd); }
+  .skel-row > div { height: 14px; border-radius: 6px; }
+  .chart-loading { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 170px; gap: 12px; }
+  .spinner { width: 28px; height: 28px; border: 3px solid var(--glass-brd); border-top-color: var(--violet); border-radius: 50%; animation: spin .8s linear infinite; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .empty-state { text-align: center; padding: 36px 16px; }
+  .empty-state .empty-icon { font-size: 36px; margin-bottom: 12px; opacity: .7; }
+  .empty-state .empty-title { font-size: 15px; font-weight: 700; margin: 0 0 6px; color: var(--text); }
+  .empty-state .empty-desc { font-size: 13px; color: var(--muted); margin: 0; max-width: 360px; display: inline-block; }
+  .fade-in { animation: fadeUp .5s ease both; }
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+
   /* ---------- mobile responsive ---------- */
   @media (max-width: 480px) {
     .hd { padding: 10px 0; gap: 10px; }
@@ -386,9 +408,9 @@
       <a class="btn ghost" href="https://testnet.arcscan.app/tx/0x83097f432db9c013b3f8d7748b58f18484c2a5fde4ce500c221ee38524250933" target="_blank" rel="noopener">See a live swap ↗</a>
     </div>
     <div class="band reveal">
-      <div class="g"><div class="n" id="bTotal">—</div><div class="l">USDC deployed</div></div>
-      <div class="g"><div class="n" id="bRuns">—</div><div class="l">Agent runs</div></div>
-      <div class="g"><div class="n" id="bLast">—</div><div class="l">Last decision</div></div>
+      <div class="g"><div class="n" id="bTotal"><div class="skel skel-num"></div></div><div class="l">USDC deployed</div></div>
+      <div class="g"><div class="n" id="bRuns"><div class="skel skel-num"></div></div><div class="l">Agent runs</div></div>
+      <div class="g"><div class="n" id="bLast"><div class="skel skel-num"></div></div><div class="l">Last decision</div></div>
     </div>
   </div>
 
@@ -448,15 +470,15 @@
     <p class="sub">Straight from <a href="https://github.com/thanhphuc85/ArcDCA/blob/main/data/history.json" target="_blank" rel="noopener"><code>data/history.json</code></a> — every run the bot commits back to its own repo.</p>
 
     <div class="grid cols-3">
-      <div class="card tile"><span class="n" id="tTotal">—</span><span class="l">USDC deployed</span></div>
-      <div class="card tile"><span class="n" id="tRuns">—</span><span class="l">Runs recorded</span></div>
-      <div class="card tile"><span class="n" id="tLast">—</span><span class="l">Last decision</span></div>
+      <div class="card tile"><span class="n" id="tTotal"><div class="skel skel-num"></div></span><span class="l">USDC deployed</span></div>
+      <div class="card tile"><span class="n" id="tRuns"><div class="skel skel-num"></div></span><span class="l">Runs recorded</span></div>
+      <div class="card tile"><span class="n" id="tLast"><div class="skel skel-num"></div></span><span class="l">Last decision</span></div>
     </div>
 
     <div class="card" style="margin-top:16px;">
       <h3>Cumulative USDC deployed</h3>
-      <p class="cs" id="chartSub">Loading history…</p>
-      <div id="chartHost"><div class="chart-empty">Loading…</div></div>
+      <p class="cs" id="chartSub"><span class="skel skel-line w60" style="display:inline-block;height:12px;"></span></p>
+      <div id="chartHost"><div class="chart-loading"><div class="spinner"></div><span style="font-size:13px;color:var(--muted);">Loading chart data…</span></div></div>
     </div>
 
     <div class="card tbl-wrap" style="margin-top:16px;">
@@ -464,7 +486,11 @@
       <p class="cs">What Claude proposed, what the guardrails allowed, and why.</p>
       <table id="runsTable"><thead>
         <tr><th>Date</th><th>Status</th><th>Requested</th><th>Executed</th><th>Bound by</th><th>Claude's reasoning</th><th>Tx</th></tr>
-      </thead><tbody id="runsBody"><tr><td colspan="7" class="reason">Loading…</td></tr></tbody></table>
+      </thead><tbody id="runsBody">
+        <tr><td><div class="skel skel-line w80"></div></td><td><div class="skel skel-line" style="width:70px;"></div></td><td><div class="skel skel-line w40"></div></td><td><div class="skel skel-line w40"></div></td><td><div class="skel skel-line w60"></div></td><td><div class="skel skel-line w80"></div></td><td><div class="skel skel-line w40"></div></td></tr>
+        <tr><td><div class="skel skel-line w80"></div></td><td><div class="skel skel-line" style="width:70px;"></div></td><td><div class="skel skel-line w40"></div></td><td><div class="skel skel-line w40"></div></td><td><div class="skel skel-line w60"></div></td><td><div class="skel skel-line w80"></div></td><td><div class="skel skel-line w40"></div></td></tr>
+        <tr><td><div class="skel skel-line w80"></div></td><td><div class="skel skel-line" style="width:70px;"></div></td><td><div class="skel skel-line w40"></div></td><td><div class="skel skel-line w40"></div></td><td><div class="skel skel-line w60"></div></td><td><div class="skel skel-line w80"></div></td><td><div class="skel skel-line w40"></div></td></tr>
+      </tbody></table>
     </div>
   </section>
 
@@ -475,30 +501,30 @@
 
     <div class="perf-grid">
       <div class="perf-tile" style="--glow:rgba(47,134,230,.15);">
-        <span class="n" id="pInvested">—</span><span class="l">Total invested</span>
+        <span class="n" id="pInvested"><div class="skel skel-num"></div></span><span class="l">Total invested</span>
       </div>
       <div class="perf-tile" style="--glow:rgba(245,165,36,.15);">
-        <span class="n" id="pAcquired">—</span><span class="l">cirBTC acquired</span>
+        <span class="n" id="pAcquired"><div class="skel skel-num"></div></span><span class="l">cirBTC acquired</span>
       </div>
       <div class="perf-tile" style="--glow:rgba(138,92,246,.15);">
-        <span class="n" id="pAvgCost">—</span><span class="l">Avg cost basis</span>
+        <span class="n" id="pAvgCost"><div class="skel skel-num"></div></span><span class="l">Avg cost basis</span>
       </div>
       <div class="perf-tile" id="pnlTile" style="--glow:rgba(52,211,153,.15);">
-        <span class="n" id="pPnl">—</span><span class="l">Unrealized PNL</span>
+        <span class="n" id="pPnl"><div class="skel skel-num"></div></span><span class="l">Unrealized PNL</span>
         <div class="delta neutral" id="pRoi"></div>
       </div>
     </div>
 
     <div class="card" style="margin-top:16px;">
       <h3>cirBTC accumulation</h3>
-      <p class="cs" id="btcChartSub">Loading…</p>
-      <div id="btcChartHost"><div class="chart-empty">Loading…</div></div>
+      <p class="cs" id="btcChartSub"><span class="skel skel-line w60" style="display:inline-block;height:12px;"></span></p>
+      <div id="btcChartHost"><div class="chart-loading"><div class="spinner"></div><span style="font-size:13px;color:var(--muted);">Loading…</span></div></div>
     </div>
 
     <div class="card" style="margin-top:16px;">
       <h3>Cost basis per swap</h3>
       <p class="cs" id="costChartSub">Implied price: USDC spent ÷ cirBTC received per swap</p>
-      <div id="costChartHost"><div class="chart-empty">Loading…</div></div>
+      <div id="costChartHost"><div class="chart-loading"><div class="spinner"></div><span style="font-size:13px;color:var(--muted);">Loading…</span></div></div>
     </div>
 
     <div class="card" style="margin-top:16px;">
@@ -667,11 +693,11 @@
       return;
     }
     try {
-      status.textContent = "Requesting accounts…";
+      status.innerHTML = '<span style="display:inline-flex;align-items:center;gap:8px;"><span class="spinner" style="width:16px;height:16px;border-width:2px;"></span> Requesting accounts…</span>';
       var accounts = await window.ethereum.request({ method: "eth_requestAccounts" });
       var account = accounts[0];
       state.account = account;
-      status.textContent = "Switching to Arc Testnet…";
+      status.innerHTML = '<span style="display:inline-flex;align-items:center;gap:8px;"><span class="spinner" style="width:16px;height:16px;border-width:2px;"></span> Switching to Arc Testnet…</span>';
       try {
         await window.ethereum.request({ method: "wallet_switchEthereumChain", params: [{ chainId: ARC.chainIdHex }] });
       } catch (switchErr) {
@@ -687,7 +713,7 @@
         }
       }
 
-      status.textContent = "Reading balances…";
+      status.innerHTML = '<span style="display:inline-flex;align-items:center;gap:8px;"><span class="spinner" style="width:16px;height:16px;border-width:2px;"></span> Reading balances…</span>';
       async function safeCall(method, params) {
         try { return await window.ethereum.request({ method: method, params: params }); }
         catch (e) { return "0x0"; }
@@ -816,7 +842,7 @@
     var base = toBaseUnits($("depositAmt").value, 6);
     var data = "0xa9059cbb" + ARC.agent.slice(2).toLowerCase().padStart(64, "0") + base.toString(16).padStart(64, "0");
     try {
-      status.textContent = "Confirm the transfer in your wallet…";
+      status.innerHTML = '<span style="display:inline-flex;align-items:center;gap:8px;"><span class="spinner" style="width:16px;height:16px;border-width:2px;"></span> Confirm the transfer in your wallet…</span>';
       var txHash = await window.ethereum.request({
         method: "eth_sendTransaction",
         params: [{ from: state.account, to: ARC.usdc, data: data }],
@@ -906,7 +932,7 @@
 
   function renderChart(points) {
     var host = $("chartHost");
-    if (!points.length) { host.innerHTML = '<div class="chart-empty">No completed runs yet — check back after the next daily run.</div>'; return; }
+    if (!points.length) { host.innerHTML = '<div class="empty-state fade-in"><div class="empty-icon">📊</div><p class="empty-title">No completed runs yet</p><p class="empty-desc">The agent runs daily via GitHub Actions. Check back after the next cron trigger to see deployment data here.</p></div>'; return; }
     var W = 920, H = 190, padL = 6, padR = 6, padT = 14, padB = 14;
     var max = points[points.length - 1].cum || 1, n = points.length;
     function x(i) { return padL + (n === 1 ? (W - padL - padR) / 2 : (i * (W - padL - padR) / (n - 1))); }
@@ -933,7 +959,7 @@
 
   function renderBtcChart(swaps) {
     var host = $("btcChartHost");
-    if (!swaps.length) { host.innerHTML = '<div class="chart-empty">No swaps with cirBTC data yet.</div>'; return; }
+    if (!swaps.length) { host.innerHTML = '<div class="empty-state fade-in"><div class="empty-icon">₿</div><p class="empty-title">No cirBTC swaps yet</p><p class="empty-desc">Once the agent executes a USDC → cirBTC swap, accumulation data will appear here.</p></div>'; return; }
     var W = 920, H = 160, padL = 6, padR = 6, padT = 14, padB = 14;
     var cum = 0, pts = [];
     swaps.forEach(function (s) { cum += s.btcOut; pts.push({ cum: cum, date: s.date }); });
@@ -962,7 +988,7 @@
 
   function renderCostChart(swaps) {
     var host = $("costChartHost");
-    if (!swaps.length) { host.innerHTML = '<div class="chart-empty">No swap price data yet.</div>'; return; }
+    if (!swaps.length) { host.innerHTML = '<div class="empty-state fade-in"><div class="empty-icon">💰</div><p class="empty-title">No price data yet</p><p class="empty-desc">Cost basis per swap will be plotted once the first successful swap completes.</p></div>'; return; }
     var W = 920, H = 160, padL = 6, padR = 6, padT = 14, padB = 14;
     var prices = swaps.map(function (s) { return s.price; });
     var max = Math.max.apply(null, prices) * 1.1 || 1;
@@ -1126,7 +1152,7 @@
         '<td class="reason">' + reason + "</td>" +
         "<td>" + tx + "</td></tr>";
     }).join("");
-    $("runsBody").innerHTML = rows || '<tr><td colspan="7" class="reason">No runs recorded yet.</td></tr>';
+    $("runsBody").innerHTML = rows || '<tr><td colspan="7"><div class="empty-state fade-in"><div class="empty-icon">🤖</div><p class="empty-title">No runs recorded yet</p><p class="empty-desc">The agent will record its first decision after the next daily cron run.</p></div></td></tr>';
 
     renderPerformance(history);
   }
@@ -1137,9 +1163,9 @@
       renderReflections(results[1]);
     })
     .catch(function (err) {
-      $("chartSub").textContent = "Could not load history: " + err.message;
-      $("chartHost").innerHTML = '<div class="chart-empty">History unavailable right now.</div>';
-      $("runsBody").innerHTML = '<tr><td colspan="7" class="reason">Could not load history.</td></tr>';
+      $("chartSub").textContent = "";
+      $("chartHost").innerHTML = '<div class="empty-state fade-in"><div class="empty-icon">⚠️</div><p class="empty-title">Could not load history</p><p class="empty-desc">' + (err.message || "Network error") + '. Try refreshing the page.</p></div>';
+      $("runsBody").innerHTML = '<tr><td colspan="7"><div class="empty-state fade-in"><div class="empty-icon">🔌</div><p class="empty-title">Data unavailable</p><p class="empty-desc">Could not fetch run history. Check your connection and refresh.</p></div></td></tr>';
       ["tTotal","tRuns","tLast","bTotal","bRuns","bLast"].forEach(function (id) { $(id).textContent = "—"; });
     });
 })();
