@@ -6,6 +6,7 @@ import { clampDecision } from "./decision/guardrails.js";
 import { executeSwap, SwapExecutionError } from "./swap/swapKit.js";
 import type { DecisionContext, HistoryEntry, RunStatus } from "./types.js";
 import { logger } from "./logger.js";
+import { notifyAll } from "./notify.js";
 
 export interface RunOutcome {
   entry: HistoryEntry;
@@ -20,8 +21,9 @@ function today(): string {
   return nowIso().slice(0, 10);
 }
 
-async function writeAndReturn(entry: HistoryEntry, isFatal = false): Promise<RunOutcome> {
+async function writeAndReturn(entry: HistoryEntry, isFatal = false, discordWebhookUrl?: string): Promise<RunOutcome> {
   await appendEntry(entry);
+  await notifyAll(entry, discordWebhookUrl);
   return { entry, isFatal };
 }
 
@@ -43,7 +45,7 @@ export async function runDailyDca(config: AppConfig): Promise<RunOutcome> {
       status: "error_rpc",
       tokenOut: config.tokenOut,
       message: `Circle Wallets balance check failed: ${(err as Error).message}`,
-    });
+    }, false, config.discordWebhookUrl);
   }
 
   const history = await readHistory();
@@ -57,7 +59,7 @@ export async function runDailyDca(config: AppConfig): Promise<RunOutcome> {
       tokenOut: config.tokenOut,
       walletUsdcBalance: usdcBalance,
       message: `Wallet balance ${usdcBalance} USDC is at or below the configured minimum reserve ${minReserve} USDC`,
-    });
+    }, false, config.discordWebhookUrl);
   }
 
   const context: DecisionContext = {
@@ -77,7 +79,12 @@ export async function runDailyDca(config: AppConfig): Promise<RunOutcome> {
 
   let decision;
   try {
-    decision = await getClaudeDecision(config.anthropicApiKey, context);
+    decision = await getClaudeDecision(config.anthropicApiKey, context, {
+      history,
+      walletUsdcBalance: usdcBalance,
+      alreadySpentTodayUsdc: context.alreadySpentTodayUsdc,
+      remainingCampaignBudgetUsdc: context.remainingCampaignBudgetUsdc,
+    });
   } catch (err) {
     const status: RunStatus =
       err instanceof DecisionError && err.kind === "invalid_output" ? "error_llm_invalid_output" : "error_llm_api";
@@ -89,7 +96,7 @@ export async function runDailyDca(config: AppConfig): Promise<RunOutcome> {
       tokenOut: config.tokenOut,
       walletUsdcBalance: usdcBalance,
       message: `Claude decision failed: ${(err as Error).message}`,
-    });
+    }, false, config.discordWebhookUrl);
   }
 
   const clamped = clampDecision(decision, {
@@ -113,7 +120,7 @@ export async function runDailyDca(config: AppConfig): Promise<RunOutcome> {
       reasoning: decision.reasoning,
       walletUsdcBalance: usdcBalance,
       message: `Skipped: ${clamped.skipReason}`,
-    });
+    }, false, config.discordWebhookUrl);
   }
 
   try {
@@ -145,7 +152,7 @@ export async function runDailyDca(config: AppConfig): Promise<RunOutcome> {
       message: swapResult.dryRun
         ? `[DRY RUN] Would have swapped ${clamped.amountUsdc} USDC -> ${config.tokenOut}`
         : `Swapped ${clamped.amountUsdc} USDC -> ${config.tokenOut}`,
-    });
+    }, false, config.discordWebhookUrl);
   } catch (err) {
     logger.error("Swap execution failed", err);
     return writeAndReturn({
@@ -159,6 +166,6 @@ export async function runDailyDca(config: AppConfig): Promise<RunOutcome> {
       reasoning: decision.reasoning,
       walletUsdcBalance: usdcBalance,
       message: `Swap failed: ${(err as Error).message}${err instanceof SwapExecutionError && err.cause ? ` (${String((err.cause as Error)?.message ?? err.cause)})` : ""}`,
-    });
+    }, false, config.discordWebhookUrl);
   }
 }

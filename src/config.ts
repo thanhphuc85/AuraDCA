@@ -25,6 +25,7 @@ const envSchema = z.object({
   CAMPAIGN_TOTAL_BUDGET_USDC: z.preprocess(emptyToUndefined, decimalString.optional()),
   CAMPAIGN_DURATION_DAYS: z.preprocess(emptyToUndefined, z.coerce.number().int().positive().optional()),
   TOKEN_OUT: z.preprocess(emptyToUndefined, z.string().default("cirBTC")),
+  DISCORD_WEBHOOK_URL: z.preprocess(emptyToUndefined, z.string().url().optional()),
   DRY_RUN: z
     .preprocess(emptyToUndefined, z.string().default("true"))
     .transform((v) => v.toLowerCase() === "true"),
@@ -38,6 +39,7 @@ export interface AppConfig {
   anthropicApiKey: string;
   tokenOut: string;
   dryRun: boolean;
+  discordWebhookUrl?: string;
   guardrails: GuardrailConfig;
 }
 
@@ -68,6 +70,7 @@ export function loadConfig(): AppConfig {
     anthropicApiKey: env.ANTHROPIC_API_KEY,
     tokenOut: env.TOKEN_OUT,
     dryRun: env.DRY_RUN,
+    discordWebhookUrl: env.DISCORD_WEBHOOK_URL,
     guardrails: {
       maxDailyUsdc: env.MAX_DAILY_USDC,
       minUsdcReserve: env.MIN_USDC_RESERVE,

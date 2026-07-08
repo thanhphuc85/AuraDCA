@@ -1,6 +1,7 @@
 import { SwapKit } from "@circle-fin/swap-kit";
 import { createCircleWalletsAdapter } from "@circle-fin/adapter-circle-wallets";
 import { ARC_TESTNET_EXPLORER } from "../config.js";
+import { withRetry } from "../retry.js";
 
 export class SwapExecutionError extends Error {
   constructor(message: string, options?: { cause?: unknown }) {
@@ -42,13 +43,16 @@ export async function executeSwap(params: SwapParamsInput): Promise<SwapExecutio
     });
 
     const kit = new SwapKit();
-    const result = await kit.swap({
-      from: { adapter, chain: "Arc_Testnet", address: params.walletAddress },
-      tokenIn: "USDC",
-      tokenOut: params.tokenOut,
-      amountIn: params.amountUsdc,
-      config: { kitKey: params.kitKey },
-    });
+    const result = await withRetry(
+      () => kit.swap({
+        from: { adapter, chain: "Arc_Testnet", address: params.walletAddress },
+        tokenIn: "USDC",
+        tokenOut: params.tokenOut,
+        amountIn: params.amountUsdc,
+        config: { kitKey: params.kitKey },
+      }),
+      { maxRetries: 2, initialBackoffMs: 2000, label: "SwapKit swap" },
+    );
 
     return {
       dryRun: false,

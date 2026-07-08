@@ -55,6 +55,7 @@ jobs:
           # "true" as a second safety switch. Manual runs default to a dry
           # run unless the workflow_dispatch input unchecks it.
           DRY_RUN: ${{ (github.event_name == 'workflow_dispatch' && (inputs.dry_run == true || vars.LIVE_TRADING_ENABLED != 'true')) || (github.event_name == 'schedule' && vars.LIVE_TRADING_ENABLED != 'true') }}
+          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
         run: npx tsx src/index.ts
 
       - name: Commit history

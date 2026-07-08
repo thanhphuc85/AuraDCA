@@ -2,6 +2,7 @@ import { loadConfig, ConfigError } from "./config.js";
 import { runDailyDca } from "./run.js";
 import { appendEntry } from "./history/store.js";
 import { logger } from "./logger.js";
+import { notifyAll } from "./notify.js";
 
 async function main(): Promise<void> {
   let config;
@@ -10,13 +11,15 @@ async function main(): Promise<void> {
   } catch (err) {
     logger.error("Configuration error", err);
     if (err instanceof ConfigError) {
-      await appendEntry({
+      const entry = {
         date: new Date().toISOString().slice(0, 10),
         timestamp: new Date().toISOString(),
-        status: "error_config",
+        status: "error_config" as const,
         tokenOut: process.env.TOKEN_OUT ?? "cirBTC",
         message: err.message,
-      }).catch(() => undefined);
+      };
+      await appendEntry(entry).catch((writeErr) => logger.error("Failed to write history entry", writeErr));
+      await notifyAll(entry).catch(() => {});
     }
     process.exitCode = 1;
     return;
@@ -34,12 +37,14 @@ async function main(): Promise<void> {
 
 main().catch(async (err) => {
   logger.error("Unexpected top-level error", err);
-  await appendEntry({
+  const entry = {
     date: new Date().toISOString().slice(0, 10),
     timestamp: new Date().toISOString(),
-    status: "error_unexpected",
+    status: "error_unexpected" as const,
     tokenOut: process.env.TOKEN_OUT ?? "cirBTC",
     message: err instanceof Error ? err.message : String(err),
-  }).catch(() => undefined);
+  };
+  await appendEntry(entry).catch((writeErr) => logger.error("Failed to write history entry", writeErr));
+  await notifyAll(entry).catch(() => {});
   process.exitCode = 1;
 });
