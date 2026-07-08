@@ -259,6 +259,55 @@
   .reveal { opacity: 0; transform: translateY(18px); transition: opacity .7s ease, transform .7s ease; }
   .reveal.in { opacity: 1; transform: none; }
 
+  /* ---------- mobile responsive ---------- */
+  @media (max-width: 480px) {
+    .hd { padding: 10px 0; gap: 10px; }
+    .brand img { width: 32px; height: 32px; }
+    .brand b { font-size: 15px; }
+    .brand span { font-size: 10px; }
+    .hero { padding: 40px 0 20px; }
+    .hero h1 { font-size: 28px; letter-spacing: -.8px; }
+    .hero p { font-size: 14px; }
+    .cta { gap: 8px; }
+    .cta .btn { font-size: 13px; padding: 10px 16px; }
+    .band { gap: 10px; margin-top: 22px; }
+    .band .g { min-width: 90px; flex: 1; padding: 10px 12px; }
+    .band .g .n { font-size: 18px; }
+    .band .g .l { font-size: 11px; }
+    section { margin: 30px 0; }
+    .h2 { font-size: 22px; }
+    .sub { font-size: 14px; margin-bottom: 14px; }
+    .card { padding: 16px; border-radius: 16px; }
+    .g { padding: 10px 14px; border-radius: 14px; }
+    .tile .n { font-size: 22px; }
+    .perf-tile .n { font-size: 20px; }
+    .perf-grid { gap: 10px; }
+    table { font-size: 12px; }
+    th, td { padding: 10px 8px; }
+    .tbl-wrap { position: relative; }
+    .tbl-wrap::after { content: "← swipe →"; position: absolute; bottom: 8px; right: 8px; font-size: 10px; color: var(--muted); opacity: .7; pointer-events: none; }
+    .deposit-stats { gap: 8px; }
+    .deposit-stat .ds-val { font-size: 17px; }
+    .deposit-form input { min-width: 120px; padding: 10px 12px; font-size: 14px; }
+    .step { padding: 16px 14px; }
+    .step .num { width: 32px; height: 32px; font-size: 13px; border-radius: 10px; margin-bottom: 10px; }
+    .step b { font-size: 14px; }
+    .step span { font-size: 12.5px; }
+    .note { font-size: 12px; padding: 12px 14px; }
+    footer { font-size: 12px; padding: 24px 0 40px; flex-direction: column; text-align: center; }
+    .wp-bal-amt { font-size: 18px; }
+    .wp-portfolio-head .wp-total { font-size: 16px; }
+    .memory-latest .insight { font-size: 15px; }
+    .deposit-qr svg { width: 130px; height: 130px; }
+    .agent-addr-full { font-size: 11.5px; }
+  }
+  @media (max-width: 380px) {
+    .wrap { padding: 0 14px; }
+    .wp-balances { grid-template-columns: 1fr; }
+    .deposit-stats { grid-template-columns: 1fr; }
+    .hero h1 { font-size: 24px; }
+  }
+
   /* ---------- theme toggle ---------- */
   .theme-toggle { background: var(--glass); border: 1px solid var(--glass-brd); cursor: pointer; width: 40px; height: 40px; border-radius: 12px; display: grid; place-items: center; font-size: 19px; color: var(--text); transition: background .18s, border-color .18s, transform .18s; flex-shrink: 0; }
   .theme-toggle:hover { background: rgba(255,255,255,.1); transform: scale(1.08); }
