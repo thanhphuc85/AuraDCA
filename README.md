@@ -1,10 +1,19 @@
-# Arc DCA Agent
+<p align="center">
+  <img src="docs/logo.svg" alt="Arc DCA Agent logo" width="96" height="96" />
+</p>
 
-[![Daily DCA Bot](https://github.com/thanhphuc85/ArcDCA/actions/workflows/dca.yml/badge.svg)](https://github.com/thanhphuc85/ArcDCA/actions/workflows/dca.yml)
-[![Arc Testnet](https://img.shields.io/badge/Arc-Testnet-2ea44f)](https://testnet.arcscan.app)
-[![Decisions by Claude](https://img.shields.io/badge/decisions%20by-Claude-8A2BE2)](https://www.anthropic.com)
-[![Circle Swap Kit](https://img.shields.io/badge/swaps%20via-Circle%20Swap%20Kit-2775CA)](https://docs.arc.io/app-kit/swap.md)
-[![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?logo=typescript&logoColor=white)](https://www.typescriptlang.org)
+<h1 align="center">Arc DCA Agent</h1>
+
+<p align="center">
+  <a href="https://thanhphuc85.github.io/ArcDCA/"><img src="https://img.shields.io/badge/%F0%9F%8C%90%20Live%20app-thanhphuc85.github.io%2FArcDCA-2775CA" alt="Live app" /></a>
+  <a href="https://github.com/thanhphuc85/ArcDCA/actions/workflows/dca.yml"><img src="https://github.com/thanhphuc85/ArcDCA/actions/workflows/dca.yml/badge.svg" alt="Daily DCA Bot" /></a>
+  <a href="https://testnet.arcscan.app"><img src="https://img.shields.io/badge/Arc-Testnet-2ea44f" alt="Arc Testnet" /></a>
+  <a href="https://www.anthropic.com"><img src="https://img.shields.io/badge/decisions%20by-Claude-8A2BE2" alt="Decisions by Claude" /></a>
+  <a href="https://docs.arc.io/app-kit/swap.md"><img src="https://img.shields.io/badge/swaps%20via-Circle%20Swap%20Kit-2775CA" alt="Circle Swap Kit" /></a>
+  <a href="https://www.typescriptlang.org"><img src="https://img.shields.io/badge/TypeScript-3178C6?logo=typescript&logoColor=white" alt="TypeScript" /></a>
+</p>
+
+**🌐 Live web app:** **https://thanhphuc85.github.io/ArcDCA/** — connect your wallet to view your Arc Testnet balance and the agent's live on-chain track record.
 
 ![Daily flow: cron → read balance → Claude decides → guardrails clamp → swap → commit history](docs/flow.svg)
 
