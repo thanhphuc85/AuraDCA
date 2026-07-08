@@ -519,28 +519,41 @@
       var accounts = await window.ethereum.request({ method: "eth_requestAccounts" });
       var account = accounts[0];
       state.account = account;
-      status.textContent = "Adding / switching to Arc Testnet…";
+      status.textContent = "Switching to Arc Testnet…";
       try {
-        await window.ethereum.request({
-          method: "wallet_addEthereumChain",
-          params: [{
-            chainId: ARC.chainIdHex, chainName: ARC.chainName,
-            nativeCurrency: { name: "USDC", symbol: "USDC", decimals: 18 },
-            rpcUrls: [ARC.rpc], blockExplorerUrls: [ARC.explorer],
-          }],
-        });
-      } catch (e) { /* may already be on Arc */ }
+        await window.ethereum.request({ method: "wallet_switchEthereumChain", params: [{ chainId: ARC.chainIdHex }] });
+      } catch (switchErr) {
+        if (switchErr && switchErr.code === 4902) {
+          await window.ethereum.request({
+            method: "wallet_addEthereumChain",
+            params: [{
+              chainId: ARC.chainIdHex, chainName: ARC.chainName,
+              nativeCurrency: { name: "USDC", symbol: "USDC", decimals: 18 },
+              rpcUrls: [ARC.rpc], blockExplorerUrls: [ARC.explorer],
+            }],
+          });
+        }
+      }
 
       status.textContent = "Reading balances…";
+      async function safeCall(method, params) {
+        try { return await window.ethereum.request({ method: method, params: params }); }
+        catch (e) { return "0x0"; }
+      }
       async function tokenBalance(token) {
         var data = "0x70a08231" + account.slice(2).toLowerCase().padStart(64, "0");
-        var raw = await window.ethereum.request({ method: "eth_call", params: [{ to: token, data: data }, "latest"] });
+        var raw = await safeCall("eth_call", [{ to: token, data: data }, "latest"]);
         return BigInt(raw || "0x0");
       }
-      var nativeRaw = await window.ethereum.request({ method: "eth_getBalance", params: [account, "latest"] });
-      var nativeBal = Number(BigInt(nativeRaw || "0x0")) / 1e18;
-      var usdc = Number(await tokenBalance(ARC.usdc)) / 1e6;
-      var cirbtc = Number(await tokenBalance(ARC.cirbtc)) / 1e8;
+      var nativeBal = 0, usdc = 0, cirbtc = 0;
+      try {
+        var nativeRaw = await safeCall("eth_getBalance", [account, "latest"]);
+        nativeBal = Number(BigInt(nativeRaw || "0x0")) / 1e18;
+        usdc = Number(await tokenBalance(ARC.usdc)) / 1e6;
+        cirbtc = Number(await tokenBalance(ARC.cirbtc)) / 1e8;
+      } catch (balErr) {
+        status.textContent = "Connected but balance read failed — you may need to switch to Arc Testnet in your wallet.";
+      }
 
       var totalUsd = usdc;
       var usdcPct = totalUsd > 0 ? (usdc / totalUsd) * 100 : 100;
