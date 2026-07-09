@@ -679,7 +679,6 @@
         </select>
       </div>
     </div>
-    </div>
     <h3 style="margin:18px 0 14px;">DCA Strategy</h3>
     <div class="settings-grid">
       <div class="setting-group">
@@ -711,6 +710,31 @@
         <input type="number" id="setStrongMult" min="1" max="10" step="0.1" placeholder="2.0" />
       </div>
     </div>
+    <h3 style="margin:18px 0 14px;">Telegram Notifications</h3>
+    <div class="settings-grid">
+      <div class="setting-group">
+        <label for="setTgToken">Bot token</label>
+        <input type="text" id="setTgToken" placeholder="123456:ABC-DEF..." style="font-family:ui-monospace,monospace;font-size:12px;" />
+      </div>
+      <div class="setting-group">
+        <label for="setTgChatId">Chat ID</label>
+        <input type="text" id="setTgChatId" placeholder="-100123456789" style="font-family:ui-monospace,monospace;font-size:12px;" />
+      </div>
+      <div class="setting-group">
+        <label for="setTgEvents">Notify on</label>
+        <select id="setTgEvents">
+          <option value="all">All runs (success + error)</option>
+          <option value="success">Success only</option>
+          <option value="error">Errors only</option>
+          <option value="off">Off</option>
+        </select>
+      </div>
+      <div class="setting-group" style="display:flex;align-items:flex-end;">
+        <button class="btn ghost" id="tgTestBtn" style="padding:8px 14px;font-size:12px;width:100%;">Send test message</button>
+      </div>
+    </div>
+    <div class="status-note" id="tgStatus" style="margin-top:6px;"></div>
+    <p style="font-size:11px;color:var(--muted);margin:8px 0 0;">Create a bot via <a href="https://t.me/BotFather" target="_blank" rel="noopener">@BotFather</a>, get your chat ID from <a href="https://t.me/userinfobot" target="_blank" rel="noopener">@userinfobot</a>. Messages are sent directly from your browser.</p>
     <div class="settings-saved" id="settingsSaved">Settings saved</div>
   </div>
 
@@ -906,6 +930,19 @@
         <span class="n" id="pPnl"><div class="skel skel-num"></div></span><span class="l">Unrealized PNL</span>
         <div class="delta neutral" id="pRoi"></div>
       </div>
+      <div class="perf-tile" style="--glow:rgba(251,113,133,.12);">
+        <span class="n" id="pDrawdown">—</span><span class="l" data-t="perfDrawdown">Max drawdown</span>
+      </div>
+      <div class="perf-tile" style="--glow:rgba(34,211,238,.12);">
+        <span class="n" id="pVsLump">—</span><span class="l" data-t="perfVsLump">DCA vs Lump sum</span>
+        <div class="delta neutral" id="pVsLumpDelta"></div>
+      </div>
+      <div class="perf-tile" style="--glow:rgba(245,165,36,.12);">
+        <span class="n" id="pAvgPrice">—</span><span class="l" data-t="perfAvgPrice">Avg buy price</span>
+      </div>
+      <div class="perf-tile" style="--glow:rgba(138,92,246,.12);">
+        <span class="n" id="pTotalBtc">—</span><span class="l" data-t="perfTotalBtc">Total cirBTC</span>
+      </div>
     </div>
 
     <div class="card" style="margin-top:16px;">
@@ -927,6 +964,16 @@
       <div style="display:flex;justify-content:space-between;margin-top:8px;font-size:12px;color:var(--muted);">
         <span id="pBarInvested">Invested: —</span>
         <span id="pBarValue">Current value: —</span>
+      </div>
+    </div>
+
+    <div class="card" style="margin-top:16px;">
+      <h3 data-t="perfDcaVsLump">DCA vs Lump Sum</h3>
+      <p class="cs" id="dcaVsLumpSub">Comparing dollar-cost-averaging to investing everything on day 1</p>
+      <div id="dcaVsLumpHost"><div class="chart-loading"><div class="spinner"></div><span style="font-size:13px;color:var(--muted);">Loading…</span></div></div>
+      <div style="display:flex;gap:16px;margin-top:10px;font-size:12px;flex-wrap:wrap;">
+        <span style="display:flex;align-items:center;gap:5px;"><span style="width:12px;height:3px;background:linear-gradient(90deg,#8a5cf6,#a78bfa);border-radius:2px;"></span> DCA portfolio</span>
+        <span style="display:flex;align-items:center;gap:5px;"><span style="width:12px;height:3px;background:#fb7185;border-radius:2px;"></span> Lump sum</span>
       </div>
     </div>
   </section>
@@ -1173,6 +1220,31 @@
     [sr, sd, sro, sc].forEach(function (el) { if (el) el.addEventListener("change", onChange); });
     [sba, smp, smop, ssp, smm, smom, ssm].forEach(function (el) { if (el) el.addEventListener("change", onStratChange); });
 
+    var tgToken = document.getElementById("setTgToken");
+    var tgChat = document.getElementById("setTgChatId");
+    var tgEvents = document.getElementById("setTgEvents");
+    var tgSettings = loadStore("aura-telegram", { token: "", chatId: "", events: "all" });
+    if (tgToken) tgToken.value = tgSettings.token || "";
+    if (tgChat) tgChat.value = tgSettings.chatId || "";
+    if (tgEvents) tgEvents.value = tgSettings.events || "all";
+    function saveTg() {
+      tgSettings.token = (tgToken.value || "").trim();
+      tgSettings.chatId = (tgChat.value || "").trim();
+      tgSettings.events = tgEvents.value;
+      saveStore("aura-telegram", tgSettings);
+      flashSaved();
+    }
+    [tgToken, tgChat, tgEvents].forEach(function (el) { if (el) el.addEventListener("change", saveTg); });
+    var tgTestBtn = document.getElementById("tgTestBtn");
+    if (tgTestBtn) tgTestBtn.addEventListener("click", function () {
+      var st = document.getElementById("tgStatus");
+      if (!tgSettings.token || !tgSettings.chatId) { st.textContent = "Enter bot token and chat ID first."; return; }
+      st.innerHTML = '<span style="display:inline-flex;align-items:center;gap:6px;"><span class="spinner" style="width:14px;height:14px;border-width:2px;"></span> Sending…</span>';
+      sendTelegram(tgSettings.token, tgSettings.chatId, "✅ Aura DCA Agent — test notification works!")
+        .then(function () { st.textContent = "Test message sent successfully!"; })
+        .catch(function (e) { st.textContent = "Failed: " + (e.message || e); });
+    });
+
     if (sd && userSettings.defaultDeposit) {
       var depInput = document.getElementById("depositAmt");
       if (depInput && !depInput.value) depInput.value = userSettings.defaultDeposit;
@@ -1188,6 +1260,36 @@
     }
   }
   setupAutoRefresh();
+
+  function sendTelegram(token, chatId, text) {
+    return fetch("https://api.telegram.org/bot" + token + "/sendMessage", {
+      method: "POST", headers: { "content-type": "application/json" },
+      body: JSON.stringify({ chat_id: chatId, text: text, parse_mode: "HTML" })
+    }).then(function (r) { if (!r.ok) throw new Error("HTTP " + r.status); return r.json(); });
+  }
+  var _lastNotifiedRun = loadStore("aura-last-notified", "");
+  function checkAndNotify(history) {
+    if (!Array.isArray(history) || !history.length) return;
+    var tg = loadStore("aura-telegram", { token: "", chatId: "", events: "off" });
+    if (!tg.token || !tg.chatId || tg.events === "off") return;
+    var latest = history[history.length - 1];
+    var runId = latest.date + "_" + latest.status;
+    if (runId === _lastNotifiedRun) return;
+    var isSuccess = latest.status === "success";
+    var isError = latest.status && latest.status.indexOf("error") >= 0;
+    if (tg.events === "success" && !isSuccess) return;
+    if (tg.events === "error" && !isError) return;
+    var icon = isSuccess ? "✅" : (isError ? "❌" : "ℹ️");
+    var msg = icon + " <b>Aura DCA Agent</b>\n" +
+      "Date: " + (latest.date || "?") + "\n" +
+      "Status: " + (latest.status || "?").replace(/_/g, " ") + "\n" +
+      (latest.clampedAmountUsdc ? "Amount: " + latest.clampedAmountUsdc + " USDC\n" : "") +
+      (latest.reasoning ? "Reasoning: " + latest.reasoning.slice(0, 200) : "");
+    sendTelegram(tg.token, tg.chatId, msg).then(function () {
+      _lastNotifiedRun = runId;
+      saveStore("aura-last-notified", runId);
+    }).catch(function () {});
+  }
 
   var ARC = {
     chainIdHex: "0x4cef52",           // 5042002
@@ -1373,6 +1475,13 @@
             '<div><div class="wp-token-amt">' + fmt(cirbtc, 8) + '</div><div class="wp-token-name">cirBTC</div></div>' +
           '</div>' +
         '</div>' +
+        '<div class="wp-treasury-compare" style="margin-top:14px;padding:12px 16px;background:rgba(138,92,246,.04);border:1px solid rgba(138,92,246,.15);border-radius:14px;">' +
+          '<div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;">' +
+            '<div><div style="font-size:11px;color:var(--muted);">' + (t.wpYourBal || 'Your balance') + '</div><div style="font-family:Sora;font-weight:700;font-size:15px;">' + fmt(usdc, 2) + ' USDC</div></div>' +
+            '<div style="font-size:16px;color:var(--muted);">vs</div>' +
+            '<div style="text-align:right;"><div style="font-size:11px;color:var(--muted);">' + (t.wpAgentTreasury || 'Agent treasury') + '</div><div style="font-family:Sora;font-weight:700;font-size:15px;" id="wpTreasuryBal">…</div></div>' +
+          '</div>' +
+        '</div>' +
 
         '<div class="wp-welcome">' +
           '<div class="wp-welcome-title">' + (t.wpWelcome || 'Welcome!') + '</div>' +
@@ -1420,6 +1529,10 @@
     refreshTreasury();
     refreshWatchlistBalances();
     if (typeof updateHeaderWallet === "function") updateHeaderWallet(account, loginType);
+    readUsdcBalance(ARC.agent).then(function (raw) {
+      var el = $("wpTreasuryBal");
+      if (el) el.textContent = fmt(Number(raw) / 1e6, 2) + " USDC";
+    }).catch(function () { var el = $("wpTreasuryBal"); if (el) el.textContent = "—"; });
   }
 
   // ---------- MetaMask connect ----------
@@ -1670,11 +1783,16 @@
     var j = await r.json();
     return BigInt(j.result || "0x0");
   }
+  var _treasuryTimer = null;
   async function refreshTreasury() {
     try {
       var bal = Number(await readUsdcBalance(ARC.agent)) / 1e6;
       $("treasuryBal").textContent = fmt(bal, 2);
     } catch (e) { $("treasuryBal").textContent = "—"; }
+  }
+  function startTreasuryAutoRefresh() {
+    if (_treasuryTimer) clearInterval(_treasuryTimer);
+    _treasuryTimer = setInterval(refreshTreasury, 30000);
   }
   async function deposit() {
     var status = $("depositStatus");
@@ -1760,6 +1878,7 @@
     });
     var db = $("depositBtn"); if (db) db.addEventListener("click", deposit);
     refreshTreasury();
+    startTreasuryAutoRefresh();
   })();
 
   // ---------- export / import ----------
@@ -2010,6 +2129,46 @@
     host.querySelector("svg").addEventListener("mouseleave", hideTip);
   }
 
+  function renderDcaVsLump(swaps, totalInvested) {
+    var host = $("dcaVsLumpHost");
+    if (swaps.length < 2) { host.innerHTML = '<div style="color:var(--muted);font-size:13px;padding:20px 0;text-align:center;">Need at least 2 swaps to compare.</div>'; return; }
+    var firstPrice = swaps[0].price;
+    var lumpBtc = totalInvested / firstPrice;
+    var cumInv = 0, cumBtc = 0;
+    var dcaPts = [], lumpPts = [];
+    swaps.forEach(function (s) {
+      cumInv += s.usdcIn; cumBtc += s.btcOut;
+      dcaPts.push({ date: s.date, value: cumBtc * s.price });
+      lumpPts.push({ date: s.date, value: lumpBtc * s.price });
+    });
+    var allVals = dcaPts.map(function (p) { return p.value; }).concat(lumpPts.map(function (p) { return p.value; }));
+    var W = 920, H = 200, padL = 54, padR = 12, padT = 16, padB = 28;
+    var max = Math.max.apply(null, allVals) * 1.1 || 1;
+    var n = dcaPts.length;
+    function x(i) { return padL + (n === 1 ? (W - padL - padR) / 2 : (i * (W - padL - padR) / (n - 1))); }
+    function y(v) { return padT + (H - padT - padB) * (1 - v / max); }
+    var grid = gridLines(W, H, padL, padR, padT, padB, max, 4, '', 2);
+    var dcaLine = "", lumpLine = "", labels = "";
+    for (var i = 0; i < n; i++) {
+      dcaLine += (i ? "L" : "M") + x(i).toFixed(1) + " " + y(dcaPts[i].value).toFixed(1) + " ";
+      lumpLine += (i ? "L" : "M") + x(i).toFixed(1) + " " + y(lumpPts[i].value).toFixed(1) + " ";
+      if (n <= 14 || i % Math.ceil(n / 10) === 0) labels += '<text x="' + x(i).toFixed(1) + '" y="' + (H - 6) + '" text-anchor="middle" class="chart-label">' + dcaPts[i].date.slice(5) + '</text>';
+    }
+    host.innerHTML =
+      '<svg class="chart" viewBox="0 0 ' + W + ' ' + H + '">' + grid +
+      '<path d="' + lumpLine + '" fill="none" stroke="#fb7185" stroke-width="2" stroke-dasharray="6 4" stroke-linecap="round" opacity="0.7"/>' +
+      '<path d="' + dcaLine + '" fill="none" stroke="url(#lg)" stroke-width="2.6" stroke-linejoin="round" stroke-linecap="round"/>' +
+      labels + '</svg>';
+    host.querySelector("svg").addEventListener("mousemove", function (ev) {
+      var r = this.getBoundingClientRect(), sx = (ev.clientX - r.left) / r.width * W;
+      var closest = 0, minD = Infinity;
+      for (var k = 0; k < n; k++) { var d = Math.abs(x(k) - sx); if (d < minD) { minD = d; closest = k; } }
+      showTip(ev, '<div class="tt-label">' + dcaPts[closest].date + '</div><div class="tt-val">DCA: ' + fmt(dcaPts[closest].value, 2) + ' USDC</div><div class="tt-val" style="color:#fb7185;">Lump: ' + fmt(lumpPts[closest].value, 2) + ' USDC</div>');
+    });
+    host.querySelector("svg").addEventListener("mouseleave", hideTip);
+    $("dcaVsLumpSub").textContent = "DCA value: " + fmt(dcaPts[n - 1].value, 2) + " USDC · Lump sum: " + fmt(lumpPts[n - 1].value, 2) + " USDC";
+  }
+
   // ---------- daily DCA bar chart ----------
   function renderDailyChart(history) {
     var host = $("dailyChartHost");
@@ -2188,9 +2347,33 @@
     var tile = $("pnlTile");
     tile.style.setProperty("--glow", pnl >= 0 ? "rgba(52,211,153,.15)" : "rgba(251,113,133,.15)");
 
+    $("pAvgPrice").textContent = fmt(latestPrice, 2) + " USDC";
+    $("pTotalBtc").textContent = fmt(totalBtc, 8);
+
+    var peakValue = 0, maxDD = 0, cumInv = 0, cumBtc = 0;
+    swapsWithBtc.forEach(function (s) {
+      cumInv += s.usdcIn; cumBtc += s.btcOut;
+      var val = cumBtc * s.price;
+      if (val > peakValue) peakValue = val;
+      var dd = peakValue > 0 ? (peakValue - val) / peakValue : 0;
+      if (dd > maxDD) maxDD = dd;
+    });
+    $("pDrawdown").textContent = "-" + fmt(maxDD * 100, 1) + "%";
+
+    var firstPrice = swapsWithBtc[0].price;
+    var lumpBtc = totalInvested / firstPrice;
+    var lumpValue = lumpBtc * latestPrice;
+    var dcaVsLump = lumpValue > 0 ? ((currentValue - lumpValue) / lumpValue) * 100 : 0;
+    var vsSign = dcaVsLump >= 0 ? "+" : "";
+    $("pVsLump").textContent = vsSign + fmt(dcaVsLump, 1) + "%";
+    var vsEl = $("pVsLumpDelta");
+    vsEl.textContent = dcaVsLump >= 0 ? "DCA outperforms" : "Lump sum better";
+    vsEl.className = "delta " + (dcaVsLump > 0.1 ? "up" : (dcaVsLump < -0.1 ? "down" : "neutral"));
+
     $("btcChartSub").textContent = swapsWithBtc.length + " swap(s) · " + fmt(totalBtc, 8) + " cirBTC total";
     renderBtcChart(swapsWithBtc);
     renderCostChart(swapsWithBtc);
+    renderDcaVsLump(swapsWithBtc, totalInvested);
 
     var investedPct = totalInvested > 0 ? Math.min(100, (totalInvested / Math.max(totalInvested, currentValue)) * 100) : 50;
     var pnlPct = 100 - investedPct;
@@ -2417,9 +2600,11 @@
         _reflectionData = results[1];
         render(results[0]);
         renderReflections(results[1]);
+        renderNewFeatures(results[0], results[1]);
         if (Array.isArray(results[0]) && results[0].length) $("historyExportBar").style.display = "";
         if (Array.isArray(results[1]) && results[1].length) $("reflExportBar").style.display = "";
         saveCache(results[0], results[1]);
+        checkAndNotify(results[0]);
       })
       .catch(function () {});
   }
@@ -2651,7 +2836,9 @@
       wpBuy: "Get testnet USDC", wpBuyDesc: "Use the Arc faucet to get free testnet tokens",
       wpTransfer: "Deposit to agent", wpTransferDesc: "Send USDC to the DCA treasury",
       wpExplore: "View on ArcScan", wpExploreDesc: "See your transaction history on the explorer",
-      wpDisconnect: "Disconnect",
+      wpDisconnect: "Disconnect", wpYourBal: "Your balance", wpAgentTreasury: "Agent treasury",
+      perfDrawdown: "Max drawdown", perfVsLump: "DCA vs Lump sum", perfAvgPrice: "Avg buy price", perfTotalBtc: "Total cirBTC",
+      perfDcaVsLump: "DCA vs Lump Sum",
     },
     vi: {
       heroChip: "Encode × Circle · Hackathon Tiền Lập Trình",
@@ -2692,7 +2879,9 @@
       wpBuy: "Nhận USDC testnet", wpBuyDesc: "Dùng faucet Arc để nhận token testnet miễn phí",
       wpTransfer: "Nạp vào agent", wpTransferDesc: "Gửi USDC vào quỹ DCA",
       wpExplore: "Xem trên ArcScan", wpExploreDesc: "Xem lịch sử giao dịch trên explorer",
-      wpDisconnect: "Ngắt kết nối",
+      wpDisconnect: "Ngắt kết nối", wpYourBal: "Số dư của bạn", wpAgentTreasury: "Quỹ agent",
+      perfDrawdown: "Sụt giảm tối đa", perfVsLump: "DCA vs Mua 1 lần", perfAvgPrice: "Giá mua TB", perfTotalBtc: "Tổng cirBTC",
+      perfDcaVsLump: "DCA vs Mua 1 lần",
     }
   };
   var currentLang = localStorage.getItem("aura-lang") || "en";
@@ -2783,6 +2972,7 @@
       if (Array.isArray(results[0]) && results[0].length) $("historyExportBar").style.display = "";
       if (Array.isArray(results[1]) && results[1].length) $("reflExportBar").style.display = "";
       saveCache(results[0], results[1]);
+      checkAndNotify(results[0]);
     })
     .catch(function (err) {
       $("chartSub").textContent = "";
