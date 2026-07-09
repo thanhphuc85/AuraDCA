@@ -29,5 +29,17 @@
     "reasoning": "No campaign budget or end date is configured, so smoothing defaults to the daily cap; wallet balance (~29.84 USDC) is well above reserve, no spend has occurred today, and compute_allocation confirms 1.00 USDC passes cleanly at the daily max without clamping.",
     "walletUsdcBalance": "29.8434085891759712",
     "message": "Swap failed: Swap Kit execution failed (Stablecoin Service createSwap failed: Route or resource not found. Details: No route available)"
+  },
+  {
+    "date": "2026-07-09",
+    "timestamp": "2026-07-09T16:18:23.824Z",
+    "status": "error_swap_failed",
+    "requestedAmountUsdc": "1.00",
+    "clampedAmountUsdc": "1.000000",
+    "boundBy": "llm_recommendation",
+    "tokenOut": "cirBTC",
+    "reasoning": "No price/dip data is available yet (dipSignal: none), so I default to the base DCA amount of 1.00 USDC. Wallet balance (~39.84 USDC) is well above the minimum reserve, no spend has occurred today, and there's no campaign budget/duration requiring smoothing. compute_allocation confirms 1.00 USDC clears all guardrails cleanly at the daily max.",
+    "walletUsdcBalance": "39.8434085891759712",
+    "message": "Swap failed: Swap Kit execution failed (Stablecoin Service createSwap failed: Route or resource not found. Details: No route available)"
   }
 ]

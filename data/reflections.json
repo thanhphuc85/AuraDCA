@@ -1,1 +1,27 @@
-[]
+[
+  {
+    "id": "ref-1783613929830",
+    "date": "2026-07-09",
+    "timestamp": "2026-07-09T16:18:49.830Z",
+    "runStatus": "error_swap_failed",
+    "insight": "Two consecutive days (07-08, 07-09) failed with the identical \"No route available\" swap error for cirBTC, indicating a persistent routing/liquidity problem for this token pair rather than a transient glitch — the allocation logic itself is fine and not the bottleneck.",
+    "patterns": [
+      "Repeated error_swap_failed on 2 of last 2 attempted swaps, both with 'No route available' for cirBTC",
+      "Allocation sizing (1.00 USDC, daily cap) is consistently correct and passes guardrails cleanly - not a clamping issue",
+      "Wallet balance keeps growing unspent (19.84 -> 29.84 -> 39.84) because swaps keep failing, so USDC is piling up idle",
+      "One earlier error_config on 07-07 suggests possible intermittent config/integration instability with the swap execution layer"
+    ],
+    "strategyAdjustment": "Stop retrying the same swap route blindly each day. Before next run, check if cirBTC route/liquidity is available at all (via a route-check or quote call) before committing to a swap attempt; if no route exists, either switch tokenOut to a supported/liquid alternative, reduce trade size to test if smaller amounts route successfully, or flag for manual intervention instead of repeating the same failing action. Also consider accumulating a larger single swap once route is restored, since idle USDC balance is growing unused.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "1.000000",
+    "dayNumber": 4,
+    "walletBalance": "39.8434085891759712",
+    "tags": [
+      "error-recovery",
+      "swap-routing",
+      "liquidity",
+      "pacing",
+      "cirBTC"
+    ]
+  }
+]
