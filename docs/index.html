@@ -236,8 +236,12 @@
   .daily-chart { width: 100%; height: 180px; display: block; cursor: crosshair; }
 
   /* table */
-  .tbl-wrap { overflow-x: auto; }
+  .tbl-wrap { overflow-x: auto; max-height: 520px; overflow-y: auto; border-radius: 14px; }
+  .tbl-wrap::-webkit-scrollbar { width: 6px; height: 6px; }
+  .tbl-wrap::-webkit-scrollbar-thumb { background: rgba(255,255,255,.12); border-radius: 3px; }
   table { width: 100%; border-collapse: collapse; font-size: 13.5px; min-width: 640px; }
+  thead { position: sticky; top: 0; z-index: 2; }
+  thead th { background: var(--bg); }
   th, td { text-align: left; padding: 12px 10px; border-bottom: 1px solid rgba(255,255,255,.06); vertical-align: top; }
   th { color: var(--muted); font-weight: 600; font-size: 11.5px; text-transform: uppercase; letter-spacing: .6px; }
   tbody tr { transition: background .15s; }
@@ -247,8 +251,17 @@
   .b-dry { background: rgba(47,134,230,.14); color: #8fc0ff; border-color: rgba(47,134,230,.3); }
   .b-skip { background: rgba(245,165,36,.13); color: #fbcf6b; border-color: rgba(245,165,36,.3); }
   .b-error { background: rgba(251,113,133,.14); color: #fda4af; border-color: rgba(251,113,133,.3); }
+  [data-theme="light"] .b-success { background: rgba(16,185,129,.1); color: #047857; border-color: rgba(16,185,129,.3); }
+  [data-theme="light"] .b-dry { background: rgba(37,99,235,.1); color: #1d4ed8; border-color: rgba(37,99,235,.3); }
+  [data-theme="light"] .b-skip { background: rgba(217,119,6,.1); color: #b45309; border-color: rgba(217,119,6,.3); }
+  [data-theme="light"] .b-error { background: rgba(239,68,68,.1); color: #dc2626; border-color: rgba(239,68,68,.3); }
+  [data-theme="light"] thead th { background: #fff; }
   .reason { color: var(--muted); max-width: 360px; }
   .amt2 { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; }
+  .row-success { border-left: 3px solid var(--green); }
+  .row-dry { border-left: 3px solid var(--blue); }
+  .row-skip { border-left: 3px solid var(--amber); }
+  .row-error { border-left: 3px solid var(--red); }
 
   /* performance dashboard */
   .perf-grid { display: grid; gap: 14px; grid-template-columns: repeat(2,1fr); }
@@ -421,53 +434,73 @@
   /* ---------- mobile responsive ---------- */
   @media (max-width: 760px) {
     .grid[style*="grid-template-columns: 1fr 1fr"] { grid-template-columns: 1fr !important; }
+    .grid[style*="grid-template-columns:1fr 1fr"] { grid-template-columns: 1fr !important; }
+    .perf-grid { grid-template-columns: repeat(2,1fr); }
+    .cols-3 { grid-template-columns: 1fr !important; }
   }
-  @media (max-width: 480px) {
-    .hd { padding: 10px 0; gap: 10px; }
+  @media (max-width: 600px) {
+    .hd { padding: 10px 0; gap: 8px; }
     .brand img { width: 32px; height: 32px; }
     .brand b { font-size: 15px; }
-    .brand span { font-size: 10px; }
+    .brand span { display: none; }
+    .hd-right { gap: 6px; }
+    .hd-right .btn { font-size: 12px; padding: 8px 14px; }
+    .hd-wallet-badge { font-size: 12px; padding: 6px 12px; }
+    .hd-wallet-drop { width: 280px; right: -8px; }
     .hero { padding: 40px 0 20px; }
-    .hero h1 { font-size: 28px; letter-spacing: -.8px; }
+    .hero h1 { font-size: 26px; letter-spacing: -.8px; line-height: 1.2; }
     .hero p { font-size: 14px; }
-    .cta { gap: 8px; }
+    .cta { gap: 8px; flex-wrap: wrap; }
     .cta .btn { font-size: 13px; padding: 10px 16px; }
-    .band { gap: 10px; margin-top: 22px; }
-    .band .g { min-width: 90px; flex: 1; padding: 10px 12px; }
-    .band .g .n { font-size: 18px; }
-    .band .g .l { font-size: 11px; }
-    section { margin: 30px 0; }
-    .h2 { font-size: 22px; }
-    .sub { font-size: 14px; margin-bottom: 14px; }
-    .card { padding: 16px; border-radius: 16px; }
-    .g { padding: 10px 14px; border-radius: 14px; }
-    .tile .n { font-size: 22px; }
-    .perf-tile .n { font-size: 20px; }
-    .perf-grid { gap: 10px; }
+    .band { gap: 8px; margin-top: 22px; flex-wrap: nowrap; }
+    .band .g { min-width: 0; flex: 1; padding: 10px 8px; }
+    .band .g .n { font-size: 16px; word-break: break-all; }
+    .band .g .l { font-size: 10px; }
+    section { margin: 28px 0; }
+    .h2 { font-size: 20px; }
+    .sub { font-size: 13px; margin-bottom: 12px; }
+    .card { padding: 14px; border-radius: 14px; }
+    .tile .n { font-size: 20px; }
+    .perf-tile .n { font-size: 18px; }
+    .perf-grid { gap: 8px; }
     table { font-size: 12px; }
     th, td { padding: 10px 8px; }
-    .tbl-wrap { position: relative; }
+    .tbl-wrap { max-height: 400px; position: relative; }
     .tbl-wrap::after { content: "← swipe →"; position: absolute; bottom: 8px; right: 8px; font-size: 10px; color: var(--muted); opacity: .7; pointer-events: none; }
     .deposit-stats { gap: 8px; }
     .deposit-stat .ds-val { font-size: 17px; }
-    .deposit-form input { min-width: 120px; padding: 10px 12px; font-size: 14px; }
-    .step { padding: 16px 14px; }
-    .step .num { width: 32px; height: 32px; font-size: 13px; border-radius: 10px; margin-bottom: 10px; }
-    .step b { font-size: 14px; }
-    .step span { font-size: 12.5px; }
+    .deposit-form input { min-width: 100px; padding: 10px 12px; font-size: 14px; }
+    .step { padding: 14px 12px; }
+    .step .num { width: 30px; height: 30px; font-size: 12px; border-radius: 10px; margin-bottom: 8px; }
+    .step b { font-size: 13px; }
+    .step span { font-size: 12px; }
     .note { font-size: 12px; padding: 12px 14px; }
-    footer { font-size: 12px; padding: 24px 0 40px; flex-direction: column; text-align: center; }
+    footer { font-size: 12px; padding: 24px 0 40px; flex-direction: column; text-align: center; gap: 8px; }
+    .wp-header { flex-direction: column; gap: 12px; }
+    .wp-balances { grid-template-columns: 1fr; }
     .wp-bal-amt { font-size: 18px; }
+    .wp-portfolio-head { flex-direction: column; gap: 8px; }
     .wp-portfolio-head .wp-total { font-size: 16px; }
+    .wp-portfolio-head > div:last-child { text-align: left !important; }
+    .wp-actions { width: 100%; justify-content: flex-start; }
+    .wp-txlist .wp-tx { font-size: 12px; }
     .memory-latest .insight { font-size: 15px; }
-    .deposit-qr svg { width: 130px; height: 130px; }
-    .agent-addr-full { font-size: 11.5px; }
+    .deposit-qr svg { width: 120px; height: 120px; }
+    .deposit-qr { padding: 14px; }
+    .agent-addr-full { font-size: 11px; word-break: break-all; }
+    .connect-options { max-width: 100%; }
+    .connect-opt { padding: 12px 14px; }
+    .settings-drawer { padding: 14px; }
+    .strat-tiles { grid-template-columns: 1fr 1fr; }
+    .dip-thresholds { grid-template-columns: 1fr; }
   }
   @media (max-width: 380px) {
-    .wrap { padding: 0 14px; }
-    .wp-balances { grid-template-columns: 1fr; }
+    .wrap { padding: 0 12px; }
+    .band .g .n { font-size: 14px; }
     .deposit-stats { grid-template-columns: 1fr; }
-    .hero h1 { font-size: 24px; }
+    .hero h1 { font-size: 22px; }
+    .strat-tiles { grid-template-columns: 1fr; }
+    .perf-grid { grid-template-columns: 1fr; }
   }
 
   /* ---------- theme toggle ---------- */
@@ -826,8 +859,10 @@
     </div>
 
     <div class="card tbl-wrap" style="margin-top:16px;">
-      <h3>Recent runs</h3>
-      <p class="cs">What Claude proposed, what the guardrails allowed, and why.</p>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+        <div><h3 style="margin:0;">Recent runs</h3><p class="cs" style="margin:4px 0 0;" id="runsCount">What Claude proposed, what the guardrails allowed, and why.</p></div>
+        <button class="btn-sm" id="showAllRuns" style="display:none;">Show all</button>
+      </div>
       <table id="runsTable"><thead>
         <tr><th>Date</th><th>Status</th><th>Requested</th><th>Executed</th><th>Bound by</th><th>Claude's reasoning</th><th>Tx</th></tr>
       </thead><tbody id="runsBody">
@@ -1097,7 +1132,7 @@
     cirbtc: "0xf0c4a4ce82a5746abaad9425360ab04fbba432bf", // cirBTC, 8 decimals
     agent: "0x00Ebbd3aFCCaD08970ED8FdaE591244c8475a0aC",  // the agent's Circle wallet (DCA treasury)
   };
-  var state = { account: null };
+  var state = { account: null, loginType: null, showAllRuns: false };
   // jsDelivr CDN first (robust CORS, no rate-limit 429s; cached up to ~12h),
   // raw.githubusercontent as a fresher fallback.
   var HISTORY_SOURCES = [
@@ -2094,12 +2129,30 @@
     $("chartSub").textContent = completed.length + " completed run(s) · " + fmt(total, 4) + " USDC total";
     renderChart(points);
 
-    var rows = history.slice().reverse().slice(0, userSettings.tableRows || 12).map(function (e) {
+    function rowClass(s) {
+      if (s === "success") return "row-success";
+      if (s === "dry_run") return "row-dry";
+      if (s && s.indexOf("skip") === 0) return "row-skip";
+      return "row-error";
+    }
+    var limit = state.showAllRuns ? history.length : (userSettings.tableRows || 12);
+    var reversed = history.slice().reverse();
+    var successCount = history.filter(function(e){ return e.status === "success"; }).length;
+    var dryCount = history.filter(function(e){ return e.status === "dry_run"; }).length;
+    var errCount = history.filter(function(e){ return e.status && e.status.indexOf("error") >= 0; }).length;
+    var skipCount = history.length - successCount - dryCount - errCount;
+    $("runsCount").innerHTML = history.length + ' runs · <span style="color:#6ee7b7">' + successCount + ' success</span> · <span style="color:#8fc0ff">' + dryCount + ' dry</span>' + (errCount ? ' · <span style="color:#fda4af">' + errCount + ' error</span>' : '') + (skipCount > 0 ? ' · <span style="color:#fbcf6b">' + skipCount + ' skipped</span>' : '');
+    var showAllBtn = $("showAllRuns");
+    if (history.length > (userSettings.tableRows || 12)) {
+      showAllBtn.style.display = "";
+      showAllBtn.textContent = state.showAllRuns ? "Show less" : "Show all (" + history.length + ")";
+    } else { showAllBtn.style.display = "none"; }
+    var rows = reversed.slice(0, limit).map(function (e) {
       var tx = e.txHash
         ? '<a href="' + (e.explorerUrl || (ARC.explorer + "/tx/" + e.txHash)) + '" target="_blank" rel="noopener">' + e.txHash.slice(0, 8) + "…</a>"
         : "—";
       var reason = e.reasoning ? e.reasoning : (e.message || "");
-      return "<tr>" +
+      return '<tr class="' + rowClass(e.status) + '">' +
         "<td>" + (e.date || "") + "</td>" +
         '<td><span class="badge ' + statusClass(e.status) + '">' + statusLabel(e.status) + "</span></td>" +
         '<td class="amt2">' + (e.requestedAmountUsdc != null ? e.requestedAmountUsdc : "—") + "</td>" +
@@ -2115,6 +2168,10 @@
     renderStrategy(history);
     renderPerformance(history);
   }
+  $("showAllRuns").addEventListener("click", function () {
+    state.showAllRuns = !state.showAllRuns;
+    render(_historyData);
+  });
 
   // ---------- token watchlist ----------
   function renderWatchlist() {
