@@ -257,6 +257,52 @@
   .conf-medium { background: rgba(245,165,36,.13); color: #fbcf6b; }
   .conf-low { background: rgba(151,164,191,.14); color: var(--muted); }
 
+  /* settings panel */
+  .settings-toggle { background: none; border: none; cursor: pointer; font-size: 20px; padding: 4px 8px; border-radius: 10px; transition: background .15s; color: var(--text); }
+  .settings-toggle:hover { background: rgba(255,255,255,.1); }
+  [data-theme="light"] .settings-toggle:hover { background: rgba(0,0,0,.06); }
+  .settings-drawer { display: none; background: var(--glass); border: 1px solid var(--glass-brd); border-radius: var(--radius); padding: 22px; backdrop-filter: blur(14px); margin-bottom: 16px; }
+  .settings-drawer.open { display: block; animation: fadeSlide .25s ease; }
+  @keyframes fadeSlide { from { opacity: 0; transform: translateY(-8px); } to { opacity: 1; transform: none; } }
+  .settings-grid { display: grid; gap: 16px; grid-template-columns: 1fr 1fr; }
+  @media (max-width: 480px) { .settings-grid { grid-template-columns: 1fr; } }
+  .setting-group label { display: block; font-size: 12px; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: .5px; margin-bottom: 6px; }
+  .setting-group select, .setting-group input[type="number"] { width: 100%; background: rgba(0,0,0,.28); border: 1px solid var(--glass-brd); border-radius: 10px; color: var(--text); padding: 10px 12px; font-size: 14px; font-family: inherit; }
+  [data-theme="light"] .setting-group select, [data-theme="light"] .setting-group input[type="number"] { background: rgba(0,0,0,.04); }
+  .setting-group select { appearance: none; -webkit-appearance: none; cursor: pointer; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%2397a4bf'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 12px center; padding-right: 32px; }
+  .settings-saved { font-size: 12px; color: var(--green); margin-top: 8px; opacity: 0; transition: opacity .3s; }
+  .settings-saved.show { opacity: 1; }
+
+  /* token watchlist */
+  .watchlist { margin-top: 16px; }
+  .watchlist-items { display: flex; flex-direction: column; gap: 8px; }
+  .wl-token { display: flex; align-items: center; gap: 12px; background: rgba(255,255,255,.03); border: 1px solid var(--glass-brd); border-radius: 14px; padding: 12px 14px; transition: background .15s; }
+  .wl-token:hover { background: rgba(255,255,255,.06); }
+  [data-theme="light"] .wl-token { background: rgba(0,0,0,.02); }
+  [data-theme="light"] .wl-token:hover { background: rgba(0,0,0,.04); }
+  .wl-icon { width: 34px; height: 34px; border-radius: 50%; display: grid; place-items: center; font-size: 14px; font-weight: 800; color: #fff; background: linear-gradient(135deg, var(--violet), var(--cyan)); flex-shrink: 0; }
+  .wl-info { flex: 1; min-width: 0; }
+  .wl-info .wl-sym { font-family: Sora; font-weight: 700; font-size: 14px; }
+  .wl-info .wl-addr { font-size: 11px; color: var(--muted); font-family: ui-monospace, SFMono-Regular, Menlo, monospace; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .wl-bal { text-align: right; }
+  .wl-bal .wl-amt { font-family: Sora; font-weight: 700; font-size: 16px; }
+  .wl-bal .wl-label { font-size: 11px; color: var(--muted); }
+  .wl-remove { background: none; border: none; cursor: pointer; color: var(--muted); font-size: 16px; padding: 4px; border-radius: 8px; transition: color .15s, background .15s; flex-shrink: 0; }
+  .wl-remove:hover { color: var(--red); background: rgba(251,113,133,.1); }
+  .wl-add { display: flex; gap: 8px; margin-top: 12px; flex-wrap: wrap; }
+  .wl-add input { flex: 1; min-width: 200px; background: rgba(0,0,0,.28); border: 1px solid var(--glass-brd); border-radius: 10px; color: var(--text); padding: 10px 12px; font-size: 13px; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; }
+  [data-theme="light"] .wl-add input { background: rgba(0,0,0,.04); }
+  .wl-add input::placeholder { color: var(--muted); font-family: Inter, sans-serif; }
+  .wl-add .wl-sym-input { min-width: 80px; flex: 0 0 100px; font-family: Inter, sans-serif; }
+  .wl-add .wl-dec-input { min-width: 60px; flex: 0 0 80px; font-family: Inter, sans-serif; }
+  .wl-empty { color: var(--muted); font-size: 13px; padding: 16px 0; text-align: center; }
+  .reconnect-bar { display: flex; align-items: center; gap: 12px; background: rgba(138,92,246,.08); border: 1px solid rgba(138,92,246,.2); border-radius: 14px; padding: 12px 16px; margin-bottom: 16px; animation: fadeSlide .3s ease; }
+  .reconnect-bar .rb-text { flex: 1; font-size: 13px; color: var(--text); }
+  .reconnect-bar .rb-addr { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; color: var(--violet); }
+  .reconnect-bar .rb-dismiss { background: none; border: none; cursor: pointer; color: var(--muted); font-size: 18px; padding: 2px 6px; }
+  .cache-indicator { font-size: 11px; color: var(--muted); display: inline-flex; align-items: center; gap: 4px; }
+  .cache-indicator .ci-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--green); }
+
   /* export/import */
   .export-bar { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 16px; }
   .export-bar .export-label { font-size: 12px; color: var(--muted); font-weight: 600; text-transform: uppercase; letter-spacing: .5px; }
@@ -409,6 +455,9 @@
   [data-theme="light"] .btn-disconnect:hover { background: rgba(251,113,133,.15); }
   [data-theme="light"] .memory-latest .strategy { color: #0e7490; }
   [data-theme="light"] .grad { background-image: linear-gradient(100deg, #2563eb, #7c3aed 45%, #0e7490); }
+  [data-theme="light"] .reconnect-bar { background: rgba(138,92,246,.06); border-color: rgba(138,92,246,.15); }
+  [data-theme="light"] .wl-token { background: rgba(0,0,0,.02); border-color: rgba(0,0,0,.08); }
+  [data-theme="light"] .wl-token:hover { background: rgba(0,0,0,.04); }
 </style>
 </head>
 <body>
@@ -424,6 +473,7 @@
       <div><b>Aura DCA Agent</b><span>Autonomous daily DCA · Arc Testnet</span></div>
     </div>
     <div class="hd-right">
+      <button class="settings-toggle" id="settingsToggle" title="Settings">⚙️</button>
       <button class="theme-toggle" id="themeToggle" title="Toggle light/dark mode">🌙</button>
       <button class="btn" id="connectBtn">Connect Wallet</button>
     </div>
@@ -431,6 +481,44 @@
 </header>
 
 <div class="wrap">
+
+  <div class="settings-drawer" id="settingsDrawer">
+    <h3 style="margin:0 0 14px;">Dashboard Settings</h3>
+    <div class="settings-grid">
+      <div class="setting-group">
+        <label for="setRefresh">Auto-refresh data</label>
+        <select id="setRefresh">
+          <option value="0">Off</option>
+          <option value="30">Every 30 seconds</option>
+          <option value="60">Every minute</option>
+          <option value="300">Every 5 minutes</option>
+        </select>
+      </div>
+      <div class="setting-group">
+        <label for="setDeposit">Default deposit amount (USDC)</label>
+        <input type="number" id="setDeposit" min="0" step="0.01" placeholder="e.g. 5" />
+      </div>
+      <div class="setting-group">
+        <label for="setRows">History rows to display</label>
+        <select id="setRows">
+          <option value="5">5 rows</option>
+          <option value="10">10 rows</option>
+          <option value="20">20 rows</option>
+          <option value="50">50 rows</option>
+        </select>
+      </div>
+      <div class="setting-group">
+        <label for="setCacheToggle">Cache data locally</label>
+        <select id="setCacheToggle">
+          <option value="1">Enabled — faster page loads</option>
+          <option value="0">Disabled — always fetch fresh</option>
+        </select>
+      </div>
+    </div>
+    <div class="settings-saved" id="settingsSaved">Settings saved</div>
+  </div>
+
+  <div id="reconnectBar"></div>
 
   <div class="hero">
     <span class="chip"><span class="dot"></span> Encode × Circle · Programmable Money Hackathon</span>
@@ -462,6 +550,24 @@
       <div id="walletProfile" style="display:none;"></div>
     </div>
     <div class="status-note" id="walletStatus"></div>
+  </section>
+
+  <section class="reveal">
+    <div class="eyebrow">Token watchlist</div>
+    <div class="h2">Track custom tokens</div>
+    <p class="sub">Add any ERC-20 token on Arc Testnet to your personal watchlist. Balances update when your wallet is connected. Saved automatically in your browser.</p>
+    <div class="card">
+      <div class="watchlist-items" id="watchlistItems">
+        <div class="wl-empty" id="wlEmpty">No custom tokens added yet. Use the form below to track any ERC-20 token.</div>
+      </div>
+      <div class="wl-add">
+        <input type="text" id="wlAddrInput" placeholder="Token contract address (0x...)" maxlength="42" />
+        <input type="text" id="wlSymInput" class="wl-sym-input" placeholder="Symbol" maxlength="10" />
+        <input type="number" id="wlDecInput" class="wl-dec-input" placeholder="Decimals" min="0" max="18" value="18" />
+        <button class="btn" id="wlAddBtn" style="padding:10px 18px;font-size:13px;">Add token</button>
+      </div>
+      <div class="status-note" id="wlStatus"></div>
+    </div>
   </section>
 
   <section class="reveal">
@@ -692,6 +798,76 @@
     }
   });
 
+  // ---------- localStorage persistence ----------
+  var STORE_KEYS = { settings: "aura-settings", watchlist: "aura-watchlist", cache: "aura-cache", wallet: "aura-wallet" };
+  function loadStore(key, fallback) { try { var v = localStorage.getItem(key); return v ? JSON.parse(v) : fallback; } catch (e) { return fallback; } }
+  function saveStore(key, val) { try { localStorage.setItem(key, JSON.stringify(val)); } catch (e) {} }
+
+  var userSettings = loadStore(STORE_KEYS.settings, { autoRefresh: 0, defaultDeposit: "", tableRows: 12, cacheEnabled: true });
+  var watchlist = loadStore(STORE_KEYS.watchlist, []);
+  var dataCache = loadStore(STORE_KEYS.cache, { history: null, reflections: null, ts: 0 });
+  var savedWallet = loadStore(STORE_KEYS.wallet, null);
+
+  function saveSettings() { saveStore(STORE_KEYS.settings, userSettings); flashSaved(); }
+  function saveWatchlist() { saveStore(STORE_KEYS.watchlist, watchlist); }
+  function saveCache(hist, refl) {
+    if (!userSettings.cacheEnabled) return;
+    saveStore(STORE_KEYS.cache, { history: hist, reflections: refl, ts: Date.now() });
+  }
+  function clearCache() { localStorage.removeItem(STORE_KEYS.cache); dataCache = { history: null, reflections: null, ts: 0 }; }
+  function saveWalletAddr(addr) { saveStore(STORE_KEYS.wallet, addr ? { address: addr, ts: Date.now() } : null); savedWallet = addr ? { address: addr, ts: Date.now() } : null; }
+
+  function flashSaved() {
+    var el = document.getElementById("settingsSaved");
+    if (!el) return;
+    el.classList.add("show");
+    setTimeout(function () { el.classList.remove("show"); }, 1800);
+  }
+
+  // settings panel toggle
+  document.getElementById("settingsToggle").addEventListener("click", function () {
+    var drawer = document.getElementById("settingsDrawer");
+    drawer.classList.toggle("open");
+  });
+
+  // populate settings UI from stored values
+  (function initSettings() {
+    var sr = document.getElementById("setRefresh");
+    var sd = document.getElementById("setDeposit");
+    var sro = document.getElementById("setRows");
+    var sc = document.getElementById("setCacheToggle");
+    if (sr) sr.value = String(userSettings.autoRefresh || 0);
+    if (sd && userSettings.defaultDeposit) sd.value = userSettings.defaultDeposit;
+    if (sro) sro.value = String(userSettings.tableRows || 12);
+    if (sc) sc.value = userSettings.cacheEnabled === false ? "0" : "1";
+
+    function onChange() {
+      userSettings.autoRefresh = parseInt(sr.value, 10) || 0;
+      userSettings.defaultDeposit = sd.value;
+      userSettings.tableRows = parseInt(sro.value, 10) || 12;
+      userSettings.cacheEnabled = sc.value !== "0";
+      if (!userSettings.cacheEnabled) clearCache();
+      saveSettings();
+      setupAutoRefresh();
+    }
+    [sr, sd, sro, sc].forEach(function (el) { if (el) el.addEventListener("change", onChange); });
+
+    if (sd && userSettings.defaultDeposit) {
+      var depInput = document.getElementById("depositAmt");
+      if (depInput && !depInput.value) depInput.value = userSettings.defaultDeposit;
+    }
+  })();
+
+  // auto-refresh timer
+  var _refreshTimer = null;
+  function setupAutoRefresh() {
+    if (_refreshTimer) { clearInterval(_refreshTimer); _refreshTimer = null; }
+    if (userSettings.autoRefresh > 0) {
+      _refreshTimer = setInterval(function () { refreshDashboardData(); }, userSettings.autoRefresh * 1000);
+    }
+  }
+  setupAutoRefresh();
+
   var ARC = {
     chainIdHex: "0x4cef52",           // 5042002
     chainName: "Arc Testnet",
@@ -781,6 +957,8 @@
       var accounts = await window.ethereum.request({ method: "eth_requestAccounts" });
       var account = accounts[0];
       state.account = account;
+      saveWalletAddr(account);
+      $("reconnectBar").innerHTML = "";
       status.innerHTML = '<span style="display:inline-flex;align-items:center;gap:8px;"><span class="spinner" style="width:16px;height:16px;border-width:2px;"></span> Switching to Arc Testnet…</span>';
       try {
         await window.ethereum.request({ method: "wallet_switchEthereumChain", params: [{ chainId: ARC.chainIdHex }] });
@@ -878,6 +1056,7 @@
       });
       $("wpDisconnect").addEventListener("click", function () {
         state.account = null;
+        saveWalletAddr(null);
         prof.style.display = "none";
         $("walletConnect").style.display = "";
         status.textContent = "";
@@ -885,6 +1064,7 @@
 
       status.textContent = "";
       refreshTreasury();
+      refreshWatchlistBalances();
     } catch (err) {
       status.textContent = "Connection cancelled or failed: " + (err && err.message ? err.message : err);
     }
@@ -1465,7 +1645,7 @@
     $("chartSub").textContent = completed.length + " completed run(s) · " + fmt(total, 4) + " USDC total";
     renderChart(points);
 
-    var rows = history.slice().reverse().slice(0, 12).map(function (e) {
+    var rows = history.slice().reverse().slice(0, userSettings.tableRows || 12).map(function (e) {
       var tx = e.txHash
         ? '<a href="' + (e.explorerUrl || (ARC.explorer + "/tx/" + e.txHash)) + '" target="_blank" rel="noopener">' + e.txHash.slice(0, 8) + "…</a>"
         : "—";
@@ -1486,6 +1666,117 @@
     renderPerformance(history);
   }
 
+  // ---------- token watchlist ----------
+  function renderWatchlist() {
+    var container = $("watchlistItems");
+    if (!watchlist.length) {
+      container.innerHTML = '<div class="wl-empty">No custom tokens added yet. Use the form below to track any ERC-20 token.</div>';
+      return;
+    }
+    var html = watchlist.map(function (tok, i) {
+      return '<div class="wl-token" data-idx="' + i + '">' +
+        '<div class="wl-icon">' + (tok.symbol || "?").charAt(0).toUpperCase() + '</div>' +
+        '<div class="wl-info"><div class="wl-sym">' + (tok.symbol || "Unknown") + '</div>' +
+        '<div class="wl-addr">' + tok.address + '</div></div>' +
+        '<div class="wl-bal"><div class="wl-amt" id="wlBal' + i + '">—</div>' +
+        '<div class="wl-label">' + (tok.decimals != null ? tok.decimals + ' decimals' : '') + '</div></div>' +
+        '<button class="wl-remove" data-rm="' + i + '" title="Remove token">✕</button></div>';
+    }).join("");
+    container.innerHTML = html;
+    container.querySelectorAll(".wl-remove").forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        var idx = parseInt(this.getAttribute("data-rm"), 10);
+        watchlist.splice(idx, 1);
+        saveWatchlist();
+        renderWatchlist();
+      });
+    });
+    if (state.account) refreshWatchlistBalances();
+  }
+
+  function refreshWatchlistBalances() {
+    if (!state.account || !watchlist.length) return;
+    watchlist.forEach(function (tok, i) {
+      var el = $("wlBal" + i);
+      if (!el) return;
+      var data = "0x70a08231" + state.account.slice(2).toLowerCase().padStart(64, "0");
+      (window.ethereum ? window.ethereum.request({ method: "eth_call", params: [{ to: tok.address, data: data }, "latest"] }) : Promise.reject())
+        .then(function (raw) {
+          var dec = parseInt(tok.decimals, 10) || 18;
+          var val = Number(BigInt(raw || "0x0")) / Math.pow(10, dec);
+          el.textContent = fmt(val, Math.min(dec, 6));
+        })
+        .catch(function () { el.textContent = "—"; });
+    });
+  }
+
+  (function initWatchlist() {
+    renderWatchlist();
+    var addBtn = $("wlAddBtn");
+    if (addBtn) addBtn.addEventListener("click", function () {
+      var addrInput = $("wlAddrInput"), symInput = $("wlSymInput"), decInput = $("wlDecInput"), status = $("wlStatus");
+      var addr = (addrInput.value || "").trim();
+      var sym = (symInput.value || "").trim().toUpperCase();
+      var dec = parseInt(decInput.value, 10);
+      if (!addr.match(/^0x[0-9a-fA-F]{40}$/)) { status.textContent = "Invalid address — must be a 0x... 42-character hex address."; return; }
+      if (!sym) { status.textContent = "Enter a token symbol (e.g. USDC, WETH)."; return; }
+      if (isNaN(dec) || dec < 0 || dec > 18) { status.textContent = "Decimals must be 0-18."; return; }
+      var dup = watchlist.some(function (t) { return t.address.toLowerCase() === addr.toLowerCase(); });
+      if (dup) { status.textContent = "This token is already in your watchlist."; return; }
+      watchlist.push({ address: addr, symbol: sym, decimals: dec });
+      saveWatchlist();
+      renderWatchlist();
+      addrInput.value = ""; symInput.value = ""; decInput.value = "18";
+      status.textContent = sym + " added to watchlist.";
+      setTimeout(function () { status.textContent = ""; }, 2000);
+    });
+  })();
+
+  // ---------- wallet memory (reconnect prompt) ----------
+  function showReconnectBar() {
+    if (!savedWallet || !savedWallet.address) return;
+    var bar = $("reconnectBar");
+    if (!bar) return;
+    var ago = Math.round((Date.now() - (savedWallet.ts || 0)) / 60000);
+    var agoText = ago < 60 ? ago + "m ago" : Math.round(ago / 60) + "h ago";
+    bar.innerHTML =
+      '<div class="reconnect-bar">' +
+      '<span class="rb-text">Welcome back! Reconnect <span class="rb-addr">' + savedWallet.address.slice(0, 6) + '…' + savedWallet.address.slice(-4) + '</span>? (last seen ' + agoText + ')</span>' +
+      '<button class="btn" id="rbReconnect" style="padding:8px 16px;font-size:12px;">Reconnect</button>' +
+      '<button class="rb-dismiss" id="rbDismiss" title="Dismiss">✕</button>' +
+      '</div>';
+    $("rbReconnect").addEventListener("click", function () { bar.innerHTML = ""; connect(); });
+    $("rbDismiss").addEventListener("click", function () { bar.innerHTML = ""; saveWalletAddr(null); });
+  }
+  if (savedWallet && savedWallet.address && !state.account) showReconnectBar();
+
+  // ---------- data cache & refresh ----------
+  function refreshDashboardData() {
+    Promise.all([fetchHistory(), fetchReflections()])
+      .then(function (results) {
+        _historyData = results[0];
+        _reflectionData = results[1];
+        render(results[0]);
+        renderReflections(results[1]);
+        if (Array.isArray(results[0]) && results[0].length) $("historyExportBar").style.display = "";
+        if (Array.isArray(results[1]) && results[1].length) $("reflExportBar").style.display = "";
+        saveCache(results[0], results[1]);
+      })
+      .catch(function () {});
+  }
+
+  // initial load: show cached data instantly, then fetch fresh
+  (function loadCachedData() {
+    if (userSettings.cacheEnabled && dataCache.history && dataCache.ts) {
+      _historyData = dataCache.history;
+      _reflectionData = dataCache.reflections;
+      render(dataCache.history);
+      if (dataCache.reflections) renderReflections(dataCache.reflections);
+      if (Array.isArray(dataCache.history) && dataCache.history.length) $("historyExportBar").style.display = "";
+      if (Array.isArray(dataCache.reflections) && dataCache.reflections.length) $("reflExportBar").style.display = "";
+    }
+  })();
+
   Promise.all([fetchHistory(), fetchReflections()])
     .then(function (results) {
       _historyData = results[0];
@@ -1494,6 +1785,7 @@
       renderReflections(results[1]);
       if (Array.isArray(results[0]) && results[0].length) $("historyExportBar").style.display = "";
       if (Array.isArray(results[1]) && results[1].length) $("reflExportBar").style.display = "";
+      saveCache(results[0], results[1]);
     })
     .catch(function (err) {
       $("chartSub").textContent = "";
