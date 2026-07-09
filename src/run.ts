@@ -89,6 +89,7 @@ export async function runDailyDca(config: AppConfig): Promise<RunOutcome> {
     dayCount: dayCount(history),
     walletUsdcBalance: usdcBalance,
     guardrails: config.guardrails,
+    dcaStrategy: config.dcaStrategy,
     remainingCampaignBudgetUsdc: remainingCampaignBudget(history, config.guardrails.campaignTotalBudgetUsdc),
     alreadySpentTodayUsdc: alreadySpentToday(history, date),
     recentHistory: recentHistory(history).map((e) => ({
@@ -107,6 +108,7 @@ export async function runDailyDca(config: AppConfig): Promise<RunOutcome> {
       walletUsdcBalance: usdcBalance,
       alreadySpentTodayUsdc: context.alreadySpentTodayUsdc,
       remainingCampaignBudgetUsdc: context.remainingCampaignBudgetUsdc,
+      dcaStrategy: config.dcaStrategy,
     });
   } catch (err) {
     const status: RunStatus =

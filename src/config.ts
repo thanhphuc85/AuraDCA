@@ -1,6 +1,6 @@
 import "dotenv/config";
 import { z } from "zod";
-import type { GuardrailConfig } from "./types.js";
+import type { GuardrailConfig, DcaStrategy } from "./types.js";
 
 export const ARC_TESTNET_NAME = "Arc_Testnet";
 export const ARC_TESTNET_EXPLORER = "https://testnet.arcscan.app";
@@ -29,6 +29,13 @@ const envSchema = z.object({
   DRY_RUN: z
     .preprocess(emptyToUndefined, z.string().default("true"))
     .transform((v) => v.toLowerCase() === "true"),
+  DCA_BASE_AMOUNT: z.preprocess(emptyToUndefined, decimalString.default("1.00")),
+  DCA_DIP_MILD_THRESHOLD: z.preprocess(emptyToUndefined, z.coerce.number().min(0).max(1).default(0.05)),
+  DCA_DIP_MODERATE_THRESHOLD: z.preprocess(emptyToUndefined, z.coerce.number().min(0).max(1).default(0.10)),
+  DCA_DIP_STRONG_THRESHOLD: z.preprocess(emptyToUndefined, z.coerce.number().min(0).max(1).default(0.20)),
+  DCA_DIP_MILD_MULTIPLIER: z.preprocess(emptyToUndefined, z.coerce.number().min(1).max(10).default(1.2)),
+  DCA_DIP_MODERATE_MULTIPLIER: z.preprocess(emptyToUndefined, z.coerce.number().min(1).max(10).default(1.5)),
+  DCA_DIP_STRONG_MULTIPLIER: z.preprocess(emptyToUndefined, z.coerce.number().min(1).max(10).default(2.0)),
 });
 
 export interface AppConfig {
@@ -41,6 +48,7 @@ export interface AppConfig {
   dryRun: boolean;
   discordWebhookUrl?: string;
   guardrails: GuardrailConfig;
+  dcaStrategy: DcaStrategy;
 }
 
 export class ConfigError extends Error {
@@ -77,6 +85,15 @@ export function loadConfig(): AppConfig {
       minSwapUsdc: env.MIN_SWAP_USDC,
       campaignTotalBudgetUsdc: env.CAMPAIGN_TOTAL_BUDGET_USDC,
       campaignDurationDays: env.CAMPAIGN_DURATION_DAYS,
+    },
+    dcaStrategy: {
+      baseAmountUsdc: env.DCA_BASE_AMOUNT,
+      dipMildThreshold: env.DCA_DIP_MILD_THRESHOLD,
+      dipModerateThreshold: env.DCA_DIP_MODERATE_THRESHOLD,
+      dipStrongThreshold: env.DCA_DIP_STRONG_THRESHOLD,
+      dipMildMultiplier: env.DCA_DIP_MILD_MULTIPLIER,
+      dipModerateMultiplier: env.DCA_DIP_MODERATE_MULTIPLIER,
+      dipStrongMultiplier: env.DCA_DIP_STRONG_MULTIPLIER,
     },
   };
 }

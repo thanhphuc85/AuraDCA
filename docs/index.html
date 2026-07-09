@@ -303,6 +303,31 @@
   .cache-indicator { font-size: 11px; color: var(--muted); display: inline-flex; align-items: center; gap: 4px; }
   .cache-indicator .ci-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--green); }
 
+  /* dca strategy */
+  .strategy-grid { display: grid; gap: 14px; grid-template-columns: repeat(2, 1fr); }
+  @media (min-width: 760px) { .strategy-grid { grid-template-columns: repeat(4, 1fr); } }
+  .strat-tile { background: var(--glass); border: 1px solid var(--glass-brd); border-radius: 16px; padding: 16px 18px; backdrop-filter: blur(8px); position: relative; overflow: hidden; }
+  .strat-tile::after { content: ""; position: absolute; inset: 0; background: radial-gradient(200px 100px at 100% 0, var(--sg, rgba(138,92,246,.12)), transparent 70%); pointer-events: none; }
+  .strat-tile .st-val { font-family: Sora; font-size: 22px; font-weight: 800; letter-spacing: -.5px; display: block; }
+  .strat-tile .st-label { color: var(--muted); font-size: 12px; }
+  .dip-signal { display: inline-flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 700; padding: 6px 14px; border-radius: 999px; }
+  .dip-none { background: rgba(151,164,191,.1); color: var(--muted); border: 1px solid rgba(151,164,191,.2); }
+  .dip-mild { background: rgba(245,165,36,.1); color: #fbcf6b; border: 1px solid rgba(245,165,36,.25); }
+  .dip-moderate { background: rgba(47,134,230,.12); color: #8fc0ff; border: 1px solid rgba(47,134,230,.3); }
+  .dip-strong { background: rgba(52,211,153,.12); color: #6ee7b7; border: 1px solid rgba(52,211,153,.3); }
+  .dip-pulse { width: 8px; height: 8px; border-radius: 50%; }
+  .dip-none .dip-pulse { background: var(--muted); }
+  .dip-mild .dip-pulse { background: var(--amber); animation: pulse 2s infinite; }
+  .dip-moderate .dip-pulse { background: var(--blue); animation: pulse 1.5s infinite; }
+  .dip-strong .dip-pulse { background: var(--green); animation: pulse 1s infinite; }
+  .strat-thresholds { display: grid; gap: 10px; grid-template-columns: repeat(3, 1fr); margin-top: 16px; }
+  .strat-th { background: rgba(255,255,255,.03); border: 1px solid var(--glass-brd); border-radius: 12px; padding: 12px; text-align: center; }
+  .strat-th .th-pct { font-family: Sora; font-size: 18px; font-weight: 800; }
+  .strat-th .th-mult { font-size: 13px; color: var(--cyan); font-weight: 600; }
+  .strat-th .th-label { font-size: 11px; color: var(--muted); margin-top: 2px; }
+  [data-theme="light"] .strat-tile { box-shadow: 0 8px 30px -12px rgba(0,0,0,.1); }
+  [data-theme="light"] .strat-th { background: rgba(0,0,0,.02); }
+
   /* export/import */
   .export-bar { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 16px; }
   .export-bar .export-label { font-size: 12px; color: var(--muted); font-weight: 600; text-transform: uppercase; letter-spacing: .5px; }
@@ -515,6 +540,38 @@
         </select>
       </div>
     </div>
+    </div>
+    <h3 style="margin:18px 0 14px;">DCA Strategy</h3>
+    <div class="settings-grid">
+      <div class="setting-group">
+        <label for="setBaseAmt">Base DCA amount (USDC)</label>
+        <input type="number" id="setBaseAmt" min="0.01" step="0.01" placeholder="1.00" />
+      </div>
+      <div class="setting-group">
+        <label for="setMildPct">Mild dip threshold (%)</label>
+        <input type="number" id="setMildPct" min="1" max="50" step="1" placeholder="5" />
+      </div>
+      <div class="setting-group">
+        <label for="setModPct">Moderate dip threshold (%)</label>
+        <input type="number" id="setModPct" min="1" max="50" step="1" placeholder="10" />
+      </div>
+      <div class="setting-group">
+        <label for="setStrongPct">Strong dip threshold (%)</label>
+        <input type="number" id="setStrongPct" min="1" max="80" step="1" placeholder="20" />
+      </div>
+      <div class="setting-group">
+        <label for="setMildMult">Mild multiplier</label>
+        <input type="number" id="setMildMult" min="1" max="10" step="0.1" placeholder="1.2" />
+      </div>
+      <div class="setting-group">
+        <label for="setModMult">Moderate multiplier</label>
+        <input type="number" id="setModMult" min="1" max="10" step="0.1" placeholder="1.5" />
+      </div>
+      <div class="setting-group">
+        <label for="setStrongMult">Strong multiplier</label>
+        <input type="number" id="setStrongMult" min="1" max="10" step="0.1" placeholder="2.0" />
+      </div>
+    </div>
     <div class="settings-saved" id="settingsSaved">Settings saved</div>
   </div>
 
@@ -601,6 +658,48 @@
         </div>
       </div>
       <p class="note" style="margin-top:16px;">⚠️ <b>Testnet demo.</b> USDC is sent to the agent's shared Circle wallet, which funds the autonomous daily DCA. There is no per-user accounting or withdrawal — deposit only valueless testnet USDC you're happy to contribute to the demo treasury. You confirm every transfer yourself in your wallet.</p>
+    </div>
+  </section>
+
+  <section class="reveal" id="strategySection">
+    <div class="eyebrow">DCA Strategy</div>
+    <div class="h2">Smart dip-buying agent</div>
+    <p class="sub">The agent monitors cirBTC price trends and automatically increases allocation when prices dip — buying more when it's cheaper.</p>
+    <div class="strategy-grid">
+      <div class="strat-tile" style="--sg:rgba(138,92,246,.15);">
+        <span class="st-val" id="stBaseAmt">—</span><span class="st-label">Base DCA amount</span>
+      </div>
+      <div class="strat-tile" style="--sg:rgba(47,134,230,.15);">
+        <span class="st-val" id="stSuggestedAmt">—</span><span class="st-label">Suggested today</span>
+      </div>
+      <div class="strat-tile" style="--sg:rgba(245,165,36,.15);">
+        <span class="st-val" id="stDrawdown">—</span><span class="st-label">Drawdown from high</span>
+      </div>
+      <div class="strat-tile" style="--sg:rgba(52,211,153,.15);">
+        <div id="stDipSignal"><span class="dip-signal dip-none"><span class="dip-pulse"></span> No signal</span></div>
+        <span class="st-label" style="margin-top:6px;display:block;">Dip signal</span>
+      </div>
+    </div>
+    <div class="card" style="margin-top:16px;">
+      <h3>Dip-buying thresholds</h3>
+      <p class="cs">When cirBTC price drops from its high, the agent increases allocation automatically.</p>
+      <div class="strat-thresholds" id="stratThresholds">
+        <div class="strat-th">
+          <div class="th-pct" id="thMildPct">5%</div>
+          <div class="th-mult" id="thMildMult">1.2x</div>
+          <div class="th-label">Mild dip</div>
+        </div>
+        <div class="strat-th">
+          <div class="th-pct" id="thModPct">10%</div>
+          <div class="th-mult" id="thModMult">1.5x</div>
+          <div class="th-label">Moderate dip</div>
+        </div>
+        <div class="strat-th">
+          <div class="th-pct" id="thStrongPct">20%</div>
+          <div class="th-mult" id="thStrongMult">2.0x</div>
+          <div class="th-label">Strong dip</div>
+        </div>
+      </div>
     </div>
   </section>
 
@@ -831,6 +930,12 @@
   });
 
   // populate settings UI from stored values
+  var dcaStrat = loadStore("aura-dca-strategy", {
+    baseAmount: "1.00", mildPct: 5, modPct: 10, strongPct: 20,
+    mildMult: 1.2, modMult: 1.5, strongMult: 2.0
+  });
+  function saveDcaStrategy() { saveStore("aura-dca-strategy", dcaStrat); flashSaved(); }
+
   (function initSettings() {
     var sr = document.getElementById("setRefresh");
     var sd = document.getElementById("setDeposit");
@@ -841,6 +946,21 @@
     if (sro) sro.value = String(userSettings.tableRows || 12);
     if (sc) sc.value = userSettings.cacheEnabled === false ? "0" : "1";
 
+    var sba = document.getElementById("setBaseAmt");
+    var smp = document.getElementById("setMildPct");
+    var smop = document.getElementById("setModPct");
+    var ssp = document.getElementById("setStrongPct");
+    var smm = document.getElementById("setMildMult");
+    var smom = document.getElementById("setModMult");
+    var ssm = document.getElementById("setStrongMult");
+    if (sba) sba.value = dcaStrat.baseAmount;
+    if (smp) smp.value = String(dcaStrat.mildPct);
+    if (smop) smop.value = String(dcaStrat.modPct);
+    if (ssp) ssp.value = String(dcaStrat.strongPct);
+    if (smm) smm.value = String(dcaStrat.mildMult);
+    if (smom) smom.value = String(dcaStrat.modMult);
+    if (ssm) ssm.value = String(dcaStrat.strongMult);
+
     function onChange() {
       userSettings.autoRefresh = parseInt(sr.value, 10) || 0;
       userSettings.defaultDeposit = sd.value;
@@ -850,7 +970,19 @@
       saveSettings();
       setupAutoRefresh();
     }
+    function onStratChange() {
+      dcaStrat.baseAmount = sba.value || "1.00";
+      dcaStrat.mildPct = parseFloat(smp.value) || 5;
+      dcaStrat.modPct = parseFloat(smop.value) || 10;
+      dcaStrat.strongPct = parseFloat(ssp.value) || 20;
+      dcaStrat.mildMult = parseFloat(smm.value) || 1.2;
+      dcaStrat.modMult = parseFloat(smom.value) || 1.5;
+      dcaStrat.strongMult = parseFloat(ssm.value) || 2.0;
+      saveDcaStrategy();
+      if (_historyData) renderStrategy(_historyData);
+    }
     [sr, sd, sro, sc].forEach(function (el) { if (el) el.addEventListener("change", onChange); });
+    [sba, smp, smop, ssp, smm, smom, ssm].forEach(function (el) { if (el) el.addEventListener("change", onStratChange); });
 
     if (sd && userSettings.defaultDeposit) {
       var depInput = document.getElementById("depositAmt");
@@ -1519,6 +1651,53 @@
       }).join("") + '</div>';
   }
 
+  function renderStrategy(history) {
+    var swaps = [];
+    history.forEach(function (e) {
+      if (e.status !== "success" && e.status !== "dry_run") return;
+      var usdcIn = parseFloat(e.clampedAmountUsdc || "0") || 0;
+      var btcOut = parseFloat(e.amountOut || "0") || 0;
+      if (usdcIn > 0 && btcOut > 0) swaps.push({ date: e.date, price: usdcIn / btcOut });
+    });
+
+    var stratSettings = loadStore("aura-dca-strategy", {
+      baseAmount: "1.00", mildPct: 5, modPct: 10, strongPct: 20,
+      mildMult: 1.2, modMult: 1.5, strongMult: 2.0
+    });
+
+    $("stBaseAmt").textContent = stratSettings.baseAmount + " USDC";
+    $("thMildPct").textContent = stratSettings.mildPct + "%";
+    $("thModPct").textContent = stratSettings.modPct + "%";
+    $("thStrongPct").textContent = stratSettings.strongPct + "%";
+    $("thMildMult").textContent = stratSettings.mildMult + "x";
+    $("thModMult").textContent = stratSettings.modMult + "x";
+    $("thStrongMult").textContent = stratSettings.strongMult + "x";
+
+    if (!swaps.length) {
+      $("stSuggestedAmt").textContent = stratSettings.baseAmount + " USDC";
+      $("stDrawdown").textContent = "—";
+      return;
+    }
+
+    var prices = swaps.map(function (s) { return s.price; });
+    var current = prices[prices.length - 1];
+    var highest = Math.max.apply(null, prices);
+    var drawdown = highest > 0 ? ((current - highest) / highest) : 0;
+    var absDrawdown = Math.abs(drawdown);
+
+    var signal = "none", mult = 1.0;
+    if (absDrawdown >= stratSettings.strongPct / 100) { signal = "strong"; mult = stratSettings.strongMult; }
+    else if (absDrawdown >= stratSettings.modPct / 100) { signal = "moderate"; mult = stratSettings.modMult; }
+    else if (absDrawdown >= stratSettings.mildPct / 100) { signal = "mild"; mult = stratSettings.mildMult; }
+
+    var suggested = (parseFloat(stratSettings.baseAmount) * mult).toFixed(2);
+    $("stSuggestedAmt").textContent = suggested + " USDC";
+    $("stDrawdown").textContent = (drawdown * 100).toFixed(1) + "%";
+
+    var signalLabels = { none: "No signal", mild: "Mild dip", moderate: "Moderate dip", strong: "Strong dip — buy more!" };
+    $("stDipSignal").innerHTML = '<span class="dip-signal dip-' + signal + '"><span class="dip-pulse"></span> ' + signalLabels[signal] + (mult > 1 ? " (" + mult + "x)" : "") + '</span>';
+  }
+
   function renderPerformance(history) {
     var swaps = [];
     history.forEach(function (e) {
@@ -1663,6 +1842,7 @@
 
     renderDailyChart(history);
     renderDonut(history);
+    renderStrategy(history);
     renderPerformance(history);
   }
 

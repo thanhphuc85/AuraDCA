@@ -19,6 +19,16 @@ export interface GuardrailConfig {
   campaignDurationDays?: number;
 }
 
+export interface DcaStrategy {
+  baseAmountUsdc: string;
+  dipMildThreshold: number;
+  dipModerateThreshold: number;
+  dipStrongThreshold: number;
+  dipMildMultiplier: number;
+  dipModerateMultiplier: number;
+  dipStrongMultiplier: number;
+}
+
 export interface HistoryEntry {
   date: string; // ISO date, e.g. 2026-07-08
   timestamp: string; // full ISO timestamp of the run
@@ -40,6 +50,7 @@ export interface DecisionContext {
   dayCount: number;
   walletUsdcBalance: string;
   guardrails: GuardrailConfig;
+  dcaStrategy: DcaStrategy;
   remainingCampaignBudgetUsdc?: string;
   alreadySpentTodayUsdc: string;
   recentHistory: Array<{

@@ -1,4 +1,5 @@
-import type { HistoryEntry, Reflection } from "../types.js";
+import type { HistoryEntry, Reflection, DcaStrategy } from "../types.js";
+import { analyzePrices, type DipConfig } from "../price/tracker.js";
 
 const SUCCESS_STATUSES = new Set(["success", "dry_run"]);
 
@@ -44,6 +45,49 @@ export const ANALYSIS_TOOLS = [
     },
   },
 ];
+
+export const CHECK_PRICE_ACTION_TOOL = {
+  name: "check_price_action",
+  description:
+    "Analyze cirBTC price action from swap history to detect dips and recommend DCA amount adjustments. Returns current implied price, drawdown from high, dip signal strength (none/mild/moderate/strong), and a recommended multiplier for the base DCA amount. Call this BEFORE deciding your amount to take advantage of price dips.",
+  input_schema: {
+    type: "object" as const,
+    properties: {},
+    required: [] as string[],
+  },
+};
+
+export function computePriceAction(
+  history: HistoryEntry[],
+  strategy: DcaStrategy,
+): Record<string, unknown> {
+  const dipConfig: DipConfig = {
+    mildThreshold: strategy.dipMildThreshold,
+    moderateThreshold: strategy.dipModerateThreshold,
+    strongThreshold: strategy.dipStrongThreshold,
+    mildMultiplier: strategy.dipMildMultiplier,
+    moderateMultiplier: strategy.dipModerateMultiplier,
+    strongMultiplier: strategy.dipStrongMultiplier,
+  };
+  const analysis = analyzePrices(history, dipConfig);
+  return {
+    baseAmountUsdc: strategy.baseAmountUsdc,
+    suggestedAmountUsdc: (parseFloat(strategy.baseAmountUsdc) * analysis.dipMultiplier).toFixed(6),
+    currentImpliedPrice: analysis.currentPrice !== null ? analysis.currentPrice.toFixed(6) : null,
+    change24h: analysis.change24h !== null ? (analysis.change24h * 100).toFixed(2) + "%" : null,
+    change7d: analysis.change7d !== null ? (analysis.change7d * 100).toFixed(2) + "%" : null,
+    drawdownFromHigh: analysis.drawdownFromHigh !== null ? (analysis.drawdownFromHigh * 100).toFixed(2) + "%" : null,
+    highestPrice: analysis.highestPrice?.toFixed(6) ?? null,
+    lowestPrice: analysis.lowestPrice?.toFixed(6) ?? null,
+    dipSignal: analysis.dipSignal,
+    dipMultiplier: analysis.dipMultiplier,
+    recentPrices: analysis.priceHistory.slice(-7).map((s) => ({
+      date: s.date,
+      price: s.impliedPrice.toFixed(6),
+    })),
+    recommendation: analysis.recommendation,
+  };
+}
 
 export const RECALL_REFLECTIONS_TOOL = {
   name: "recall_reflections",
