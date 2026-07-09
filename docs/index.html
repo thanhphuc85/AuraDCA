@@ -565,6 +565,51 @@
   [data-theme="light"] .reconnect-bar { background: rgba(138,92,246,.06); border-color: rgba(138,92,246,.15); }
   [data-theme="light"] .wl-token { background: rgba(0,0,0,.02); border-color: rgba(0,0,0,.08); }
   [data-theme="light"] .wl-token:hover { background: rgba(0,0,0,.04); }
+
+  /* ---------- QR enhanced ---------- */
+  .qr-hero { background: linear-gradient(135deg, rgba(138,92,246,.06), rgba(47,134,230,.06)); border: 2px solid rgba(138,92,246,.25); border-radius: 20px; padding: 28px 20px; text-align: center; position: relative; }
+  .qr-hero::before { content: ""; position: absolute; inset: -2px; border-radius: 22px; padding: 2px; background: linear-gradient(135deg, var(--violet), var(--blue), var(--cyan)); -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0); mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0); -webkit-mask-composite: xor; mask-composite: exclude; opacity: .45; animation: qrGlow 3s ease-in-out infinite alternate; pointer-events: none; }
+  @keyframes qrGlow { 0%{opacity:.25} 100%{opacity:.55} }
+  .qr-hero svg { width: 200px; height: 200px; border-radius: 14px; filter: drop-shadow(0 8px 24px rgba(138,92,246,.2)); }
+  .qr-hero .qr-title { font-family: Sora; font-size: 14px; font-weight: 700; margin-top: 14px; }
+  .qr-hero .qr-sub { font-size: 11px; color: var(--muted); margin-top: 4px; }
+  [data-theme="light"] .qr-hero { background: linear-gradient(135deg, rgba(138,92,246,.04), rgba(47,134,230,.04)); border-color: rgba(138,92,246,.15); }
+
+  /* ---------- AI insight highlight ---------- */
+  .insight-cards { display: grid; gap: 14px; }
+  @media (min-width: 760px) { .insight-cards { grid-template-columns: 1fr 1fr; } }
+  .insight-card { position: relative; overflow: hidden; padding: 22px; }
+  .insight-card::before { content: "\201C"; position: absolute; top: -8px; left: 12px; font-size: 72px; font-family: Georgia, serif; color: rgba(138,92,246,.12); pointer-events: none; line-height: 1; }
+  .insight-quote { font-size: 14px; line-height: 1.65; color: var(--text); margin: 0 0 14px; padding-left: 16px; border-left: 3px solid var(--violet); }
+  .insight-meta { font-size: 12px; color: var(--muted); display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+
+  /* ---------- leaderboard ---------- */
+  .lb-summary { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 16px; }
+  .lb-stat { background: rgba(255,255,255,.03); border: 1px solid var(--glass-brd); border-radius: 12px; padding: 12px 14px; text-align: center; }
+  .lb-stat .lb-val { font-family: Sora; font-size: 20px; font-weight: 800; }
+  .lb-stat .lb-label { font-size: 11px; color: var(--muted); }
+  .lb-list { display: flex; flex-direction: column; gap: 8px; }
+  .lb-row { display: flex; align-items: center; gap: 12px; padding: 12px 14px; background: rgba(255,255,255,.03); border: 1px solid var(--glass-brd); border-radius: 14px; transition: background .15s; }
+  .lb-row:hover { background: rgba(255,255,255,.06); }
+  .lb-rank { font-family: Sora; font-weight: 800; font-size: 16px; width: 28px; text-align: center; flex-shrink: 0; }
+  .lb-rank.r1 { color: #fbbf24; }
+  .lb-rank.r2 { color: #94a3b8; }
+  .lb-rank.r3 { color: #d97706; }
+  .lb-avatar { width: 32px; height: 32px; border-radius: 50%; flex-shrink: 0; }
+  .lb-addr { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 13px; flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; }
+  .lb-amt { font-family: Sora; font-weight: 700; font-size: 15px; text-align: right; white-space: nowrap; }
+  .lb-pct-bar { height: 4px; border-radius: 4px; background: rgba(255,255,255,.06); margin-top: 6px; overflow: hidden; }
+  .lb-pct-fill { height: 100%; border-radius: 4px; background: linear-gradient(90deg, var(--blue), var(--violet)); }
+  [data-theme="light"] .lb-row { background: rgba(0,0,0,.02); }
+  [data-theme="light"] .lb-row:hover { background: rgba(0,0,0,.04); }
+  [data-theme="light"] .lb-stat { background: rgba(0,0,0,.02); }
+  @media (max-width: 600px) { .lb-summary { grid-template-columns: 1fr; } .lb-amt { font-size: 13px; } }
+
+  /* ---------- language toggle ---------- */
+  .lang-toggle { background: var(--glass); border: 1px solid var(--glass-brd); cursor: pointer; height: 40px; border-radius: 12px; display: flex; align-items: center; padding: 0 10px; font-size: 12px; font-weight: 700; color: var(--text); transition: background .18s; flex-shrink: 0; gap: 4px; font-family: Inter, sans-serif; }
+  .lang-toggle:hover { background: rgba(255,255,255,.1); }
+  [data-theme="light"] .lang-toggle:hover { background: rgba(0,0,0,.06); }
+  .lang-toggle .lang-flag { font-size: 16px; }
 </style>
 </head>
 <body>
@@ -580,6 +625,7 @@
       <div><b>Aura DCA Agent</b><span>Autonomous daily DCA · Arc Testnet</span></div>
     </div>
     <div class="hd-right">
+      <button class="lang-toggle" id="langToggle" title="Switch language"><span class="lang-flag">🇬🇧</span> EN</button>
       <button class="settings-toggle" id="settingsToggle" title="Settings">⚙️</button>
       <button class="theme-toggle" id="themeToggle" title="Toggle light/dark mode">🌙</button>
       <div class="hd-wallet-wrap" id="hdWalletWrap">
@@ -748,6 +794,13 @@
     </div>
   </section>
 
+  <section class="reveal" id="insightsSection" style="display:none;">
+    <div class="eyebrow" data-t="aiInsightsEye">AI Insights</div>
+    <div class="h2" data-t="aiInsightsTitle">Claude's best reasoning</div>
+    <p class="sub" data-t="aiInsightsSub">Highlights from the agent's most insightful decisions — showing how it thinks about market conditions and allocation.</p>
+    <div class="insight-cards" id="insightCards"></div>
+  </section>
+
   <section class="reveal" id="strategySection">
     <div class="eyebrow">DCA Strategy</div>
     <div class="h2">Smart dip-buying agent</div>
@@ -807,6 +860,12 @@
       <h3>Cumulative USDC deployed</h3>
       <p class="cs" id="chartSub"><span class="skel skel-line w60" style="display:inline-block;height:12px;"></span></p>
       <div id="chartHost"><div class="chart-loading"><div class="spinner"></div><span style="font-size:13px;color:var(--muted);">Loading chart data…</span></div></div>
+    </div>
+
+    <div class="card" style="margin-top:16px;display:none;" id="priceChartCard">
+      <h3 data-t="priceChartTitle">cirBTC / USDC Price</h3>
+      <p class="cs" id="priceSub"><span class="skel skel-line w60" style="display:inline-block;height:12px;"></span></p>
+      <div id="priceChartHost"><div class="chart-loading"><div class="spinner"></div><span style="font-size:13px;color:var(--muted);">Loading price data…</span></div></div>
     </div>
 
     <div class="grid" style="margin-top:16px;grid-template-columns:1fr 1fr;gap:16px;">
@@ -917,9 +976,10 @@
     <p class="sub">Send testnet USDC to the agent's wallet — it dollar-cost-averages the pooled balance into cirBTC autonomously.</p>
     <div class="card">
       <div class="deposit-layout">
-        <div class="deposit-qr">
+        <div class="qr-hero">
           <div id="agentQR"></div>
-          <div class="qr-label">Scan to copy agent address</div>
+          <div class="qr-title" data-t="qrTitle">Scan to deposit</div>
+          <div class="qr-sub" data-t="qrSub">Send testnet USDC to this address on Arc Testnet</div>
         </div>
         <div class="deposit-details">
           <div class="agent-addr-box">
@@ -942,6 +1002,18 @@
         </div>
       </div>
       <p class="note" style="margin-top:16px;">⚠️ <b>Testnet demo.</b> Deposit only valueless testnet USDC. No per-user accounting or withdrawal. You confirm every transfer in your wallet.</p>
+    </div>
+  </section>
+
+  <section class="reveal" id="leaderboardSection" style="display:none;">
+    <div class="eyebrow" data-t="lbEye">Public Treasury</div>
+    <div class="h2" data-t="lbTitle">Community deposits</div>
+    <p class="sub" data-t="lbSub">Everyone who has deposited USDC into the agent's DCA treasury — fully transparent, sourced from on-chain data.</p>
+    <div class="lb-summary" id="lbSummary"></div>
+    <div class="card">
+      <h3 data-t="lbLeaderboard">Depositor leaderboard</h3>
+      <p class="cs" id="lbCount">Loading on-chain data…</p>
+      <div class="lb-list" id="lbList"><div class="chart-loading"><div class="spinner"></div><span style="font-size:13px;color:var(--muted);">Fetching deposits…</span></div></div>
     </div>
   </section>
 
@@ -2276,12 +2348,332 @@
     }
   })();
 
+  // ---------- price chart (cirBTC/USDC) ----------
+  function renderPriceChart(history) {
+    var host = $("priceChartHost");
+    var card = $("priceChartCard");
+    var swaps = [];
+    history.forEach(function (e) {
+      if (!SUCCESS[e.status]) return;
+      var usdcIn = parseFloat(e.clampedAmountUsdc || "0") || 0;
+      var btcOut = parseFloat(e.amountOut || "0") || 0;
+      if (usdcIn > 0 && btcOut > 0) swaps.push({ date: e.date, price: usdcIn / btcOut, usdcIn: usdcIn, btcOut: btcOut });
+    });
+    if (!swaps.length) {
+      card.style.display = "none";
+      return;
+    }
+    card.style.display = "";
+    var latest = swaps[swaps.length - 1];
+    var prev = swaps.length > 1 ? swaps[swaps.length - 2] : latest;
+    var change = prev.price > 0 ? ((latest.price - prev.price) / prev.price * 100) : 0;
+    var changeStr = (change >= 0 ? "+" : "") + change.toFixed(2) + "%";
+    var changeColor = change >= 0 ? "var(--green)" : "var(--red)";
+    $("priceSub").innerHTML = "Latest: <b>" + fmt(latest.price, 4) + " USDC/cirBTC</b> <span style='color:" + changeColor + ";font-weight:700;'>" + changeStr + "</span> · " + swaps.length + " data points";
+
+    var W = 920, H = 220, padL = 54, padR = 12, padT = 16, padB = 28;
+    var prices = swaps.map(function (s) { return s.price; });
+    var max = Math.max.apply(null, prices) * 1.12 || 1;
+    var min = Math.min.apply(null, prices) * 0.88 || 0;
+    var range = max - min || 1;
+    var n = prices.length;
+    function x(i) { return padL + (n === 1 ? (W - padL - padR) / 2 : (i * (W - padL - padR) / (n - 1))); }
+    function y(v) { return padT + (H - padT - padB) * (1 - (v - min) / range); }
+    var grid = "";
+    for (var gi = 0; gi <= 4; gi++) {
+      var gv = min + (range / 4) * gi, gy = y(gv);
+      grid += '<line x1="' + padL + '" y1="' + gy.toFixed(1) + '" x2="' + (W - padR) + '" y2="' + gy.toFixed(1) + '" stroke="var(--glass-brd)" stroke-dasharray="4 4"/>';
+      grid += '<text x="' + (padL - 4) + '" y="' + (gy + 3).toFixed(1) + '" text-anchor="end" class="chart-label">' + fmt(gv, 2) + '</text>';
+    }
+    var line = "", area = "M" + x(0) + " " + (H - padB), len = 0, px0 = x(0), py0 = y(prices[0]);
+    for (var i = 0; i < n; i++) {
+      var px = x(i), py = y(prices[i]);
+      if (i) len += Math.hypot(px - px0, py - py0);
+      px0 = px; py0 = py;
+      line += (i ? "L" : "M") + px.toFixed(1) + " " + py.toFixed(1) + " ";
+      area += " L" + px.toFixed(1) + " " + py.toFixed(1);
+    }
+    area += " L" + x(n - 1) + " " + (H - padB) + " Z";
+    var dots = "", labels = "";
+    for (var j = 0; j < n; j++) {
+      dots += '<circle cx="' + x(j).toFixed(1) + '" cy="' + y(prices[j]).toFixed(1) + '" r="4.5" fill="#f59e0b" stroke="var(--bg)" stroke-width="2"/>';
+      if (n <= 14 || j % Math.ceil(n / 10) === 0) labels += '<text x="' + x(j).toFixed(1) + '" y="' + (H - 6) + '" text-anchor="middle" class="chart-label">' + swaps[j].date.slice(5) + '</text>';
+    }
+    host.innerHTML =
+      '<svg class="chart" viewBox="0 0 ' + W + ' ' + H + '">' +
+      '<defs><linearGradient id="pg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f59e0b" stop-opacity="0.3"/><stop offset="1" stop-color="#f59e0b" stop-opacity="0"/></linearGradient>' +
+      '<linearGradient id="pl" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#f59e0b"/><stop offset="1" stop-color="#fb923c"/></linearGradient></defs>' +
+      grid + '<path d="' + area + '" fill="url(#pg)"/>' +
+      '<path class="line" style="--len:' + (len + 4).toFixed(0) + '" d="' + line + '" fill="none" stroke="url(#pl)" stroke-width="2.8" stroke-linejoin="round" stroke-linecap="round"/>' +
+      dots + labels + '</svg>';
+    host.querySelector("svg").addEventListener("mousemove", function (ev) {
+      var r = this.getBoundingClientRect(), sx = (ev.clientX - r.left) / r.width * W;
+      var closest = 0, minD = Infinity;
+      for (var k = 0; k < n; k++) { var d = Math.abs(x(k) - sx); if (d < minD) { minD = d; closest = k; } }
+      var s = swaps[closest];
+      showTip(ev, '<div class="tt-label">' + s.date + '</div><div class="tt-val">' + fmt(s.price, 4) + ' USDC/cirBTC</div><div class="tt-sub">' + fmt(s.usdcIn, 4) + ' → ' + fmt(s.btcOut, 8) + ' cirBTC</div>');
+    });
+    host.querySelector("svg").addEventListener("mouseleave", hideTip);
+  }
+
+  // ---------- AI reasoning highlights ----------
+  function renderInsights(history, reflections) {
+    var sec = $("insightsSection");
+    var cards = $("insightCards");
+    var highlights = [];
+    // Pick best reasonings from history (longest successful ones)
+    var successful = (history || []).filter(function (e) { return SUCCESS[e.status] && e.reasoning && e.reasoning.length > 40; });
+    successful.sort(function (a, b) { return (b.reasoning || "").length - (a.reasoning || "").length; });
+    successful.slice(0, 2).forEach(function (e) {
+      highlights.push({ text: e.reasoning, date: e.date, status: e.status, amount: e.clampedAmountUsdc, source: "decision" });
+    });
+    // Pick best reflection insights
+    var reflOk = (reflections || []).filter(function (r) { return r.insight && r.insight.length > 30; });
+    reflOk.sort(function (a, b) { return (b.insight || "").length - (a.insight || "").length; });
+    reflOk.slice(0, 1).forEach(function (r) {
+      highlights.push({ text: r.insight, date: r.date, status: r.runStatus, amount: null, source: "reflection", strategy: r.strategyAdjustment, confidence: r.confidenceLevel });
+    });
+    if (!highlights.length) { sec.style.display = "none"; return; }
+    sec.style.display = "";
+    cards.innerHTML = highlights.map(function (h) {
+      var meta = '<span>' + (h.date || "") + '</span>';
+      if (h.amount) meta += '<span> · ' + h.amount + ' USDC</span>';
+      if (h.source === "reflection") {
+        meta += '<span> · <span class="conf-badge conf-' + (h.confidence || "low") + '">' + (h.confidence || "—") + '</span></span>';
+      }
+      var statusBadge = h.status ? '<span class="badge ' + statusClass(h.status) + '" style="font-size:10px;">' + statusLabel(h.status) + '</span>' : '';
+      var extra = h.strategy ? '<div style="margin-top:10px;font-size:12px;color:var(--cyan);font-style:normal;">Strategy: ' + h.strategy + '</div>' : '';
+      return '<div class="card insight-card">' +
+        '<p class="insight-quote">' + h.text + '</p>' +
+        extra +
+        '<div class="insight-meta">' + statusBadge + meta + '</div></div>';
+    }).join("");
+  }
+
+  // ---------- leaderboard / treasury deposits ----------
+  async function fetchLeaderboard() {
+    var sec = $("leaderboardSection");
+    try {
+      var latest = await rpcCall("eth_blockNumber", []);
+      var latestNum = parseInt(latest, 16);
+      var agentPad = "0x000000000000000000000000" + ARC.agent.slice(2).toLowerCase();
+      var CHUNK = 9999, LOOKBACK = 200000;
+      var logs = [];
+      var end = latestNum;
+      var earliest = Math.max(0, latestNum - LOOKBACK);
+      for (var from = end - CHUNK; from >= earliest; from -= CHUNK) {
+        var fb = "0x" + Math.max(0, from).toString(16);
+        var tb = "0x" + Math.min(end, from + CHUNK).toString(16);
+        try {
+          var batch = await rpcCall("eth_getLogs", [{ fromBlock: fb, toBlock: tb, address: ARC.usdc, topics: ["0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef", null, agentPad] }]) || [];
+          logs = logs.concat(batch);
+        } catch (e) {}
+        end = from;
+        if (logs.length > 0 && from < latestNum - CHUNK * 3) break;
+      }
+      if (!logs.length) {
+        sec.style.display = "";
+        $("lbSummary").innerHTML =
+          '<div class="lb-stat"><div class="lb-val">0</div><div class="lb-label">Total deposited</div></div>' +
+          '<div class="lb-stat"><div class="lb-val">0</div><div class="lb-label">Depositors</div></div>' +
+          '<div class="lb-stat"><div class="lb-val">—</div><div class="lb-label">Be the first!</div></div>';
+        $("lbCount").textContent = "No deposits found yet";
+        $("lbList").innerHTML = '<div class="empty-state fade-in"><div class="empty-icon">🏆</div><p class="empty-title">No deposits yet</p><p class="empty-desc">Be the first to deposit testnet USDC into the DCA treasury! The agent will DCA it into cirBTC automatically.</p></div>';
+        return;
+      }
+      sec.style.display = "";
+      var depositors = {};
+      var totalDeposited = 0;
+      logs.forEach(function (l) {
+        var from = "0x" + (l.topics[1] || "").slice(26);
+        var val = Number(BigInt(l.data || "0x0")) / 1e6;
+        if (!depositors[from]) depositors[from] = { address: from, total: 0, count: 0 };
+        depositors[from].total += val;
+        depositors[from].count++;
+        totalDeposited += val;
+      });
+      var sorted = Object.values(depositors).sort(function (a, b) { return b.total - a.total; });
+
+      $("lbSummary").innerHTML =
+        '<div class="lb-stat"><div class="lb-val">' + fmt(totalDeposited, 2) + '</div><div class="lb-label">Total deposited (USDC)</div></div>' +
+        '<div class="lb-stat"><div class="lb-val">' + sorted.length + '</div><div class="lb-label">Unique depositors</div></div>' +
+        '<div class="lb-stat"><div class="lb-val">' + logs.length + '</div><div class="lb-label">Total deposits</div></div>';
+
+      $("lbCount").textContent = sorted.length + " depositor(s) · " + logs.length + " transaction(s)";
+      var maxAmt = sorted[0] ? sorted[0].total : 1;
+      $("lbList").innerHTML = sorted.slice(0, 20).map(function (d, i) {
+        var rankClass = i === 0 ? "r1" : (i === 1 ? "r2" : (i === 2 ? "r3" : ""));
+        var pct = totalDeposited > 0 ? (d.total / totalDeposited * 100) : 0;
+        return '<div class="lb-row">' +
+          '<div class="lb-rank ' + rankClass + '">#' + (i + 1) + '</div>' +
+          '<img class="lb-avatar" src="' + generateAvatar(d.address) + '" alt=""/>' +
+          '<div style="flex:1;min-width:0;">' +
+            '<a class="lb-addr" href="' + ARC.explorer + '/address/' + d.address + '" target="_blank" rel="noopener">' + d.address.slice(0, 8) + '…' + d.address.slice(-6) + '</a>' +
+            '<div class="lb-pct-bar"><div class="lb-pct-fill" style="width:' + (d.total / maxAmt * 100).toFixed(1) + '%;"></div></div>' +
+          '</div>' +
+          '<div style="text-align:right;">' +
+            '<div class="lb-amt">' + fmt(d.total, 2) + ' USDC</div>' +
+            '<div style="font-size:11px;color:var(--muted);">' + d.count + ' tx · ' + pct.toFixed(1) + '%</div>' +
+          '</div>' +
+        '</div>';
+      }).join("") || '<div style="color:var(--muted);padding:16px;text-align:center;">No deposits found.</div>';
+    } catch (e) {
+      sec.style.display = "none";
+    }
+  }
+
+  // ---------- multi-language (EN/VN) ----------
+  var T = {
+    en: {
+      heroChip: "Encode × Circle · Programmable Money Hackathon",
+      heroH1a: "An agent that ", heroGrad: "dollar-cost-averages", heroH1b: " for you.",
+      heroDesc: 'Every day it asks <b>Claude</b> how much USDC to allocate, enforces hard spend guardrails in code, and executes a real <b>USDC → cirBTC</b> swap on Arc Testnet via Circle\'s Swap Kit — no server, no human in the loop.',
+      connectWallet: "Connect Wallet", viewSource: "View source ↗", liveSwap: "See a live swap ↗",
+      usdcDeployed: "USDC deployed", agentRuns: "Agent runs", lastDecision: "Last decision",
+      howEye: "How it works", howTitle: "Claude recommends. Code decides.",
+      howSub: "The LLM is never the final authority on how much money moves.",
+      step1t: "Claude decides", step1d: "Given balance, budget, day count & history, Claude returns a proposed amount + reasoning via a forced, schema-validated tool call.",
+      step2t: "Guardrails clamp", step2d: "A pure, unit-tested function re-derives the cap from hard limits (max/day, reserve, dust, budget). The sole spending authority.",
+      step3t: "Swap & record", step3d: "Circle Swap Kit executes USDC → cirBTC on Arc Testnet; the run is appended to a public audit trail committed back to the repo.",
+      aiInsightsEye: "AI Insights", aiInsightsTitle: "Claude's best reasoning",
+      aiInsightsSub: "Highlights from the agent's most insightful decisions — showing how it thinks about market conditions and allocation.",
+      stratEye: "DCA Strategy", stratTitle: "Smart dip-buying agent",
+      stratSub: "The agent monitors cirBTC price trends and automatically increases allocation when prices dip — buying more when it's cheaper.",
+      trackEye: "Live track record", trackTitle: "What the agent has done",
+      trackSub: "Every run is recorded on-chain and committed to the repo — full transparency.",
+      priceChartTitle: "cirBTC / USDC Price",
+      perfEye: "Performance", perfTitle: "Portfolio dashboard",
+      memEye: "Agent memory", memTitle: "What the agent has learned",
+      memSub: "After every run, the agent reflects on its decisions and outcomes — building persistent memory that shapes future strategy.",
+      fundEye: "Fund the agent", fundTitle: "Deposit to DCA treasury",
+      fundSub: "Send testnet USDC to the agent's wallet — it dollar-cost-averages the pooled balance into cirBTC autonomously.",
+      qrTitle: "Scan to deposit", qrSub: "Send testnet USDC to this address on Arc Testnet",
+      fundNote: '⚠️ <b>Testnet demo.</b> Deposit only valueless testnet USDC. No per-user accounting or withdrawal. You confirm every transfer in your wallet.',
+      lbEye: "Public Treasury", lbTitle: "Community deposits",
+      lbSub: "Everyone who has deposited USDC into the agent's DCA treasury — fully transparent, sourced from on-chain data.",
+      lbLeaderboard: "Depositor leaderboard",
+      dataEye: "Data", dataTitle: "Export your data",
+      dataSub: "Download run history and reflections for offline analysis.",
+      footerDisclaimer: "Aura DCA Agent · Testnet only · not financial advice.",
+    },
+    vi: {
+      heroChip: "Encode × Circle · Hackathon Tiền Lập Trình",
+      heroH1a: "Agent tự động ", heroGrad: "DCA bình quân giá", heroH1b: " cho bạn.",
+      heroDesc: 'Mỗi ngày agent hỏi <b>Claude</b> nên phân bổ bao nhiêu USDC, áp dụng rào chắn chi tiêu cứng trong code, và thực hiện swap <b>USDC → cirBTC</b> thật trên Arc Testnet qua Circle Swap Kit — không server, không cần người can thiệp.',
+      connectWallet: "Kết nối ví", viewSource: "Mã nguồn ↗", liveSwap: "Xem giao dịch ↗",
+      usdcDeployed: "USDC đã triển khai", agentRuns: "Lần chạy", lastDecision: "Quyết định gần nhất",
+      howEye: "Cách hoạt động", howTitle: "Claude đề xuất. Code quyết định.",
+      howSub: "LLM không bao giờ là thẩm quyền cuối cùng về số tiền di chuyển.",
+      step1t: "Claude quyết định", step1d: "Dựa trên số dư, ngân sách, số ngày & lịch sử, Claude đề xuất số tiền + lý do qua tool call có schema cố định.",
+      step2t: "Rào chắn giới hạn", step2d: "Hàm thuần túy, có unit test, tính lại giới hạn từ các ràng buộc cứng (max/ngày, dự trữ, dust, ngân sách). Đây mới là quyền chi tiêu.",
+      step3t: "Swap & ghi nhận", step3d: "Circle Swap Kit thực hiện USDC → cirBTC trên Arc Testnet; kết quả được thêm vào audit trail công khai và commit lại repo.",
+      aiInsightsEye: "AI Insights", aiInsightsTitle: "Suy luận hay nhất của Claude",
+      aiInsightsSub: "Điểm nhấn từ những quyết định sâu sắc nhất của agent — cho thấy cách nó suy nghĩ về thị trường và phân bổ.",
+      stratEye: "Chiến lược DCA", stratTitle: "Agent mua thông minh khi giảm giá",
+      stratSub: "Agent theo dõi xu hướng giá cirBTC và tự động tăng phân bổ khi giá giảm — mua nhiều hơn khi rẻ hơn.",
+      trackEye: "Hồ sơ trực tiếp", trackTitle: "Agent đã làm gì",
+      trackSub: "Mỗi lần chạy được ghi on-chain và commit vào repo — minh bạch hoàn toàn.",
+      priceChartTitle: "Giá cirBTC / USDC",
+      perfEye: "Hiệu suất", perfTitle: "Bảng điều khiển danh mục",
+      memEye: "Bộ nhớ Agent", memTitle: "Agent đã học được gì",
+      memSub: "Sau mỗi lần chạy, agent phản chiếu về quyết định và kết quả — xây dựng bộ nhớ bền vững định hình chiến lược tương lai.",
+      fundEye: "Nạp tiền", fundTitle: "Gửi USDC vào quỹ DCA",
+      fundSub: "Gửi USDC testnet vào ví agent — nó sẽ tự động DCA số dư chung thành cirBTC.",
+      qrTitle: "Quét để nạp tiền", qrSub: "Gửi USDC testnet đến địa chỉ này trên Arc Testnet",
+      fundNote: '⚠️ <b>Demo testnet.</b> Chỉ nạp USDC testnet không có giá trị. Không có hạch toán hay rút tiền. Bạn xác nhận mọi giao dịch trong ví.',
+      lbEye: "Quỹ công khai", lbTitle: "Đóng góp cộng đồng",
+      lbSub: "Tất cả những ai đã gửi USDC vào quỹ DCA của agent — hoàn toàn minh bạch, nguồn từ dữ liệu on-chain.",
+      lbLeaderboard: "Bảng xếp hạng người nạp",
+      dataEye: "Dữ liệu", dataTitle: "Xuất dữ liệu",
+      dataSub: "Tải lịch sử chạy và phản chiếu để phân tích offline.",
+      footerDisclaimer: "Aura DCA Agent · Chỉ dùng trên Testnet · không phải tư vấn tài chính.",
+    }
+  };
+  var currentLang = localStorage.getItem("aura-lang") || "en";
+  function applyLang(lang) {
+    currentLang = lang;
+    localStorage.setItem("aura-lang", lang);
+    var btn = $("langToggle");
+    btn.innerHTML = lang === "vi" ? '<span class="lang-flag">🇻🇳</span> VN' : '<span class="lang-flag">🇬🇧</span> EN';
+    var t = T[lang] || T.en;
+    // Update data-t elements
+    document.querySelectorAll("[data-t]").forEach(function (el) {
+      var key = el.getAttribute("data-t");
+      if (t[key] != null) {
+        if (t[key].indexOf("<") >= 0) el.innerHTML = t[key]; else el.textContent = t[key];
+      }
+    });
+    // Hero (special structure)
+    var h1 = document.querySelector(".hero h1");
+    if (h1) h1.innerHTML = t.heroH1a + '<span class="grad">' + t.heroGrad + '</span>' + t.heroH1b;
+    var heroP = document.querySelector(".hero > p");
+    if (heroP) heroP.innerHTML = t.heroDesc;
+    var chip = document.querySelector(".hero .chip");
+    if (chip) chip.innerHTML = '<span class="dot"></span> ' + t.heroChip;
+    // CTA buttons
+    var heroConnectBtn = $("connectHero");
+    if (heroConnectBtn) heroConnectBtn.textContent = t.connectWallet;
+    var headerConnectBtn = $("connectBtn");
+    if (headerConnectBtn) headerConnectBtn.textContent = t.connectWallet;
+    // Band labels
+    var bandLabels = document.querySelectorAll(".band .g .l");
+    if (bandLabels[0]) bandLabels[0].textContent = t.usdcDeployed;
+    if (bandLabels[1]) bandLabels[1].textContent = t.agentRuns;
+    if (bandLabels[2]) bandLabels[2].textContent = t.lastDecision;
+    // How it works steps
+    var steps = document.querySelectorAll(".flow .step");
+    if (steps[0]) { steps[0].querySelector("b").textContent = t.step1t; steps[0].querySelector("span:not(.num)").textContent = t.step1d; }
+    if (steps[1]) { steps[1].querySelector("b").textContent = t.step2t; steps[1].querySelector("span:not(.num)").textContent = t.step2d; }
+    if (steps[2]) { steps[2].querySelector("b").textContent = t.step3t; steps[2].querySelector("span:not(.num)").textContent = t.step3d; }
+    // Fund note
+    var noteEl = document.querySelector("#agentQR").closest("section").querySelector(".note");
+    if (noteEl) noteEl.innerHTML = t.fundNote;
+    // Footer
+    var footerDiv = document.querySelector("footer > div:first-child");
+    if (footerDiv) footerDiv.textContent = t.footerDisclaimer;
+  }
+  $("langToggle").addEventListener("click", function () {
+    applyLang(currentLang === "en" ? "vi" : "en");
+  });
+  // Apply saved language on load
+  if (currentLang !== "en") applyLang(currentLang);
+
+  // ---------- add data-t attributes to sections for language support ----------
+  (function markTranslatable() {
+    var map = {
+      "How it works": ["howEye", "howTitle", "howSub"],
+      "DCA Strategy": ["stratEye", "stratTitle", "stratSub"],
+      "Live track record": ["trackEye", "trackTitle", "trackSub"],
+      "Performance": ["perfEye", "perfTitle", null],
+      "Agent memory": ["memEye", "memTitle", "memSub"],
+      "Fund the agent": ["fundEye", "fundTitle", "fundSub"],
+      "Data": ["dataEye", "dataTitle", "dataSub"],
+    };
+    document.querySelectorAll(".eyebrow").forEach(function (ey) {
+      var txt = ey.textContent.trim();
+      var keys = map[txt];
+      if (!keys) return;
+      ey.setAttribute("data-t", keys[0]);
+      var h2 = ey.parentElement.querySelector(".h2");
+      if (h2 && keys[1]) h2.setAttribute("data-t", keys[1]);
+      var sub = ey.parentElement.querySelector(".sub");
+      if (sub && keys[2]) sub.setAttribute("data-t", keys[2]);
+    });
+  })();
+
+  // ---------- wire up new features on data load ----------
+  function renderNewFeatures(history, reflections) {
+    renderPriceChart(history || []);
+    renderInsights(history, reflections);
+  }
+
   Promise.all([fetchHistory(), fetchReflections()])
     .then(function (results) {
       _historyData = results[0];
       _reflectionData = results[1];
       render(results[0]);
       renderReflections(results[1]);
+      renderNewFeatures(results[0], results[1]);
       if (Array.isArray(results[0]) && results[0].length) $("historyExportBar").style.display = "";
       if (Array.isArray(results[1]) && results[1].length) $("reflExportBar").style.display = "";
       saveCache(results[0], results[1]);
@@ -2292,6 +2684,12 @@
       $("runsBody").innerHTML = '<tr><td colspan="7"><div class="empty-state fade-in"><div class="empty-icon">🔌</div><p class="empty-title">Data unavailable</p><p class="empty-desc">Could not fetch run history. Check your connection and refresh.</p></div></td></tr>';
       ["tTotal","tRuns","tLast","bTotal","bRuns","bLast"].forEach(function (id) { $(id).textContent = "—"; });
     });
+
+  // Fetch leaderboard in parallel
+  fetchLeaderboard();
+
+  // Apply language to dynamically-added data-t attributes
+  if (currentLang !== "en") setTimeout(function () { applyLang(currentLang); }, 100);
 })();
 </script>
 </body>
