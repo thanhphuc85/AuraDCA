@@ -173,6 +173,21 @@
   .wp-bottom .wp-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--green); box-shadow: 0 0 6px rgba(52,211,153,.6); }
   .btn-disconnect { background: rgba(251,113,133,.1); color: #fda4af; border: 1px solid rgba(251,113,133,.25); font-size: 12px; font-weight: 600; padding: 6px 14px; border-radius: 10px; cursor: pointer; transition: background .15s; }
   .btn-disconnect:hover { background: rgba(251,113,133,.2); }
+  .wp-txlist { margin-top: 18px; padding-top: 16px; border-top: 1px solid rgba(255,255,255,.06); }
+  .wp-txlist h4 { font-size: 13px; font-weight: 700; margin: 0 0 10px; color: var(--muted); text-transform: uppercase; letter-spacing: .4px; }
+  .wp-tx { display: flex; align-items: center; gap: 10px; padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,.04); }
+  .wp-tx:last-child { border-bottom: none; }
+  .wp-tx-icon { width: 28px; height: 28px; border-radius: 50%; display: grid; place-items: center; font-size: 13px; font-weight: 700; flex-shrink: 0; }
+  .wp-tx-icon.tx-in { background: rgba(52,211,153,.12); color: var(--green); }
+  .wp-tx-icon.tx-out { background: rgba(251,113,133,.1); color: var(--red); }
+  .wp-tx-info { flex: 1; min-width: 0; font-size: 12px; line-height: 1.4; }
+  .wp-tx-info .tx-type { font-weight: 600; font-size: 13px; }
+  .wp-tx-info .tx-hash { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 11px; color: var(--muted); }
+  .wp-tx-amt { font-family: Sora; font-size: 13px; font-weight: 700; white-space: nowrap; text-align: right; }
+  [data-theme="light"] .wp-txlist { border-top-color: rgba(0,0,0,.07); }
+  [data-theme="light"] .wp-tx { border-bottom-color: rgba(0,0,0,.05); }
+  [data-theme="light"] .wp-tx-icon.tx-in { background: rgba(16,185,129,.08); }
+  [data-theme="light"] .wp-tx-icon.tx-out { background: rgba(239,68,68,.08); }
   [data-theme="light"] .wp-welcome { border-top-color: rgba(0,0,0,.07); }
   [data-theme="light"] .wp-bottom { border-top-color: rgba(0,0,0,.07); }
   [data-theme="light"] .wp-token { background: rgba(0,0,0,.02); }
@@ -1833,13 +1848,13 @@
       return txs.slice(0, 8);
     } catch (e) { return []; }
   }
-  function renderTxList(txs) {
-    if (!txs.length) return "";
-    var html = '<div class="wp-txlist"><h4>Recent activity</h4>';
-    txs.forEach(function (tx) {
+  function renderTxList(txs, t) {
+    if (!txs || !txs.length) return "";
+    var html = '<div class="wp-txlist"><h4>' + (t && t.wpRecentActivity || 'Recent activity') + '</h4>';
+    txs.slice(0, 6).forEach(function (tx) {
       var icon = tx.dir === "in" ? "tx-in" : "tx-out";
       var arrow = tx.dir === "in" ? "↓" : "↑";
-      var type = tx.dir === "in" ? "Received" : "Sent";
+      var type = tx.dir === "in" ? (t && t.wpReceived || "Received") : (t && t.wpSent || "Sent");
       var hash = tx.hash ? tx.hash.slice(0, 10) + "…" : "";
       var amtStr = (tx.dir === "out" ? "−" : "+") + fmt(tx.amount, tx.symbol === "USDC" ? 2 : 6) + " " + tx.symbol;
       html += '<div class="wp-tx">' +
@@ -1853,10 +1868,59 @@
   }
 
   // ---------- show wallet profile ----------
+  function getImpliedPrice() {
+    if (!_historyData || !_historyData.length) return 0;
+    for (var i = _historyData.length - 1; i >= 0; i--) {
+      var e = _historyData[i];
+      if ((e.status === "success" || e.status === "dry_run") && e.clampedAmountUsdc && e.amountOut) {
+        var u = parseFloat(e.clampedAmountUsdc), b = parseFloat(e.amountOut);
+        if (u > 0 && b > 0) return u / b;
+      }
+    }
+    return 0;
+  }
+
+  var _walletRefreshTimer = null;
+  function startWalletAutoRefresh() {
+    if (_walletRefreshTimer) clearInterval(_walletRefreshTimer);
+    _walletRefreshTimer = setInterval(function () {
+      if (!state.account) return;
+      refreshWalletBalances(state.account, state.loginType);
+    }, 30000);
+  }
+  function stopWalletAutoRefresh() {
+    if (_walletRefreshTimer) { clearInterval(_walletRefreshTimer); _walletRefreshTimer = null; }
+  }
+  async function refreshWalletBalances(account, loginType) {
+    try {
+      var usdc = Number(await tokenBalanceOf(ARC.usdc, account)) / 1e6;
+      var cirbtc = Number(await tokenBalanceOf(ARC.cirbtc, account)) / 1e8;
+      var price = getImpliedPrice();
+      var totalUsd = usdc + (cirbtc * price);
+      var balEl = document.querySelector(".wp-balance");
+      if (balEl) balEl.textContent = fmt(totalUsd, 2) + " US$";
+      var usdcAmtEl = document.querySelector(".wp-token-icon.usdc");
+      if (usdcAmtEl) {
+        var row = usdcAmtEl.parentElement;
+        var amtEl = row.querySelector(".wp-token-amt");
+        if (amtEl) amtEl.textContent = fmt(usdc, 4);
+      }
+      var btcAmtEl = document.querySelector(".wp-token-icon.cirbtc");
+      if (btcAmtEl) {
+        var row2 = btcAmtEl.parentElement;
+        var amtEl2 = row2.querySelector(".wp-token-amt");
+        if (amtEl2) amtEl2.textContent = fmt(cirbtc, 8);
+      }
+      var yourBal = document.querySelector("#wpYourBalVal");
+      if (yourBal) yourBal.textContent = fmt(usdc, 2) + " USDC";
+    } catch (e) {}
+  }
+
   function showWalletProfile(account, nativeBal, usdc, cirbtc, loginType, txs) {
     var status = $("walletStatus");
     var t = T[currentLang] || T.en;
-    var totalUsd = usdc;
+    var price = getImpliedPrice();
+    var totalUsd = usdc + (cirbtc * price);
 
     var badge = loginType === "gmail"
       ? '<span class="wp-login-badge gmail">G Gmail</span>'
@@ -1894,9 +1958,10 @@
             '<div><div class="wp-token-amt">' + fmt(cirbtc, 8) + '</div><div class="wp-token-name">cirBTC</div></div>' +
           '</div>' +
         '</div>' +
+        (price > 0 ? '<div style="font-size:12px;color:var(--muted);margin-top:4px;">cirBTC ≈ ' + fmt(price, 2) + ' USDC · ' + fmt(cirbtc * price, 2) + ' US$ value</div>' : '') +
         '<div class="wp-treasury-compare" style="margin-top:14px;padding:12px 16px;background:rgba(138,92,246,.04);border:1px solid rgba(138,92,246,.15);border-radius:14px;">' +
           '<div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;">' +
-            '<div><div style="font-size:11px;color:var(--muted);">' + (t.wpYourBal || 'Your balance') + '</div><div style="font-family:Sora;font-weight:700;font-size:15px;">' + fmt(usdc, 2) + ' USDC</div></div>' +
+            '<div><div style="font-size:11px;color:var(--muted);">' + (t.wpYourBal || 'Your balance') + '</div><div style="font-family:Sora;font-weight:700;font-size:15px;" id="wpYourBalVal">' + fmt(usdc, 2) + ' USDC</div></div>' +
             '<div style="font-size:16px;color:var(--muted);">vs</div>' +
             '<div style="text-align:right;"><div style="font-size:11px;color:var(--muted);">' + (t.wpAgentTreasury || 'Agent treasury') + '</div><div style="font-family:Sora;font-weight:700;font-size:15px;" id="wpTreasuryBal">…</div></div>' +
           '</div>' +
@@ -1921,6 +1986,8 @@
           '</div>' +
         '</div>' +
 
+        renderTxList(txs, t) +
+
         '<div class="wp-bottom">' +
           '<div class="wp-net"><span class="wp-dot"></span> Arc Testnet</div>' +
           '<button class="btn-disconnect" id="wpDisconnect">' + (t.wpDisconnect || 'Disconnect') + '</button>' +
@@ -1943,12 +2010,14 @@
       $("walletCard").style.display = "none";
       closeWalletPopover();
       status.textContent = "";
+      stopWalletAutoRefresh();
       if (typeof updateHeaderWallet === "function") updateHeaderWallet(null, null);
     });
 
     status.textContent = "";
     refreshTreasury();
     refreshWatchlistBalances();
+    startWalletAutoRefresh();
     if (typeof updateHeaderWallet === "function") updateHeaderWallet(account, loginType);
     openWalletPopover();
     readUsdcBalance(ARC.agent).then(function (raw) {
@@ -2003,6 +2072,28 @@
     } catch (err) {
       status.textContent = "Connection cancelled or failed: " + (err && err.message ? err.message : err);
     }
+  }
+
+  // ---------- MetaMask event listeners ----------
+  if (window.ethereum) {
+    window.ethereum.on("accountsChanged", function (accounts) {
+      if (!accounts || !accounts.length) {
+        state.account = null;
+        state.loginType = null;
+        saveWalletAddr(null);
+        stopWalletAutoRefresh();
+        var prof = $("walletProfile");
+        if (prof) { prof.style.display = "none"; prof.innerHTML = ""; }
+        $("walletCard").style.display = "none";
+        closeWalletPopover();
+        if (typeof updateHeaderWallet === "function") updateHeaderWallet(null, null);
+      } else if (accounts[0] !== state.account) {
+        connectMetamask();
+      }
+    });
+    window.ethereum.on("chainChanged", function () {
+      if (state.account && state.loginType === "metamask") connectMetamask();
+    });
   }
 
   // ---------- Gmail login ----------
@@ -3013,16 +3104,17 @@
     if (!savedWallet || !savedWallet.address) return;
     var bar = $("reconnectBar");
     if (!bar) return;
+    var t = (typeof T !== "undefined" && T[currentLang]) ? T[currentLang] : {};
     var ago = Math.round((Date.now() - (savedWallet.ts || 0)) / 60000);
-    var agoText = ago < 60 ? ago + "m ago" : Math.round(ago / 60) + "h ago";
+    var agoText = ago < 60 ? ago + (t.rbMinAgo || "m ago") : Math.round(ago / 60) + (t.rbHourAgo || "h ago");
     var gmailData = null;
     try { var g = localStorage.getItem("aura-gmail-wallet"); if (g) gmailData = JSON.parse(g); } catch(e){}
     var isGmail = gmailData && gmailData.address === savedWallet.address;
     var label = isGmail ? (gmailData.email || savedWallet.address.slice(0, 6) + '…' + savedWallet.address.slice(-4)) : savedWallet.address.slice(0, 6) + '…' + savedWallet.address.slice(-4);
     bar.innerHTML =
       '<div class="reconnect-bar">' +
-      '<span class="rb-text">Welcome back! Reconnect <span class="rb-addr">' + label + '</span>? (last seen ' + agoText + ')</span>' +
-      '<button class="btn" id="rbReconnect" style="padding:8px 16px;font-size:12px;">Reconnect</button>' +
+      '<span class="rb-text">' + (t.rbWelcome || 'Welcome back!') + ' ' + (t.rbReconnectPrompt || 'Reconnect') + ' <span class="rb-addr">' + label + '</span>? (' + (t.rbLastSeen || 'last seen') + ' ' + agoText + ')</span>' +
+      '<button class="btn" id="rbReconnect" style="padding:8px 16px;font-size:12px;">' + (t.rbReconnectBtn || 'Reconnect') + '</button>' +
       '<button class="rb-dismiss" id="rbDismiss" title="Dismiss">✕</button>' +
       '</div>';
     $("rbReconnect").addEventListener("click", function () {
@@ -3308,6 +3400,9 @@
       intelAlertErrorStreak: "Error streak", intelAlertDip: "Significant dip", intelAlertClamping: "Frequent clamping",
       intelAlertLowSuccess: "Low success rate", intelAlertStrategy: "Strategy update",
       intelNoAlerts: "All clear", intelNoAlertsDetail: "No unusual patterns detected. Agent is running normally.",
+      wpRecentActivity: "Recent activity", wpReceived: "Received", wpSent: "Sent",
+      rbWelcome: "Welcome back!", rbReconnectPrompt: "Reconnect", rbLastSeen: "last seen",
+      rbReconnectBtn: "Reconnect", rbMinAgo: "m ago", rbHourAgo: "h ago",
     },
     vi: {
       heroChip: "Encode × Circle · Hackathon Tiền Lập Trình",
@@ -3375,6 +3470,9 @@
       intelAlertErrorStreak: "Chuỗi lỗi", intelAlertDip: "Giảm giá đáng kể", intelAlertClamping: "Bị giới hạn thường xuyên",
       intelAlertLowSuccess: "Tỉ lệ thành công thấp", intelAlertStrategy: "Cập nhật chiến lược",
       intelNoAlerts: "Bình thường", intelNoAlertsDetail: "Không phát hiện mẫu bất thường. Agent đang hoạt động bình thường.",
+      wpRecentActivity: "Hoạt động gần đây", wpReceived: "Nhận", wpSent: "Gửi",
+      rbWelcome: "Chào mừng trở lại!", rbReconnectPrompt: "Kết nối lại", rbLastSeen: "lần cuối",
+      rbReconnectBtn: "Kết nối lại", rbMinAgo: " phút trước", rbHourAgo: " giờ trước",
     }
   };
   var currentLang = localStorage.getItem("aura-lang") || "en";
