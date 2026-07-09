@@ -508,6 +508,30 @@
   .approval-mode-badge { display: inline-flex; align-items: center; gap: 6px; font-size: 11px; font-weight: 600; padding: 4px 10px; border-radius: 8px; margin-left: 8px; }
   .approval-mode-badge.on { background: rgba(245,165,36,.12); color: #f5a524; }
   .approval-mode-badge.off { background: rgba(100,116,139,.12); color: var(--muted); }
+  .btn-run-dca { display: inline-flex; align-items: center; gap: 8px; padding: 12px 24px; border-radius: 14px; border: none; font-weight: 700; font-size: 14px; cursor: pointer; transition: all .18s; background: linear-gradient(135deg, var(--purple), #6366f1); color: #fff; box-shadow: 0 4px 20px rgba(138,92,246,.3); margin-top: 16px; }
+  .btn-run-dca:hover { filter: brightness(1.12); transform: translateY(-1px); box-shadow: 0 6px 28px rgba(138,92,246,.45); }
+  .btn-run-dca:disabled { opacity: .5; cursor: not-allowed; transform: none; filter: none; }
+  .run-dca-modal { display: none; position: fixed; inset: 0; z-index: 200; background: rgba(0,0,0,.55); backdrop-filter: blur(6px); justify-content: center; align-items: center; padding: 20px; }
+  .run-dca-modal.open { display: flex; animation: wmFadeIn .2s ease; }
+  .rdm-card { background: var(--bg); border: 1px solid var(--glass-brd); border-radius: 24px; width: 100%; max-width: 440px; max-height: 90vh; overflow-y: auto; box-shadow: 0 24px 60px rgba(0,0,0,.5); animation: wmSlideUp .25s ease; padding: 24px; }
+  [data-theme="light"] .rdm-card { background: #fff; box-shadow: 0 24px 60px rgba(0,0,0,.12); }
+  .rdm-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 18px; }
+  .rdm-header h3 { margin: 0; font-size: 18px; }
+  .rdm-close { background: none; border: none; font-size: 22px; cursor: pointer; color: var(--muted); padding: 4px; line-height: 1; }
+  .rdm-summary { padding: 16px; border-radius: 14px; background: var(--glass); border: 1px solid var(--glass-brd); margin-bottom: 16px; }
+  .rdm-summary .rdm-row { display: flex; justify-content: space-between; align-items: center; padding: 6px 0; font-size: 13px; }
+  .rdm-summary .rdm-row:not(:last-child) { border-bottom: 1px solid var(--glass-brd); }
+  .rdm-summary .rdm-label { color: var(--muted); }
+  .rdm-summary .rdm-val { font-weight: 600; font-family: Sora, sans-serif; }
+  .rdm-reasoning { font-size: 13px; line-height: 1.6; color: var(--text); padding: 14px 16px; border-radius: 14px; border: 1px solid rgba(245,165,36,.2); background: rgba(245,165,36,.04); margin-bottom: 18px; max-height: 150px; overflow-y: auto; }
+  .rdm-actions { display: flex; gap: 10px; }
+  .rdm-actions .btn-approve, .rdm-actions .btn-reject { flex: 1; padding: 12px; border-radius: 14px; font-size: 14px; }
+  .ah-settings-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+  .ah-settings-table th { text-align: left; padding: 8px 10px; font-size: 11px; text-transform: uppercase; letter-spacing: .5px; color: var(--muted); border-bottom: 1px solid var(--glass-brd); }
+  .ah-settings-table td { padding: 8px 10px; border-bottom: 1px solid var(--glass-brd); }
+  .ah-settings-table .ah-verdict { font-weight: 600; font-size: 11px; padding: 2px 8px; border-radius: 6px; }
+  .ah-settings-table .ah-verdict.approved { background: rgba(52,211,153,.12); color: var(--green); }
+  .ah-settings-table .ah-verdict.rejected { background: rgba(251,113,133,.12); color: #fb7185; }
 
   /* ---------- wallet connect modal ---------- */
   .wm-overlay { display: none; position: fixed; inset: 0; z-index: 200; background: rgba(0,0,0,.55); backdrop-filter: blur(6px); justify-content: center; align-items: center; padding: 20px; }
@@ -781,6 +805,9 @@
     </div>
     <div class="status-note" id="tgStatus" style="margin-top:6px;"></div>
     <p style="font-size:11px;color:var(--muted);margin:8px 0 0;">Create a bot via <a href="https://t.me/BotFather" target="_blank" rel="noopener">@BotFather</a>, get your chat ID from <a href="https://t.me/userinfobot" target="_blank" rel="noopener">@userinfobot</a>. Messages are sent directly from your browser.</p>
+    <h3 style="margin:18px 0 14px;" data-t="approvalHistoryTitle">Approval History</h3>
+    <div id="settingsApprovalHistory" style="max-height:250px;overflow-y:auto;border:1px solid var(--glass-brd);border-radius:14px;"></div>
+    <button class="btn ghost" id="clearApprovalHistBtn" style="margin-top:8px;padding:6px 14px;font-size:11px;">Clear history</button>
     <div class="settings-saved" id="settingsSaved">Settings saved</div>
   </div>
 
@@ -893,7 +920,24 @@
         </div>
       </div>
     </div>
+    <button class="btn-run-dca" id="runDcaBtn" data-t="runDcaBtn">▶ Run DCA Now</button>
   </section>
+
+  <div class="run-dca-modal" id="rdmOverlay">
+    <div class="rdm-card" id="rdmCard">
+      <div class="rdm-header">
+        <h3 data-t="rdmTitle">Confirm DCA Trade</h3>
+        <button class="rdm-close" id="rdmClose">✕</button>
+      </div>
+      <div class="rdm-summary" id="rdmSummary"></div>
+      <div class="rdm-reasoning" id="rdmReasoning"></div>
+      <div class="rdm-actions">
+        <button class="btn-approve" id="rdmApprove" data-t="apBtnApprove">Approve swap</button>
+        <button class="btn-reject" id="rdmReject" data-t="apBtnReject">Reject</button>
+      </div>
+      <div class="status-note" id="rdmStatus" style="margin-top:12px;"></div>
+    </div>
+  </div>
 
   <section class="reveal" id="approvalSection" style="display:none;">
     <div class="eyebrow" data-t="approvalEye">Approval Center</div>
@@ -1487,7 +1531,104 @@
     var alreadyDecided = approvalData.history.some(function (h) { return h.id === latest.timestamp; });
     if (alreadyDecided) return;
     addPendingApproval(latest);
+    notifyPendingApproval(latest);
   }
+
+  function notifyPendingApproval(entry) {
+    var tg = loadStore("aura-telegram", {});
+    if (!tg.token || !tg.chatId) return;
+    var t = (typeof T !== "undefined" && T[currentLang]) ? T[currentLang] : {};
+    var msg = (t.rdmTgPending || "📋 Pending approval") + "\n\n" +
+      "Amount: " + (entry.clampedAmountUsdc || entry.amount || "?") + " USDC → " + (entry.tokenOut || "cirBTC") + "\n" +
+      "Date: " + (entry.date || "—") + "\n" +
+      (entry.reasoning ? "Reasoning: " + entry.reasoning.slice(0, 300) : "") + "\n\n" +
+      "⏳ Open the dashboard to approve or reject.";
+    sendTelegram(tg.token, tg.chatId, msg).catch(function () {});
+  }
+
+  // ---------- Run DCA Now modal ----------
+  var _rdmPendingId = null;
+  function openRunDcaModal() {
+    var t = (typeof T !== "undefined" && T[currentLang]) ? T[currentLang] : {};
+    var status = $("rdmStatus");
+    if (!_historyData || !_historyData.length) {
+      status.textContent = t.rdmNoData || "No DCA proposal available.";
+      return;
+    }
+    var latest = _historyData[_historyData.length - 1];
+    if (!latest.clampedAmountUsdc && !latest.requestedAmountUsdc) {
+      status.textContent = t.rdmNoData || "No DCA proposal available.";
+      return;
+    }
+    var id = latest.timestamp || new Date().toISOString();
+    var alreadyPending = approvalData.pending.some(function (p) { return p.id === id; });
+    if (!alreadyPending) {
+      var newId = id + "_" + Date.now();
+      approvalData.pending.push({
+        id: newId, date: latest.date, timestamp: latest.timestamp,
+        amount: latest.clampedAmountUsdc || latest.requestedAmountUsdc || "0",
+        boundBy: latest.boundBy || "—", reasoning: latest.reasoning || "",
+        balance: latest.walletUsdcBalance || "—", status: latest.status || "pending",
+        tokenOut: latest.tokenOut || "cirBTC"
+      });
+      saveApprovals();
+      id = newId;
+    }
+    _rdmPendingId = id;
+    var p = approvalData.pending.find(function (x) { return x.id === id; }) || latest;
+    var amt = p.clampedAmountUsdc || p.amount || "0";
+    $("rdmSummary").innerHTML =
+      '<div class="rdm-row"><span class="rdm-label">' + (t.rdmAmount || "Amount") + '</span><span class="rdm-val">' + fmt(parseFloat(amt) || 0, 4) + ' USDC</span></div>' +
+      '<div class="rdm-row"><span class="rdm-label">' + (t.rdmToken || "Token") + '</span><span class="rdm-val">' + (p.tokenOut || "cirBTC") + '</span></div>' +
+      '<div class="rdm-row"><span class="rdm-label">' + (t.rdmBound || "Bound by") + '</span><span class="rdm-val">' + ((p.boundBy || "—").replace(/_/g, " ")) + '</span></div>' +
+      '<div class="rdm-row"><span class="rdm-label">' + (t.rdmBalance || "Wallet balance") + '</span><span class="rdm-val">' + (p.balance && p.balance !== "—" ? fmt(parseFloat(p.balance) || 0, 2) + " USDC" : "—") + '</span></div>';
+    $("rdmReasoning").textContent = p.reasoning || latest.reasoning || "No reasoning provided.";
+    status.textContent = "";
+    $("rdmOverlay").classList.add("open");
+    document.body.style.overflow = "hidden";
+  }
+  function closeRunDcaModal() {
+    $("rdmOverlay").classList.remove("open");
+    document.body.style.overflow = "";
+    _rdmPendingId = null;
+  }
+  $("rdmClose").addEventListener("click", closeRunDcaModal);
+  $("rdmOverlay").addEventListener("click", function (e) { if (e.target === $("rdmOverlay")) closeRunDcaModal(); });
+  document.addEventListener("keydown", function (e) { if (e.key === "Escape" && $("rdmOverlay").classList.contains("open")) closeRunDcaModal(); });
+  $("rdmCard").addEventListener("click", function (e) { e.stopPropagation(); });
+
+  $("rdmApprove").addEventListener("click", function () {
+    if (_rdmPendingId) { approveDecision(_rdmPendingId); closeRunDcaModal(); renderApprovalSection(); renderSettingsApprovalHistory(); }
+  });
+  $("rdmReject").addEventListener("click", function () {
+    if (_rdmPendingId) { rejectDecision(_rdmPendingId); closeRunDcaModal(); renderApprovalSection(); renderSettingsApprovalHistory(); }
+  });
+  $("runDcaBtn").addEventListener("click", openRunDcaModal);
+
+  // ---------- Settings approval history table ----------
+  function renderSettingsApprovalHistory() {
+    var host = $("settingsApprovalHistory");
+    if (!host) return;
+    var t = (typeof T !== "undefined" && T[currentLang]) ? T[currentLang] : {};
+    if (!approvalData.history.length) {
+      host.innerHTML = '<div style="padding:16px;text-align:center;color:var(--muted);font-size:12px;">' + (t.apHistEmpty || "No approval history yet.") + '</div>';
+      return;
+    }
+    host.innerHTML = '<table class="ah-settings-table"><thead><tr><th>Date</th><th>' + (t.rdmAmount || "Amount") + '</th><th>Token</th><th>Status</th></tr></thead><tbody>' +
+      approvalData.history.slice(0, 30).map(function (h) {
+        var isA = h.verdict === "approved";
+        var when = h.verdictAt ? new Date(h.verdictAt).toLocaleDateString() : h.date || "—";
+        return '<tr><td>' + when + '</td><td>' + fmt(parseFloat(h.amount) || 0, 4) + ' USDC</td><td>' + (h.tokenOut || "cirBTC") + '</td>' +
+          '<td><span class="ah-verdict ' + (isA ? "approved" : "rejected") + '">' + (isA ? (t.apApproved || "Approved") : (t.apRejected || "Rejected")) + '</span></td></tr>';
+      }).join("") + '</tbody></table>';
+  }
+  $("clearApprovalHistBtn").addEventListener("click", function () {
+    approvalData.history = [];
+    saveApprovals();
+    renderSettingsApprovalHistory();
+    renderApprovalSection();
+    flashSaved();
+  });
 
   var ARC = {
     chainIdHex: "0x4cef52",           // 5042002
@@ -3070,6 +3211,10 @@
       apBtnApprove: "Approve swap", apBtnReject: "Reject",
       apEmpty: "No pending decisions. The agent will submit proposals here when Manual Approval is enabled.",
       apHistEmpty: "No approval history yet.",
+      runDcaBtn: "▶ Run DCA Now", rdmTitle: "Confirm DCA Trade",
+      rdmAmount: "Amount", rdmToken: "Token", rdmBound: "Bound by", rdmBalance: "Wallet balance",
+      rdmNoData: "No DCA proposal available. Wait for the next agent run.",
+      rdmCreating: "Creating proposal…", rdmTgPending: "📋 Pending approval",
     },
     vi: {
       heroChip: "Encode × Circle · Hackathon Tiền Lập Trình",
@@ -3121,6 +3266,10 @@
       apBtnApprove: "Duyệt swap", apBtnReject: "Từ chối",
       apEmpty: "Không có quyết định chờ duyệt. Agent sẽ gửi đề xuất tại đây khi bật chế độ Phê duyệt thủ công.",
       apHistEmpty: "Chưa có lịch sử phê duyệt.",
+      runDcaBtn: "▶ Chạy DCA ngay", rdmTitle: "Xác nhận giao dịch DCA",
+      rdmAmount: "Số lượng", rdmToken: "Token", rdmBound: "Giới hạn bởi", rdmBalance: "Số dư ví",
+      rdmNoData: "Chưa có đề xuất DCA. Đợi lần chạy tiếp theo của agent.",
+      rdmCreating: "Đang tạo đề xuất…", rdmTgPending: "📋 Chờ phê duyệt",
     }
   };
   var currentLang = localStorage.getItem("aura-lang") || "en";
@@ -3172,6 +3321,7 @@
   // Apply saved language on load
   if (currentLang !== "en") applyLang(currentLang);
   renderApprovalSection();
+  renderSettingsApprovalHistory();
 
   // ---------- add data-t attributes to sections for language support ----------
   (function markTranslatable() {
