@@ -1670,8 +1670,10 @@
   function updateHeaderWallet(account, loginType) {
     var btn = $("connectBtn");
     var badge = $("hdWalletBadge");
+    var heroBtn = $("connectHero");
     if (account) {
       btn.style.display = "none";
+      if (heroBtn) heroBtn.style.display = "none";
       badge.style.display = "flex";
       badge.innerHTML = '<span class="badge-dot"></span> ' + account.slice(0, 6) + '…' + account.slice(-4);
       badge.onclick = function () {
@@ -1679,6 +1681,7 @@
       };
     } else {
       btn.style.display = "";
+      if (heroBtn) heroBtn.style.display = "";
       badge.style.display = "none";
     }
   }
