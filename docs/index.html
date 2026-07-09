@@ -695,44 +695,34 @@
     </div>
   </div>
 
-  <section class="reveal">
-    <div class="eyebrow">Wallet</div>
-    <div class="h2">Your Arc Testnet wallet</div>
-    <p class="sub">Connect your wallet to view on-chain balances. Read-only — this page never sends a transaction.</p>
-    <div class="card" id="walletCard">
-      <div class="wp-connect" id="walletConnect">
-        <div class="wp-icon">🔗</div>
-        <h3>Connect your wallet</h3>
-        <p>Sign in with Gmail to create a wallet, or connect MetaMask to view your Arc Testnet balances and activity.</p>
-        <div class="connect-options" id="connectOptions">
-          <button class="connect-opt" id="connectGmail">
-            <div class="co-icon gmail">G</div>
-            <div class="co-info"><span class="co-title">Continue with Gmail</span><span class="co-desc">Create wallet with your Google account</span></div>
-            <span class="co-arrow">→</span>
-          </button>
-          <div class="connect-divider">or</div>
-          <button class="connect-opt" id="connectMetamask">
-            <div class="co-icon metamask">🦊</div>
-            <div class="co-info"><span class="co-title">Connect MetaMask</span><span class="co-desc">Use your existing wallet</span></div>
-            <span class="co-arrow">→</span>
-          </button>
-        </div>
-        <div class="gmail-form" id="gmailForm" style="display:none;">
-          <input type="text" id="gmailName" placeholder="Your name" />
-          <input type="email" id="gmailEmail" placeholder="your.email@gmail.com" />
-          <button class="btn" id="gmailSubmit" style="width:100%;">Create wallet & sign in</button>
-          <button class="gmail-back" id="gmailBack">← Back to options</button>
-        </div>
+  <div id="walletCard" style="display:none;">
+    <section class="reveal">
+      <div class="eyebrow">Your wallet</div>
+      <div class="card">
+        <div class="wp-connect" id="walletConnect" style="display:none;"></div>
+        <div id="walletProfile"></div>
       </div>
-      <div id="walletProfile" style="display:none;"></div>
-    </div>
-    <div class="status-note" id="walletStatus"></div>
-  </section>
+      <div class="status-note" id="walletStatus"></div>
+    </section>
+  </div>
 
-  <section class="reveal">
-    <div class="eyebrow">Token watchlist</div>
-    <div class="h2">Track custom tokens</div>
-    <p class="sub">Add any ERC-20 token on Arc Testnet to your personal watchlist. Balances update when your wallet is connected. Saved automatically in your browser.</p>
+  <!-- Hidden connect form (used by header dropdown) -->
+  <div style="display:none;">
+    <div id="connectOptions"></div>
+    <button id="connectGmail"></button>
+    <button id="connectMetamask"></button>
+    <div id="gmailForm">
+      <input type="text" id="gmailName" />
+      <input type="email" id="gmailEmail" />
+      <button id="gmailSubmit"></button>
+      <button id="gmailBack"></button>
+    </div>
+  </div>
+
+  <div id="reconnectBarWallet"></div>
+
+  <!-- Token watchlist (hidden, placeholder) -->
+  <div style="display:none;" id="watchlistSection">
     <div class="card">
       <div class="watchlist-items" id="watchlistItems">
         <div class="wl-empty" id="wlEmpty">No custom tokens added yet. Use the form below to track any ERC-20 token.</div>
@@ -745,39 +735,16 @@
       </div>
       <div class="status-note" id="wlStatus"></div>
     </div>
-  </section>
+  </div>
 
   <section class="reveal">
-    <div class="eyebrow">Use the agent</div>
-    <div class="h2">Fund the agent's DCA treasury</div>
-    <p class="sub">Deposit testnet USDC to the agent's wallet and its daily cron will dollar-cost-average the pooled balance into cirBTC — the agent works for the treasury, autonomously.</p>
-    <div class="card">
-      <div class="deposit-layout">
-        <div class="deposit-qr">
-          <div id="agentQR"></div>
-          <div class="qr-label">Scan to copy agent address</div>
-        </div>
-        <div class="deposit-details">
-          <div class="agent-addr-box">
-            <div class="agent-addr-label">Agent Wallet Address</div>
-            <div class="agent-addr-full" id="agentAddrFull"></div>
-            <div class="agent-addr-actions">
-              <button class="btn ghost" id="copyAgent">Copy address</button>
-              <a class="btn ghost" id="agentScan" target="_blank" rel="noopener">View on ArcScan ↗</a>
-            </div>
-          </div>
-          <div class="deposit-stats">
-            <div class="deposit-stat"><div class="ds-val" id="treasuryBal">—</div><div class="ds-label">Treasury balance (USDC)</div></div>
-            <div class="deposit-stat"><div class="ds-val" id="treasuryNet">Arc Testnet</div><div class="ds-label">Network</div></div>
-          </div>
-          <div class="deposit-form">
-            <input id="depositAmt" type="number" min="0" step="0.01" placeholder="Amount in USDC" />
-            <button class="btn" id="depositBtn">Deposit to agent</button>
-          </div>
-          <div class="status-note" id="depositStatus"></div>
-        </div>
-      </div>
-      <p class="note" style="margin-top:16px;">⚠️ <b>Testnet demo.</b> USDC is sent to the agent's shared Circle wallet, which funds the autonomous daily DCA. There is no per-user accounting or withdrawal — deposit only valueless testnet USDC you're happy to contribute to the demo treasury. You confirm every transfer yourself in your wallet.</p>
+    <div class="eyebrow">How it works</div>
+    <div class="h2">Claude recommends. Code decides.</div>
+    <p class="sub">The LLM is never the final authority on how much money moves.</p>
+    <div class="flow">
+      <div class="step"><div class="num">1</div><b>Claude decides</b><span>Given balance, budget, day count &amp; history, Claude returns a proposed amount + reasoning via a forced, schema-validated tool call.</span></div>
+      <div class="step"><div class="num">2</div><b>Guardrails clamp</b><span>A pure, unit-tested function re-derives the cap from hard limits (max/day, reserve, dust, budget). The sole spending authority.</span></div>
+      <div class="step"><div class="num">3</div><b>Swap &amp; record</b><span>Circle Swap Kit executes USDC → cirBTC on Arc Testnet; the run is appended to a public audit trail committed back to the repo.</span></div>
     </div>
   </section>
 
@@ -826,20 +793,17 @@
   <section class="reveal">
     <div class="eyebrow">Live track record</div>
     <div class="h2">What the agent has done</div>
-    <p class="sub">Straight from <a href="https://github.com/thanhphuc85/ArcDCA/blob/main/data/history.json" target="_blank" rel="noopener"><code>data/history.json</code></a> — every run the bot commits back to its own repo.</p>
+    <p class="sub">Every run is recorded on-chain and committed to the repo — full transparency.</p>
     <div class="export-bar" id="historyExportBar" style="display:none;">
       <span class="export-label">Export:</span>
       <button class="btn-sm" id="exportHistCSV"><span class="ic">📄</span> CSV</button>
       <button class="btn-sm" id="exportHistJSON"><span class="ic">{ }</span> JSON</button>
     </div>
 
-    <div class="grid cols-3">
-      <div class="card tile"><span class="n" id="tTotal"><div class="skel skel-num"></div></span><span class="l">USDC deployed</span></div>
-      <div class="card tile"><span class="n" id="tRuns"><div class="skel skel-num"></div></span><span class="l">Runs recorded</span></div>
-      <div class="card tile"><span class="n" id="tLast"><div class="skel skel-num"></div></span><span class="l">Last decision</span></div>
-    </div>
+    <!-- Stats tiles removed — single source at hero band -->
+    <span id="tTotal" style="display:none;"></span><span id="tRuns" style="display:none;"></span><span id="tLast" style="display:none;"></span>
 
-    <div class="card" style="margin-top:16px;">
+    <div class="card">
       <h3>Cumulative USDC deployed</h3>
       <p class="cs" id="chartSub"><span class="skel skel-line w60" style="display:inline-block;height:12px;"></span></p>
       <div id="chartHost"><div class="chart-loading"><div class="spinner"></div><span style="font-size:13px;color:var(--muted);">Loading chart data…</span></div></div>
@@ -948,41 +912,53 @@
   </section>
 
   <section class="reveal">
-    <div class="eyebrow">How it works</div>
-    <div class="h2">Claude recommends. Code decides.</div>
-    <p class="sub">The LLM is never the final authority on how much money moves.</p>
-    <div class="flow">
-      <div class="step"><div class="num">1</div><b>Claude decides</b><span>Given balance, budget, day count &amp; history, Claude returns a proposed amount + reasoning via a forced, schema-validated tool call.</span></div>
-      <div class="step"><div class="num">2</div><b>Guardrails clamp</b><span>A pure, unit-tested function re-derives the cap from hard limits (max/day, reserve, dust, budget). The sole spending authority.</span></div>
-      <div class="step"><div class="num">3</div><b>Swap &amp; record</b><span>Circle Swap Kit executes USDC → cirBTC on Arc Testnet; the run is appended to a public audit trail committed back to the repo.</span></div>
+    <div class="eyebrow">Fund the agent</div>
+    <div class="h2">Deposit to DCA treasury</div>
+    <p class="sub">Send testnet USDC to the agent's wallet — it dollar-cost-averages the pooled balance into cirBTC autonomously.</p>
+    <div class="card">
+      <div class="deposit-layout">
+        <div class="deposit-qr">
+          <div id="agentQR"></div>
+          <div class="qr-label">Scan to copy agent address</div>
+        </div>
+        <div class="deposit-details">
+          <div class="agent-addr-box">
+            <div class="agent-addr-label">Agent Wallet Address</div>
+            <div class="agent-addr-full" id="agentAddrFull"></div>
+            <div class="agent-addr-actions">
+              <button class="btn ghost" id="copyAgent">Copy address</button>
+              <a class="btn ghost" id="agentScan" target="_blank" rel="noopener">View on ArcScan ↗</a>
+            </div>
+          </div>
+          <div class="deposit-stats">
+            <div class="deposit-stat"><div class="ds-val" id="treasuryBal">—</div><div class="ds-label">Treasury balance (USDC)</div></div>
+            <div class="deposit-stat"><div class="ds-val" id="treasuryNet">Arc Testnet</div><div class="ds-label">Network</div></div>
+          </div>
+          <div class="deposit-form">
+            <input id="depositAmt" type="number" min="0" step="0.01" placeholder="Amount in USDC" />
+            <button class="btn" id="depositBtn">Deposit to agent</button>
+          </div>
+          <div class="status-note" id="depositStatus"></div>
+        </div>
+      </div>
+      <p class="note" style="margin-top:16px;">⚠️ <b>Testnet demo.</b> Deposit only valueless testnet USDC. No per-user accounting or withdrawal. You confirm every transfer in your wallet.</p>
     </div>
-    <p class="note" style="margin-top:18px;">The autonomous trading runs <b>server-side</b> (a GitHub Actions cron with a Circle Developer-Controlled Wallet), so no API keys ever reach the browser. This page is a read-only dashboard — connecting your wallet only reads your Arc balance.</p>
   </section>
 
   <section class="reveal">
-    <div class="eyebrow">Data management</div>
-    <div class="h2">Import & export your data</div>
-    <p class="sub">Download run history or reflections for offline analysis. Import a previously exported JSON backup to restore data.</p>
-    <div class="grid" style="grid-template-columns:1fr 1fr;gap:16px;">
-      <div class="card">
-        <h3>Export all data</h3>
-        <p class="cs">Download a full backup of history and reflections as a single JSON file.</p>
-        <button class="btn-sm" id="exportAllJSON" style="margin-top:8px;"><span class="ic">💾</span> Export full backup (JSON)</button>
-        <div style="margin-top:12px;">
-          <button class="btn-sm" id="exportAllCSV"><span class="ic">📊</span> Export history (CSV)</button>
-        </div>
-      </div>
-      <div class="card">
-        <h3>Import data</h3>
-        <p class="cs">Restore from a previously exported JSON backup file.</p>
-        <div class="import-zone" id="importZone">
-          <div class="iz-icon">📂</div>
-          <p class="iz-title">Drop JSON file here or click to browse</p>
-          <p class="iz-desc">Accepts exported .json backup files</p>
-        </div>
-        <input type="file" id="importFile" accept=".json" style="display:none;">
-        <div class="import-status" id="importStatus"></div>
-      </div>
+    <div class="eyebrow">Data</div>
+    <div class="h2">Export your data</div>
+    <p class="sub">Download run history and reflections for offline analysis.</p>
+    <div class="card" style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;">
+      <button class="btn-sm" id="exportAllJSON"><span class="ic">💾</span> Full backup (JSON)</button>
+      <button class="btn-sm" id="exportAllCSV"><span class="ic">📊</span> History (CSV)</button>
+      <span style="font-size:12px;color:var(--muted);">Includes all runs, reflections, and strategy data</span>
+    </div>
+    <!-- Hidden import elements (keep JS working) -->
+    <div style="display:none;">
+      <div id="importZone"></div>
+      <input type="file" id="importFile" accept=".json">
+      <div id="importStatus"></div>
     </div>
   </section>
 
@@ -1274,6 +1250,7 @@
       ? '<span class="wp-login-badge gmail">G Signed in with Gmail</span>'
       : '<span class="wp-login-badge wallet">🦊 MetaMask</span>';
 
+    $("walletCard").style.display = "";
     $("walletConnect").style.display = "none";
     var prof = $("walletProfile");
     prof.style.display = "";
@@ -1337,9 +1314,7 @@
       saveWalletAddr(null);
       try { localStorage.removeItem("aura-gmail-wallet"); } catch(e){}
       prof.style.display = "none";
-      $("walletConnect").style.display = "";
-      $("connectOptions").style.display = "";
-      $("gmailForm").style.display = "none";
+      $("walletCard").style.display = "none";
       status.textContent = "";
       if (typeof updateHeaderWallet === "function") updateHeaderWallet(null, null);
     });
@@ -1408,22 +1383,23 @@
     var hex = Math.abs(hash).toString(16).padStart(40, "0").slice(0, 40);
     return "0x" + hex;
   }
-  async function connectGmail() {
+  async function connectGmail(overrideName, overrideEmail) {
     var status = $("walletStatus");
-    var nameVal = $("gmailName").value.trim();
-    var emailVal = $("gmailEmail").value.trim();
+    var nameVal = overrideName || $("gmailName").value.trim() || $("hdGmailName").value.trim();
+    var emailVal = overrideEmail || $("gmailEmail").value.trim() || $("hdGmailEmail").value.trim();
     if (!emailVal || !emailVal.includes("@")) {
       status.textContent = "Please enter a valid email address.";
       return;
     }
+    try {
     status.innerHTML = '<span style="display:inline-flex;align-items:center;gap:8px;"><span class="spinner" style="width:16px;height:16px;border-width:2px;"></span> Creating wallet…</span>';
 
     var account = generateWalletFromEmail(emailVal);
     state.account = account;
     state.loginType = "gmail";
     saveWalletAddr(account);
-    try { localStorage.setItem("aura-gmail-wallet", JSON.stringify({ name: nameVal, email: emailVal, address: account })); } catch(e){}
-    $("reconnectBar").innerHTML = "";
+    try { localStorage.setItem("aura-gmail-wallet", JSON.stringify({ name: nameVal, email: emailVal, address: account })); } catch(e2){}
+    var rb = $("reconnectBar"); if (rb) rb.innerHTML = "";
 
     var nativeBal = 0, usdc = 0, cirbtc = 0;
     try {
@@ -1431,9 +1407,10 @@
       nativeBal = Number(BigInt(nativeRaw || "0x0")) / 1e18;
       usdc = Number(await tokenBalanceOf(ARC.usdc, account)) / 1e6;
       cirbtc = Number(await tokenBalanceOf(ARC.cirbtc, account)) / 1e8;
-    } catch (e) {}
+    } catch (e3) {}
     var txs = await fetchRecentTxs(account);
     showWalletProfile(account, nativeBal, usdc, cirbtc, "gmail", txs);
+    } catch (err) { status.textContent = "Connection failed: " + (err.message || err); }
   }
 
   // ---------- wallet connect event listeners ----------
@@ -1466,11 +1443,13 @@
     hdWrap.classList.remove("open");
     connectMetamask();
   });
-  $("hdConnectGmail").addEventListener("click", function () {
+  $("hdConnectGmail").addEventListener("click", function (e) {
+    e.stopPropagation();
     $("hdConnectGmail").parentElement.querySelector(".connect-divider").style.display = "none";
     $("hdConnectGmail").style.display = "none";
     $("hdConnectMetamask").style.display = "none";
     $("hdGmailForm").style.display = "";
+    hdWrap.classList.add("open");
   });
   $("hdGmailBack").addEventListener("click", function () {
     $("hdGmailForm").style.display = "none";
@@ -1478,12 +1457,14 @@
     $("hdConnectMetamask").style.display = "";
     $("hdConnectGmail").parentElement.querySelector(".connect-divider").style.display = "";
   });
-  $("hdGmailSubmit").addEventListener("click", function () {
-    $("gmailName").value = $("hdGmailName").value;
-    $("gmailEmail").value = $("hdGmailEmail").value;
+  $("hdGmailSubmit").addEventListener("click", function (ev) {
+    ev.stopPropagation();
+    var n = $("hdGmailName").value;
+    var e = $("hdGmailEmail").value;
     hdWrap.classList.remove("open");
-    connectGmail();
+    connectGmail(n, e);
   });
+  $("hdGmailForm").addEventListener("click", function (ev) { ev.stopPropagation(); });
   $("hdGmailEmail").addEventListener("keydown", function (e) {
     if (e.key === "Enter") { $("hdGmailSubmit").click(); }
   });
@@ -2259,9 +2240,7 @@
     $("rbReconnect").addEventListener("click", function () {
       bar.innerHTML = "";
       if (isGmail) {
-        $("gmailName").value = gmailData.name || "";
-        $("gmailEmail").value = gmailData.email || "";
-        connectGmail();
+        connectGmail(gmailData.name || "", gmailData.email || "");
       } else {
         connectMetamask();
       }
