@@ -477,8 +477,6 @@
   .wp-popover { display: none; position: absolute; top: calc(100% + 10px); right: 0; width: 380px; max-height: calc(100vh - 90px); overflow-y: auto; background: var(--bg); border: 1px solid var(--glass-brd); border-radius: 20px; box-shadow: 0 24px 80px -16px rgba(0,0,0,.8), 0 0 0 1px rgba(255,255,255,.04); backdrop-filter: blur(20px); z-index: 30; scrollbar-width: thin; }
   .wp-popover.open { display: block; animation: popIn .18s ease; }
   @keyframes popIn { from { opacity: 0; transform: translateY(-8px) scale(.97); } to { opacity: 1; transform: none; } }
-  .wp-popover-backdrop { display: none; position: fixed; inset: 0; z-index: 25; }
-  .wp-popover-backdrop.open { display: block; }
   [data-theme="light"] .wp-popover { background: #fff; box-shadow: 0 24px 80px -16px rgba(0,0,0,.18), 0 0 0 1px rgba(0,0,0,.06); }
   @media (max-width: 600px) { .wp-popover { width: calc(100vw - 24px); right: -12px; } }
 
@@ -655,7 +653,6 @@
     </div>
   </div>
 </header>
-<div class="wp-popover-backdrop" id="wpBackdrop"></div>
 
 <div class="wrap">
 
@@ -1751,22 +1748,28 @@
   if (heroBtn) heroBtn.addEventListener("click", openWalletModal);
 
   // Update header when wallet connects/disconnects
+  function _onDocClickPopover(e) {
+    var wrap = $("hdWalletWrap");
+    if (wrap && !wrap.contains(e.target)) closeWalletPopover();
+  }
   function openWalletPopover() {
     $("wpPopover").classList.add("open");
-    $("wpBackdrop").classList.add("open");
     $("hdWalletWrap").classList.add("pop-open");
+    setTimeout(function () { document.addEventListener("click", _onDocClickPopover); }, 0);
   }
   function closeWalletPopover() {
     $("wpPopover").classList.remove("open");
-    $("wpBackdrop").classList.remove("open");
     $("hdWalletWrap").classList.remove("pop-open");
+    document.removeEventListener("click", _onDocClickPopover);
   }
   function toggleWalletPopover() {
     var pop = $("wpPopover");
     if (pop.classList.contains("open")) closeWalletPopover();
     else openWalletPopover();
   }
-  $("wpBackdrop").addEventListener("click", closeWalletPopover);
+  document.addEventListener("keydown", function (e) {
+    if (e.key === "Escape" && $("wpPopover").classList.contains("open")) closeWalletPopover();
+  });
 
   function updateHeaderWallet(account, loginType) {
     var btn = $("connectBtn");
@@ -1777,7 +1780,8 @@
       if (heroBtn) heroBtn.style.display = "none";
       badge.style.display = "flex";
       badge.innerHTML = '<span class="badge-dot"></span> ' + account.slice(0, 6) + '…' + account.slice(-4);
-      badge.onclick = toggleWalletPopover;
+      badge.removeEventListener("click", toggleWalletPopover);
+      badge.addEventListener("click", toggleWalletPopover);
     } else {
       btn.style.display = "";
       if (heroBtn) heroBtn.style.display = "";
