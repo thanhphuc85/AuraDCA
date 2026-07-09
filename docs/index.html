@@ -474,6 +474,19 @@
   .theme-toggle { background: var(--glass); border: 1px solid var(--glass-brd); cursor: pointer; width: 40px; height: 40px; border-radius: 12px; display: grid; place-items: center; font-size: 19px; color: var(--text); transition: background .18s, border-color .18s, transform .18s; flex-shrink: 0; }
   .theme-toggle:hover { background: rgba(255,255,255,.1); transform: scale(1.08); }
   .hd-right { display: flex; align-items: center; gap: 10px; }
+  .hd-wallet-wrap { position: relative; }
+  .hd-wallet-drop { display: none; position: absolute; top: calc(100% + 10px); right: 0; width: 300px; background: var(--bg); border: 1px solid var(--glass-brd); border-radius: 16px; padding: 14px; z-index: 100; box-shadow: 0 12px 40px rgba(0,0,0,.45); }
+  .hd-wallet-wrap.open .hd-wallet-drop { display: block; }
+  .hd-wallet-drop .connect-opt { padding: 12px 14px; }
+  .hd-wallet-drop .connect-divider { margin: 6px 0; font-size: 11px; }
+  .hd-wallet-drop .hd-gmail-form input { width: 100%; background: rgba(0,0,0,.28); border: 1px solid var(--glass-brd); border-radius: 10px; color: var(--text); padding: 10px 14px; font-size: 13px; font-family: inherit; margin-bottom: 8px; }
+  .hd-wallet-drop .hd-gmail-form input:focus { outline: none; border-color: var(--violet); }
+  .hd-wallet-drop .hd-gmail-form input::placeholder { color: var(--muted); }
+  [data-theme="light"] .hd-wallet-drop { background: #fff; box-shadow: 0 12px 40px rgba(0,0,0,.12); }
+  [data-theme="light"] .hd-wallet-drop .hd-gmail-form input { background: rgba(0,0,0,.04); }
+  .hd-wallet-badge { display: flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 600; cursor: pointer; padding: 8px 16px; border-radius: 14px; border: 1px solid var(--glass-brd); background: var(--glass); transition: background .18s; }
+  .hd-wallet-badge:hover { background: rgba(255,255,255,.1); }
+  .hd-wallet-badge .badge-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--green); flex-shrink: 0; }
 
   /* ---------- light theme ---------- */
   [data-theme="light"] {
@@ -536,7 +549,27 @@
     <div class="hd-right">
       <button class="settings-toggle" id="settingsToggle" title="Settings">⚙️</button>
       <button class="theme-toggle" id="themeToggle" title="Toggle light/dark mode">🌙</button>
-      <button class="btn" id="connectBtn">Connect Wallet</button>
+      <div class="hd-wallet-wrap" id="hdWalletWrap">
+        <button class="btn" id="connectBtn">Connect Wallet</button>
+        <div class="hd-wallet-drop" id="hdWalletDrop">
+          <button class="connect-opt" id="hdConnectGmail">
+            <div class="co-icon gmail">G</div>
+            <div class="co-info"><span class="co-title">Continue with Gmail</span><span class="co-desc">Create wallet with Google</span></div>
+          </button>
+          <div class="connect-divider">or</div>
+          <button class="connect-opt" id="hdConnectMetamask">
+            <div class="co-icon metamask">🦊</div>
+            <div class="co-info"><span class="co-title">Connect MetaMask</span><span class="co-desc">Use existing wallet</span></div>
+          </button>
+          <div class="hd-gmail-form" id="hdGmailForm" style="display:none;">
+            <input type="text" id="hdGmailName" placeholder="Your name" />
+            <input type="email" id="hdGmailEmail" placeholder="your.email@gmail.com" />
+            <button class="btn" style="width:100%;" id="hdGmailSubmit">Create wallet & sign in</button>
+            <button class="gmail-back" id="hdGmailBack">← Back</button>
+          </div>
+        </div>
+        <div class="hd-wallet-badge" id="hdWalletBadge" style="display:none;"></div>
+      </div>
     </div>
   </div>
 </header>
@@ -1273,11 +1306,13 @@
       $("connectOptions").style.display = "";
       $("gmailForm").style.display = "none";
       status.textContent = "";
+      if (typeof updateHeaderWallet === "function") updateHeaderWallet(null, null);
     });
 
     status.textContent = "";
     refreshTreasury();
     refreshWatchlistBalances();
+    if (typeof updateHeaderWallet === "function") updateHeaderWallet(account, loginType);
   }
 
   // ---------- MetaMask connect ----------
@@ -1367,6 +1402,7 @@
   }
 
   // ---------- wallet connect event listeners ----------
+  // In-page card buttons
   $("connectMetamask").addEventListener("click", connectMetamask);
   $("connectGmail").addEventListener("click", function () {
     $("connectOptions").style.display = "none";
@@ -1381,9 +1417,63 @@
   $("gmailEmail").addEventListener("keydown", function (e) {
     if (e.key === "Enter") connectGmail();
   });
-  ["connectBtn", "connectHero"].forEach(function (id) {
-    var el = $(id); if (el) el.addEventListener("click", connectMetamask);
+
+  // Header dropdown
+  var hdWrap = $("hdWalletWrap");
+  $("connectBtn").addEventListener("click", function (e) {
+    e.stopPropagation();
+    hdWrap.classList.toggle("open");
   });
+  document.addEventListener("click", function (e) {
+    if (!hdWrap.contains(e.target)) hdWrap.classList.remove("open");
+  });
+  $("hdConnectMetamask").addEventListener("click", function () {
+    hdWrap.classList.remove("open");
+    connectMetamask();
+  });
+  $("hdConnectGmail").addEventListener("click", function () {
+    $("hdConnectGmail").parentElement.querySelector(".connect-divider").style.display = "none";
+    $("hdConnectGmail").style.display = "none";
+    $("hdConnectMetamask").style.display = "none";
+    $("hdGmailForm").style.display = "";
+  });
+  $("hdGmailBack").addEventListener("click", function () {
+    $("hdGmailForm").style.display = "none";
+    $("hdConnectGmail").style.display = "";
+    $("hdConnectMetamask").style.display = "";
+    $("hdConnectGmail").parentElement.querySelector(".connect-divider").style.display = "";
+  });
+  $("hdGmailSubmit").addEventListener("click", function () {
+    $("gmailName").value = $("hdGmailName").value;
+    $("gmailEmail").value = $("hdGmailEmail").value;
+    hdWrap.classList.remove("open");
+    connectGmail();
+  });
+  $("hdGmailEmail").addEventListener("keydown", function (e) {
+    if (e.key === "Enter") { $("hdGmailSubmit").click(); }
+  });
+
+  // Hero button
+  var heroBtn = $("connectHero");
+  if (heroBtn) heroBtn.addEventListener("click", connectMetamask);
+
+  // Update header when wallet connects/disconnects
+  function updateHeaderWallet(account, loginType) {
+    var btn = $("connectBtn");
+    var badge = $("hdWalletBadge");
+    if (account) {
+      btn.style.display = "none";
+      var icon = loginType === "gmail" ? "G" : "🦊";
+      badge.style.display = "flex";
+      badge.innerHTML = '<span class="badge-dot"></span> ' + account.slice(0, 6) + '…' + account.slice(-4);
+      badge.onclick = function () {
+        document.getElementById("walletCard").scrollIntoView({ behavior: "smooth", block: "center" });
+      };
+    } else {
+      btn.style.display = "";
+      badge.style.display = "none";
+    }
+  }
 
   // ---------- fund the agent (deposit USDC) ----------
   function toBaseUnits(str, decimals) {
