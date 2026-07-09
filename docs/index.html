@@ -3234,31 +3234,72 @@
   })();
 
   // ---------- per-user portfolio ----------
+  var _userOnChainDeposits = null;
+
+  async function scanUserDepositsOnChain(userAddr) {
+    try {
+      var latest = await rpcCall("eth_blockNumber", []);
+      var latestNum = parseInt(latest, 16);
+      var userPad = "0x" + userAddr.slice(2).toLowerCase().padStart(64, "0");
+      var agentPad = "0x" + ARC.agent.slice(2).toLowerCase().padStart(64, "0");
+      var TOPIC = "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef";
+      var CHUNK = 9999, LOOKBACK = 200000;
+      var logs = [], end = latestNum, earliest = Math.max(0, latestNum - LOOKBACK);
+      while (end > earliest) {
+        var start = Math.max(earliest, end - CHUNK);
+        var chunk = await rpcCall("eth_getLogs", [{
+          fromBlock: "0x" + start.toString(16), toBlock: "0x" + end.toString(16),
+          address: ARC.usdc, topics: [TOPIC, userPad, agentPad]
+        }]);
+        if (Array.isArray(chunk)) logs = logs.concat(chunk);
+        end = start - 1;
+      }
+      var total = 0;
+      logs.forEach(function (l) { total += Number(BigInt(l.data || "0x0")) / 1e6; });
+      return { count: logs.length, total: total };
+    } catch (e) { return null; }
+  }
+
   function renderPortfolio(ledger) {
     var sec = $("portfolioSection");
     if (!sec) return;
-    if (!ledger || !ledger.users || !state.account) {
-      sec.style.display = "none";
-      return;
-    }
-    var key = state.account.toLowerCase();
-    var user = ledger.users[key];
-    if (!user) {
-      sec.style.display = "none";
-      return;
-    }
-    sec.style.display = "";
-    $("portUsdc").textContent = fmt(parseFloat(user.usdcBalance || "0"), 6);
-    $("portCirBtc").textContent = fmt(parseFloat(user.cirBtcBalance || "0"), 8);
-    $("portDeposited").textContent = fmt(parseFloat(user.totalDeposited || "0"), 2);
-    $("portSwapped").textContent = fmt(parseFloat(user.totalSwapped || "0"), 2);
+    if (!state.account) { sec.style.display = "none"; return; }
 
-    // Withdrawal history for this user
-    var wds = (ledger.withdrawals || []).filter(function (w) { return w.address === key; });
+    sec.style.display = "";
+    var key = state.account.toLowerCase();
+    var user = (ledger && ledger.users) ? ledger.users[key] : null;
     var t = (typeof T !== "undefined" && T[currentLang]) ? T[currentLang] : {};
+
+    if (user) {
+      $("portUsdc").textContent = fmt(parseFloat(user.usdcBalance || "0"), 6);
+      $("portCirBtc").textContent = fmt(parseFloat(user.cirBtcBalance || "0"), 8);
+      $("portDeposited").textContent = fmt(parseFloat(user.totalDeposited || "0"), 2);
+      $("portSwapped").textContent = fmt(parseFloat(user.totalSwapped || "0"), 2);
+    } else {
+      $("portUsdc").textContent = "—";
+      $("portCirBtc").textContent = "—";
+      $("portDeposited").textContent = "—";
+      $("portSwapped").textContent = "—";
+      // Scan on-chain to show deposits even before ledger updates
+      if (!_userOnChainDeposits) {
+        scanUserDepositsOnChain(state.account).then(function (result) {
+          _userOnChainDeposits = result;
+          if (result && result.total > 0) {
+            $("portDeposited").textContent = fmt(result.total, 2);
+            $("portUsdc").textContent = "~" + fmt(result.total, 2);
+            $("wdStatus").innerHTML = '<span style="color:var(--muted);">⏳ ' +
+              (t.portPendingScan || "Your deposit of " + fmt(result.total, 2) + " USDC was detected on-chain. It will be credited to your account in the next agent run.") +
+              '</span>';
+          }
+        });
+      }
+    }
+
+    // Withdrawal history
+    var wds = (ledger && ledger.withdrawals || []).filter(function (w) { return w.address === key; });
     var wdHtml = "";
     if (wds.length > 0) {
-      wdHtml = "<h4>" + (t.portWdPending || "Withdrawals") + "</h4>";
+      wdHtml = "<h4 style='margin:12px 0 8px;font-size:14px;'>Withdrawal history</h4>";
       wds.forEach(function (w) {
         var badgeClass = w.status;
         var label = t["portWd" + w.status.charAt(0).toUpperCase() + w.status.slice(1)] || w.status;
@@ -3272,8 +3313,8 @@
     }
     $("wdHistory").innerHTML = wdHtml;
 
-    // Distribution history for this user
-    var dists = (ledger.distributions || []).filter(function (d) {
+    // Distribution history
+    var dists = (ledger && ledger.distributions || []).filter(function (d) {
       return d.allocations && d.allocations.some(function (a) { return a.address === key; });
     });
     var distCard = $("distCard");
@@ -3574,6 +3615,7 @@
       portWithdrawBtn: "Request withdrawal",
       portDistTitle: "DCA allocation history", portDistSub: "How the agent's swaps were distributed to your account.",
       portNoAccount: "No account found. Deposit USDC to the agent to start DCA.",
+      portPendingScan: "Your deposit was detected on-chain. It will be credited to your account in the next agent run.",
       portWdPending: "Pending", portWdCompleted: "Completed", portWdFailed: "Failed", portWdProcessing: "Processing",
     },
     vi: {
@@ -3655,6 +3697,7 @@
       portWithdrawBtn: "Yêu cầu rút tiền",
       portDistTitle: "Lịch sử phân bổ DCA", portDistSub: "Cách swap của agent được phân bổ cho tài khoản bạn.",
       portNoAccount: "Chưa có tài khoản. Gửi USDC vào agent để bắt đầu DCA.",
+      portPendingScan: "Tiền gửi đã phát hiện trên chain. Sẽ được ghi nhận vào tài khoản trong lần chạy agent tiếp theo.",
       portWdPending: "Chờ xử lý", portWdCompleted: "Hoàn thành", portWdFailed: "Thất bại", portWdProcessing: "Đang xử lý",
     }
   };
