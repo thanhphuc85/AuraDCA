@@ -508,18 +508,67 @@
   .theme-toggle:hover { background: rgba(255,255,255,.1); transform: scale(1.08); }
   .hd-right { display: flex; align-items: center; gap: 10px; }
   .hd-wallet-wrap { position: relative; }
-  .hd-wallet-drop { display: none; position: absolute; top: calc(100% + 10px); right: 0; width: 300px; background: var(--bg); border: 1px solid var(--glass-brd); border-radius: 16px; padding: 14px; z-index: 100; box-shadow: 0 12px 40px rgba(0,0,0,.45); }
-  .hd-wallet-wrap.open .hd-wallet-drop { display: block; }
-  .hd-wallet-drop .connect-opt { padding: 12px 14px; }
-  .hd-wallet-drop .connect-divider { margin: 6px 0; font-size: 11px; }
-  .hd-wallet-drop .hd-gmail-form input { width: 100%; background: rgba(0,0,0,.28); border: 1px solid var(--glass-brd); border-radius: 10px; color: var(--text); padding: 10px 14px; font-size: 13px; font-family: inherit; margin-bottom: 8px; }
-  .hd-wallet-drop .hd-gmail-form input:focus { outline: none; border-color: var(--violet); }
-  .hd-wallet-drop .hd-gmail-form input::placeholder { color: var(--muted); }
-  [data-theme="light"] .hd-wallet-drop { background: #fff; box-shadow: 0 12px 40px rgba(0,0,0,.12); }
-  [data-theme="light"] .hd-wallet-drop .hd-gmail-form input { background: rgba(0,0,0,.04); }
   .hd-wallet-badge { display: flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 600; cursor: pointer; padding: 8px 16px; border-radius: 14px; border: 1px solid var(--glass-brd); background: var(--glass); transition: background .18s; }
   .hd-wallet-badge:hover { background: rgba(255,255,255,.1); }
   .hd-wallet-badge .badge-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--green); flex-shrink: 0; }
+
+  /* ---------- wallet connect modal ---------- */
+  .wm-overlay { display: none; position: fixed; inset: 0; z-index: 200; background: rgba(0,0,0,.55); backdrop-filter: blur(6px); justify-content: center; align-items: center; padding: 20px; }
+  .wm-overlay.open { display: flex; animation: wmFadeIn .2s ease; }
+  @keyframes wmFadeIn { from { opacity: 0; } to { opacity: 1; } }
+  .wm-card { background: var(--bg); border: 1px solid var(--glass-brd); border-radius: 24px; width: 100%; max-width: 400px; max-height: 90vh; overflow-y: auto; box-shadow: 0 24px 60px rgba(0,0,0,.5); animation: wmSlideUp .25s ease; }
+  @keyframes wmSlideUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: none; } }
+  [data-theme="light"] .wm-card { background: #fff; box-shadow: 0 24px 60px rgba(0,0,0,.12); }
+  .wm-header { display: flex; align-items: center; justify-content: space-between; padding: 20px 24px 0; }
+  .wm-title { font-family: Sora; font-size: 18px; font-weight: 700; }
+  .wm-close { background: none; border: none; cursor: pointer; width: 36px; height: 36px; border-radius: 50%; display: grid; place-items: center; font-size: 18px; color: var(--muted); transition: background .15s, color .15s; }
+  .wm-close:hover { background: rgba(255,255,255,.08); color: var(--text); }
+  [data-theme="light"] .wm-close:hover { background: rgba(0,0,0,.05); }
+  .wm-body { padding: 16px 24px 24px; }
+  .wm-wallets { display: flex; flex-direction: column; gap: 6px; }
+  .wm-wallet { display: flex; align-items: center; gap: 14px; padding: 14px 16px; border-radius: 16px; border: 1px solid var(--glass-brd); background: rgba(255,255,255,.03); cursor: pointer; transition: border-color .2s, background .2s, transform .15s; width: 100%; font-family: inherit; color: var(--text); text-align: left; font-size: 14px; }
+  .wm-wallet:hover { border-color: rgba(138,92,246,.4); background: rgba(138,92,246,.05); transform: translateY(-1px); }
+  .wm-wallet:active { transform: translateY(0); }
+  [data-theme="light"] .wm-wallet { background: rgba(0,0,0,.02); }
+  [data-theme="light"] .wm-wallet:hover { background: rgba(138,92,246,.04); }
+  .wm-wallet-icon { width: 42px; height: 42px; border-radius: 12px; display: grid; place-items: center; font-size: 22px; flex-shrink: 0; overflow: hidden; }
+  .wm-wallet-icon img { width: 100%; height: 100%; object-fit: cover; border-radius: 12px; }
+  .wm-wallet-icon.metamask { background: linear-gradient(135deg, #e2761b, #f5841f); }
+  .wm-wallet-icon.coinbase { background: linear-gradient(135deg, #0052ff, #3377ff); }
+  .wm-wallet-icon.walletconnect { background: linear-gradient(135deg, #3b99fc, #5ab0ff); }
+  .wm-wallet-icon.phantom { background: linear-gradient(135deg, #ab9ff2, #c4b5fd); }
+  .wm-wallet-icon.rabby { background: linear-gradient(135deg, #7c6af6, #9b8afb); }
+  .wm-wallet-icon.injected { background: linear-gradient(135deg, var(--blue), var(--violet)); }
+  .wm-wallet-icon.gmail-icon { background: linear-gradient(135deg, #ea4335, #fbbc05, #34a853, #4285f4); background-size: 200% 200%; animation: gmailShift 3s ease infinite; }
+  .wm-wallet-info { flex: 1; min-width: 0; }
+  .wm-wallet-name { display: block; font-weight: 600; font-size: 15px; }
+  .wm-wallet-desc { display: block; font-size: 11px; color: var(--muted); margin-top: 2px; }
+  .wm-wallet-badge { font-size: 10px; font-weight: 700; padding: 3px 10px; border-radius: 999px; flex-shrink: 0; white-space: nowrap; }
+  .wm-badge-detected { background: rgba(52,211,153,.12); color: #6ee7b7; border: 1px solid rgba(52,211,153,.25); }
+  .wm-badge-popular { background: rgba(47,134,230,.12); color: #8fc0ff; border: 1px solid rgba(47,134,230,.25); }
+  [data-theme="light"] .wm-badge-detected { background: rgba(16,185,129,.08); color: #047857; border-color: rgba(16,185,129,.2); }
+  [data-theme="light"] .wm-badge-popular { background: rgba(37,99,235,.08); color: #1d4ed8; border-color: rgba(37,99,235,.2); }
+  .wm-wallet-arrow { color: var(--muted); font-size: 16px; flex-shrink: 0; }
+  .wm-divider { display: flex; align-items: center; gap: 14px; color: var(--muted); font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; margin: 16px 0; }
+  .wm-divider::before, .wm-divider::after { content: ""; flex: 1; height: 1px; background: var(--glass-brd); }
+  .wm-create-btn { width: 100%; padding: 14px; border: none; border-radius: 16px; background: linear-gradient(135deg, var(--violet), #c75af6); color: #fff; font-family: Sora; font-size: 15px; font-weight: 700; cursor: pointer; transition: filter .15s, transform .15s; box-shadow: 0 8px 24px -8px rgba(138,92,246,.5); }
+  .wm-create-btn:hover { filter: brightness(1.08); transform: translateY(-1px); }
+  .wm-create-btn:active { transform: translateY(0); }
+  .wm-signin { text-align: center; margin-top: 12px; }
+  .wm-signin a { font-size: 14px; font-weight: 600; color: var(--violet); cursor: pointer; }
+  .wm-signin a:hover { color: #a78bfa; }
+  .wm-footer { text-align: center; padding: 12px 24px 20px; font-size: 11px; color: var(--muted); line-height: 1.5; }
+  .wm-footer a { color: var(--violet); }
+  .wm-gmail-form { display: none; }
+  .wm-gmail-form.open { display: block; animation: fadeSlide .2s ease; }
+  .wm-gmail-form input { width: 100%; background: rgba(0,0,0,.2); border: 1px solid var(--glass-brd); border-radius: 12px; color: var(--text); padding: 12px 16px; font-size: 14px; font-family: inherit; margin-bottom: 10px; }
+  .wm-gmail-form input:focus { outline: none; border-color: var(--violet); }
+  .wm-gmail-form input::placeholder { color: var(--muted); }
+  [data-theme="light"] .wm-gmail-form input { background: rgba(0,0,0,.04); }
+  .wm-back { background: none; border: none; color: var(--muted); font-size: 13px; cursor: pointer; padding: 8px 0; font-family: inherit; display: flex; align-items: center; gap: 4px; }
+  .wm-back:hover { color: var(--text); }
+  .wm-status { font-size: 13px; color: var(--muted); margin-top: 10px; min-height: 18px; text-align: center; }
+  @media (max-width: 480px) { .wm-card { max-width: 100%; border-radius: 20px; } .wm-body { padding: 14px 18px 18px; } .wm-header { padding: 16px 18px 0; } .wm-footer { padding: 10px 18px 16px; } }
 
   /* ---------- light theme ---------- */
   [data-theme="light"] {
@@ -629,24 +678,7 @@
       <button class="settings-toggle" id="settingsToggle" title="Settings">⚙️</button>
       <button class="theme-toggle" id="themeToggle" title="Toggle light/dark mode">🌙</button>
       <div class="hd-wallet-wrap" id="hdWalletWrap">
-        <button class="btn" id="connectBtn">Connect Wallet</button>
-        <div class="hd-wallet-drop" id="hdWalletDrop">
-          <button class="connect-opt" id="hdConnectGmail">
-            <div class="co-icon gmail">G</div>
-            <div class="co-info"><span class="co-title">Continue with Gmail</span><span class="co-desc">Create wallet with Google</span></div>
-          </button>
-          <div class="connect-divider">or</div>
-          <button class="connect-opt" id="hdConnectMetamask">
-            <div class="co-icon metamask">🦊</div>
-            <div class="co-info"><span class="co-title">Connect MetaMask</span><span class="co-desc">Use existing wallet</span></div>
-          </button>
-          <div class="hd-gmail-form" id="hdGmailForm" style="display:none;">
-            <input type="text" id="hdGmailName" placeholder="Your name" />
-            <input type="email" id="hdGmailEmail" placeholder="your.email@gmail.com" />
-            <button class="btn" style="width:100%;" id="hdGmailSubmit">Create wallet & sign in</button>
-            <button class="gmail-back" id="hdGmailBack">← Back</button>
-          </div>
-        </div>
+        <button class="btn" id="connectBtn" data-t="connectWallet">Connect Wallet</button>
         <div class="hd-wallet-badge" id="hdWalletBadge" style="display:none;"></div>
       </div>
     </div>
@@ -1033,6 +1065,34 @@
       <div id="importStatus"></div>
     </div>
   </section>
+
+  <!-- Wallet connect modal -->
+  <div class="wm-overlay" id="wmOverlay">
+    <div class="wm-card" id="wmCard">
+      <div class="wm-header">
+        <span class="wm-title" data-t="wmTitle">Connect Wallet</span>
+        <button class="wm-close" id="wmClose">✕</button>
+      </div>
+      <div class="wm-body">
+        <div id="wmWalletList">
+          <div class="wm-wallets" id="wmWallets"></div>
+          <div class="wm-divider" data-t="wmOr">or</div>
+          <button class="wm-create-btn" id="wmCreateBtn" data-t="wmCreate">Create account</button>
+          <div class="wm-signin"><a id="wmSignin" data-t="wmSignin">Sign in</a></div>
+        </div>
+        <div class="wm-gmail-form" id="wmGmailForm">
+          <button class="wm-back" id="wmGmailBack">← <span data-t="wmBack">Back</span></button>
+          <div style="margin-top:12px;">
+            <input type="text" id="wmGmailName" placeholder="Your name" data-ph-t="wmNamePh" />
+            <input type="email" id="wmGmailEmail" placeholder="your.email@gmail.com" />
+            <button class="wm-create-btn" id="wmGmailSubmit" data-t="wmCreateSubmit">Create wallet & sign in</button>
+          </div>
+        </div>
+        <div class="wm-status" id="wmStatus"></div>
+      </div>
+      <div class="wm-footer" data-t="wmFooter">By connecting a wallet, you agree this is a <b>testnet demo</b> with no real value. <a href="https://github.com/thanhphuc85/ArcDCA" target="_blank" rel="noopener">View source</a>.</div>
+    </div>
+  </div>
 
   <footer>
     <div>Aura DCA Agent · Testnet only · not financial advice.</div>
@@ -1457,8 +1517,8 @@
   }
   async function connectGmail(overrideName, overrideEmail) {
     var status = $("walletStatus");
-    var nameVal = overrideName || $("gmailName").value.trim() || $("hdGmailName").value.trim();
-    var emailVal = overrideEmail || $("gmailEmail").value.trim() || $("hdGmailEmail").value.trim();
+    var nameVal = overrideName || $("gmailName").value.trim() || ($("wmGmailName") ? $("wmGmailName").value.trim() : "");
+    var emailVal = overrideEmail || $("gmailEmail").value.trim() || ($("wmGmailEmail") ? $("wmGmailEmail").value.trim() : "");
     if (!emailVal || !emailVal.includes("@")) {
       status.textContent = "Please enter a valid email address.";
       return;
@@ -1485,65 +1545,126 @@
     } catch (err) { status.textContent = "Connection failed: " + (err.message || err); }
   }
 
-  // ---------- wallet connect event listeners ----------
-  // In-page card buttons
-  $("connectMetamask").addEventListener("click", connectMetamask);
-  $("connectGmail").addEventListener("click", function () {
-    $("connectOptions").style.display = "none";
-    $("gmailForm").style.display = "";
-  });
-  $("gmailBack").addEventListener("click", function () {
-    $("gmailForm").style.display = "none";
-    $("connectOptions").style.display = "";
-    $("walletStatus").textContent = "";
-  });
-  $("gmailSubmit").addEventListener("click", connectGmail);
-  $("gmailEmail").addEventListener("keydown", function (e) {
-    if (e.key === "Enter") connectGmail();
-  });
+  // ---------- wallet connect modal ----------
+  var WALLETS = [
+    { id: "metamask", name: "MetaMask", icon: "🦊", detect: function() { return window.ethereum && window.ethereum.isMetaMask; }, action: "connect" },
+    { id: "coinbase", name: "Coinbase Wallet", icon: "🔵", detect: function() { return window.ethereum && window.ethereum.isCoinbaseWallet; }, action: "connect" },
+    { id: "rabby", name: "Rabby Wallet", icon: "🐰", detect: function() { return window.ethereum && window.ethereum.isRabby; }, action: "connect" },
+    { id: "phantom", name: "Phantom", icon: "👻", detect: function() { return window.phantom && window.phantom.ethereum; }, action: "connect" },
+    { id: "walletconnect", name: "WalletConnect", icon: "🔗", detect: function() { return false; }, action: "soon" },
+  ];
 
-  // Header dropdown
-  var hdWrap = $("hdWalletWrap");
-  $("connectBtn").addEventListener("click", function (e) {
-    e.stopPropagation();
-    hdWrap.classList.toggle("open");
+  function detectWallets() {
+    return WALLETS.map(function (w) {
+      return { id: w.id, name: w.name, icon: w.icon, detected: w.detect(), action: w.action };
+    });
+  }
+
+  function renderWalletModal() {
+    var wallets = detectWallets();
+    var t = T[currentLang] || T.en;
+    var detectedLabel = currentLang === "vi" ? "Đã phát hiện" : "Detected";
+    var popularLabel = currentLang === "vi" ? "Phổ biến" : "Popular";
+    var comingSoonLabel = currentLang === "vi" ? "Sắp có" : "Coming soon";
+
+    var detected = wallets.filter(function (w) { return w.detected; });
+    var others = wallets.filter(function (w) { return !w.detected; });
+    var sorted = detected.concat(others);
+
+    $("wmWallets").innerHTML = sorted.map(function (w) {
+      var badge = "";
+      if (w.detected) badge = '<span class="wm-wallet-badge wm-badge-detected">' + detectedLabel + '</span>';
+      else if (w.action === "soon") badge = '<span class="wm-wallet-badge wm-badge-popular">' + comingSoonLabel + '</span>';
+      else if (w.id === "metamask") badge = '<span class="wm-wallet-badge wm-badge-popular">' + popularLabel + '</span>';
+      var disabled = w.action === "soon" && !w.detected;
+      return '<button class="wm-wallet' + (disabled ? '' : '') + '" data-wallet="' + w.id + '"' + (disabled ? ' style="opacity:.5;cursor:default;"' : '') + '>' +
+        '<div class="wm-wallet-icon ' + w.id + '">' + w.icon + '</div>' +
+        '<div class="wm-wallet-info"><span class="wm-wallet-name">' + w.name + '</span>' +
+        (w.detected ? '<span class="wm-wallet-desc">EVM · Arc Testnet</span>' : '') + '</div>' +
+        badge +
+        '<span class="wm-wallet-arrow">›</span></button>';
+    }).join("");
+
+    // Add click handlers
+    $("wmWallets").querySelectorAll(".wm-wallet").forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        var wid = this.getAttribute("data-wallet");
+        var w = wallets.find(function (x) { return x.id === wid; });
+        if (w && w.action === "soon" && !w.detected) return;
+        closeWalletModal();
+        connectMetamask();
+      });
+    });
+  }
+
+  function openWalletModal() {
+    renderWalletModal();
+    $("wmOverlay").classList.add("open");
+    $("wmWalletList").style.display = "";
+    $("wmGmailForm").classList.remove("open");
+    $("wmStatus").textContent = "";
+    document.body.style.overflow = "hidden";
+  }
+
+  function closeWalletModal() {
+    $("wmOverlay").classList.remove("open");
+    document.body.style.overflow = "";
+  }
+
+  // Modal event listeners
+  $("wmClose").addEventListener("click", closeWalletModal);
+  $("wmOverlay").addEventListener("click", function (e) {
+    if (e.target === $("wmOverlay")) closeWalletModal();
   });
-  document.addEventListener("click", function (e) {
-    if (!hdWrap.contains(e.target)) hdWrap.classList.remove("open");
+  document.addEventListener("keydown", function (e) {
+    if (e.key === "Escape" && $("wmOverlay").classList.contains("open")) closeWalletModal();
   });
-  $("hdConnectMetamask").addEventListener("click", function () {
-    hdWrap.classList.remove("open");
-    connectMetamask();
+  $("wmCreateBtn").addEventListener("click", function () {
+    $("wmWalletList").style.display = "none";
+    $("wmGmailForm").classList.add("open");
+    $("wmGmailName").focus();
   });
-  $("hdConnectGmail").addEventListener("click", function (e) {
-    e.stopPropagation();
-    $("hdConnectGmail").parentElement.querySelector(".connect-divider").style.display = "none";
-    $("hdConnectGmail").style.display = "none";
-    $("hdConnectMetamask").style.display = "none";
-    $("hdGmailForm").style.display = "";
-    hdWrap.classList.add("open");
+  $("wmSignin").addEventListener("click", function () {
+    var gmailData = null;
+    try { var g = localStorage.getItem("aura-gmail-wallet"); if (g) gmailData = JSON.parse(g); } catch(e){}
+    if (gmailData && gmailData.email) {
+      closeWalletModal();
+      connectGmail(gmailData.name, gmailData.email);
+    } else {
+      $("wmWalletList").style.display = "none";
+      $("wmGmailForm").classList.add("open");
+      $("wmGmailEmail").focus();
+    }
   });
-  $("hdGmailBack").addEventListener("click", function () {
-    $("hdGmailForm").style.display = "none";
-    $("hdConnectGmail").style.display = "";
-    $("hdConnectMetamask").style.display = "";
-    $("hdConnectGmail").parentElement.querySelector(".connect-divider").style.display = "";
+  $("wmGmailBack").addEventListener("click", function () {
+    $("wmGmailForm").classList.remove("open");
+    $("wmWalletList").style.display = "";
+    $("wmStatus").textContent = "";
   });
-  $("hdGmailSubmit").addEventListener("click", function (ev) {
-    ev.stopPropagation();
-    var n = $("hdGmailName").value;
-    var e = $("hdGmailEmail").value;
-    hdWrap.classList.remove("open");
+  $("wmGmailSubmit").addEventListener("click", function () {
+    var n = $("wmGmailName").value;
+    var e = $("wmGmailEmail").value;
+    if (!e || !e.includes("@")) {
+      $("wmStatus").textContent = currentLang === "vi" ? "Vui lòng nhập email hợp lệ." : "Please enter a valid email address.";
+      return;
+    }
+    closeWalletModal();
     connectGmail(n, e);
   });
-  $("hdGmailForm").addEventListener("click", function (ev) { ev.stopPropagation(); });
-  $("hdGmailEmail").addEventListener("keydown", function (e) {
-    if (e.key === "Enter") { $("hdGmailSubmit").click(); }
+  $("wmGmailEmail").addEventListener("keydown", function (e) {
+    if (e.key === "Enter") $("wmGmailSubmit").click();
   });
+  $("wmCard").addEventListener("click", function (e) { e.stopPropagation(); });
 
-  // Hero button
+  // In-page hidden card buttons (keep for compatibility)
+  $("connectMetamask").addEventListener("click", function () { connectMetamask(); });
+  $("connectGmail").addEventListener("click", function () { openWalletModal(); $("wmCreateBtn").click(); });
+  $("gmailSubmit").addEventListener("click", connectGmail);
+
+  // Header + Hero buttons open modal
+  $("connectBtn").addEventListener("click", openWalletModal);
   var heroBtn = $("connectHero");
-  if (heroBtn) heroBtn.addEventListener("click", connectMetamask);
+  if (heroBtn) heroBtn.addEventListener("click", openWalletModal);
 
   // Update header when wallet connects/disconnects
   function updateHeaderWallet(account, loginType) {
@@ -1551,7 +1672,6 @@
     var badge = $("hdWalletBadge");
     if (account) {
       btn.style.display = "none";
-      var icon = loginType === "gmail" ? "G" : "🦊";
       badge.style.display = "flex";
       badge.innerHTML = '<span class="badge-dot"></span> ' + account.slice(0, 6) + '…' + account.slice(-4);
       badge.onclick = function () {
@@ -2555,6 +2675,9 @@
       dataEye: "Data", dataTitle: "Export your data",
       dataSub: "Download run history and reflections for offline analysis.",
       footerDisclaimer: "Aura DCA Agent · Testnet only · not financial advice.",
+      wmTitle: "Connect Wallet", wmOr: "or", wmCreate: "Create account", wmSignin: "Sign in",
+      wmBack: "Back", wmCreateSubmit: "Create wallet & sign in",
+      wmFooter: 'By connecting a wallet, you agree this is a <b>testnet demo</b> with no real value. <a href="https://github.com/thanhphuc85/ArcDCA" target="_blank" rel="noopener">View source</a>.',
     },
     vi: {
       heroChip: "Encode × Circle · Hackathon Tiền Lập Trình",
@@ -2587,6 +2710,9 @@
       dataEye: "Dữ liệu", dataTitle: "Xuất dữ liệu",
       dataSub: "Tải lịch sử chạy và phản chiếu để phân tích offline.",
       footerDisclaimer: "Aura DCA Agent · Chỉ dùng trên Testnet · không phải tư vấn tài chính.",
+      wmTitle: "Kết nối ví", wmOr: "hoặc", wmCreate: "Tạo tài khoản", wmSignin: "Đăng nhập",
+      wmBack: "Quay lại", wmCreateSubmit: "Tạo ví & đăng nhập",
+      wmFooter: 'Bằng việc kết nối ví, bạn đồng ý đây là <b>demo testnet</b> không có giá trị thực. <a href="https://github.com/thanhphuc85/ArcDCA" target="_blank" rel="noopener">Xem mã nguồn</a>.',
     }
   };
   var currentLang = localStorage.getItem("aura-lang") || "en";
