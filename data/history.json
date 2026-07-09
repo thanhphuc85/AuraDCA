@@ -41,5 +41,17 @@
     "reasoning": "No price/dip data is available yet (dipSignal: none), so I default to the base DCA amount of 1.00 USDC. Wallet balance (~39.84 USDC) is well above the minimum reserve, no spend has occurred today, and there's no campaign budget/duration requiring smoothing. compute_allocation confirms 1.00 USDC clears all guardrails cleanly at the daily max.",
     "walletUsdcBalance": "39.8434085891759712",
     "message": "Swap failed: Swap Kit execution failed (Stablecoin Service createSwap failed: Route or resource not found. Details: No route available)"
+  },
+  {
+    "date": "2026-07-09",
+    "timestamp": "2026-07-09T19:08:47.634Z",
+    "status": "error_swap_failed",
+    "requestedAmountUsdc": "0.25",
+    "clampedAmountUsdc": "0.250000",
+    "boundBy": "llm_recommendation",
+    "tokenOut": "cirBTC",
+    "reasoning": "Price/regime data remain unavailable (dipSignal: none, regime: insufficient_data), so there's no dip or momentum edge to lean on. Risk score is low (22) and pacing is actually behind (only 1 of 4 runs succeeded, wallet balance ballooning to ~39.84 USDC unused), which would normally argue for the full 1.00 cap, but my stored reflection flags a persistent \"No route available\" swap failure on the last two identical 1.00 USDC attempts — a routing/liquidity issue, not a guardrail or sizing problem. Per that reflection's strategy adjustment, I'm testing a smaller trade size (0.25 USDC, well within guardrails) this run to diagnose whether the route fails at all sizes or just larger ones, rather than blindly repeating the same failing 1.00 USDC request.",
+    "walletUsdcBalance": "39.8434085891759712",
+    "message": "Swap failed: Swap Kit execution failed (Stablecoin Service createSwap failed: Route or resource not found. Details: No route available)"
   }
 ]

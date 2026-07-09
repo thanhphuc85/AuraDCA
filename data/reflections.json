@@ -23,5 +23,30 @@
       "pacing",
       "cirBTC"
     ]
+  },
+  {
+    "id": "ref-1783624170746",
+    "date": "2026-07-09",
+    "timestamp": "2026-07-09T19:09:30.746Z",
+    "runStatus": "error_swap_failed",
+    "insight": "Testing 0.25 USDC (down from 1.00) still failed with identical \"No route available\" error, confirming the swap failure is NOT size-dependent — it's a persistent routing/liquidity issue for the cirBTC pair itself, not a guardrail or amount problem.",
+    "patterns": [
+      "3 consecutive error_swap_failed on 2026-07-08 and 2026-07-09 (two same-day attempts), all with identical 'No route available' message regardless of size (1.00 and 0.25 USDC both failed)",
+      "Wallet balance climbing unused each run: 19.84 -> 29.84 -> 39.84 USDC, indicating funds are accumulating without deployment",
+      "Price/regime data has been unavailable (dipSignal: none, regime: insufficient_data) across all recent runs, so sizing decisions have had no market signal input at all",
+      "Pacing is behind: only 1 of 5 logged runs actually executed (the dry_run on 07-07), cumulative spent is only 1.00 USDC by day 5 despite a presumed daily cap of 1.00"
+    ],
+    "strategyAdjustment": "Stop varying trade size to diagnose the swap failure — size is ruled out as the cause. Instead, next run should check for an alternate route/DEX or a different tokenOut pathway for cirBTC, or flag this as a persistent infrastructure/liquidity issue requiring escalation rather than retrying with LLM-side parameter tweaks. If the route continues to fail, consider pausing automatic retries on cirBTC and surfacing a clear alert rather than repeatedly consuming run cycles on a known-broken route. Also, since wallet balance is ballooning (39.84 USDC unused) and pacing is behind, once the route is fixed, consider a catch-up allocation above the simple daily cap to correct for the accumulated shortfall.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "1.000000",
+    "dayNumber": 5,
+    "walletBalance": "39.8434085891759712",
+    "tags": [
+      "error-recovery",
+      "routing-failure",
+      "pacing",
+      "budget",
+      "diagnostics"
+    ]
   }
 ]
