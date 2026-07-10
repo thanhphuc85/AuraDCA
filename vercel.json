@@ -5,6 +5,9 @@
       "maxDuration": 30
     }
   },
+  "rewrites": [
+    { "source": "/((?!api/).*)", "destination": "/docs/$1" }
+  ],
   "headers": [
     {
       "source": "/api/(.*)",

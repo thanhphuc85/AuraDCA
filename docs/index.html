@@ -898,11 +898,11 @@
     <h3 style="margin:18px 0 14px;" data-t="setWithdrawApiTitle">Withdrawal API</h3>
     <div class="settings-grid">
       <div class="setting-group" style="grid-column:1/-1;">
-        <label for="setWdApi" data-t="setWdApiLabel">API base URL</label>
-        <input type="url" id="setWdApi" placeholder="https://your-project.vercel.app" style="font-family:ui-monospace,monospace;font-size:12px;width:100%;" />
+        <label for="setWdApi" data-t="setWdApiLabel">API base URL (optional)</label>
+        <input type="url" id="setWdApi" placeholder="Leave empty — uses this site's /api/withdraw" style="font-family:ui-monospace,monospace;font-size:12px;width:100%;" />
       </div>
     </div>
-    <p style="font-size:11px;color:var(--muted);margin:8px 0 0;" data-t="setWdApiHelp">Deploy the <code>api/withdraw.ts</code> serverless function to Vercel and paste the base URL here. Withdrawals are processed in real-time (10–30s).</p>
+    <p style="font-size:11px;color:var(--muted);margin:8px 0 0;" data-t="setWdApiHelp">Leave empty to use this site's own <code>/api/withdraw</code> (works when deployed to Vercel). Only set a URL to route withdrawals through a different backend. Processed in real-time (10–30s).</p>
     <h3 style="margin:18px 0 14px;" data-t="approvalHistoryTitle">Approval History</h3>
     <div id="settingsApprovalHistory" style="max-height:250px;overflow-y:auto;border:1px solid var(--glass-brd);border-radius:14px;"></div>
     <button class="btn ghost" id="clearApprovalHistBtn" style="margin-top:8px;padding:6px 14px;font-size:11px;">Clear history</button>
@@ -3614,11 +3614,10 @@
       var bal = parseFloat(token === "USDC" ? user.usdcBalance : user.cirBtcBalance);
       if (amount > bal) { st.textContent = (t.wdErrBalance || "Insufficient balance: ") + bal + " " + token; return; }
 
-      var apiUrl = loadStore("aura-withdraw-api", "");
-      if (!apiUrl) {
-        st.innerHTML = '<span style="color:var(--amber);">' + (t.wdErrApiUrl || 'Set your Withdrawal API URL in Settings first.') + '</span>';
-        return;
-      }
+      // Default to this site's own serverless function (same-origin /api/withdraw
+      // when deployed to Vercel). An optional override can point at another backend.
+      var apiBase = loadStore("aura-withdraw-api", "");
+      var endpoint = apiBase ? apiBase.replace(/\/+$/, "") + "/api/withdraw" : "/api/withdraw";
 
       btn.disabled = true;
       prog.style.display = "";
@@ -3661,7 +3660,7 @@
           body.telegramChatId = tg.chatId;
         }
 
-        var response = await fetch(apiUrl + "/api/withdraw", {
+        var response = await fetch(endpoint, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(body)
@@ -3673,7 +3672,7 @@
           setStep(2, "done");
           setStep(3, "done");
           st.innerHTML = '<span style="color:var(--green);">✅ ' + (t.wdSuccess || "Withdrawal completed!") + ' ' + result.amount + ' ' + result.token + '</span>' +
-            (result.txHash ? '<br><a href="https://testnet.arcscan.io/tx/' + result.txHash + '" target="_blank" rel="noopener" style="font-size:12px;">View transaction ↗</a>' : '');
+            (result.txHash ? '<br><a href="' + ARC.explorer + '/tx/' + result.txHash + '" target="_blank" rel="noopener" style="font-size:12px;">View transaction ↗</a>' : '');
 
           if (tg.token && tg.chatId) {
             sendTelegram(tg.token, tg.chatId,
@@ -3956,8 +3955,8 @@
       wdErrConnect: "Connect your wallet first.", wdErrProvider: "MetaMask not available.",
       wdErrAmount: "Enter a valid amount.", wdErrLedger: "Ledger not loaded yet.",
       wdErrBalance: "Insufficient balance: ", wdErrApiUrl: "Set your Withdrawal API URL in Settings first.",
-      setWithdrawApiTitle: "Withdrawal API", setWdApiLabel: "API base URL",
-      setWdApiHelp: "Deploy the api/withdraw.ts serverless function to Vercel and paste the base URL here. Withdrawals are processed in real-time (10–30s).",
+      setWithdrawApiTitle: "Withdrawal API", setWdApiLabel: "API base URL (optional)",
+      setWdApiHelp: "Leave empty to use this site's own /api/withdraw (works when deployed to Vercel). Only set a URL to route withdrawals through a different backend. Processed in real-time (10–30s).",
       depErrConnect: "Connect your wallet first.", depErrAmount: "Enter an amount greater than 0.",
       depConfirm: "Confirm in wallet…", depSuccess: "Deposited", depCancelled: "Transaction cancelled.",
       depFailed: "Transfer failed: ", depBtn: "Deposit to agent",
@@ -4049,8 +4048,8 @@
       wdErrConnect: "Kết nối ví trước.", wdErrProvider: "MetaMask không khả dụng.",
       wdErrAmount: "Nhập số tiền hợp lệ.", wdErrLedger: "Chưa tải được sổ cái.",
       wdErrBalance: "Số dư không đủ: ", wdErrApiUrl: "Cấu hình URL API rút tiền trong Cài đặt trước.",
-      setWithdrawApiTitle: "API rút tiền", setWdApiLabel: "URL cơ sở API",
-      setWdApiHelp: "Deploy hàm serverless api/withdraw.ts lên Vercel và dán URL tại đây. Rút tiền xử lý theo thời gian thực (10–30 giây).",
+      setWithdrawApiTitle: "API rút tiền", setWdApiLabel: "URL cơ sở API (tùy chọn)",
+      setWdApiHelp: "Để trống để dùng /api/withdraw của chính site này (hoạt động khi deploy lên Vercel). Chỉ nhập URL nếu muốn định tuyến rút tiền qua backend khác. Xử lý thời gian thực (10–30 giây).",
       depErrConnect: "Kết nối ví trước.", depErrAmount: "Nhập số tiền lớn hơn 0.",
       depConfirm: "Xác nhận trong ví…", depSuccess: "Đã nạp", depCancelled: "Đã hủy giao dịch.",
       depFailed: "Chuyển tiền thất bại: ", depBtn: "Nạp vào agent",
