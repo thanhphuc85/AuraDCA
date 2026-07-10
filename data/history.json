@@ -65,5 +65,17 @@
     "reasoning": "Price/regime signals remain unavailable (dipSignal: none, regime: insufficient_data) and risk score is low (28), so sizing itself is not the issue — compute_allocation confirms 1.00 USDC clears guardrails cleanly. However, my own reflections document that both 1.00 USDC and 0.25 USDC swap attempts failed today/yesterday with an identical \"No route available\" error, proving this is a persistent routing/liquidity problem for cirBTC, not a size or guardrail constraint. Per my stored strategy adjustment to stop blindly retrying the same broken route and instead flag for escalation, I'm recommending proceed=false today rather than consuming another cycle on a known-failing swap; wallet balance (~39.84 USDC) is healthy and can absorb a catch-up allocation once the route is restored.",
     "walletUsdcBalance": "39.8434085891759712",
     "message": "Skipped: llm_declined"
+  },
+  {
+    "date": "2026-07-10",
+    "timestamp": "2026-07-10T16:07:28.476Z",
+    "status": "error_swap_failed",
+    "requestedAmountUsdc": "0.85",
+    "clampedAmountUsdc": "0.850000",
+    "boundBy": "llm_recommendation",
+    "tokenOut": "cirBTC",
+    "reasoning": "Market brief shows bearish sentiment (Fear&Greed 23, \"decrease 10-15%\" allocation bias) despite modest 24h BTC gain, so I trim from the 1.00 base to ~0.85 rather than deploy the full daily cap. Price action and regime tools still report insufficient cirBTC swap history (dipSignal: none, regime: insufficient_data), so there's no dip-buying override; risk score is medium (33, driven mainly by the historical error streak, not current volatility/concentration) which argues for a standard, undiscounted-but-not-aggressive allocation. Past reflections flag 4 consecutive \"No route available\" swap failures across various sizes (1.00 and 0.25 USDC), confirming it's a routing/liquidity issue rather than a sizing problem — so I'm proceeding with a reasonable size today (0.85, clears guardrails cleanly per compute_allocation) rather than withholding indefinitely, since wallet balance (~44.8 USDC) is healthy and the route may have been restored since the last attempt.",
+    "walletUsdcBalance": "44.8434085891759712",
+    "message": "Swap failed [no_route]: Swap failed [no_route]: Stablecoin Service createSwap failed: Route or resource not found. Details: No route available"
   }
 ]
