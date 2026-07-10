@@ -1890,6 +1890,14 @@
     rabby: "io.rabby",
     phantom: "app.phantom",
   };
+  // Catalog for icons + install links, keyed by rdns.
+  var KNOWN_WALLETS = {
+    "io.metamask": { id: "metamask", name: "MetaMask", icon: "🦊", install: "https://metamask.io/download/" },
+    "io.rabby": { id: "rabby", name: "Rabby Wallet", icon: "🐰", install: "https://rabby.io/" },
+    "com.coinbase.wallet": { id: "coinbase", name: "Coinbase Wallet", icon: "🔵", install: "https://www.coinbase.com/wallet/downloads" },
+    "app.phantom": { id: "phantom", name: "Phantom", icon: "👻", install: "https://phantom.app/download" },
+  };
+  function rdnsToId(rdns) { return (KNOWN_WALLETS[rdns] && KNOWN_WALLETS[rdns].id) || rdns; }
   window.addEventListener("eip6963:announceProvider", function (event) {
     var detail = event.detail;
     if (detail && detail.info && detail.provider) {
@@ -2093,9 +2101,13 @@
     var price = getImpliedPrice();
     var totalUsd = usdc + (cirbtc * price);
 
+    var WALLET_LABELS = {
+      metamask: "🦊 MetaMask", coinbase: "🔵 Coinbase", rabby: "🐰 Rabby", phantom: "👻 Phantom",
+      "io.metamask": "🦊 MetaMask", "com.coinbase.wallet": "🔵 Coinbase", "io.rabby": "🐰 Rabby", "app.phantom": "👻 Phantom",
+    };
     var badge = loginType === "gmail"
       ? '<span class="wp-login-badge gmail">G Gmail</span>'
-      : '<span class="wp-login-badge wallet">🦊 MetaMask</span>';
+      : '<span class="wp-login-badge wallet">' + (WALLET_LABELS[loginType] || "👛 " + (loginType || "Wallet")) + '</span>';
 
     $("walletCard").style.display = "";
     var prof = $("walletProfile");
@@ -2200,46 +2212,43 @@
   }
 
   // ---------- Provider resolver ----------
+  // Accepts either our short id ("metamask") or a raw rdns ("io.metamask").
   function getProvider(walletId) {
-    // 1. Preferred: EIP-6963 announced provider matched by rdns.
     requestWalletAnnounce();
-    var rdns = WALLET_RDNS[walletId];
+    var rdns = WALLET_RDNS[walletId] || walletId;
+
+    // 1. Preferred: EIP-6963 announced provider matched by rdns.
     if (rdns && discoveredProviders[rdns]) return discoveredProviders[rdns].provider;
 
     // 2. Phantom exposes a dedicated global.
-    if (walletId === "phantom" && window.phantom && window.phantom.ethereum) return window.phantom.ethereum;
+    if ((walletId === "phantom" || rdns === "app.phantom") && window.phantom && window.phantom.ethereum) return window.phantom.ethereum;
 
     // 3. Legacy multi-provider array on window.ethereum.
     var providers = window.ethereum && window.ethereum.providers;
     if (providers && Array.isArray(providers)) {
       for (var i = 0; i < providers.length; i++) {
         var p = providers[i];
-        if (walletId === "metamask" && p.isMetaMask && !p.isRabby && !p.isCoinbaseWallet) return p;
-        if (walletId === "coinbase" && p.isCoinbaseWallet) return p;
-        if (walletId === "rabby" && p.isRabby) return p;
+        if ((walletId === "metamask" || rdns === "io.metamask") && p.isMetaMask && !p.isRabby && !p.isCoinbaseWallet) return p;
+        if ((walletId === "coinbase" || rdns === "com.coinbase.wallet") && p.isCoinbaseWallet) return p;
+        if ((walletId === "rabby" || rdns === "io.rabby") && p.isRabby) return p;
       }
     }
 
     // 4. Single injected provider — only return it if its flags match the request,
     //    so we never silently fall back to the wrong wallet (e.g. MetaMask).
     if (window.ethereum) {
-      if (walletId === "metamask" && window.ethereum.isMetaMask && !window.ethereum.isRabby && !window.ethereum.isCoinbaseWallet) return window.ethereum;
-      if (walletId === "coinbase" && window.ethereum.isCoinbaseWallet) return window.ethereum;
-      if (walletId === "rabby" && window.ethereum.isRabby) return window.ethereum;
+      if ((walletId === "metamask" || rdns === "io.metamask") && window.ethereum.isMetaMask && !window.ethereum.isRabby && !window.ethereum.isCoinbaseWallet) return window.ethereum;
+      if ((walletId === "coinbase" || rdns === "com.coinbase.wallet") && window.ethereum.isCoinbaseWallet) return window.ethereum;
+      if ((walletId === "rabby" || rdns === "io.rabby") && window.ethereum.isRabby) return window.ethereum;
     }
     return null;
   }
 
   // ---------- Wallet connect ----------
-  async function connectWallet(walletId) {
-    walletId = walletId || "metamask";
-    var status = $("walletStatus");
-    var provider = getProvider(walletId);
-    if (!provider) {
-      var walletName = (WALLETS.find(function (w) { return w.id === walletId; }) || {}).name || walletId;
-      status.innerHTML = walletName + ' not found. Install the extension to connect.';
-      return;
-    }
+  // Shared core: connect with an explicit provider, reporting into statusEl.
+  async function connectWithProvider(provider, walletId, statusEl) {
+    var status = statusEl || $("walletStatus");
+    var t = (typeof T !== "undefined" && T[currentLang]) ? T[currentLang] : {};
     state.provider = provider;
     attachProviderListeners(provider);
     try {
@@ -2254,18 +2263,25 @@
       try {
         await provider.request({ method: "wallet_switchEthereumChain", params: [{ chainId: ARC.chainIdHex }] });
       } catch (switchErr) {
-        if (switchErr && switchErr.code === 4902) {
-          await provider.request({
-            method: "wallet_addEthereumChain",
-            params: [{
-              chainId: ARC.chainIdHex, chainName: ARC.chainName,
-              nativeCurrency: { name: "USDC", symbol: "USDC", decimals: 18 },
-              rpcUrls: [ARC.rpc], blockExplorerUrls: [ARC.explorer],
-            }],
-          });
+        if (switchErr && (switchErr.code === 4902 || switchErr.code === -32603)) {
+          try {
+            await provider.request({
+              method: "wallet_addEthereumChain",
+              params: [{
+                chainId: ARC.chainIdHex, chainName: ARC.chainName,
+                nativeCurrency: { name: "USDC", symbol: "USDC", decimals: 18 },
+                rpcUrls: [ARC.rpc], blockExplorerUrls: [ARC.explorer],
+              }],
+            });
+          } catch (addErr) {
+            if (addErr && addErr.code === 4001) throw addErr;
+          }
+        } else if (switchErr && switchErr.code === 4001) {
+          throw switchErr;
         }
       }
 
+      closeWalletModal();
       status.innerHTML = '<span style="display:inline-flex;align-items:center;gap:8px;"><span class="spinner" style="width:16px;height:16px;border-width:2px;"></span> Reading wallet data…</span>';
       var nativeBal = 0, usdc = 0, cirbtc = 0;
       try {
@@ -2280,13 +2296,29 @@
       showWalletProfile(account, nativeBal, usdc, cirbtc, walletId, txs);
       if (typeof renderPortfolio === "function") renderPortfolio(_ledgerData);
     } catch (err) {
-      var t = (typeof T !== "undefined" && T[currentLang]) ? T[currentLang] : {};
       if (err && err.code === 4001) {
         status.innerHTML = '<span style="color:var(--muted);">' + (t.walletCancelled || "Connection cancelled.") + '</span>';
       } else {
         status.innerHTML = '<span style="color:var(--red);">✗ ' + (t.walletFailed || "Connection failed") + ': ' + (err && err.message ? err.message : err) + '</span>';
       }
     }
+  }
+
+  // Resolve a provider by id/rdns, then connect. Used by reconnect bar + events.
+  async function connectWallet(walletId, statusEl) {
+    walletId = walletId || "metamask";
+    var status = statusEl || $("walletStatus");
+    var provider = getProvider(walletId);
+    if (!provider) {
+      var rdns = WALLET_RDNS[walletId] || walletId;
+      var known = KNOWN_WALLETS[rdns];
+      var walletName = (known && known.name) || walletId;
+      var installUrl = known && known.install;
+      status.innerHTML = '<span style="color:var(--amber);">' + walletName + ' not detected. ' +
+        (installUrl ? '<a href="' + installUrl + '" target="_blank" rel="noopener">Install ↗</a>' : 'Install the extension to connect.') + '</span>';
+      return;
+    }
+    return connectWithProvider(provider, walletId, status);
   }
   function connectMetamask() { return connectWallet("metamask"); }
 
@@ -2361,55 +2393,99 @@
   }
 
   // ---------- wallet connect modal ----------
-  // Detection now relies on EIP-6963 discovery (getProvider), with legacy
-  // fallbacks handled inside getProvider itself.
-  var WALLETS = [
-    { id: "metamask", name: "MetaMask", icon: "🦊", detect: function() { return !!getProvider("metamask"); }, action: "connect" },
-    { id: "coinbase", name: "Coinbase Wallet", icon: "🔵", detect: function() { return !!getProvider("coinbase"); }, action: "connect" },
-    { id: "rabby", name: "Rabby Wallet", icon: "🐰", detect: function() { return !!getProvider("rabby"); }, action: "connect" },
-    { id: "phantom", name: "Phantom", icon: "👻", detect: function() { return !!getProvider("phantom"); }, action: "connect" },
-    { id: "walletconnect", name: "WalletConnect", icon: "🔗", detect: function() { return false; }, action: "soon" },
-  ];
+  // The list is built dynamically from EIP-6963 announcements so each row maps
+  // to the exact provider that wallet injected — clicking it always connects
+  // that wallet, never a default fallback.
+  var _walletEntries = []; // rendered rows, indexed by data-idx
 
-  function detectWallets() {
-    return WALLETS.map(function (w) {
-      return { id: w.id, name: w.name, icon: w.icon, detected: w.detect(), action: w.action };
+  function buildWalletEntries() {
+    requestWalletAnnounce();
+    var entries = [];
+    var seen = {};
+
+    // 1. Every wallet that announced itself via EIP-6963 (detected, has provider).
+    Object.keys(discoveredProviders).forEach(function (rdns) {
+      var disc = discoveredProviders[rdns];
+      var known = KNOWN_WALLETS[rdns];
+      entries.push({
+        id: known ? known.id : rdns,
+        rdns: rdns,
+        name: (known && known.name) || (disc.info && disc.info.name) || rdns,
+        icon: (known && known.icon) || "👛",
+        iconImg: disc.info && disc.info.icon,
+        provider: disc.provider,
+        detected: true,
+        action: "connect",
+      });
+      seen[rdns] = true;
     });
+
+    // 2. Known wallets that did NOT announce — show as install prompts (unless a
+    //    legacy fallback provider is available, in which case mark detected).
+    Object.keys(KNOWN_WALLETS).forEach(function (rdns) {
+      if (seen[rdns]) return;
+      var known = KNOWN_WALLETS[rdns];
+      var legacy = getProvider(known.id);
+      entries.push({
+        id: known.id,
+        rdns: rdns,
+        name: known.name,
+        icon: known.icon,
+        provider: legacy || null,
+        install: known.install,
+        detected: !!legacy,
+        action: "connect",
+      });
+    });
+
+    // 3. WalletConnect placeholder.
+    entries.push({ id: "walletconnect", name: "WalletConnect", icon: "🔗", detected: false, action: "soon" });
+
+    // Detected first.
+    entries.sort(function (a, b) { return (b.detected ? 1 : 0) - (a.detected ? 1 : 0); });
+    return entries;
   }
 
   function renderWalletModal() {
-    var wallets = detectWallets();
-    var t = T[currentLang] || T.en;
+    _walletEntries = buildWalletEntries();
     var detectedLabel = currentLang === "vi" ? "Đã phát hiện" : "Detected";
     var popularLabel = currentLang === "vi" ? "Phổ biến" : "Popular";
     var comingSoonLabel = currentLang === "vi" ? "Sắp có" : "Coming soon";
+    var installLabel = currentLang === "vi" ? "Cài đặt" : "Install";
 
-    var detected = wallets.filter(function (w) { return w.detected; });
-    var others = wallets.filter(function (w) { return !w.detected; });
-    var sorted = detected.concat(others);
-
-    $("wmWallets").innerHTML = sorted.map(function (w) {
+    $("wmWallets").innerHTML = _walletEntries.map(function (w, idx) {
       var badge = "";
       if (w.detected) badge = '<span class="wm-wallet-badge wm-badge-detected">' + detectedLabel + '</span>';
       else if (w.action === "soon") badge = '<span class="wm-wallet-badge wm-badge-popular">' + comingSoonLabel + '</span>';
-      else if (w.id === "metamask") badge = '<span class="wm-wallet-badge wm-badge-popular">' + popularLabel + '</span>';
+      else if (w.install) badge = '<span class="wm-wallet-badge wm-badge-popular">' + installLabel + '</span>';
       var disabled = w.action === "soon" && !w.detected;
-      return '<button class="wm-wallet' + (disabled ? '' : '') + '" data-wallet="' + w.id + '"' + (disabled ? ' style="opacity:.5;cursor:default;"' : '') + '>' +
-        '<div class="wm-wallet-icon ' + w.id + '">' + w.icon + '</div>' +
+      var iconInner = w.iconImg
+        ? '<img src="' + w.iconImg + '" alt="" style="width:24px;height:24px;border-radius:6px;" />'
+        : w.icon;
+      return '<button class="wm-wallet" data-idx="' + idx + '"' + (disabled ? ' style="opacity:.5;cursor:default;"' : '') + '>' +
+        '<div class="wm-wallet-icon ' + (w.id || '') + '">' + iconInner + '</div>' +
         '<div class="wm-wallet-info"><span class="wm-wallet-name">' + w.name + '</span>' +
         (w.detected ? '<span class="wm-wallet-desc">EVM · Arc Testnet</span>' : '') + '</div>' +
         badge +
         '<span class="wm-wallet-arrow">›</span></button>';
     }).join("");
 
-    // Add click handlers
+    // Add click handlers — connect with the exact announced provider.
     $("wmWallets").querySelectorAll(".wm-wallet").forEach(function (btn) {
       btn.addEventListener("click", function () {
-        var wid = this.getAttribute("data-wallet");
-        var w = wallets.find(function (x) { return x.id === wid; });
-        if (w && w.action === "soon" && !w.detected) return;
-        closeWalletModal();
-        connectWallet(wid);
+        var idx = parseInt(this.getAttribute("data-idx"), 10);
+        var w = _walletEntries[idx];
+        if (!w) return;
+        if (w.action === "soon" && !w.detected) return;
+        if (w.provider) {
+          connectWithProvider(w.provider, w.id, $("wmStatus"));
+        } else if (w.install) {
+          $("wmStatus").innerHTML = '<span style="color:var(--amber);">' + w.name + ' ' +
+            (currentLang === "vi" ? "chưa được cài." : "is not installed.") +
+            ' <a href="' + w.install + '" target="_blank" rel="noopener">' + installLabel + ' ↗</a></span>';
+        } else {
+          connectWallet(w.id, $("wmStatus"));
+        }
       });
     });
   }
