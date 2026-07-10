@@ -18,10 +18,12 @@
     "@solana/codecs-strings": "^2.3.0",
     "@solana/kit": "^6.10.0",
     "dotenv": "^17.4.2",
+    "ethers": "^6.17.0",
     "zod": "^3.25.67"
   },
   "devDependencies": {
     "@types/node": "^26.1.0",
+    "@vercel/node": "^5.8.23",
     "tsx": "^4.23.0",
     "typescript": "^6.0.3",
     "vitest": "^4.1.10"

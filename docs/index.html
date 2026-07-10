@@ -332,6 +332,16 @@
   .wd-badge.completed { background: rgba(76,175,80,.15); color: #4caf50; }
   .wd-badge.failed { background: rgba(244,67,54,.15); color: #f44336; }
   .wd-badge.processing { background: rgba(33,150,243,.15); color: #2196f3; }
+  .wd-progress { margin-top: 14px; }
+  .wd-steps { display: flex; flex-direction: column; gap: 8px; }
+  .wd-step { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--muted); padding: 6px 10px; border-radius: 8px; background: rgba(255,255,255,.02); transition: color .2s, background .2s; }
+  .wd-step.active { color: var(--amber); background: rgba(245,165,36,.06); }
+  .wd-step.done { color: var(--green); }
+  .wd-step.fail { color: var(--red); }
+  .wd-step-icon { font-size: 15px; width: 20px; text-align: center; }
+  @keyframes wdSpin { to { transform: rotate(360deg); } }
+  .wd-spinner { display: inline-block; width: 14px; height: 14px; border: 2px solid var(--glass-brd); border-top-color: var(--amber); border-radius: 50%; animation: wdSpin .6s linear infinite; }
+  .withdraw-row .btn:disabled { opacity: .5; cursor: not-allowed; filter: grayscale(.3); }
   .dist-table { width: 100%; font-size: 13px; border-collapse: collapse; }
   .dist-table th, .dist-table td { padding: 8px 10px; text-align: left; border-bottom: 1px solid var(--glass-brd); }
   .dist-table th { color: var(--muted); font-weight: 500; font-size: 11px; text-transform: uppercase; }
@@ -878,6 +888,14 @@
     </div>
     <div class="status-note" id="tgStatus" style="margin-top:6px;"></div>
     <p style="font-size:11px;color:var(--muted);margin:8px 0 0;">Create a bot via <a href="https://t.me/BotFather" target="_blank" rel="noopener">@BotFather</a>, get your chat ID from <a href="https://t.me/userinfobot" target="_blank" rel="noopener">@userinfobot</a>. Messages are sent directly from your browser.</p>
+    <h3 style="margin:18px 0 14px;" data-t="setWithdrawApiTitle">Withdrawal API</h3>
+    <div class="settings-grid">
+      <div class="setting-group" style="grid-column:1/-1;">
+        <label for="setWdApi" data-t="setWdApiLabel">API base URL</label>
+        <input type="url" id="setWdApi" placeholder="https://your-project.vercel.app" style="font-family:ui-monospace,monospace;font-size:12px;width:100%;" />
+      </div>
+    </div>
+    <p style="font-size:11px;color:var(--muted);margin:8px 0 0;" data-t="setWdApiHelp">Deploy the <code>api/withdraw.ts</code> serverless function to Vercel and paste the base URL here. Withdrawals are processed in real-time (10–30s).</p>
     <h3 style="margin:18px 0 14px;" data-t="approvalHistoryTitle">Approval History</h3>
     <div id="settingsApprovalHistory" style="max-height:250px;overflow-y:auto;border:1px solid var(--glass-brd);border-radius:14px;"></div>
     <button class="btn ghost" id="clearApprovalHistBtn" style="margin-top:8px;padding:6px 14px;font-size:11px;">Clear history</button>
@@ -1267,11 +1285,18 @@
     </div>
     <div class="card">
       <h3 data-t="portWithdrawTitle">Withdraw your tokens</h3>
-      <p class="cs" data-t="portWithdrawSub">Request a withdrawal — processed during the next agent run via GitHub Actions.</p>
+      <p class="cs" data-t="portWithdrawSub">Sign a message to verify your identity — withdrawal completes in 10–30 seconds.</p>
       <div class="withdraw-row">
         <select id="wdToken"><option value="USDC">USDC</option><option value="cirBTC">cirBTC</option></select>
         <input id="wdAmount" type="number" min="0" step="0.000001" placeholder="Amount" />
-        <button class="btn" id="wdBtn" data-t="portWithdrawBtn">Request withdrawal</button>
+        <button class="btn" id="wdBtn" data-t="portWithdrawBtn">Withdraw now</button>
+      </div>
+      <div class="wd-progress" id="wdProgress" style="display:none;">
+        <div class="wd-steps">
+          <div class="wd-step" id="wdStep1"><span class="wd-step-icon">1</span> <span data-t="wdStep1">Signing message with wallet…</span></div>
+          <div class="wd-step" id="wdStep2"><span class="wd-step-icon">2</span> <span data-t="wdStep2">Verifying signature &amp; processing transfer…</span></div>
+          <div class="wd-step" id="wdStep3"><span class="wd-step-icon">3</span> <span data-t="wdStep3">Completing withdrawal…</span></div>
+        </div>
       </div>
       <div class="status-note" id="wdStatus"></div>
       <div class="wd-history" id="wdHistory"></div>
@@ -1488,6 +1513,16 @@
         .then(function () { st.textContent = "Test message sent successfully!"; })
         .catch(function (e) { st.textContent = "Failed: " + (e.message || e); });
     });
+
+    var wdApiInput = document.getElementById("setWdApi");
+    var wdApiUrl = loadStore("aura-withdraw-api", "");
+    if (wdApiInput) {
+      wdApiInput.value = wdApiUrl || "";
+      wdApiInput.addEventListener("change", function () {
+        saveStore("aura-withdraw-api", (wdApiInput.value || "").trim().replace(/\/+$/, ""));
+        flashSaved();
+      });
+    }
 
     if (sd && userSettings.defaultDeposit) {
       var depInput = document.getElementById("depositAmt");
@@ -3334,29 +3369,123 @@
     }
   }
 
-  // Withdrawal request button
+  // Real-time withdrawal: sign message → call API → get tokens back in 10-30s
   (function setupWithdraw() {
     var btn = $("wdBtn");
     if (!btn) return;
-    btn.addEventListener("click", function () {
+
+    function setStep(n, status) {
+      for (var i = 1; i <= 3; i++) {
+        var el = $("wdStep" + i);
+        if (!el) continue;
+        el.className = "wd-step" + (i === n && status === "active" ? " active" : "") + (i < n || (i === n && status === "done") ? " done" : "") + (i === n && status === "fail" ? " fail" : "");
+        var icon = el.querySelector(".wd-step-icon");
+        if (i < n || (i === n && status === "done")) { icon.textContent = "✓"; }
+        else if (i === n && status === "active") { icon.innerHTML = '<span class="wd-spinner"></span>'; }
+        else if (i === n && status === "fail") { icon.textContent = "✗"; }
+        else { icon.textContent = String(i); }
+      }
+    }
+
+    btn.addEventListener("click", async function () {
       var st = $("wdStatus");
-      if (!state.account) { st.textContent = "Connect your wallet first."; return; }
+      var prog = $("wdProgress");
+      var t = (typeof T !== "undefined" && T[currentLang]) ? T[currentLang] : {};
+      st.innerHTML = "";
+
+      if (!state.account) { st.textContent = t.wdErrConnect || "Connect your wallet first."; return; }
+      if (!state.provider) { st.textContent = t.wdErrProvider || "MetaMask not available."; return; }
       var token = $("wdToken").value;
       var amount = parseFloat($("wdAmount").value);
-      if (!(amount > 0)) { st.textContent = "Enter a valid amount."; return; }
-      if (!_ledgerData || !_ledgerData.users) { st.textContent = "Ledger not loaded."; return; }
+      if (!(amount > 0)) { st.textContent = t.wdErrAmount || "Enter a valid amount."; return; }
+      if (!_ledgerData || !_ledgerData.users) { st.textContent = t.wdErrLedger || "Ledger not loaded yet."; return; }
       var key = state.account.toLowerCase();
       var user = _ledgerData.users[key];
-      if (!user) { st.textContent = "No account found. Deposit first."; return; }
+      if (!user) { st.textContent = t.portNoAccount || "No account found. Deposit first."; return; }
       var bal = parseFloat(token === "USDC" ? user.usdcBalance : user.cirBtcBalance);
-      if (amount > bal) { st.textContent = "Insufficient balance: " + bal + " " + token + " available."; return; }
+      if (amount > bal) { st.textContent = (t.wdErrBalance || "Insufficient balance: ") + bal + " " + token; return; }
 
-      // Build GitHub Actions workflow_dispatch URL
-      var ghUrl = "https://github.com/thanhphuc85/ArcDCA/actions/workflows/dca.yml";
-      st.innerHTML = 'To process this withdrawal, trigger a <a href="' + ghUrl + '" target="_blank" rel="noopener">manual workflow run</a> with:<br>' +
-        '<code>withdrawal_address: ' + state.account + '</code><br>' +
-        '<code>withdrawal_token: ' + token + '</code><br>' +
-        '<code>withdrawal_amount: ' + amount + '</code>';
+      var apiUrl = loadStore("aura-withdraw-api", "");
+      if (!apiUrl) {
+        st.innerHTML = '<span style="color:var(--amber);">' + (t.wdErrApiUrl || 'Set your Withdrawal API URL in Settings first.') + '</span>';
+        return;
+      }
+
+      btn.disabled = true;
+      prog.style.display = "";
+      setStep(1, "active");
+      st.innerHTML = "";
+
+      try {
+        var decimals = token === "USDC" ? 6 : 8;
+        var amountStr = amount.toFixed(decimals);
+        var timestamp = Date.now();
+        var message = "Aura DCA Agent — Withdrawal Request\n" +
+          "Token: " + token + "\n" +
+          "Amount: " + amountStr + "\n" +
+          "Address: " + state.account + "\n" +
+          "Timestamp: " + timestamp;
+
+        var signature;
+        try {
+          signature = await state.provider.request({
+            method: "personal_sign",
+            params: [message, state.account]
+          });
+        } catch (signErr) {
+          setStep(1, "fail");
+          if (signErr.code === 4001) {
+            st.innerHTML = '<span style="color:var(--muted);">' + (t.wdCancelled || "Signing cancelled.") + '</span>';
+          } else {
+            st.innerHTML = '<span style="color:var(--red);">' + (signErr.message || "Signing failed") + '</span>';
+          }
+          return;
+        }
+
+        setStep(1, "done");
+        setStep(2, "active");
+
+        var tg = loadStore("aura-telegram", { token: "", chatId: "" });
+        var body = { message: message, signature: signature };
+        if (tg.token && tg.chatId) {
+          body.telegramToken = tg.token;
+          body.telegramChatId = tg.chatId;
+        }
+
+        var response = await fetch(apiUrl + "/api/withdraw", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(body)
+        });
+
+        var result = await response.json();
+
+        if (response.ok && result.success) {
+          setStep(2, "done");
+          setStep(3, "done");
+          st.innerHTML = '<span style="color:var(--green);">✅ ' + (t.wdSuccess || "Withdrawal completed!") + ' ' + result.amount + ' ' + result.token + '</span>' +
+            (result.txHash ? '<br><a href="https://testnet.arcscan.io/tx/' + result.txHash + '" target="_blank" rel="noopener" style="font-size:12px;">View transaction ↗</a>' : '');
+
+          if (tg.token && tg.chatId) {
+            sendTelegram(tg.token, tg.chatId,
+              "💰 Withdrawal completed!\n" + result.amount + " " + result.token + " → " + short(state.account) +
+              (result.txHash ? "\nTx: " + result.txHash : "")
+            ).catch(function () {});
+          }
+
+          $("wdAmount").value = "";
+          fetchLedger().then(function (l) { _ledgerData = l; renderPortfolio(_ledgerData); });
+        } else {
+          setStep(2, "fail");
+          st.innerHTML = '<span style="color:var(--red);">❌ ' + (result.error || "Unknown error") + '</span>';
+        }
+      } catch (err) {
+        setStep(2, "fail");
+        st.innerHTML = '<span style="color:var(--red);">❌ ' + (err.message || "Withdrawal failed") + '</span>';
+      } finally {
+        btn.disabled = false;
+        setTimeout(function () { prog.style.display = "none"; }, 8000);
+      }
     });
   })();
 
@@ -3611,8 +3740,15 @@
       portCirBtcLabel: "cirBTC earned", portCirBtcSub: "From DCA allocations",
       portDepositedLabel: "Total deposited", portDepositedSub: "USDC all-time",
       portSwappedLabel: "Total swapped", portSwappedSub: "USDC → cirBTC",
-      portWithdrawTitle: "Withdraw your tokens", portWithdrawSub: "Request a withdrawal — processed during the next agent run via GitHub Actions.",
-      portWithdrawBtn: "Request withdrawal",
+      portWithdrawTitle: "Withdraw your tokens", portWithdrawSub: "Sign a message to verify your identity — withdrawal completes in 10–30 seconds.",
+      portWithdrawBtn: "Withdraw now",
+      wdStep1: "Signing message with wallet…", wdStep2: "Verifying signature & processing transfer…", wdStep3: "Completing withdrawal…",
+      wdSuccess: "Withdrawal completed!", wdCancelled: "Signing cancelled.",
+      wdErrConnect: "Connect your wallet first.", wdErrProvider: "MetaMask not available.",
+      wdErrAmount: "Enter a valid amount.", wdErrLedger: "Ledger not loaded yet.",
+      wdErrBalance: "Insufficient balance: ", wdErrApiUrl: "Set your Withdrawal API URL in Settings first.",
+      setWithdrawApiTitle: "Withdrawal API", setWdApiLabel: "API base URL",
+      setWdApiHelp: "Deploy the api/withdraw.ts serverless function to Vercel and paste the base URL here. Withdrawals are processed in real-time (10–30s).",
       portDistTitle: "DCA allocation history", portDistSub: "How the agent's swaps were distributed to your account.",
       portNoAccount: "No account found. Deposit USDC to the agent to start DCA.",
       portPendingScan: "Your deposit was detected on-chain. It will be credited to your account in the next agent run.",
@@ -3693,8 +3829,15 @@
       portCirBtcLabel: "cirBTC đã nhận", portCirBtcSub: "Từ phân bổ DCA",
       portDepositedLabel: "Tổng đã gửi", portDepositedSub: "USDC tất cả",
       portSwappedLabel: "Tổng đã swap", portSwappedSub: "USDC → cirBTC",
-      portWithdrawTitle: "Rút token", portWithdrawSub: "Yêu cầu rút tiền — xử lý trong lần chạy agent tiếp theo qua GitHub Actions.",
-      portWithdrawBtn: "Yêu cầu rút tiền",
+      portWithdrawTitle: "Rút token", portWithdrawSub: "Ký xác nhận danh tính — rút tiền hoàn tất trong 10–30 giây.",
+      portWithdrawBtn: "Rút ngay",
+      wdStep1: "Đang ký message bằng ví…", wdStep2: "Xác minh chữ ký & xử lý chuyển tiền…", wdStep3: "Hoàn tất rút tiền…",
+      wdSuccess: "Rút tiền thành công!", wdCancelled: "Đã hủy ký.",
+      wdErrConnect: "Kết nối ví trước.", wdErrProvider: "MetaMask không khả dụng.",
+      wdErrAmount: "Nhập số tiền hợp lệ.", wdErrLedger: "Chưa tải được sổ cái.",
+      wdErrBalance: "Số dư không đủ: ", wdErrApiUrl: "Cấu hình URL API rút tiền trong Cài đặt trước.",
+      setWithdrawApiTitle: "API rút tiền", setWdApiLabel: "URL cơ sở API",
+      setWdApiHelp: "Deploy hàm serverless api/withdraw.ts lên Vercel và dán URL tại đây. Rút tiền xử lý theo thời gian thực (10–30 giây).",
       portDistTitle: "Lịch sử phân bổ DCA", portDistSub: "Cách swap của agent được phân bổ cho tài khoản bạn.",
       portNoAccount: "Chưa có tài khoản. Gửi USDC vào agent để bắt đầu DCA.",
       portPendingScan: "Tiền gửi đã phát hiện trên chain. Sẽ được ghi nhận vào tài khoản trong lần chạy agent tiếp theo.",
