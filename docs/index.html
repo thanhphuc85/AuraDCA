@@ -759,6 +759,8 @@
   .lb-amt { font-family: Sora; font-weight: 700; font-size: 15px; text-align: right; white-space: nowrap; }
   .lb-pct-bar { height: 4px; border-radius: 4px; background: rgba(255,255,255,.06); margin-top: 6px; overflow: hidden; }
   .lb-pct-fill { height: 100%; border-radius: 4px; background: linear-gradient(90deg, var(--blue), var(--violet)); }
+  .lb-rate { font-size: 11px; margin-top: 3px; color: var(--green); white-space: nowrap; }
+  .lb-rate.paused { color: var(--amber); }
   [data-theme="light"] .lb-row { background: rgba(0,0,0,.02); }
   [data-theme="light"] .lb-row:hover { background: rgba(0,0,0,.04); }
   [data-theme="light"] .lb-stat { background: rgba(0,0,0,.02); }
@@ -1317,6 +1319,7 @@
       <div class="withdraw-row">
         <input id="rateAmount" type="number" min="0" step="0.000001" placeholder="USDC per day (0 = pause)" />
         <button class="btn" id="rateBtn" data-t="rateBtn">Save rate</button>
+        <button class="btn btn-ghost" id="ratePauseBtn" data-t="ratePauseBtn">Pause</button>
       </div>
       <div style="margin-top:8px;display:flex;gap:8px;flex-wrap:wrap;">
         <button class="btn btn-ghost rate-preset" data-days="30" data-t="ratePreset30">Spread over 30d</button>
@@ -3612,6 +3615,8 @@
     var custom = !!user.dcaRateIsCustom;
     var paused = !!user.dcaPaused || rate <= 0;
     if (input && document.activeElement !== input) input.value = rate ? rate.toFixed(6).replace(/0+$/, "").replace(/\.$/, "") : "";
+    var pauseBtn = $("ratePauseBtn");
+    if (pauseBtn) pauseBtn.textContent = paused ? (t.rateResumeBtn || "Resume") : (t.ratePauseBtn || "Pause");
     if (paused) {
       el.innerHTML = '<span style="color:var(--amber);">⏸ ' + (t.ratePaused || "Paused") + '</span> · ' + (t.rateBalance || "Balance") + ' ' + fmt(bal, 2) + ' USDC';
     } else {
@@ -3641,11 +3646,12 @@
       });
     });
 
-    btn.addEventListener("click", async function () {
+    var pauseBtn = $("ratePauseBtn");
+
+    async function submitRate(rate) {
       var t = (typeof T !== "undefined" && T[currentLang]) ? T[currentLang] : {};
       st.innerHTML = "";
       if (!state.account || !state.provider) { st.innerHTML = '<span style="color:var(--amber);">' + (t.wdErrConnect || "Connect your wallet first.") + '</span>'; return; }
-      var rate = parseFloat(input.value);
       if (isNaN(rate) || rate < 0) { st.innerHTML = '<span style="color:var(--amber);">' + (t.rateErrAmount || "Enter a rate ≥ 0 (0 = pause).") + '</span>'; return; }
 
       var apiBase = loadStore("aura-withdraw-api", "");
@@ -3657,7 +3663,7 @@
         "Address: " + state.account + "\n" +
         "Timestamp: " + timestamp;
 
-      btn.disabled = true;
+      btn.disabled = true; if (pauseBtn) pauseBtn.disabled = true;
       st.innerHTML = '<span style="display:inline-flex;align-items:center;gap:8px;color:var(--amber);"><span class="spinner" style="width:16px;height:16px;border-width:2px;"></span> ' + (t.rateSigning || "Sign in your wallet…") + '</span>';
       try {
         var signature = await state.provider.request({ method: "personal_sign", params: [message, state.account] });
@@ -3674,9 +3680,29 @@
         if (err && err.code === 4001) st.innerHTML = '<span style="color:var(--muted);">' + (t.wdCancelled || "Cancelled.") + '</span>';
         else st.innerHTML = '<span style="color:var(--red);">❌ ' + (err && err.message ? err.message : err) + '</span>';
       } finally {
-        btn.disabled = false;
+        btn.disabled = false; if (pauseBtn) pauseBtn.disabled = false;
       }
-    });
+    }
+
+    btn.addEventListener("click", function () { submitRate(parseFloat(input.value)); });
+
+    if (pauseBtn) {
+      pauseBtn.addEventListener("click", function () {
+        var key = state.account && state.account.toLowerCase();
+        var user = key && _ledgerData && _ledgerData.users ? _ledgerData.users[key] : null;
+        var rate = user ? parseFloat(user.dcaRatePerDay || "0") : 0;
+        var paused = user ? (!!user.dcaPaused || rate <= 0) : true;
+        if (paused) {
+          // Resume: use the input value if set, else auto = balance/30
+          var bal = user ? parseFloat(user.usdcBalance || "0") : 0;
+          var resumeRate = parseFloat(input.value);
+          if (!(resumeRate > 0)) resumeRate = bal > 0 ? bal / 30 : 0;
+          submitRate(resumeRate);
+        } else {
+          submitRate(0);
+        }
+      });
+    }
   })();
 
   // Real-time withdrawal: sign message → call API → get tokens back in 10-30s
@@ -3958,9 +3984,19 @@
 
       $("lbCount").textContent = sorted.length + " depositor(s) · " + logs.length + " transaction(s)";
       var maxAmt = sorted[0] ? sorted[0].total : 1;
+      var tLb = (typeof T !== "undefined" && T[currentLang]) ? T[currentLang] : {};
       $("lbList").innerHTML = sorted.slice(0, 20).map(function (d, i) {
         var rankClass = i === 0 ? "r1" : (i === 1 ? "r2" : (i === 2 ? "r3" : ""));
         var pct = totalDeposited > 0 ? (d.total / totalDeposited * 100) : 0;
+        // Cross-reference the ledger for this depositor's DCA rate.
+        var lu = _ledgerData && _ledgerData.users ? _ledgerData.users[d.address.toLowerCase()] : null;
+        var rateHtml = "";
+        if (lu) {
+          var r = parseFloat(lu.dcaRatePerDay || "0");
+          var isPaused = !!lu.dcaPaused || r <= 0;
+          if (isPaused) rateHtml = '<div class="lb-rate paused">⏸ ' + (tLb.ratePaused || "Paused") + '</div>';
+          else rateHtml = '<div class="lb-rate">⚡ ' + fmt(r, 4) + ' USDC/' + (tLb.rateDay || "day") + '</div>';
+        }
         return '<div class="lb-row">' +
           '<div class="lb-rank ' + rankClass + '">#' + (i + 1) + '</div>' +
           '<img class="lb-avatar" src="' + generateAvatar(d.address) + '" alt=""/>' +
@@ -3971,6 +4007,7 @@
           '<div style="text-align:right;">' +
             '<div class="lb-amt">' + fmt(d.total, 2) + ' USDC</div>' +
             '<div style="font-size:11px;color:var(--muted);">' + d.count + ' tx · ' + pct.toFixed(1) + '%</div>' +
+            rateHtml +
           '</div>' +
         '</div>';
       }).join("") || '<div style="color:var(--muted);padding:16px;text-align:center;">No deposits found.</div>';
@@ -4062,7 +4099,7 @@
       rateNoAccount: "Deposit USDC first to start a DCA schedule.", ratePaused: "Paused", rateAuto: "auto",
       rateDay: "day", rateDays: "days", rateRunway: "runway", rateBalance: "Balance",
       rateErrAmount: "Enter a rate ≥ 0 (0 = pause).", rateSigning: "Sign in your wallet…", rateSaving: "Saving…",
-      rateSavedOk: "Rate saved:", ratePausedOk: "DCA paused.",
+      rateSavedOk: "Rate saved:", ratePausedOk: "DCA paused.", ratePauseBtn: "Pause", rateResumeBtn: "Resume",
       portWithdrawBtn: "Withdraw now",
       wdStep1: "Signing message with wallet…", wdStep2: "Verifying signature & processing transfer…", wdStep3: "Completing withdrawal…",
       wdSuccess: "Withdrawal completed!", wdCancelled: "Signing cancelled.",
@@ -4161,7 +4198,7 @@
       rateNoAccount: "Nạp USDC trước để bắt đầu lịch DCA.", ratePaused: "Đã tạm dừng", rateAuto: "tự động",
       rateDay: "ngày", rateDays: "ngày", rateRunway: "còn", rateBalance: "Số dư",
       rateErrAmount: "Nhập tốc độ ≥ 0 (0 = tạm dừng).", rateSigning: "Ký trong ví…", rateSaving: "Đang lưu…",
-      rateSavedOk: "Đã lưu tốc độ:", ratePausedOk: "Đã tạm dừng DCA.",
+      rateSavedOk: "Đã lưu tốc độ:", ratePausedOk: "Đã tạm dừng DCA.", ratePauseBtn: "Tạm dừng", rateResumeBtn: "Tiếp tục",
       portWithdrawBtn: "Rút ngay",
       wdStep1: "Đang ký message bằng ví…", wdStep2: "Xác minh chữ ký & xử lý chuyển tiền…", wdStep3: "Hoàn tất rút tiền…",
       wdSuccess: "Rút tiền thành công!", wdCancelled: "Đã hủy ký.",
