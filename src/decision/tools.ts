@@ -89,6 +89,121 @@ export function computePriceAction(
   };
 }
 
+export const COMPUTE_DIP_LADDER_TOOL = {
+  name: "compute_dip_ladder",
+  description:
+    "Compute the dip-buying ladder: a set of drawdown tiers (mild → moderate → strong → deep) where a deeper dip allocates more. Returns each tier's threshold, whether it is currently triggered by the price drawdown, and a balance-aware recommended amount for the deepest triggered tier. Thresholds auto-widen when volatility is high. Use this to size buys on dips without over- or under-spending the available balance.",
+  input_schema: {
+    type: "object" as const,
+    properties: {},
+    required: [] as string[],
+  },
+};
+
+interface LadderTierDef {
+  name: string;
+  threshold: number;
+  multiplier: number;
+  balanceFraction: number;
+}
+
+export function computeDipLadder(
+  history: HistoryEntry[],
+  strategy: DcaStrategy,
+  walletUsdcBalance: string,
+  minReserve: string,
+): Record<string, unknown> {
+  const dipConfig: DipConfig = {
+    mildThreshold: strategy.dipMildThreshold,
+    moderateThreshold: strategy.dipModerateThreshold,
+    strongThreshold: strategy.dipStrongThreshold,
+    mildMultiplier: strategy.dipMildMultiplier,
+    moderateMultiplier: strategy.dipModerateMultiplier,
+    strongMultiplier: strategy.dipStrongMultiplier,
+  };
+  const analysis = analyzePrices(history, dipConfig);
+  const base = parseFloat(strategy.baseAmountUsdc);
+  const available = Math.max(0, parseFloat(walletUsdcBalance) - parseFloat(minReserve));
+
+  if (analysis.drawdownFromHigh === null || analysis.priceHistory.length < 2) {
+    return {
+      status: "insufficient_data",
+      currentDrawdown: null,
+      availableBalanceUsdc: available.toFixed(6),
+      recommendedAmountUsdc: Math.min(base, available).toFixed(6),
+      recommendation: "Not enough price history to build a dip ladder. Use the base DCA amount.",
+    };
+  }
+
+  // Volatility from recent implied prices (coefficient of variation).
+  const prices = analysis.priceHistory.map((s) => s.impliedPrice).slice(-7);
+  const mean = prices.reduce((a, b) => a + b, 0) / prices.length;
+  const variance = prices.reduce((a, p) => a + (p - mean) ** 2, 0) / prices.length;
+  const cv = mean > 0 ? Math.sqrt(variance) / mean : 0;
+  const volatile = cv > 0.15;
+  const widen = volatile ? strategy.ladderVolatilityWiden : 1.0;
+
+  // Deeper tier = larger balance fraction. Mild/moderate/strong scale up to the
+  // configurable deepest cap.
+  const deepFraction = strategy.ladderMaxBalanceFraction;
+  const tierDefs: LadderTierDef[] = [
+    { name: "mild", threshold: strategy.dipMildThreshold, multiplier: strategy.dipMildMultiplier, balanceFraction: deepFraction * 0.2 },
+    { name: "moderate", threshold: strategy.dipModerateThreshold, multiplier: strategy.dipModerateMultiplier, balanceFraction: deepFraction * 0.4 },
+    { name: "strong", threshold: strategy.dipStrongThreshold, multiplier: strategy.dipStrongMultiplier, balanceFraction: deepFraction * 0.7 },
+    { name: "deep", threshold: strategy.dipDeepThreshold, multiplier: strategy.dipDeepMultiplier, balanceFraction: deepFraction },
+  ];
+
+  const absDrawdown = Math.abs(analysis.drawdownFromHigh);
+  let activeTier: LadderTierDef | null = null;
+
+  const tiers = tierDefs.map((tier) => {
+    const effectiveThreshold = tier.threshold * widen;
+    const triggered = absDrawdown >= effectiveThreshold;
+    if (triggered) activeTier = tier; // tierDefs are ascending → last triggered is deepest
+    // Balance-aware target: base×multiplier, capped by the tier's balance fraction.
+    const baseTarget = base * tier.multiplier;
+    const balanceCap = tier.balanceFraction * available;
+    const tierAllocation = Math.min(baseTarget, balanceCap);
+    return {
+      name: tier.name,
+      drawdownThreshold: (effectiveThreshold * 100).toFixed(1) + "%",
+      baseMultiplier: tier.multiplier,
+      maxBalanceFraction: (tier.balanceFraction * 100).toFixed(0) + "%",
+      triggered,
+      tierAllocationUsdc: tierAllocation.toFixed(6),
+    };
+  });
+
+  let recommended: number;
+  let recommendation: string;
+  if (activeTier) {
+    const t = activeTier as LadderTierDef;
+    const baseTarget = base * t.multiplier;
+    const balanceCap = t.balanceFraction * available;
+    recommended = Math.min(baseTarget, balanceCap);
+    recommendation =
+      `Price is ${(absDrawdown * 100).toFixed(1)}% off its high — the '${t.name}' tier is triggered` +
+      `${volatile ? " (thresholds widened for high volatility)" : ""}. ` +
+      `Recommend ${recommended.toFixed(6)} USDC (base ×${t.multiplier} = ${baseTarget.toFixed(6)}, ` +
+      `capped at ${(t.balanceFraction * 100).toFixed(0)}% of available = ${balanceCap.toFixed(6)}).`;
+  } else {
+    recommended = Math.min(base, available);
+    recommendation = `Price is only ${(absDrawdown * 100).toFixed(1)}% off its high — no dip tier triggered. Use the base amount ${recommended.toFixed(6)} USDC.`;
+  }
+
+  return {
+    status: "ok",
+    currentDrawdown: (absDrawdown * 100).toFixed(2) + "%",
+    volatility: { coeffOfVariation: (cv * 100).toFixed(2) + "%", volatile, thresholdsWidenedBy: widen },
+    availableBalanceUsdc: available.toFixed(6),
+    baseAmountUsdc: strategy.baseAmountUsdc,
+    activeTier: activeTier ? (activeTier as LadderTierDef).name : null,
+    tiers,
+    recommendedAmountUsdc: recommended.toFixed(6),
+    recommendation,
+  };
+}
+
 export const RECALL_REFLECTIONS_TOOL = {
   name: "recall_reflections",
   description:

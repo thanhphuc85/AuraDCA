@@ -12,6 +12,7 @@ import {
   ASSESS_MARKET_REGIME_TOOL,
   EVALUATE_RISK_TOOL,
   GET_MARKET_BRIEF_TOOL,
+  COMPUTE_DIP_LADDER_TOOL,
   computePacingMetrics,
   buildDetailedHistory,
   previewAllocation,
@@ -19,6 +20,7 @@ import {
   computePriceAction,
   computeMarketRegime,
   computeRiskScore,
+  computeDipLadder,
 } from "./tools.js";
 
 export class DecisionError extends Error {
@@ -108,6 +110,18 @@ function handleToolCall(
         2,
       );
 
+    case "compute_dip_ladder":
+      return JSON.stringify(
+        computeDipLadder(
+          deps.history,
+          deps.dcaStrategy,
+          deps.walletUsdcBalance,
+          context.guardrails.minUsdcReserve,
+        ),
+        null,
+        2,
+      );
+
     case "assess_market_regime":
       return JSON.stringify(
         computeMarketRegime(deps.history),
@@ -145,7 +159,7 @@ export async function getClaudeDecision(
   deps: DecisionDeps,
 ): Promise<ClaudeDecision> {
   const client = new Anthropic({ apiKey });
-  const allTools = [GET_MARKET_BRIEF_TOOL, RECALL_REFLECTIONS_TOOL, CHECK_PRICE_ACTION_TOOL, ASSESS_MARKET_REGIME_TOOL, ...ANALYSIS_TOOLS, EVALUATE_RISK_TOOL, DECISION_TOOL];
+  const allTools = [GET_MARKET_BRIEF_TOOL, RECALL_REFLECTIONS_TOOL, CHECK_PRICE_ACTION_TOOL, COMPUTE_DIP_LADDER_TOOL, ASSESS_MARKET_REGIME_TOOL, ...ANALYSIS_TOOLS, EVALUATE_RISK_TOOL, DECISION_TOOL];
 
   const messages: Anthropic.MessageParam[] = [
     { role: "user", content: buildUserPrompt(context) },

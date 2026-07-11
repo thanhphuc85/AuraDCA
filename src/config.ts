@@ -36,6 +36,11 @@ const envSchema = z.object({
   DCA_DIP_MILD_MULTIPLIER: z.preprocess(emptyToUndefined, z.coerce.number().min(1).max(10).default(1.2)),
   DCA_DIP_MODERATE_MULTIPLIER: z.preprocess(emptyToUndefined, z.coerce.number().min(1).max(10).default(1.5)),
   DCA_DIP_STRONG_MULTIPLIER: z.preprocess(emptyToUndefined, z.coerce.number().min(1).max(10).default(2.0)),
+  // Phase 1 dip-ladder knobs
+  DCA_DIP_DEEP_THRESHOLD: z.preprocess(emptyToUndefined, z.coerce.number().min(0).max(1).default(0.30)),
+  DCA_DIP_DEEP_MULTIPLIER: z.preprocess(emptyToUndefined, z.coerce.number().min(1).max(10).default(2.5)),
+  DCA_LADDER_VOL_WIDEN: z.preprocess(emptyToUndefined, z.coerce.number().min(1).max(3).default(1.3)),
+  DCA_LADDER_MAX_BALANCE_FRACTION: z.preprocess(emptyToUndefined, z.coerce.number().min(0).max(1).default(0.5)),
   WITHDRAWAL_ADDRESS: z.preprocess(emptyToUndefined, z.string().regex(/^0x[a-fA-F0-9]{40}$/).optional()),
   WITHDRAWAL_TOKEN: z.preprocess(emptyToUndefined, z.enum(["USDC", "cirBTC"]).optional()),
   WITHDRAWAL_AMOUNT: z.preprocess(emptyToUndefined, decimalString.optional()),
@@ -123,6 +128,10 @@ export function loadConfig(): AppConfig {
       dipMildMultiplier: env.DCA_DIP_MILD_MULTIPLIER,
       dipModerateMultiplier: env.DCA_DIP_MODERATE_MULTIPLIER,
       dipStrongMultiplier: env.DCA_DIP_STRONG_MULTIPLIER,
+      dipDeepThreshold: env.DCA_DIP_DEEP_THRESHOLD,
+      dipDeepMultiplier: env.DCA_DIP_DEEP_MULTIPLIER,
+      ladderVolatilityWiden: env.DCA_LADDER_VOL_WIDEN,
+      ladderMaxBalanceFraction: env.DCA_LADDER_MAX_BALANCE_FRACTION,
     },
     withdrawalInput: env.WITHDRAWAL_ADDRESS && env.WITHDRAWAL_TOKEN && env.WITHDRAWAL_AMOUNT
       ? { address: env.WITHDRAWAL_ADDRESS, token: env.WITHDRAWAL_TOKEN, amount: env.WITHDRAWAL_AMOUNT }

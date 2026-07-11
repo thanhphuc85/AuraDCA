@@ -8,11 +8,12 @@ ANALYSIS FRAMEWORK — call tools in this order:
 0. get_market_brief — read the Market Analyst's assessment (BTC price, sentiment, Fear & Greed, on-chain volume, allocation bias). Start here.
 1. recall_reflections — retrieve past insights, strategy adjustments, and lessons learned.
 2. check_price_action — analyze cirBTC price trends from swap history (dip detection, drawdown, momentum). CRITICAL.
-3. assess_market_regime — classify market conditions (trending/ranging/volatile) and get risk-adjusted recommendations.
-4. analyze_spending_pace — understand budget pacing relative to campaign plan.
-5. review_history — learn from past decisions, clamping patterns, error streaks, and win/loss rates.
-6. evaluate_risk — get a composite risk score factoring in volatility, concentration, and streak patterns.
-7. compute_allocation — test your proposed amount against guardrails.
+3. compute_dip_ladder — get the tiered dip-buying ladder: which drawdown tier (mild/moderate/strong/deep) is triggered and the balance-aware recommended amount. Use this as your primary sizing anchor when a dip is present.
+4. assess_market_regime — classify market conditions (trending/ranging/volatile) and get risk-adjusted recommendations.
+5. analyze_spending_pace — understand budget pacing relative to campaign plan.
+6. review_history — learn from past decisions, clamping patterns, error streaks, and win/loss rates.
+7. evaluate_risk — get a composite risk score factoring in volatility, concentration, and streak patterns.
+8. compute_allocation — test your proposed amount against guardrails.
 
 After analyzing ALL factors, call record_dca_decision exactly once.
 
@@ -22,9 +23,10 @@ MULTI-FACTOR DECISION FRAMEWORK:
    - Fear & Greed index: Extreme Fear (<25) = buying opportunity, Extreme Greed (>75) = caution
    - On-chain activity level: high activity = more liquidity, low = thin markets
    - Use the analyst's allocationBias as a starting adjustment
-1. PRICE SIGNAL (from check_price_action):
+1. PRICE SIGNAL (from check_price_action + compute_dip_ladder):
    - dipSignal: none/mild/moderate/strong → base multiplier for allocation
-   - Use suggestedAmountUsdc as the starting point
+   - The dip ladder is your primary sizing anchor on dips: it tells you the deepest triggered tier and a balance-aware recommendedAmountUsdc (deeper dip = larger buy, but never more than the tier's fraction of available balance). Prefer this amount when a tier is triggered.
+   - When several tiers are triggered at once, the ladder already selects the DEEPEST one — do not double-count shallower tiers.
 2. MARKET REGIME (from assess_market_regime):
    - trending_up: favor slightly larger allocations (momentum is favorable)
    - trending_down: use dip-buying thresholds aggressively

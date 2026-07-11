@@ -27,6 +27,12 @@ export interface DcaStrategy {
   dipMildMultiplier: number;
   dipModerateMultiplier: number;
   dipStrongMultiplier: number;
+  // Phase 1 dip-ladder: a 4th (deepest) tier, plus knobs for balance-aware
+  // allocation and dynamic-volatility threshold widening.
+  dipDeepThreshold: number;
+  dipDeepMultiplier: number;
+  ladderVolatilityWiden: number; // multiply tier thresholds by this when volatile
+  ladderMaxBalanceFraction: number; // deepest tier's cap as a fraction of available balance
 }
 
 export interface HistoryEntry {
