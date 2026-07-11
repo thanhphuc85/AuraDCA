@@ -843,7 +843,8 @@
         </select>
       </div>
     </div>
-    <h3 style="margin:18px 0 14px;">DCA Strategy</h3>
+    <h3 style="margin:18px 0 14px;">Dip signals (advisory)</h3>
+    <p style="font-size:11px;color:var(--muted);margin:0 0 12px;">Buy sizing is now per-user — set your own rate in <b>Your DCA schedule</b>. The values below are the agent's advisory dip tiers (market context only) and are read-only here.</p>
     <div class="settings-grid">
       <div class="setting-group">
         <label for="setBaseAmt">Base DCA amount (USDC)</label>
@@ -984,8 +985,8 @@
 
   <section class="reveal" id="strategySection">
     <div class="eyebrow">DCA Strategy</div>
-    <div class="h2">Smart dip-buying agent</div>
-    <p class="sub">The agent monitors cirBTC price trends and automatically increases allocation when prices dip — buying more when it's cheaper.</p>
+    <div class="h2">Per-user recurring DCA</div>
+    <p class="sub">Each wallet sets its own daily DCA rate. The agent pools everyone's schedule into one on-chain buy each run and distributes cirBTC by how much each user contributed. The dip signals below are advisory market context — they no longer size buys.</p>
     <div class="strategy-grid">
       <div class="strat-tile" style="--sg:rgba(138,92,246,.15);">
         <span class="st-val" id="stBaseAmt">—</span><span class="st-label">Base DCA amount</span>
@@ -1002,8 +1003,8 @@
       </div>
     </div>
     <div class="card" style="margin-top:16px;">
-      <h3>Dip-buying thresholds</h3>
-      <p class="cs">When cirBTC price drops from its high, the agent increases allocation automatically.</p>
+      <h3>Dip signals (advisory)</h3>
+      <p class="cs">Market context only — these dip tiers inform the agent's reasoning but no longer size buys. Your buy amount is your own DCA rate, set in "Your DCA schedule".</p>
       <div class="strat-thresholds" id="stratThresholds">
         <div class="strat-th">
           <div class="th-pct" id="thMildPct">5%</div>
@@ -1490,6 +1491,8 @@
     if (smm) smm.value = String(dcaStrat.mildMult);
     if (smom) smom.value = String(dcaStrat.modMult);
     if (ssm) ssm.value = String(dcaStrat.strongMult);
+    // Advisory-only now (buy sizing is per-user rate): make these read-only.
+    [sba, smp, smop, ssp, smm, smom, ssm].forEach(function (el) { if (el) { el.disabled = true; el.style.opacity = "0.6"; el.style.cursor = "not-allowed"; } });
 
     function onChange() {
       userSettings.autoRefresh = parseInt(sr.value, 10) || 0;
