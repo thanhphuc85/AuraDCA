@@ -113,5 +113,17 @@
     "reasoning": "Market brief shows bearish price sentiment but Fear&Greed at 26 (elevated fear) with high on-chain activity, and the analyst's allocation bias is actually \"increase 10-15%\" — fear readings like this historically favor accumulation, not caution. No real cirBTC price history exists yet for dip-ladder or regime signals (both insufficient_data), so there's no dip override; risk score is medium (34) but driven almost entirely by the historical swap-failure streak and low reliability rather than current volatility or concentration (only 2% of wallet deployed). Pacing is significantly behind (1 of 9 runs successfully executed, ~42.8 USDC sitting idle), and reflections confirm prior failures were a routing/liquidity issue independent of trade size, not a sizing problem — so I'm proceeding with the full daily cap of 1.00 USDC, which clears guardrails cleanly (bound by proposed_amount, not clamped), to both honor the analyst's increase bias and continue catching up on pacing.",
     "walletUsdcBalance": "42.8385270565623072",
     "message": "Swap failed [no_route]: Swap failed [no_route]: Stablecoin Service createSwap failed: Route or resource not found. Details: No route available"
+  },
+  {
+    "date": "2026-07-11",
+    "timestamp": "2026-07-11T16:12:41.278Z",
+    "status": "error_swap_failed",
+    "requestedAmountUsdc": "0.672822",
+    "clampedAmountUsdc": "0.672822",
+    "boundBy": "user_schedule",
+    "tokenOut": "cirBTC",
+    "reasoning": "Market brief remains bearish (Fear&Greed 26, allocation bias \"decrease 10-15%\") with no confirming dip signal—real cirBTC price feed, price-action, and regime tools all still report insufficient data, so there's no dip-buying override. Risk score is medium (34), driven almost entirely by the 8-run error streak and low reliability rather than current volatility or concentration (only 2% of the ~42.8 USDC wallet deployed), and pacing remains far behind (1 of 10 runs executed), which argues against further trimming. Reflections confirm the persistent \"No route available\" failures are a routing/liquidity issue independent of trade size, not a sizing problem, so I'm applying the bearish trim (0.90 vs 1.00 base) while still attempting the swap in case the route has been restored, rather than withholding indefinitely.",
+    "walletUsdcBalance": "42.8385270565623072",
+    "message": "Swap failed [no_route]: Swap failed [no_route]: Stablecoin Service createSwap failed: Route or resource not found. Details: No route available"
   }
 ]
