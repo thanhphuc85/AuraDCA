@@ -2,6 +2,7 @@ import { readFile, writeFile } from "node:fs/promises";
 import { fileURLToPath } from "node:url";
 import path from "node:path";
 import type { Ledger, UserAccount } from "../types.js";
+import { DEFAULT_DCA_HORIZON_DAYS } from "../types.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 export const LEDGER_FILE_PATH = path.resolve(__dirname, "../../data/ledger.json");
@@ -40,6 +41,9 @@ function emptyUser(address: string, now: string): UserAccount {
     totalWithdrawnUsdc: "0",
     firstSeen: now,
     lastActivity: now,
+    dcaRatePerDay: "0",
+    dcaRateIsCustom: false,
+    dcaPaused: false,
   };
 }
 
@@ -49,4 +53,15 @@ export function getOrCreateUser(ledger: Ledger, address: string, now?: string): 
     ledger.users[key] = emptyUser(key, now ?? new Date().toISOString());
   }
   return ledger.users[key];
+}
+
+/**
+ * Recompute a user's auto DCA rate = current USDC balance / horizon, UNLESS the
+ * user has set a custom rate. Call after a deposit changes their balance.
+ */
+export function refreshAutoDcaRate(user: UserAccount, horizonDays = DEFAULT_DCA_HORIZON_DAYS): void {
+  if (user.dcaRateIsCustom) return;
+  const balance = Number.parseFloat(user.usdcBalance || "0");
+  const rate = horizonDays > 0 ? balance / horizonDays : 0;
+  user.dcaRatePerDay = rate.toFixed(6);
 }

@@ -4,16 +4,15 @@ import { readHistory, appendEntry, recentHistory, dayCount, alreadySpentToday, r
 import { readReflections, appendReflection } from "./history/reflectionStore.js";
 import { readLedger, writeLedger } from "./ledger/store.js";
 import { scanDeposits } from "./ledger/scanner.js";
-import { distributeSwap } from "./ledger/distribute.js";
+import { computeScheduledSpends, applyScheduledDistribution } from "./ledger/schedule.js";
 import { requestWithdrawal, processPendingWithdrawals } from "./ledger/withdraw.js";
 import { ARC_TESTNET_RPC, ARC_USDC_CONTRACT } from "./ledger/constants.js";
-import { getClaudeDecision, DecisionError } from "./decision/client.js";
+import { getClaudeDecision } from "./decision/client.js";
 import { generateReflection } from "./decision/reflect.js";
 import { runMarketAnalyst } from "./decision/analyst.js";
 import { fetchAllMarketData } from "./market/external.js";
 import { fetchCirBtcPriceUsd } from "./price/priceFeed.js";
 import { readPrices, appendPrice } from "./price/priceStore.js";
-import { clampDecision } from "./decision/guardrails.js";
 import { executeSwap, SwapExecutionError } from "./swap/swapKit.js";
 import type { DecisionContext, HistoryEntry, Ledger, RunStatus } from "./types.js";
 import { logger } from "./logger.js";
@@ -157,25 +156,51 @@ export async function runDailyDca(config: AppConfig): Promise<RunOutcome> {
     }, false, config.discordWebhookUrl, refCtx);
   }
 
-  const context: DecisionContext = {
-    date,
-    dayCount: dayCount(history),
-    walletUsdcBalance: usdcBalance,
-    guardrails: config.guardrails,
-    dcaStrategy: config.dcaStrategy,
-    remainingCampaignBudgetUsdc: remainingCampaignBudget(history, config.guardrails.campaignTotalBudgetUsdc),
-    alreadySpentTodayUsdc: alreadySpentToday(history, date),
-    recentHistory: recentHistory(history).map((e) => ({
-      date: e.date,
-      status: e.status,
-      amountUsdc: e.clampedAmountUsdc,
-      reasoningSummary: e.reasoning,
-    })),
-  };
+  // --- Cách B: deterministic per-user rate-driven sizing ---
+  // The buy amount is the SUM of each active user's scheduled spend (rate/day ×
+  // elapsed), capped by their own balance. The agent no longer sizes the buy.
+  const schedule = computeScheduledSpends(ledger, timestamp);
+  const scheduledTotal = schedule.totalUsdc;
+  const available = Number.parseFloat(usdcBalance) - minReserve;
+  const minSwap = Number.parseFloat(config.guardrails.minSwapUsdc);
+  const executable = Math.max(0, Math.min(scheduledTotal, available));
+  const executableStr = executable.toFixed(6);
 
-  let decision;
+  if (executable < minSwap) {
+    logger.info(`Scheduled spend ${scheduledTotal} USDC (executable ${executable}) below min swap ${minSwap}; skipping`);
+    return writeAndReturn({
+      date,
+      timestamp,
+      status: "skipped_guardrail_clamped",
+      requestedAmountUsdc: scheduledTotal.toFixed(6),
+      clampedAmountUsdc: "0",
+      boundBy: scheduledTotal < minSwap ? "scheduled_below_min" : "wallet_available_after_reserve",
+      tokenOut: config.tokenOut,
+      walletUsdcBalance: usdcBalance,
+      message: `No buy this run: ${schedule.spends.length} active user(s), scheduled ${scheduledTotal.toFixed(6)} USDC, executable ${executable.toFixed(6)} < min swap ${minSwap}`,
+    }, false, config.discordWebhookUrl, refCtx);
+  }
+
+  // Advisory market commentary (non-fatal). Sizing is deterministic; the agent's
+  // reasoning is kept only to enrich the dashboard's AI insights + reflections.
+  let reasoning = `Rate-based DCA: ${schedule.spends.length} active user(s), executing ${executableStr} USDC this run.`;
   try {
-    decision = await getClaudeDecision(config.anthropicApiKey, context, {
+    const context: DecisionContext = {
+      date,
+      dayCount: dayCount(history),
+      walletUsdcBalance: usdcBalance,
+      guardrails: config.guardrails,
+      dcaStrategy: config.dcaStrategy,
+      remainingCampaignBudgetUsdc: remainingCampaignBudget(history, config.guardrails.campaignTotalBudgetUsdc),
+      alreadySpentTodayUsdc: alreadySpentToday(history, date),
+      recentHistory: recentHistory(history).map((e) => ({
+        date: e.date,
+        status: e.status,
+        amountUsdc: e.clampedAmountUsdc,
+        reasoningSummary: e.reasoning,
+      })),
+    };
+    const commentary = await getClaudeDecision(config.anthropicApiKey, context, {
       history,
       reflections,
       walletUsdcBalance: usdcBalance,
@@ -185,42 +210,9 @@ export async function runDailyDca(config: AppConfig): Promise<RunOutcome> {
       marketBrief,
       cirBtcPriceSnapshots,
     });
+    if (commentary?.reasoning) reasoning = commentary.reasoning;
   } catch (err) {
-    const status: RunStatus =
-      err instanceof DecisionError && err.kind === "invalid_output" ? "error_llm_invalid_output" : "error_llm_api";
-    logger.error("Claude decision call failed", err);
-    return writeAndReturn({
-      date,
-      timestamp,
-      status,
-      tokenOut: config.tokenOut,
-      walletUsdcBalance: usdcBalance,
-      message: `Claude decision failed: ${(err as Error).message}`,
-    }, false, config.discordWebhookUrl, refCtx);
-  }
-
-  const clamped = clampDecision(decision, {
-    guardrails: config.guardrails,
-    walletUsdcBalance: usdcBalance,
-    alreadySpentTodayUsdc: context.alreadySpentTodayUsdc,
-    remainingCampaignBudgetUsdc: context.remainingCampaignBudgetUsdc,
-  });
-
-  if (!clamped.proceed) {
-    const status: RunStatus = clamped.skipReason === "llm_declined" ? "skipped_llm_declined" : "skipped_guardrail_clamped";
-    logger.info(`Not proceeding: ${clamped.skipReason} (bound by ${clamped.boundBy})`);
-    return writeAndReturn({
-      date,
-      timestamp,
-      status,
-      requestedAmountUsdc: decision.amountUsdc,
-      clampedAmountUsdc: "0",
-      boundBy: clamped.boundBy,
-      tokenOut: config.tokenOut,
-      reasoning: decision.reasoning,
-      walletUsdcBalance: usdcBalance,
-      message: `Skipped: ${clamped.skipReason}`,
-    }, false, config.discordWebhookUrl, refCtx);
+    logger.warn(`Advisory commentary failed (non-fatal): ${(err as Error).message}`);
   }
 
   try {
@@ -230,15 +222,15 @@ export async function runDailyDca(config: AppConfig): Promise<RunOutcome> {
       walletAddress: wallet.address,
       kitKey: config.kitKey,
       tokenOut: config.tokenOut,
-      amountUsdc: clamped.amountUsdc,
+      amountUsdc: executableStr,
       dryRun: config.dryRun,
     });
 
     logger.info(swapResult.dryRun ? "Dry run: swap skipped" : `Swap executed: ${swapResult.txHash}`);
 
-    // Pro-rata distribution after successful swap
+    // Attribute the swap back to each user's schedule.
     if (!swapResult.dryRun && swapResult.amountOut) {
-      distributeSwap(ledger, clamped.amountUsdc, swapResult.amountOut, timestamp);
+      applyScheduledDistribution(ledger, schedule.spends, executableStr, swapResult.amountOut, timestamp);
       await saveLedger(ledger);
     }
 
@@ -246,18 +238,18 @@ export async function runDailyDca(config: AppConfig): Promise<RunOutcome> {
       date,
       timestamp,
       status: swapResult.dryRun ? "dry_run" : "success",
-      requestedAmountUsdc: decision.amountUsdc,
-      clampedAmountUsdc: clamped.amountUsdc,
-      boundBy: clamped.boundBy,
+      requestedAmountUsdc: scheduledTotal.toFixed(6),
+      clampedAmountUsdc: executableStr,
+      boundBy: executable < scheduledTotal ? "wallet_available_after_reserve" : "user_schedule",
       tokenOut: config.tokenOut,
-      reasoning: decision.reasoning,
+      reasoning,
       txHash: swapResult.txHash,
       explorerUrl: swapResult.explorerUrl,
       amountOut: swapResult.amountOut,
       walletUsdcBalance: usdcBalance,
       message: swapResult.dryRun
-        ? `[DRY RUN] Would have swapped ${clamped.amountUsdc} USDC -> ${config.tokenOut}`
-        : `Swapped ${clamped.amountUsdc} USDC -> ${config.tokenOut}`,
+        ? `[DRY RUN] Would have swapped ${executableStr} USDC -> ${config.tokenOut} across ${schedule.spends.length} user(s)`
+        : `Swapped ${executableStr} USDC -> ${config.tokenOut} across ${schedule.spends.length} user(s)`,
     }, false, config.discordWebhookUrl, refCtx);
   } catch (err) {
     const category = err instanceof SwapExecutionError ? err.category : "unknown";
@@ -266,11 +258,11 @@ export async function runDailyDca(config: AppConfig): Promise<RunOutcome> {
       date,
       timestamp,
       status: "error_swap_failed",
-      requestedAmountUsdc: decision.amountUsdc,
-      clampedAmountUsdc: clamped.amountUsdc,
-      boundBy: clamped.boundBy,
+      requestedAmountUsdc: scheduledTotal.toFixed(6),
+      clampedAmountUsdc: executableStr,
+      boundBy: "user_schedule",
       tokenOut: config.tokenOut,
-      reasoning: decision.reasoning,
+      reasoning,
       walletUsdcBalance: usdcBalance,
       message: `Swap failed [${category}]: ${(err as Error).message}`,
     }, false, config.discordWebhookUrl, refCtx);

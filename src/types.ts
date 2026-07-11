@@ -92,7 +92,16 @@ export interface UserAccount {
   totalWithdrawnUsdc: string;
   firstSeen: string;
   lastActivity: string;
+  // Per-user recurring DCA (Cách B). Optional for backward compatibility with
+  // ledgers written before this feature; code fills defaults when absent.
+  dcaRatePerDay?: string; // USDC/day this user's schedule spends
+  dcaRateIsCustom?: boolean; // true once the user sets it themselves (don't auto-recompute)
+  dcaPaused?: boolean; // user paused their DCA
+  lastChargedAt?: string; // ISO timestamp of the last run that spent for this user
 }
+
+// Default deploy horizon (days) used to derive a user's auto rate = deposit / horizon.
+export const DEFAULT_DCA_HORIZON_DAYS = 30;
 
 export interface DepositRecord {
   id: string;

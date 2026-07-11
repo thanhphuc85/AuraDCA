@@ -1,5 +1,5 @@
 import type { Ledger, DepositRecord } from "../types.js";
-import { normalizeAddress, getOrCreateUser } from "./store.js";
+import { normalizeAddress, getOrCreateUser, refreshAutoDcaRate } from "./store.js";
 import { ERC20_TRANSFER_TOPIC, USDC_DECIMALS, DEPOSIT_SCAN_CHUNK_SIZE, DEPOSIT_SCAN_LOOKBACK } from "./constants.js";
 import { withRetry } from "../retry.js";
 import { logger } from "../logger.js";
@@ -84,6 +84,8 @@ export async function scanDeposits(
       user.usdcBalance = (parseFloat(user.usdcBalance) + parseFloat(parsed.amount)).toFixed(USDC_DECIMALS);
       user.totalDeposited = (parseFloat(user.totalDeposited) + parseFloat(parsed.amount)).toFixed(USDC_DECIMALS);
       user.lastActivity = now;
+      // Auto-set the recurring DCA rate from the new balance (unless user customized it).
+      refreshAutoDcaRate(user);
 
       const record: DepositRecord = {
         id,
