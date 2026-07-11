@@ -2,7 +2,7 @@ import type { AppConfig } from "./config.js";
 import { createWallet } from "./wallet.js";
 import { readHistory, appendEntry, recentHistory, dayCount, alreadySpentToday, remainingCampaignBudget } from "./history/store.js";
 import { readReflections, appendReflection } from "./history/reflectionStore.js";
-import { readLedger, writeLedger } from "./ledger/store.js";
+import { readLedger, writeLedger, ensureDefaultRates } from "./ledger/store.js";
 import { scanDeposits } from "./ledger/scanner.js";
 import { computeScheduledSpends, applyScheduledDistribution } from "./ledger/schedule.js";
 import { requestWithdrawal, processPendingWithdrawals } from "./ledger/withdraw.js";
@@ -91,6 +91,10 @@ export async function runDailyDca(config: AppConfig): Promise<RunOutcome> {
   } catch (err) {
     logger.error("Deposit scan failed (non-fatal)", err);
   }
+
+  // Back-fill default rates for accounts that predate per-user DCA.
+  const filled = ensureDefaultRates(ledger);
+  if (filled > 0) logger.info(`Back-filled default DCA rate for ${filled} pre-existing user(s)`);
 
   if (config.withdrawalInput) {
     try {

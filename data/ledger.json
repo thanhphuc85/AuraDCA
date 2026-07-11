@@ -11,7 +11,9 @@
       "totalWithdrawnCirBtc": "0",
       "totalWithdrawnUsdc": "0",
       "firstSeen": "2026-07-09T22:59:39.139Z",
-      "lastActivity": "2026-07-09T22:59:39.139Z"
+      "lastActivity": "2026-07-09T22:59:39.139Z",
+      "dcaRatePerDay": "0.333333",
+      "dcaPaused": false
     },
     "0xdd6045a634ef2c61d6070552b556aae40099e84b": {
       "address": "0xdd6045a634ef2c61d6070552b556aae40099e84b",
@@ -22,7 +24,9 @@
       "totalWithdrawnCirBtc": "0",
       "totalWithdrawnUsdc": "2.000000",
       "firstSeen": "2026-07-10T16:07:29.490Z",
-      "lastActivity": "2026-07-11T00:47:37.213Z"
+      "lastActivity": "2026-07-11T00:47:37.213Z",
+      "dcaRatePerDay": "0.100000",
+      "dcaPaused": false
     }
   },
   "deposits": [

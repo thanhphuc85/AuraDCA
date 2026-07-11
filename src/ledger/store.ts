@@ -65,3 +65,20 @@ export function refreshAutoDcaRate(user: UserAccount, horizonDays = DEFAULT_DCA_
   const rate = horizonDays > 0 ? balance / horizonDays : 0;
   user.dcaRatePerDay = rate.toFixed(6);
 }
+
+/**
+ * Back-fill a default rate for users whose rate was never set — i.e. accounts
+ * that existed before per-user DCA shipped (dcaRatePerDay === undefined). Runs
+ * once per such user; leaves custom and already-initialized rates untouched.
+ */
+export function ensureDefaultRates(ledger: Ledger, horizonDays = DEFAULT_DCA_HORIZON_DAYS): number {
+  let filled = 0;
+  for (const user of Object.values(ledger.users)) {
+    if (user.dcaRatePerDay === undefined && !user.dcaRateIsCustom) {
+      refreshAutoDcaRate(user, horizonDays);
+      if (user.dcaPaused === undefined) user.dcaPaused = false;
+      filled++;
+    }
+  }
+  return filled;
+}
