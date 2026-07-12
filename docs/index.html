@@ -115,6 +115,9 @@
   .brand { display: flex; align-items: center; gap: 12px; }
   .brand img { width: 40px; height: 40px; filter: drop-shadow(0 4px 14px rgba(138,92,246,.45)); }
   .brand b { font-family: Sora; font-size: 18px; letter-spacing: .2px; }
+  /* Sidebar already carries the brand, so keep the header brand only on mobile. */
+  @media (min-width: 981px) { header .brand { display: none; } }
+  @media (max-width: 560px) { header .brand div span { display: none; } .brand img { width: 30px; height: 30px; } }
   .brand span { display: block; font-size: 11px; color: var(--muted); }
 
   /* ---------- buttons ---------- */
@@ -1017,10 +1020,10 @@
 
   <section class="reveal" id="dashSection">
     <div class="dash-stats">
-      <div class="dash-card"><div class="dc-ic">💸</div><div class="dc-val" id="dsDeployed">—</div><div class="dc-lbl">Total USDC Deployed</div></div>
-      <div class="dash-card"><div class="dc-ic">📅</div><div class="dc-val" id="dsToday">—</div><div class="dc-lbl">Today's DCA</div></div>
-      <div class="dash-card"><div class="dc-ic">👥</div><div class="dc-val" id="dsUsers">—</div><div class="dc-lbl">Active Users</div></div>
-      <div class="dash-card"><div class="dc-ic">✅</div><div class="dc-val" id="dsSuccess">—</div><div class="dc-lbl">Success Rate</div></div>
+      <div class="dash-card"><div class="dc-ic">💸</div><div class="dc-val" id="dsDeployed"><div class="skel skel-num"></div></div><div class="dc-lbl">Total USDC Deployed</div></div>
+      <div class="dash-card"><div class="dc-ic">📅</div><div class="dc-val" id="dsToday"><div class="skel skel-num"></div></div><div class="dc-lbl">Today's DCA</div></div>
+      <div class="dash-card"><div class="dc-ic">👥</div><div class="dc-val" id="dsUsers"><div class="skel skel-num"></div></div><div class="dc-lbl">Active Users</div></div>
+      <div class="dash-card"><div class="dc-ic">✅</div><div class="dc-val" id="dsSuccess"><div class="skel skel-num"></div></div><div class="dc-lbl">Success Rate</div></div>
     </div>
     <div class="dash-row2">
       <div class="card">
@@ -1040,8 +1043,8 @@
       </div>
       <div class="card">
         <h3 style="margin:0 0 4px;">🧠 Latest decision</h3>
-        <p class="cs" style="margin:0 0 10px;" id="agentLastStatus">—</p>
-        <div id="agentLastDecision" class="agent-last">Waiting for the next run…</div>
+        <p class="cs" style="margin:0 0 10px;" id="agentLastStatus"><div class="skel skel-line w40"></div></p>
+        <div id="agentLastDecision" class="agent-last"><div class="skel skel-line w80"></div><div class="skel skel-line w60"></div></div>
       </div>
     </div>
   </section>
@@ -3343,7 +3346,7 @@
     var ledgerLoaded = !!(_ledgerData && _ledgerData.users);
     var users = ledgerLoaded ? Object.keys(_ledgerData.users).map(function (k) { return _ledgerData.users[k]; }) : [];
     var active = users.filter(function (u) { return parseFloat(u.dcaRatePerDay || "0") > 0 && !u.dcaPaused; }).length;
-    var us = $("dsUsers"); if (us) us.textContent = ledgerLoaded ? String(active) : "—";
+    var us = $("dsUsers"); if (us && ledgerLoaded) us.textContent = String(active);
     var done = history.filter(function (e) { return e.status === "success" || e.status === "dry_run"; }).length;
     var sr = $("dsSuccess"); if (sr) sr.textContent = history.length ? Math.round(done / history.length * 100) + "%" : "—";
     var last = history[history.length - 1];
