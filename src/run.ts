@@ -5,8 +5,9 @@ import { readReflections, appendReflection } from "./history/reflectionStore.js"
 import { readLedger, writeLedger, ensureDefaultRates } from "./ledger/store.js";
 import { scanDeposits } from "./ledger/scanner.js";
 import { computeScheduledSpends, applyScheduledDistribution } from "./ledger/schedule.js";
+import { computeAllowanceSpends, pullUsdcFromUser, sendTokenToUser } from "./ledger/allowance.js";
 import { requestWithdrawal, processPendingWithdrawals } from "./ledger/withdraw.js";
-import { ARC_TESTNET_RPC, ARC_USDC_CONTRACT } from "./ledger/constants.js";
+import { ARC_TESTNET_RPC, ARC_USDC_CONTRACT, ARC_CIRBTC_CONTRACT } from "./ledger/constants.js";
 import { getClaudeDecision } from "./decision/client.js";
 import { generateReflection } from "./decision/reflect.js";
 import { runMarketAnalyst } from "./decision/analyst.js";
@@ -144,6 +145,101 @@ export async function runDailyDca(config: AppConfig): Promise<RunOutcome> {
       } catch (err) {
         logger.error("Failed to persist cirBTC price (non-fatal)", err);
       }
+    }
+  }
+
+  const minSwapUsdc = Number.parseFloat(config.guardrails.minSwapUsdc);
+
+  // --- Non-custodial allowance mode (gated by ALLOWANCE_MODE) ---
+  // Instead of spending a pooled deposit, pull each user's scheduled amount from
+  // their own wallet via transferFrom, swap the sum, and send cirBTC back.
+  if (config.allowanceMode) {
+    const { spends, totalUsdc } = await computeAllowanceSpends(ledger, ARC_TESTNET_RPC, ARC_USDC_CONTRACT, wallet.address, timestamp);
+    logger.info(`Allowance mode: ${spends.length} active user(s), total pull ${totalUsdc} USDC`);
+
+    if (totalUsdc < minSwapUsdc) {
+      return writeAndReturn({
+        date, timestamp, status: "skipped_guardrail_clamped",
+        requestedAmountUsdc: totalUsdc.toFixed(6), clampedAmountUsdc: "0", boundBy: "allowance_below_min",
+        tokenOut: config.tokenOut, walletUsdcBalance: usdcBalance,
+        message: `Allowance mode: ${spends.length} user(s), total ${totalUsdc.toFixed(6)} < min swap ${minSwapUsdc}`,
+      }, false, config.discordWebhookUrl, refCtx);
+    }
+
+    if (config.dryRun) {
+      return writeAndReturn({
+        date, timestamp, status: "dry_run",
+        requestedAmountUsdc: totalUsdc.toFixed(6), clampedAmountUsdc: totalUsdc.toFixed(6),
+        tokenOut: config.tokenOut, walletUsdcBalance: usdcBalance,
+        message: `[DRY RUN] Allowance mode would pull ${totalUsdc.toFixed(6)} USDC from ${spends.length} wallet(s) → swap → send cirBTC back`,
+      }, false, config.discordWebhookUrl, refCtx);
+    }
+
+    // LIVE: pull each user's amount via transferFrom.
+    const pulled: Array<{ user: string; amount: number }> = [];
+    for (const s of spends) {
+      try {
+        await pullUsdcFromUser({
+          apiKey: config.circleApiKey, entitySecret: config.circleEntitySecret, walletId: config.walletId,
+          usdcContract: ARC_USDC_CONTRACT, agentAddress: wallet.address, user: s.user, amountUsdc: s.amount.toFixed(6),
+        });
+        pulled.push({ user: s.user, amount: s.amount });
+      } catch (err) {
+        logger.error(`transferFrom pull failed for ${s.user} (non-fatal)`, err);
+      }
+    }
+    const pulledTotal = pulled.reduce((a, x) => a + x.amount, 0);
+    if (pulledTotal < minSwapUsdc) {
+      return writeAndReturn({
+        date, timestamp, status: "error_swap_failed", tokenOut: config.tokenOut, walletUsdcBalance: usdcBalance,
+        message: `Allowance mode: pulled only ${pulledTotal.toFixed(6)} USDC (< min swap ${minSwapUsdc})`,
+      }, false, config.discordWebhookUrl, refCtx);
+    }
+
+    try {
+      const swapResult = await executeSwap({
+        circleApiKey: config.circleApiKey, circleEntitySecret: config.circleEntitySecret,
+        walletAddress: wallet.address, kitKey: config.kitKey, tokenOut: config.tokenOut,
+        amountUsdc: pulledTotal.toFixed(6), dryRun: false,
+      });
+      if (swapResult.amountOut) {
+        const totalOut = Number.parseFloat(swapResult.amountOut);
+        for (const p of pulled) {
+          const share = ((p.amount / pulledTotal) * totalOut).toFixed(8);
+          try {
+            await sendTokenToUser({
+              apiKey: config.circleApiKey, entitySecret: config.circleEntitySecret, walletId: config.walletId,
+              tokenContract: ARC_CIRBTC_CONTRACT, user: p.user, amount: share,
+            });
+          } catch (err) {
+            logger.error(`cirBTC send-back failed for ${p.user} (non-fatal)`, err);
+          }
+          const u = ledger.users[p.user.toLowerCase()];
+          if (u) {
+            u.cirBtcBalance = (Number.parseFloat(u.cirBtcBalance) + Number.parseFloat(share)).toFixed(8);
+            u.totalSwapped = (Number.parseFloat(u.totalSwapped) + p.amount).toFixed(6);
+            u.lastChargedAt = timestamp;
+            u.lastActivity = timestamp;
+          }
+        }
+        await saveLedger(ledger);
+      }
+      return writeAndReturn({
+        date, timestamp, status: "success",
+        requestedAmountUsdc: totalUsdc.toFixed(6), clampedAmountUsdc: pulledTotal.toFixed(6),
+        tokenOut: config.tokenOut, txHash: swapResult.txHash, explorerUrl: swapResult.explorerUrl, amountOut: swapResult.amountOut,
+        walletUsdcBalance: usdcBalance,
+        reasoning: `Allowance mode: pulled ${pulledTotal.toFixed(6)} USDC from ${pulled.length} wallet(s), swapped, sent cirBTC back.`,
+        message: `Allowance DCA: pulled + swapped ${pulledTotal.toFixed(6)} USDC across ${pulled.length} user(s)`,
+      }, false, config.discordWebhookUrl, refCtx);
+    } catch (err) {
+      const category = err instanceof SwapExecutionError ? err.category : "unknown";
+      logger.error(`Allowance swap failed [${category}]`, err);
+      return writeAndReturn({
+        date, timestamp, status: "error_swap_failed", clampedAmountUsdc: pulledTotal.toFixed(6),
+        tokenOut: config.tokenOut, walletUsdcBalance: usdcBalance,
+        message: `Allowance swap failed [${category}]: ${(err as Error).message}`,
+      }, false, config.discordWebhookUrl, refCtx);
     }
   }
 

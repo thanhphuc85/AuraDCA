@@ -29,6 +29,11 @@ const envSchema = z.object({
   DRY_RUN: z
     .preprocess(emptyToUndefined, z.string().default("true"))
     .transform((v) => v.toLowerCase() === "true"),
+  // Non-custodial allowance model: agent pulls USDC from each user's wallet via
+  // transferFrom instead of a pooled deposit. Off by default until verified live.
+  ALLOWANCE_MODE: z
+    .preprocess(emptyToUndefined, z.string().default("false"))
+    .transform((v) => v.toLowerCase() === "true"),
   DCA_BASE_AMOUNT: z.preprocess(emptyToUndefined, decimalString.default("1.00")),
   DCA_DIP_MILD_THRESHOLD: z.preprocess(emptyToUndefined, z.coerce.number().min(0).max(1).default(0.05)),
   DCA_DIP_MODERATE_THRESHOLD: z.preprocess(emptyToUndefined, z.coerce.number().min(0).max(1).default(0.10)),
@@ -60,6 +65,7 @@ export interface AppConfig {
   anthropicApiKey: string;
   tokenOut: string;
   dryRun: boolean;
+  allowanceMode: boolean;
   discordWebhookUrl?: string;
   guardrails: GuardrailConfig;
   dcaStrategy: DcaStrategy;
@@ -112,6 +118,7 @@ export function loadConfig(): AppConfig {
     anthropicApiKey: env.ANTHROPIC_API_KEY,
     tokenOut: env.TOKEN_OUT,
     dryRun: env.DRY_RUN,
+    allowanceMode: env.ALLOWANCE_MODE,
     discordWebhookUrl: env.DISCORD_WEBHOOK_URL,
     guardrails: {
       maxDailyUsdc: env.MAX_DAILY_USDC,

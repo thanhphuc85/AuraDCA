@@ -1,5 +1,9 @@
+import { initiateDeveloperControlledWalletsClient } from "@circle-fin/developer-controlled-wallets";
+import type { Ledger } from "../types.js";
 import { withRetry } from "../retry.js";
 import { USDC_DECIMALS } from "./constants.js";
+
+const MAX_CATCHUP_DAYS = 2;
 
 /**
  * Non-custodial (allowance) model helpers — Cách B / Grok style.
@@ -68,4 +72,108 @@ export async function readUserOnChainState(
     balanceUsdc,
     spendableUsdc: Math.min(allowanceUsdc, balanceUsdc),
   };
+}
+
+export interface AllowanceSpend {
+  user: string;
+  amount: number;
+  allowanceUsdc: number;
+  balanceUsdc: number;
+}
+
+/**
+ * Allowance-mode schedule: for each active user, the amount to pull this run =
+ * rate × elapsed, capped by their on-chain spendable (min of allowance and wallet
+ * balance). Nothing is pooled — this reads live on-chain state per user.
+ */
+export async function computeAllowanceSpends(
+  ledger: Ledger,
+  rpcUrl: string,
+  usdcContract: string,
+  agentAddress: string,
+  nowIso: string,
+): Promise<{ spends: AllowanceSpend[]; totalUsdc: number }> {
+  const now = new Date(nowIso).getTime();
+  const spends: AllowanceSpend[] = [];
+  let total = 0;
+
+  for (const user of Object.values(ledger.users)) {
+    if (user.dcaPaused) continue;
+    const rate = Number.parseFloat(user.dcaRatePerDay ?? "0");
+    if (!(rate > 0)) continue;
+
+    const lastMs = new Date(user.lastChargedAt ?? user.firstSeen).getTime();
+    let elapsedDays = (now - lastMs) / (24 * 3600 * 1000);
+    if (!(elapsedDays > 0)) continue;
+    elapsedDays = Math.min(elapsedDays, MAX_CATCHUP_DAYS);
+
+    const onchain = await readUserOnChainState(rpcUrl, usdcContract, user.address, agentAddress);
+    const intended = rate * elapsedDays;
+    const amount = Number.parseFloat(Math.min(intended, onchain.spendableUsdc).toFixed(USDC_DECIMALS));
+    if (amount > 0) {
+      spends.push({ user: user.address, amount, allowanceUsdc: onchain.allowanceUsdc, balanceUsdc: onchain.balanceUsdc });
+      total += amount;
+    }
+  }
+
+  return { spends, totalUsdc: Number.parseFloat(total.toFixed(USDC_DECIMALS)) };
+}
+
+function toBaseUnits(amountUsdc: string, decimals: number): string {
+  const [whole, frac = ""] = amountUsdc.split(".");
+  const fracPadded = (frac + "0".repeat(decimals)).slice(0, decimals);
+  return (BigInt(whole || "0") * 10n ** BigInt(decimals) + BigInt(fracPadded || "0")).toString();
+}
+
+/**
+ * Pull USDC from a user's wallet into the agent wallet via ERC-20 transferFrom,
+ * using the allowance the user granted. Executed by the agent's Circle wallet
+ * (the approved spender) through contract execution.
+ */
+export async function pullUsdcFromUser(params: {
+  apiKey: string;
+  entitySecret: string;
+  walletId: string;
+  usdcContract: string;
+  agentAddress: string;
+  user: string;
+  amountUsdc: string;
+}): Promise<{ txId?: string }> {
+  const client = initiateDeveloperControlledWalletsClient({ apiKey: params.apiKey, entitySecret: params.entitySecret });
+  const base = toBaseUnits(params.amountUsdc, USDC_DECIMALS);
+  const res = await client.createContractExecutionTransaction({
+    walletId: params.walletId,
+    contractAddress: params.usdcContract,
+    abiFunctionSignature: "transferFrom(address,address,uint256)",
+    abiParameters: [params.user, params.agentAddress, base],
+    fee: { type: "level", config: { feeLevel: "HIGH" } },
+  });
+  return { txId: res.data?.id };
+}
+
+/**
+ * Send a token (e.g. the freshly-swapped cirBTC) from the agent wallet back to a
+ * user's own wallet.
+ */
+export async function sendTokenToUser(params: {
+  apiKey: string;
+  entitySecret: string;
+  walletId: string;
+  tokenContract: string;
+  user: string;
+  amount: string;
+}): Promise<{ txId?: string }> {
+  const client = initiateDeveloperControlledWalletsClient({ apiKey: params.apiKey, entitySecret: params.entitySecret });
+  const walletRes = await client.getWallet({ id: params.walletId });
+  const walletAddress = walletRes.data?.wallet?.address;
+  if (!walletAddress) throw new Error("Could not resolve agent wallet address");
+  const res = await client.createTransaction({
+    walletAddress,
+    blockchain: "ARC-TESTNET",
+    tokenAddress: params.tokenContract,
+    destinationAddress: params.user,
+    amount: [params.amount],
+    fee: { type: "level", config: { feeLevel: "HIGH" } },
+  });
+  return { txId: res.data?.id };
 }
