@@ -63,6 +63,23 @@
     .sb-overlay.open { display: block; }
     .net-chip .net-txt, .gas-chip { display: none; }
   }
+  /* ---------- Dashboard home grid ---------- */
+  .dash-stats { display: grid; grid-template-columns: repeat(2,1fr); gap: 14px; margin-bottom: 16px; }
+  @media (min-width: 820px) { .dash-stats { grid-template-columns: repeat(4,1fr); } }
+  .dash-card { background: var(--glass); border: 1px solid var(--glass-brd); border-radius: 16px; padding: 18px; transition: transform .15s, border-color .15s; }
+  .dash-card:hover { transform: translateY(-2px); border-color: rgba(138,92,246,.4); }
+  .dc-ic { font-size: 20px; margin-bottom: 8px; }
+  .dc-val { font-family: Sora, Inter, sans-serif; font-size: 26px; font-weight: 800; letter-spacing: -.02em; }
+  .dc-lbl { font-size: 12px; color: var(--muted); margin-top: 4px; }
+  .dash-row2 { display: grid; grid-template-columns: 1fr; gap: 16px; }
+  @media (min-width: 820px) { .dash-row2 { grid-template-columns: 2fr 3fr; } }
+  .agent-countdown { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; margin: 14px 0; padding: 14px 16px; border-radius: 14px; background: linear-gradient(135deg, rgba(138,92,246,.12), rgba(47,134,230,.08)); border: 1px solid var(--glass-brd); }
+  .ac-label { font-size: 12px; color: var(--muted); }
+  .ac-timer { font-family: Sora, ui-monospace, monospace; font-size: 22px; font-weight: 800; color: var(--text); letter-spacing: .02em; }
+  .agent-stat-row { display: flex; justify-content: space-between; font-size: 13px; padding: 7px 0; border-bottom: 1px solid var(--glass-brd); }
+  .agent-stat-row:last-child { border-bottom: none; }
+  .agent-stat-row b { font-family: Sora, Inter, sans-serif; }
+  .agent-last { margin-top: 12px; font-size: 12px; color: var(--muted); font-style: italic; line-height: 1.5; }
   html { scroll-behavior: smooth; }
   body {
     margin: 0; background: var(--bg); color: var(--text);
@@ -997,6 +1014,37 @@
       <div class="g"><div class="n" id="bLast"><div class="skel skel-num"></div></div><div class="l">Last decision</div></div>
     </div>
   </div>
+
+  <section class="reveal" id="dashSection">
+    <div class="dash-stats">
+      <div class="dash-card"><div class="dc-ic">💸</div><div class="dc-val" id="dsDeployed">—</div><div class="dc-lbl">Total USDC Deployed</div></div>
+      <div class="dash-card"><div class="dc-ic">📅</div><div class="dc-val" id="dsToday">—</div><div class="dc-lbl">Today's DCA</div></div>
+      <div class="dash-card"><div class="dc-ic">👥</div><div class="dc-val" id="dsUsers">—</div><div class="dc-lbl">Active Users</div></div>
+      <div class="dash-card"><div class="dc-ic">✅</div><div class="dc-val" id="dsSuccess">—</div><div class="dc-lbl">Success Rate</div></div>
+    </div>
+    <div class="dash-row2">
+      <div class="card">
+        <h3 style="margin:0 0 4px;">🤖 Your DCA Agent</h3>
+        <p class="cs" style="margin:0 0 12px;">Runs automatically 3× a day on Arc Testnet.</p>
+        <div class="agent-countdown">
+          <span class="ac-label">Next agent run</span>
+          <span class="ac-timer" id="nextRunTimer">—</span>
+        </div>
+        <div id="agentCardBody">
+          <p class="cs" id="agentConnectHint">Connect your wallet to set your DCA rate.</p>
+        </div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:12px;">
+          <button class="btn btn-ghost" id="agentGoSchedule">⚙️ Set DCA rate</button>
+          <button class="btn btn-ghost" id="agentGoApprove">🔑 Approve allowance</button>
+        </div>
+      </div>
+      <div class="card">
+        <h3 style="margin:0 0 4px;">🧠 Latest decision</h3>
+        <p class="cs" style="margin:0 0 10px;" id="agentLastStatus">—</p>
+        <div id="agentLastDecision" class="agent-last">Waiting for the next run…</div>
+      </div>
+    </div>
+  </section>
 
   <div id="walletCard" style="display:none;"></div>
 
@@ -3285,6 +3333,61 @@
     }).join("") || '<div style="color:var(--muted);padding:16px 0;font-size:13px;">No reflections yet.</div>';
   }
 
+  function renderDashboard(history, total) {
+    history = Array.isArray(history) ? history : [];
+    var dep = $("dsDeployed"); if (dep) dep.textContent = fmt(total || 0, 2);
+    var today = new Date().toISOString().slice(0, 10);
+    var todaySum = history.filter(function (e) { return e.date === today && SUCCESS[e.status]; })
+      .reduce(function (a, e) { return a + (parseFloat(e.clampedAmountUsdc || "0") || 0); }, 0);
+    var td = $("dsToday"); if (td) td.textContent = fmt(todaySum, 4);
+    var ledgerLoaded = !!(_ledgerData && _ledgerData.users);
+    var users = ledgerLoaded ? Object.keys(_ledgerData.users).map(function (k) { return _ledgerData.users[k]; }) : [];
+    var active = users.filter(function (u) { return parseFloat(u.dcaRatePerDay || "0") > 0 && !u.dcaPaused; }).length;
+    var us = $("dsUsers"); if (us) us.textContent = ledgerLoaded ? String(active) : "—";
+    var done = history.filter(function (e) { return e.status === "success" || e.status === "dry_run"; }).length;
+    var sr = $("dsSuccess"); if (sr) sr.textContent = history.length ? Math.round(done / history.length * 100) + "%" : "—";
+    var last = history[history.length - 1];
+    if (last) {
+      var stEl = $("agentLastStatus");
+      if (stEl) stEl.textContent = (typeof statusLabel === "function" ? statusLabel(last.status) : last.status) + (last.date ? " · " + last.date : "");
+      var ld = $("agentLastDecision");
+      if (ld) ld.textContent = last.reasoning ? '“' + last.reasoning + '”' : (last.message || "No reasoning recorded.");
+    }
+  }
+
+  // Next-run countdown (cron at 07:00 / 13:00 / 19:00 UTC).
+  (function setupCountdown() {
+    var el = document.getElementById("nextRunTimer");
+    if (!el) return;
+    var HOURS = [7, 13, 19];
+    function nextRun() {
+      var now = new Date();
+      for (var d = 0; d < 2; d++) {
+        for (var i = 0; i < HOURS.length; i++) {
+          var t = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate() + d, HOURS[i], 0, 0));
+          if (t > now) return t;
+        }
+      }
+      return null;
+    }
+    function pad(n) { return String(n).padStart(2, "0"); }
+    function tick() {
+      var t = nextRun(); if (!t) { el.textContent = "—"; return; }
+      var s = Math.max(0, Math.floor((t - new Date()) / 1000));
+      el.textContent = pad(Math.floor(s / 3600)) + ":" + pad(Math.floor((s % 3600) / 60)) + ":" + pad(s % 60);
+    }
+    tick(); setInterval(tick, 1000);
+  })();
+
+  // Agent card quick-action buttons.
+  (function setupAgentCardBtns() {
+    function jump(id) { var el = document.getElementById(id); if (el) window.scrollTo({ top: el.getBoundingClientRect().top + window.scrollY - 80, behavior: "smooth" }); }
+    var s = document.getElementById("agentGoSchedule");
+    if (s) s.addEventListener("click", function () { if (!state.account) { openWalletModal(); return; } jump("portfolioSection"); });
+    var a = document.getElementById("agentGoApprove");
+    if (a) a.addEventListener("click", function () { jump("fundSection"); });
+  })();
+
   function render(history) {
     if (!Array.isArray(history)) history = [];
     var completed = history.filter(function (e) { return SUCCESS[e.status]; });
@@ -3301,6 +3404,8 @@
     countUp($("bTotal"), total, "", 3);
     countUp($("bRuns"), history.length, "", 0);
     $("bLast").textContent = lastTxt;
+
+    if (typeof renderDashboard === "function") renderDashboard(history, total);
 
     $("chartSub").textContent = completed.length + " completed run(s) · " + fmt(total, 4) + " USDC total";
     renderChart(points);
@@ -3534,6 +3639,15 @@
 
     if (typeof renderRateCard === "function") renderRateCard(user);
     if (typeof renderAllowance === "function") renderAllowance();
+
+    // Reflect the connected user's rate in the Dashboard agent card.
+    var ach = $("agentConnectHint");
+    if (ach) {
+      var r = user ? parseFloat(user.dcaRatePerDay || "0") : 0;
+      if (user && r > 0 && !user.dcaPaused) ach.innerHTML = 'Your DCA rate: <b>' + fmt(r, 6) + ' USDC/day</b>';
+      else if (user && user.dcaPaused) ach.innerHTML = '<span style="color:var(--amber);">⏸ Your DCA is paused.</span>';
+      else ach.textContent = 'Set your DCA rate below to start.';
+    }
 
     // Withdrawal history
     var wds = (ledger && ledger.withdrawals || []).filter(function (w) { return w.address === key; });
