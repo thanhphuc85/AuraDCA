@@ -185,5 +185,17 @@
     "reasoning": "Market brief is bearish (Fear&Greed 28, allocation bias \"decrease 10-15%\"), but there's no dip or regime signal to size against—real cirBTC price feed, price-action, dip-ladder, and regime tools all still report no/insufficient data. Risk score is medium (36), driven almost entirely by a 10+ consecutive error streak and 0% reliability rather than volatility or concentration (only 2% of the ~42.3 USDC wallet deployed), and my stored reflections confirm this is a structural routing/liquidity outage independent of trade size (failures occurred from 0.10 to 3.67 USDC alike) — so escalating size adds no value. Per the reflection's strategy adjustment to periodically probe with minimal capital rather than either blindly retrying full-size or withholding indefinitely, I'm sending a small 0.10 USDC test swap today to check if the route has been restored before resuming normal/catch-up sizing; pacing remains severely behind (1 of 15 runs executed) so a successful probe should be followed by a larger catch-up allocation.",
     "walletUsdcBalance": "42.8385270565623072",
     "message": "Swap failed [no_route]: Swap failed [no_route]: Stablecoin Service createSwap failed: Route or resource not found. Details: No route available"
+  },
+  {
+    "date": "2026-07-13",
+    "timestamp": "2026-07-13T18:51:22.110Z",
+    "status": "error_swap_failed",
+    "requestedAmountUsdc": "3.666666",
+    "clampedAmountUsdc": "3.666666",
+    "boundBy": "user_schedule",
+    "tokenOut": "cirBTC",
+    "reasoning": "Market brief is bearish (Fear&Greed 28, allocation bias \"decrease 10-15%\"), but with no dip/regime signal (real cirBTC price feed, price-action, dip-ladder, and regime tools all still report no/insufficient data) there's no market edge to size against anyway. Risk score is medium (36), driven almost entirely by a now 10+ consecutive error streak and 0% reliability rather than volatility or concentration (only 2% of the ~42.3 USDC wallet deployed) — and critically, today's own earlier 0.10 USDC probe swap already failed with the same routing error, confirming the structural liquidity/routing outage documented in my stored reflections persists regardless of trade size (0.10 to 3.67 USDC have all failed identically across 4+ days). Per the reflection's strategy adjustment, repeatedly resubmitting swaps against a confirmed-dead route adds no value and just inflates failed-request counts, so I'm setting proceed=false to preserve capital (wallet balance remains safe and idle) until an external signal confirms the cirBTC route has actually been restored, at which point a larger catch-up allocation should resume given severely behind pacing (1 of 16 runs executed).",
+    "walletUsdcBalance": "42.8385270565623072",
+    "message": "Swap failed [no_route]: Swap failed [no_route]: Stablecoin Service createSwap failed: Route or resource not found. Details: No route available"
   }
 ]
