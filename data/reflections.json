@@ -128,5 +128,33 @@
       "probe-strategy",
       "budget-idle"
     ]
+  },
+  {
+    "id": "ref-1784068511109",
+    "date": "2026-07-14",
+    "timestamp": "2026-07-14T22:35:11.109Z",
+    "runStatus": "error_swap_failed",
+    "insight": "Day 21 of a structural \"No route available\" outage for cirBTC swaps persists with zero successful executions since day 1 (cumulative spent stuck at 1.000000 USDC out of ~42.8 idle); probing at any size (0.10 to 3.67 USDC) has produced zero new information for 20+ days, confirming this is a persistent infrastructure/liquidity failure, not a transient or size-dependent issue.",
+    "patterns": [
+      "100% error rate (error_swap_failed) across all 8 recent runs and effectively all runs since campaign start, spanning 20+ days",
+      "Identical 'No route available' message regardless of trade size (0.10 USDC probes vs 3.67 USDC full-size attempts) or time of day",
+      "Market brief signals (Extreme Fear 22, contrarian 'increase 10-15%' bias) are consistently irrelevant since the binding constraint is the broken swap route, not sizing/timing",
+      "Risk score stable at medium (36), driven entirely by error streak/0% reliability, not volatility or concentration (only ~2% of wallet deployed)",
+      "Multiple same-day repeat attempts (probe + full-size) on 07-12, 07-13, and 07-14 wasted cycles before the strategy shifted to proceed=false after first same-day failure",
+      "Probe frequency has been ~every 2 days, still yielding no new information — probing itself may now be the low-value action"
+    ],
+    "strategyAdjustment": "Stop probing entirely for now — 20+ days of identical failures across all sizes is conclusive evidence the route is dead, not intermittent. Instead of periodic 0.10 USDC probes, set proceed=false by default and only attempt a swap if there's an explicit external signal (e.g., a status update, changelog, or announcement) that the cirBTC route/liquidity has been restored. If no such signal mechanism exists, reduce probe frequency further (e.g., weekly instead of every 2 days) to avoid wasting cycles on a confirmed-dead route, since the last ~10 probes added zero information. Also stop issuing two attempts (probe + full-size) within the same day — this run's history shows that pattern still recurring on 07-14 despite prior reflections flagging it.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "1.000000",
+    "dayNumber": 21,
+    "walletBalance": "42.8385270565623072",
+    "tags": [
+      "error-recovery",
+      "structural-outage",
+      "pacing",
+      "probe-frequency",
+      "budget",
+      "no-route"
+    ]
   }
 ]
