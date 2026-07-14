@@ -101,5 +101,32 @@
       "budget",
       "guardrails-not-binding"
     ]
+  },
+  {
+    "id": "ref-1784048280301",
+    "date": "2026-07-14",
+    "timestamp": "2026-07-14T16:58:00.302Z",
+    "runStatus": "error_swap_failed",
+    "insight": "The cirBTC swap route has been completely non-functional for 20 consecutive days (19 runs, only 1 execution ever succeeded, cumulative spend stuck at 1.00 USDC out of a planned ~76 USDC schedule) — this is not a transient liquidity blip but a persistent structural outage that no amount of probing at any size (0.10 to 3.67 USDC) has resolved.",
+    "patterns": [
+      "Every single run since day 1 except one has ended in error_swap_failed with identical 'No route available' message, regardless of trade size (0.10-3.67 USDC tested repeatedly)",
+      "The probe-then-withhold strategy (small test swap every ~2 days, proceed=false otherwise) has been followed consistently for the last ~8 runs but has produced zero new information — every probe fails identically",
+      "Risk score has plateaued at medium (36) purely from error-streak/reliability scoring, not from real market risk, for the entire campaign",
+      "Market brief signals (Fear&Greed, allocation bias) are being computed and reasoned about every run despite being irrelevant since no swap can execute anyway — wasted analytical cycles",
+      "Pacing has gone from 'behind' to 'severely behind' and is now effectively frozen at 1/19-20 runs with no trajectory toward catch-up"
+    ],
+    "strategyAdjustment": "Stop treating this as a recoverable-any-day liquidity issue and escalate: (1) reduce probe frequency further to once every 5-7 days instead of every 2 days, since probing has cost 20 days with zero signal change and adds no informational value at this cadence; (2) explicitly flag in reasoning that this may require external/manual intervention (e.g., checking if cirBTC token/pool was delisted or migrated) rather than assuming route will self-restore; (3) stop re-deriving full market-brief analysis (Fear&Greed, allocation bias) each run when the swap is structurally blocked — this is wasted reasoning effort; instead lead with route-status check first and short-circuit early; (4) if route remains dead past day 30, consider recommending pausing the schedule entirely or reallocating to a different tokenOut until cirBTC liquidity is confirmed restored, rather than accumulating an ever-growing idle balance against a fixed schedule.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "1.000000",
+    "dayNumber": 20,
+    "walletBalance": "42.8385270565623072",
+    "tags": [
+      "error-recovery",
+      "structural-outage",
+      "pacing",
+      "route-failure",
+      "probe-strategy",
+      "budget-idle"
+    ]
   }
 ]
