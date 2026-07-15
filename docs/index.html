@@ -2024,7 +2024,8 @@
     "https://cdn.jsdelivr.net/gh/thanhphuc85/ArcDCA@main/data/reflections.json",
     "https://raw.githubusercontent.com/thanhphuc85/ArcDCA/main/data/reflections.json",
   ];
-  function fetchFromSources(sources) {
+  // Try each source in order; the first that responds OK wins.
+  function fetchSourcesOnce(sources) {
     return sources.reduce(function (p, url) {
       return p.catch(function () {
         return fetch(url, { cache: "no-store" }).then(function (r) {
@@ -2034,11 +2035,29 @@
       });
     }, Promise.reject(new Error("init")));
   }
+  // Retry the whole source list a couple of times with a short backoff. On page
+  // load many resources fetch at once and a single CDN hiccup would otherwise
+  // reject permanently — a brief retry recovers from those transient failures.
+  function fetchFromSources(sources, retries) {
+    retries = retries == null ? 2 : retries;
+    return fetchSourcesOnce(sources).catch(function (err) {
+      if (retries <= 0) throw err;
+      return new Promise(function (res) { setTimeout(res, 600); })
+        .then(function () { return fetchFromSources(sources, retries - 1); });
+    });
+  }
   var LEDGER_SOURCES = [
     "https://cdn.jsdelivr.net/gh/thanhphuc85/ArcDCA@main/data/ledger.json",
     "https://raw.githubusercontent.com/thanhphuc85/ArcDCA/main/data/ledger.json",
   ];
-  function fetchHistory() { return fetchFromSources(HISTORY_SOURCES); }
+  function fetchHistory() {
+    return fetchFromSources(HISTORY_SOURCES).catch(function (err) {
+      // Last resort: serve cached history so the runs table/charts don't blank
+      // out on a network blip. Re-throw only when there's nothing cached.
+      if (dataCache && Array.isArray(dataCache.history) && dataCache.history.length) return dataCache.history;
+      throw err;
+    });
+  }
   function fetchReflections() { return fetchFromSources(REFLECTION_SOURCES).catch(function () { return []; }); }
   function fetchLedger() { return fetchFromSources(LEDGER_SOURCES).catch(function () { return null; }); }
   var _ledgerData = null;
@@ -3299,6 +3318,9 @@
   }
 
   function renderPerformance(history) {
+    // The Performance panel is optional — bail out if its markup isn't present
+    // so a missing section never throws and takes the whole render chain down.
+    if (!$("perfSection")) return;
     var swaps = [];
     history.forEach(function (e) {
       if (!SUCCESS[e.status]) return;
@@ -4562,6 +4584,7 @@
 
   // ---------- wire up new features on data load ----------
   function renderIntelligence(history, reflections) {
+    if (!$("intelligenceSection")) return; // optional section, skip if absent
     if (!Array.isArray(history) || history.length < 3) {
       $("intelligenceSection").style.display = "none";
       return;
@@ -4760,6 +4783,7 @@
       checkAndNotify(results[0]);
     })
     .catch(function (err) {
+      console.error("DASHBOARD LOAD FAILED:", err && err.stack || err);
       $("chartSub").textContent = "";
       $("chartHost").innerHTML = '<div class="empty-state fade-in"><div class="empty-icon">⚠️</div><p class="empty-title">Could not load history</p><p class="empty-desc">' + (err.message || "Network error") + '. Try refreshing the page.</p></div>';
       $("runsBody").innerHTML = '<tr><td colspan="7"><div class="empty-state fade-in"><div class="empty-icon">🔌</div><p class="empty-title">Data unavailable</p><p class="empty-desc">Could not fetch run history. Check your connection and refresh.</p></div></td></tr>';
