@@ -26,6 +26,17 @@ The swap itself goes through Circle's official **Swap Kit** SDK — the only off
 
 It runs entirely on a **GitHub Actions cron** — no server to host. Each run commits its result back to `data/history.json` in the repo, producing a public, tamper-evident audit trail that grows over time.
 
+### The dashboard — from bot to product
+
+On top of the autonomous cron, we shipped a full **dashboard** (live at **[arc-dca.vercel.app](https://arc-dca.vercel.app)**) that turns the agent into something people can actually use:
+
+![The Aura DCA dashboard](docs/dashboard.svg)
+
+- **Per-user, non-custodial DCA.** Anyone connects a wallet (EIP-6963 multi-wallet) or signs in with email, sets their **own** daily DCA rate, and the agent pools everyone's schedule into each run. Every state change (`set rate`, `run DCA now`, `withdraw`) is authorized by an **EIP-191 wallet signature** and verified in a Vercel serverless function — the user stays in control of their keys.
+- **A conversational agent.** A Claude assistant (tool calling) answers "how much is in the treasury?", "explain the last trade", etc. from live on-chain data, and for sensitive actions it only **proposes** — the user confirms and signs in the UI before anything executes.
+- **Vector memory + reflection.** After each run Claude writes a reflection to `data/reflections.json`; the dashboard surfaces this "agent memory" plus an **Agent intelligence** panel (risk / market regime / confidence / pattern alerts) derived from the run history.
+- **Multi-agent decisions.** A Claude Haiku market-analyst produces a brief that the main decision agent factors into its allocation.
+
 ## How it works (flow)
 
 ```
@@ -45,6 +56,8 @@ GitHub Actions cron (daily)
 - **Arc Testnet** (Circle's stablecoin-native EVM L1; gas paid in USDC)
 - **GitHub Actions** for scheduling, secrets, and the commit-back audit trail
 - **Vitest** unit tests on the safety-critical guardrail logic
+- **Vercel** serverless functions (`api/`) for the dashboard's signed actions — set-rate, run-DCA, withdraw, chat, welcome-email
+- **Single-file dashboard** (`docs/index.html`) — EIP-6963 wallet discovery, EIP-191 signing, EN/VI, light/dark
 
 ## What makes it stand out
 
@@ -61,9 +74,11 @@ GitHub Actions cron (daily)
 ## What's next
 
 - Multi-asset DCA (split across cirBTC / EURC by a Claude-decided allocation)
-- Price-aware pacing once an on-chain oracle is available on Arc
-- A small dashboard rendering `history.json` as a running P&L / cost-basis chart
+- A live P&L / cost-basis panel — the dashboard markup is ready and turns on automatically once cirBTC swaps clear (Arc Testnet's USDC→cirBTC route has been in an outage the agent has been reasoning around)
+- Verified sender domain for the welcome email so it reaches any user, not just the operator's inbox
 - Mainnet-readiness review when Arc mainnet ships
+
+> Since the first submission we grew this from a headless cron bot into a usable product: a per-user, non-custodial dashboard, a conversational Claude assistant with confirm-to-sign actions, real-time withdrawals and on-demand DCA, and the agent's own vector memory — all still governed by the same code-owns-the-money guardrail.
 
 ## Safety note
 

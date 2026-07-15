@@ -28,6 +28,17 @@ Bản thân giao dịch swap đi qua SDK **Swap Kit** chính thức của Circle
 
 Toàn bộ chạy trên **GitHub Actions cron** — không cần server. Mỗi lần chạy commit kết quả ngược lại `data/history.json` trong repo, tạo ra một nhật ký kiểm toán công khai, chống chỉnh sửa, lớn dần theo thời gian.
 
+### Dashboard — từ bot thành sản phẩm
+
+Trên nền cron tự động, chúng tôi xây thêm một **dashboard** hoàn chỉnh (chạy tại **[arc-dca.vercel.app](https://arc-dca.vercel.app)**), biến agent thành thứ người dùng thật sự dùng được:
+
+![Dashboard Aura DCA](docs/dashboard.svg)
+
+- **DCA per-user, non-custodial.** Người dùng kết nối ví (EIP-6963 đa ví) hoặc đăng nhập bằng email, tự đặt **tỉ lệ DCA hàng ngày** của mình; agent gộp lịch của mọi người vào mỗi lần chạy. Mọi thay đổi trạng thái (`đặt rate`, `chạy DCA ngay`, `rút tiền`) đều được ủy quyền bằng **chữ ký ví EIP-191** và verify trong serverless function trên Vercel — người dùng giữ quyền kiểm soát khóa của mình.
+- **Agent hội thoại.** Trợ lý Claude (tool calling) trả lời "ngân quỹ còn bao nhiêu?", "giải thích giao dịch gần nhất"… từ dữ liệu on-chain thật; với action nhạy cảm nó chỉ **đề xuất** — người dùng xác nhận và ký trong UI trước khi thực thi.
+- **Bộ nhớ vector + reflection.** Sau mỗi lần chạy Claude ghi một reflection vào `data/reflections.json`; dashboard hiển thị "bộ nhớ agent" này cùng bảng **Agent intelligence** (rủi ro / market regime / độ tự tin / pattern alerts) suy ra từ lịch sử chạy.
+- **Đa agent.** Một market-analyst chạy Claude Haiku tạo bản tóm tắt thị trường mà agent quyết định chính đưa vào cân nhắc phân bổ.
+
 ## Cách hoạt động (luồng)
 
 ```
@@ -47,6 +58,8 @@ GitHub Actions cron (hàng ngày)
 - **Arc Testnet** (L1 EVM stablecoin-native của Circle; gas trả bằng USDC)
 - **GitHub Actions** cho lịch chạy, secrets và nhật ký kiểm toán commit-back
 - **Vitest** unit test cho phần logic guardrail quan trọng về an toàn
+- **Vercel** serverless (`api/`) cho các action có ký của dashboard — set-rate, run-DCA, rút tiền, chat, email chào mừng
+- **Dashboard một file** (`docs/index.html`) — phát hiện ví EIP-6963, ký EIP-191, song ngữ Anh/Việt, sáng/tối
 
 ## Điểm nổi bật
 
@@ -63,9 +76,11 @@ GitHub Actions cron (hàng ngày)
 ## Hướng phát triển tiếp
 
 - DCA đa tài sản (chia giữa cirBTC / EURC theo tỷ lệ do Claude quyết định)
-- Dàn nhịp theo giá khi Arc có oracle on-chain
-- Một dashboard nhỏ hiển thị `history.json` thành biểu đồ P&L / giá vốn theo thời gian
+- Bảng P&L / giá vốn trực tiếp — markup dashboard đã sẵn, tự bật khi các swap cirBTC thành công (route USDC→cirBTC trên Arc Testnet đang gặp outage mà agent vẫn lý luận xoay quanh)
+- Verify domain gửi email để email chào mừng tới được mọi user, không chỉ hộp thư người vận hành
 - Rà soát sẵn sàng cho mainnet khi Arc mainnet ra mắt
+
+> Kể từ submission đầu, chúng tôi phát triển từ một bot cron không giao diện thành sản phẩm dùng được: dashboard per-user non-custodial, trợ lý Claude hội thoại với action xác-nhận-rồi-ký, rút tiền thời gian thực và DCA theo yêu cầu, cùng bộ nhớ vector của chính agent — tất cả vẫn nằm dưới cùng một guardrail "code nắm giữ tiền".
 
 ## Lưu ý an toàn
 

@@ -15,6 +15,8 @@
 
 **🌐 Live dashboard:** **https://arc-dca.vercel.app** — connect your wallet (or sign in with email) to view your Arc Testnet balance, set your own DCA rate, chat with the agent, and watch its live on-chain track record.
 
+![The Aura DCA dashboard — sidebar navigation, treasury stats, per-user DCA, and the AI chat assistant](docs/dashboard.svg)
+
 ![Daily flow: cron → read balance → Claude decides → guardrails clamp → swap → commit history](docs/flow.svg)
 
 > **An LLM-driven dollar-cost-averaging agent that runs itself.** Every day a GitHub Actions cron wakes up, asks **Claude** how much USDC to allocate, enforces hard spend guardrails in code, executes a real **USDC → cirBTC** swap on **Arc Testnet** via Circle's official Swap Kit, and commits the audit trail back to this repo — no server, no human in the loop.
