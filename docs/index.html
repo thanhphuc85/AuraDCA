@@ -14,8 +14,8 @@
 <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
 <style>
   :root {
-    --bg: #060912; --text: #eaf0fb; --muted: #97a4bf;
-    --blue: #2f86e6; --violet: #8a5cf6; --cyan: #22d3ee; --amber: #f5a524; --green: #34d399; --red: #fb7185;
+    --bg: #0a0716; --text: #eaf0fb; --muted: #97a4bf;
+    --blue: #2f86e6; --violet: #8a5cf6; --purple: #8a5cf6; --cyan: #22d3ee; --amber: #f5a524; --green: #34d399; --red: #fb7185;
     --glass: rgba(255,255,255,.045); --glass-brd: rgba(255,255,255,.09);
     --radius: 20px;
     --sidebar-w: 244px;
@@ -34,7 +34,8 @@
   .page-hidden { display: none !important; }
   .sb-brand { display: flex; align-items: center; gap: 10px; padding: 6px 10px 18px; }
   .sb-brand img { width: 30px; height: 30px; }
-  .sb-brand b { font-family: Sora, Inter, sans-serif; font-size: 16px; letter-spacing: -.02em; }
+  .sb-brand b { font-family: Sora, Inter, sans-serif; font-size: 16px; letter-spacing: -.02em;
+    background: linear-gradient(92deg, #ffffff, #c4b5fd 55%, #67e8f9); -webkit-background-clip: text; background-clip: text; color: transparent; }
   .sb-nav { display: flex; flex-direction: column; gap: 2px; }
   .sb-link {
     display: flex; align-items: center; gap: 11px; padding: 10px 12px; border-radius: 12px;
@@ -83,7 +84,13 @@
   .agent-last { margin-top: 12px; font-size: 12px; color: var(--muted); font-style: italic; line-height: 1.5; }
   html { scroll-behavior: smooth; }
   body {
-    margin: 0; background: var(--bg); color: var(--text);
+    margin: 0; color: var(--text);
+    /* Aura backdrop: faint violet↔cyan glows echoing the logo, over the base bg */
+    background:
+      radial-gradient(900px 500px at 22% -8%, rgba(138,92,246,.14), transparent 60%),
+      radial-gradient(760px 460px at 100% 6%, rgba(34,211,238,.09), transparent 62%),
+      var(--bg);
+    background-attachment: fixed;
     font-family: Inter, -apple-system, "Segoe UI", Roboto, sans-serif; line-height: 1.6;
     -webkit-font-smoothing: antialiased; overflow-x: hidden;
   }
@@ -115,7 +122,8 @@
   .hd { display: flex; align-items: center; justify-content: space-between; padding: 14px 0; gap: 14px; flex-wrap: wrap; }
   .brand { display: flex; align-items: center; gap: 12px; }
   .brand img { width: 40px; height: 40px; filter: drop-shadow(0 4px 14px rgba(138,92,246,.45)); }
-  .brand b { font-family: Sora; font-size: 18px; letter-spacing: .2px; }
+  .brand b { font-family: Sora; font-size: 18px; letter-spacing: .2px;
+    background: linear-gradient(92deg, #ffffff, #c4b5fd 55%, #67e8f9); -webkit-background-clip: text; background-clip: text; color: transparent; }
   /* Sidebar already carries the brand, so keep the header brand only on mobile,
      and pin the header cluster to the far top-right (full width, right-aligned). */
   @media (min-width: 981px) {
@@ -748,6 +756,8 @@
   }
   [data-theme="light"] a { color: #2563eb; }
   [data-theme="light"] a:hover { color: #1d4ed8; }
+  /* Wordmark gradient needs darker stops to stay legible on the light background. */
+  [data-theme="light"] .brand b, [data-theme="light"] .sb-brand b { background-image: linear-gradient(92deg, #4c1d95, #7c3aed 55%, #0e7490); }
   [data-theme="light"] .blob { opacity: .1 !important; }
   [data-theme="light"] .b1 { background: #93b5e8; }
   [data-theme="light"] .b2 { background: #c4a8f8; }
