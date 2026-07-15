@@ -116,8 +116,12 @@
   .brand { display: flex; align-items: center; gap: 12px; }
   .brand img { width: 40px; height: 40px; filter: drop-shadow(0 4px 14px rgba(138,92,246,.45)); }
   .brand b { font-family: Sora; font-size: 18px; letter-spacing: .2px; }
-  /* Sidebar already carries the brand, so keep the header brand only on mobile. */
-  @media (min-width: 981px) { header .brand { display: none; } }
+  /* Sidebar already carries the brand, so keep the header brand only on mobile,
+     and pin the header cluster to the far top-right (full width, right-aligned). */
+  @media (min-width: 981px) {
+    header .brand { display: none; }
+    header .wrap.hd { max-width: none; justify-content: flex-end; padding-right: 28px; }
+  }
   @media (max-width: 560px) { header .brand div span { display: none; } .brand img { width: 30px; height: 30px; } }
   .brand span { display: block; font-size: 11px; color: var(--muted); }
 
