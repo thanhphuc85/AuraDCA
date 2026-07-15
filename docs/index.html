@@ -1371,7 +1371,7 @@
             <input type="text" id="wmGmailName" placeholder="Your name" data-ph-t="wmNamePh" />
             <input type="email" id="wmGmailEmail" placeholder="your.email@gmail.com" />
             <button class="wm-create-btn" id="wmGmailSubmit" data-t="wmCreateSubmit">Create wallet & sign in</button>
-            <p style="font-size:11px;color:var(--muted);margin:10px 2px 0;line-height:1.5;" data-t="wmGmailNote">No email is sent — this instantly creates a demo wallet derived from your email (no seed phrase). Sign back in with the same email to restore it.</p>
+            <p style="font-size:11px;color:var(--muted);margin:10px 2px 0;line-height:1.5;" data-t="wmGmailNote">We'll email a confirmation to your inbox. This creates a wallet derived from your email (no seed phrase) — sign back in with the same email to restore it.</p>
           </div>
         </div>
         <div class="wm-status" id="wmStatus"></div>
@@ -2477,6 +2477,16 @@
     saveWalletAddr(account);
     try { localStorage.setItem("aura-gmail-wallet", JSON.stringify({ name: nameVal, email: emailVal, address: account })); } catch(e2){}
     var rb = $("reconnectBar"); if (rb) rb.innerHTML = "";
+
+    // Fire a real welcome email to the user's inbox (non-fatal: wallet is already
+    // created, so email failures never block sign-in).
+    fetch("/api/send-welcome", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ name: nameVal, email: emailVal, address: account })
+    }).then(function (r) {
+      if (!r.ok) console.warn("send-welcome failed:", r.status);
+    }).catch(function (e6) { console.warn("send-welcome error:", e6); });
 
     var nativeBal = 0, usdc = 0, cirbtc = 0;
     try {
@@ -4270,7 +4280,7 @@
       footerDisclaimer: "Aura DCA Agent · Testnet only · not financial advice.",
       wmTitle: "Connect Wallet", wmOr: "or", wmCreate: "Create account", wmSignin: "Sign in",
       wmBack: "Back", wmCreateSubmit: "Create wallet & sign in",
-      wmGmailNote: "No email is sent — this instantly creates a demo wallet derived from your email (no seed phrase). Sign back in with the same email to restore it.",
+      wmGmailNote: "We'll email a confirmation to your inbox. This creates a wallet derived from your email (no seed phrase) — sign back in with the same email to restore it.",
       wmFooter: 'By connecting a wallet, you agree this is a <b>testnet demo</b> with no real value. <a href="https://github.com/thanhphuc85/ArcDCA" target="_blank" rel="noopener">View source</a>.',
       wpBalanceSub: "Portfolio value on Arc Testnet",
       wpWelcome: "Welcome!", wpWelcomeDesc: "Get started with your first action below.",
@@ -4376,7 +4386,7 @@
       footerDisclaimer: "Aura DCA Agent · Chỉ dùng trên Testnet · không phải tư vấn tài chính.",
       wmTitle: "Kết nối ví", wmOr: "hoặc", wmCreate: "Tạo tài khoản", wmSignin: "Đăng nhập",
       wmBack: "Quay lại", wmCreateSubmit: "Tạo ví & đăng nhập",
-      wmGmailNote: "Không gửi email — thao tác này tạo ngay một ví demo suy ra từ email của bạn (không cần seed phrase). Đăng nhập lại bằng cùng email để khôi phục.",
+      wmGmailNote: "Chúng tôi sẽ gửi email xác nhận về hộp thư của bạn. Thao tác này tạo ví suy ra từ email của bạn (không cần seed phrase) — đăng nhập lại bằng cùng email để khôi phục.",
       wmFooter: 'Bằng việc kết nối ví, bạn đồng ý đây là <b>demo testnet</b> không có giá trị thực. <a href="https://github.com/thanhphuc85/ArcDCA" target="_blank" rel="noopener">Xem mã nguồn</a>.',
       wpBalanceSub: "Giá trị danh mục trên Arc Testnet",
       wpWelcome: "Chào mừng!", wpWelcomeDesc: "Bắt đầu với hành động đầu tiên bên dưới.",
