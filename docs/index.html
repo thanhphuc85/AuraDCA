@@ -4875,7 +4875,8 @@
         signing: "Sign in your wallet…", saving: "Saving…",
         rateOk: "✅ Rate updated.", paused: "✅ DCA paused.",
         cancelled: "Cancelled.", netErr: "Network error. Try again.",
-        runNote: "Opening the run confirmation…", runNoHistory: "No runs yet to base an immediate buy on — try again after the first scheduled run."
+        runSubmitting: "Running the swap… (10–30s)",
+        runOk: function (out) { return out ? "✅ Swapped! Received " + out + " cirBTC." : "✅ DCA run submitted."; }
       },
       vi: {
         greeting: "Chào bạn! Tôi là trợ lý DCA của Aura. Hỏi về số dư, ngân quỹ, giao dịch trước, hoặc yêu cầu điều chỉnh tỉ lệ DCA của bạn.",
@@ -4889,7 +4890,8 @@
         signing: "Ký trong ví…", saving: "Đang lưu…",
         rateOk: "✅ Đã cập nhật tỉ lệ.", paused: "✅ Đã tạm dừng DCA.",
         cancelled: "Đã huỷ.", netErr: "Lỗi mạng. Thử lại.",
-        runNote: "Đang mở xác nhận chạy…", runNoHistory: "Chưa có lần chạy nào để căn cứ — thử lại sau lần chạy theo lịch đầu tiên."
+        runSubmitting: "Đang chạy swap… (10–30s)",
+        runOk: function (out) { return out ? "✅ Đã swap! Nhận " + out + " cirBTC." : "✅ Đã gửi lệnh DCA."; }
       }
     };
     function ct() { return CT[currentLang] || CT.en; }
@@ -5012,13 +5014,35 @@
     }
 
     function confirmRun(amount, yes, no, status) {
-      // There is no per-user instant-execution backend; route through the app's
-      // existing manual "Run DCA Now" approval flow so nothing is faked.
+      if (!state.account || !state.provider) { status.style.color = "var(--amber)"; status.textContent = ct().connectFirst; return; }
       yes.disabled = true; no.disabled = true;
-      if (!_historyData || !_historyData.length) { status.style.color = "var(--amber)"; status.textContent = ct().runNoHistory; yes.disabled = false; no.disabled = false; return; }
-      status.style.color = "var(--green)"; status.textContent = ct().runNote;
-      closePanel();
-      if (typeof openRunDcaModal === "function") openRunDcaModal();
+      status.style.color = "var(--amber)"; status.textContent = ct().signing;
+      var amtStr = Number(amount).toFixed(6);
+      var timestamp = Date.now();
+      var message = "Aura DCA Agent — Run DCA\n" + "Amount: " + amtStr + "\n" + "Address: " + state.account + "\n" + "Timestamp: " + timestamp;
+      var apiBase = loadStore("aura-withdraw-api", "");
+      var endpoint = apiBase ? apiBase.replace(/\/+$/, "") + "/api/run-dca" : "/api/run-dca";
+      state.provider.request({ method: "personal_sign", params: [message, state.account] })
+        .then(function (signature) {
+          status.textContent = ct().runSubmitting;
+          return fetch(endpoint, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ message: message, signature: signature }) })
+            .then(function (r) { return r.json().then(function (j) { return { ok: r.ok, j: j }; }); });
+        })
+        .then(function (res) {
+          if (res && res.ok && res.j.success) {
+            status.style.color = "var(--green)";
+            status.textContent = ct().runOk(res.j.cirBtcOut);
+            if (typeof fetchLedger === "function") fetchLedger().then(function (l) { _ledgerData = l; if (typeof renderPortfolio === "function") renderPortfolio(_ledgerData); });
+          } else {
+            status.style.color = "var(--red)"; status.textContent = "❌ " + ((res && res.j && res.j.error) || ct().netErr);
+            yes.disabled = false; no.disabled = false;
+          }
+        })
+        .catch(function (err) {
+          if (err && err.code === 4001) { status.style.color = "var(--muted)"; status.textContent = ct().cancelled; }
+          else { status.style.color = "var(--red)"; status.textContent = "❌ " + (err && err.message ? err.message : ct().netErr); }
+          yes.disabled = false; no.disabled = false;
+        });
     }
 
     // Re-localize suggestions/placeholder when the language toggles.

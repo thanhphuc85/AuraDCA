@@ -6,6 +6,9 @@
     },
     "api/chat.ts": {
       "maxDuration": 30
+    },
+    "api/run-dca.ts": {
+      "maxDuration": 60
     }
   },
   "rewrites": [
