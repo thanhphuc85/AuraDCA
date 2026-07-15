@@ -839,6 +839,51 @@
   .lang-toggle:hover { background: rgba(255,255,255,.1); }
   [data-theme="light"] .lang-toggle:hover { background: rgba(0,0,0,.06); }
   .lang-toggle .lang-flag { font-size: 16px; }
+
+  /* ---------- AI assistant chat ---------- */
+  .chat-fab { position: fixed; right: 22px; bottom: 22px; z-index: 900; width: 58px; height: 58px; border-radius: 50%; border: none; cursor: pointer; background: linear-gradient(135deg, #8a5cf6, #2f86e6); color: #fff; font-size: 24px; box-shadow: 0 10px 30px rgba(138,92,246,.45); display: flex; align-items: center; justify-content: center; transition: transform .18s, box-shadow .18s; }
+  .chat-fab:hover { transform: translateY(-2px) scale(1.04); box-shadow: 0 14px 36px rgba(138,92,246,.55); }
+  .chat-fab.open { transform: scale(.9); opacity: .85; }
+  .chat-panel { position: fixed; right: 22px; bottom: 92px; z-index: 900; width: 380px; max-width: calc(100vw - 32px); height: 560px; max-height: calc(100vh - 130px); background: var(--glass); border: 1px solid var(--glass-brd); border-radius: 20px; backdrop-filter: blur(16px); box-shadow: 0 24px 60px rgba(0,0,0,.45); display: none; flex-direction: column; overflow: hidden; }
+  .chat-panel.open { display: flex; animation: chatIn .22s ease; }
+  @keyframes chatIn { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+  .chat-head { display: flex; align-items: center; gap: 10px; padding: 14px 16px; border-bottom: 1px solid var(--glass-brd); flex-shrink: 0; }
+  .chat-head .ch-avatar { width: 34px; height: 34px; border-radius: 50%; background: linear-gradient(135deg, #8a5cf6, #2f86e6); display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; }
+  .chat-head .ch-title { font-weight: 700; font-size: 14px; color: var(--text); }
+  .chat-head .ch-sub { font-size: 11px; color: var(--muted); }
+  .chat-head .ch-close { margin-left: auto; background: none; border: none; color: var(--muted); font-size: 20px; cursor: pointer; line-height: 1; padding: 4px; }
+  .chat-head .ch-close:hover { color: var(--text); }
+  .chat-body { flex: 1; overflow-y: auto; padding: 16px; display: flex; flex-direction: column; gap: 12px; }
+  .chat-msg { max-width: 85%; padding: 10px 13px; border-radius: 14px; font-size: 13.5px; line-height: 1.5; white-space: pre-wrap; word-wrap: break-word; }
+  .chat-msg.user { align-self: flex-end; background: linear-gradient(135deg, #8a5cf6, #2f86e6); color: #fff; border-bottom-right-radius: 4px; }
+  .chat-msg.bot { align-self: flex-start; background: rgba(255,255,255,.06); border: 1px solid var(--glass-brd); color: var(--text); border-bottom-left-radius: 4px; }
+  [data-theme="light"] .chat-msg.bot { background: rgba(0,0,0,.04); }
+  .chat-msg.err { align-self: flex-start; background: rgba(239,68,68,.12); border: 1px solid rgba(239,68,68,.35); color: #fca5a5; font-size: 12.5px; }
+  .chat-typing { align-self: flex-start; display: flex; gap: 4px; padding: 12px 14px; }
+  .chat-typing span { width: 7px; height: 7px; border-radius: 50%; background: var(--muted); animation: chatDot 1.2s infinite ease-in-out; }
+  .chat-typing span:nth-child(2) { animation-delay: .2s; }
+  .chat-typing span:nth-child(3) { animation-delay: .4s; }
+  @keyframes chatDot { 0%,60%,100% { opacity: .3; transform: translateY(0); } 30% { opacity: 1; transform: translateY(-4px); } }
+  .chat-confirm { align-self: flex-start; max-width: 92%; background: rgba(245,165,36,.10); border: 1px solid rgba(245,165,36,.4); border-radius: 14px; padding: 12px 14px; font-size: 13px; }
+  .chat-confirm .cc-title { font-weight: 700; color: var(--amber); margin: 0 0 4px; display: flex; align-items: center; gap: 6px; }
+  .chat-confirm .cc-detail { color: var(--text); margin: 0 0 10px; font-size: 13px; }
+  .chat-confirm .cc-actions { display: flex; gap: 8px; }
+  .chat-confirm button { border: none; border-radius: 10px; padding: 8px 14px; font-size: 12.5px; font-weight: 700; cursor: pointer; font-family: Inter, sans-serif; }
+  .chat-confirm .cc-yes { background: linear-gradient(135deg, #8a5cf6, #2f86e6); color: #fff; }
+  .chat-confirm .cc-no { background: rgba(255,255,255,.08); color: var(--muted); }
+  .chat-confirm button:disabled { opacity: .5; cursor: default; }
+  .chat-confirm .cc-status { margin: 8px 0 0; font-size: 12px; }
+  .chat-foot { border-top: 1px solid var(--glass-brd); padding: 10px 12px; flex-shrink: 0; }
+  .chat-suggest { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 8px; }
+  .chat-suggest button { background: rgba(255,255,255,.06); border: 1px solid var(--glass-brd); color: var(--muted); border-radius: 999px; padding: 5px 11px; font-size: 11px; cursor: pointer; font-family: Inter, sans-serif; transition: color .15s, border-color .15s; }
+  .chat-suggest button:hover { color: var(--text); border-color: var(--purple, #8a5cf6); }
+  .chat-inputbar { display: flex; gap: 8px; align-items: flex-end; }
+  .chat-inputbar textarea { flex: 1; resize: none; background: rgba(255,255,255,.05); border: 1px solid var(--glass-brd); border-radius: 12px; color: var(--text); font-size: 13.5px; padding: 10px 12px; font-family: Inter, sans-serif; max-height: 96px; line-height: 1.4; }
+  [data-theme="light"] .chat-inputbar textarea { background: rgba(0,0,0,.03); }
+  .chat-inputbar textarea:focus { outline: none; border-color: #8a5cf6; }
+  .chat-send { flex-shrink: 0; width: 40px; height: 40px; border-radius: 12px; border: none; background: linear-gradient(135deg, #8a5cf6, #2f86e6); color: #fff; font-size: 17px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+  .chat-send:disabled { opacity: .5; cursor: default; }
+  @media (max-width: 480px) { .chat-panel { right: 8px; left: 8px; width: auto; bottom: 84px; } .chat-fab { right: 16px; bottom: 16px; } }
 </style>
 </head>
 <body>
@@ -4329,6 +4374,7 @@
       wmTitle: "Connect Wallet", wmOr: "or", wmCreate: "Create account", wmSignin: "Sign in",
       wmBack: "Back", wmCreateSubmit: "Create wallet & sign in",
       wmGmailNote: "We'll email a confirmation to your inbox. This creates a wallet derived from your email (no seed phrase) — sign back in with the same email to restore it.",
+      chatTitle: "Aura Assistant", chatSub: "Ask about your DCA, treasury & trades",
       wmFooter: 'By connecting a wallet, you agree this is a <b>testnet demo</b> with no real value. <a href="https://github.com/thanhphuc85/ArcDCA" target="_blank" rel="noopener">View source</a>.',
       wpBalanceSub: "Portfolio value on Arc Testnet",
       wpWelcome: "Welcome!", wpWelcomeDesc: "Get started with your first action below.",
@@ -4435,6 +4481,7 @@
       wmTitle: "Kết nối ví", wmOr: "hoặc", wmCreate: "Tạo tài khoản", wmSignin: "Đăng nhập",
       wmBack: "Quay lại", wmCreateSubmit: "Tạo ví & đăng nhập",
       wmGmailNote: "Chúng tôi sẽ gửi email xác nhận về hộp thư của bạn. Thao tác này tạo ví suy ra từ email của bạn (không cần seed phrase) — đăng nhập lại bằng cùng email để khôi phục.",
+      chatTitle: "Trợ lý Aura", chatSub: "Hỏi về DCA, ngân quỹ & giao dịch của bạn",
       wmFooter: 'Bằng việc kết nối ví, bạn đồng ý đây là <b>demo testnet</b> không có giá trị thực. <a href="https://github.com/thanhphuc85/ArcDCA" target="_blank" rel="noopener">Xem mã nguồn</a>.',
       wpBalanceSub: "Giá trị danh mục trên Arc Testnet",
       wpWelcome: "Chào mừng!", wpWelcomeDesc: "Bắt đầu với hành động đầu tiên bên dưới.",
@@ -4807,7 +4854,201 @@
 
   // Apply language to dynamically-added data-t attributes
   if (currentLang !== "en") setTimeout(function () { applyLang(currentLang); }, 100);
+
+  // ---------- AI assistant chat widget ----------
+  function setupChat() {
+    var fab = $("chatFab"), panel = $("chatPanel"), body = $("chatBody"),
+        input = $("chatInput"), sendBtn = $("chatSend"), closeBtn = $("chatClose"),
+        suggestWrap = $("chatSuggest");
+    if (!fab || !panel) return;
+
+    var CT = {
+      en: {
+        greeting: "Hi! I'm your Aura DCA assistant. Ask about your balance, the treasury, past trades, or tell me to adjust your DCA rate.",
+        placeholder: "Type a message…",
+        suggestions: ["How much is in the treasury?", "What's my current DCA rate?", "Explain the last trade", "Increase my DCA rate to 0.5 USDC/day"],
+        confirmRate: "Set DCA rate", confirmRun: "Run DCA now",
+        rateDetail: function (r) { return r <= 0 ? "Pause your DCA (rate → 0)." : "Change your DCA rate to " + r + " USDC/day."; },
+        runDetail: function (a) { return "Run a DCA buy now for " + a + " USDC."; },
+        confirmBtn: "Confirm & sign", cancelBtn: "Cancel",
+        connectFirst: "Connect your wallet first to confirm this.",
+        signing: "Sign in your wallet…", saving: "Saving…",
+        rateOk: "✅ Rate updated.", paused: "✅ DCA paused.",
+        cancelled: "Cancelled.", netErr: "Network error. Try again.",
+        runNote: "Opening the run confirmation…", runNoHistory: "No runs yet to base an immediate buy on — try again after the first scheduled run."
+      },
+      vi: {
+        greeting: "Chào bạn! Tôi là trợ lý DCA của Aura. Hỏi về số dư, ngân quỹ, giao dịch trước, hoặc yêu cầu điều chỉnh tỉ lệ DCA của bạn.",
+        placeholder: "Nhập tin nhắn…",
+        suggestions: ["Ngân quỹ còn bao nhiêu?", "Tỉ lệ DCA hiện tại của tôi?", "Giải thích giao dịch gần nhất", "Tăng DCA lên 0.5 USDC/ngày"],
+        confirmRate: "Đặt tỉ lệ DCA", confirmRun: "Chạy DCA ngay",
+        rateDetail: function (r) { return r <= 0 ? "Tạm dừng DCA (tỉ lệ → 0)." : "Đổi tỉ lệ DCA thành " + r + " USDC/ngày."; },
+        runDetail: function (a) { return "Chạy một lệnh DCA ngay với " + a + " USDC."; },
+        confirmBtn: "Xác nhận & ký", cancelBtn: "Huỷ",
+        connectFirst: "Hãy kết nối ví trước để xác nhận.",
+        signing: "Ký trong ví…", saving: "Đang lưu…",
+        rateOk: "✅ Đã cập nhật tỉ lệ.", paused: "✅ Đã tạm dừng DCA.",
+        cancelled: "Đã huỷ.", netErr: "Lỗi mạng. Thử lại.",
+        runNote: "Đang mở xác nhận chạy…", runNoHistory: "Chưa có lần chạy nào để căn cứ — thử lại sau lần chạy theo lịch đầu tiên."
+      }
+    };
+    function ct() { return CT[currentLang] || CT.en; }
+
+    var convo = [];        // {role, content} text-only, sent to /api/chat
+    var greeted = false, busy = false;
+
+    function scrollDown() { body.scrollTop = body.scrollHeight; }
+    function addBubble(role, text) {
+      var d = document.createElement("div");
+      d.className = "chat-msg " + (role === "user" ? "user" : role === "err" ? "err" : "bot");
+      d.textContent = text;
+      body.appendChild(d); scrollDown();
+      return d;
+    }
+    function addTyping() {
+      var d = document.createElement("div");
+      d.className = "chat-typing"; d.innerHTML = "<span></span><span></span><span></span>";
+      body.appendChild(d); scrollDown(); return d;
+    }
+    function renderSuggest() {
+      suggestWrap.innerHTML = "";
+      ct().suggestions.forEach(function (s) {
+        var b = document.createElement("button"); b.textContent = s;
+        b.addEventListener("click", function () { if (!busy) send(s); });
+        suggestWrap.appendChild(b);
+      });
+    }
+    function localize() { input.placeholder = ct().placeholder; renderSuggest(); }
+
+    function openPanel() {
+      panel.classList.add("open"); fab.classList.add("open");
+      if (!greeted) { addBubble("bot", ct().greeting); greeted = true; }
+      localize();
+      setTimeout(function () { input.focus(); }, 120);
+    }
+    function closePanel() { panel.classList.remove("open"); fab.classList.remove("open"); }
+
+    fab.addEventListener("click", function () { panel.classList.contains("open") ? closePanel() : openPanel(); });
+    closeBtn.addEventListener("click", closePanel);
+    input.addEventListener("input", function () { input.style.height = "auto"; input.style.height = Math.min(96, input.scrollHeight) + "px"; });
+    input.addEventListener("keydown", function (e) { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); send(input.value); } });
+    sendBtn.addEventListener("click", function () { send(input.value); });
+
+    function setBusy(b) { busy = b; sendBtn.disabled = b; }
+
+    function send(text) {
+      text = (text || "").trim();
+      if (!text || busy) return;
+      input.value = ""; input.style.height = "auto";
+      addBubble("user", text);
+      convo.push({ role: "user", content: text });
+      setBusy(true);
+      var typing = addTyping();
+      fetch("/api/chat", {
+        method: "POST", headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ messages: convo, address: state.account || null })
+      }).then(function (r) { return r.json().then(function (j) { return { ok: r.ok, j: j }; }); })
+        .then(function (res) {
+          typing.remove();
+          if (!res.ok || res.j.error) { addBubble("err", res.j.error || ct().netErr); return; }
+          var reply = res.j.reply || "…";
+          addBubble("bot", reply);
+          convo.push({ role: "assistant", content: reply });
+          if (res.j.proposal) addConfirm(res.j.proposal);
+        })
+        .catch(function () { typing.remove(); addBubble("err", ct().netErr); })
+        .finally(function () { setBusy(false); input.focus(); });
+    }
+
+    // ---- sensitive-action confirmation cards (Claude proposes, user confirms) ----
+    function addConfirm(p) {
+      var card = document.createElement("div");
+      card.className = "chat-confirm";
+      var title = p.action === "set_dca_rate" ? ct().confirmRate : ct().confirmRun;
+      var detail = p.action === "set_dca_rate" ? ct().rateDetail(p.rate) : ct().runDetail(p.amountUsdc);
+      card.innerHTML = '<p class="cc-title">⚠️ </p><p class="cc-detail"></p><div class="cc-actions"><button class="cc-yes"></button><button class="cc-no"></button></div><p class="cc-status"></p>';
+      card.querySelector(".cc-title").appendChild(document.createTextNode(title));
+      card.querySelector(".cc-detail").textContent = detail;
+      var yes = card.querySelector(".cc-yes"), no = card.querySelector(".cc-no"), status = card.querySelector(".cc-status");
+      yes.textContent = ct().confirmBtn; no.textContent = ct().cancelBtn;
+      no.addEventListener("click", function () { yes.disabled = true; no.disabled = true; status.style.color = "var(--muted)"; status.textContent = ct().cancelled; });
+      yes.addEventListener("click", function () {
+        if (p.action === "set_dca_rate") confirmRate(p.rate, yes, no, status);
+        else confirmRun(p.amountUsdc, yes, no, status);
+      });
+      body.appendChild(card); scrollDown();
+    }
+
+    function confirmRate(rate, yes, no, status) {
+      if (!state.account || !state.provider) { status.style.color = "var(--amber)"; status.textContent = ct().connectFirst; return; }
+      yes.disabled = true; no.disabled = true;
+      status.style.color = "var(--amber)"; status.textContent = ct().signing;
+      var rateStr = Number(rate).toFixed(6);
+      var timestamp = Date.now();
+      var message = "Aura DCA Agent — Set DCA Rate\n" + "Rate: " + rateStr + "\n" + "Address: " + state.account + "\n" + "Timestamp: " + timestamp;
+      var apiBase = loadStore("aura-withdraw-api", "");
+      var endpoint = apiBase ? apiBase.replace(/\/+$/, "") + "/api/set-dca-rate" : "/api/set-dca-rate";
+      state.provider.request({ method: "personal_sign", params: [message, state.account] })
+        .then(function (signature) {
+          status.textContent = ct().saving;
+          return fetch(endpoint, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ message: message, signature: signature }) })
+            .then(function (r) { return r.json().then(function (j) { return { ok: r.ok, j: j }; }); });
+        })
+        .then(function (res) {
+          if (res && res.ok && res.j.success) {
+            status.style.color = "var(--green)";
+            status.textContent = res.j.paused ? ct().paused : ct().rateOk;
+            if (typeof fetchLedger === "function") fetchLedger().then(function (l) { _ledgerData = l; if (typeof renderPortfolio === "function") renderPortfolio(_ledgerData); });
+          } else {
+            status.style.color = "var(--red)"; status.textContent = "❌ " + ((res && res.j && res.j.error) || ct().netErr);
+            yes.disabled = false; no.disabled = false;
+          }
+        })
+        .catch(function (err) {
+          if (err && err.code === 4001) { status.style.color = "var(--muted)"; status.textContent = ct().cancelled; }
+          else { status.style.color = "var(--red)"; status.textContent = "❌ " + (err && err.message ? err.message : ct().netErr); }
+          yes.disabled = false; no.disabled = false;
+        });
+    }
+
+    function confirmRun(amount, yes, no, status) {
+      // There is no per-user instant-execution backend; route through the app's
+      // existing manual "Run DCA Now" approval flow so nothing is faked.
+      yes.disabled = true; no.disabled = true;
+      if (!_historyData || !_historyData.length) { status.style.color = "var(--amber)"; status.textContent = ct().runNoHistory; yes.disabled = false; no.disabled = false; return; }
+      status.style.color = "var(--green)"; status.textContent = ct().runNote;
+      closePanel();
+      if (typeof openRunDcaModal === "function") openRunDcaModal();
+    }
+
+    // Re-localize suggestions/placeholder when the language toggles.
+    var langBtn = $("langToggle");
+    if (langBtn) langBtn.addEventListener("click", function () { setTimeout(localize, 0); });
+  }
+  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", setupChat);
+  else setupChat();
 })();
 </script>
+
+<!-- ---------- AI assistant chat widget ---------- -->
+<button class="chat-fab" id="chatFab" aria-label="Open AI assistant">💬</button>
+<div class="chat-panel" id="chatPanel" role="dialog" aria-label="AI assistant">
+  <div class="chat-head">
+    <div class="ch-avatar">🤖</div>
+    <div>
+      <div class="ch-title" data-t="chatTitle">Aura Assistant</div>
+      <div class="ch-sub" data-t="chatSub">Ask about your DCA, treasury &amp; trades</div>
+    </div>
+    <button class="ch-close" id="chatClose" aria-label="Close">✕</button>
+  </div>
+  <div class="chat-body" id="chatBody"></div>
+  <div class="chat-foot">
+    <div class="chat-suggest" id="chatSuggest"></div>
+    <div class="chat-inputbar">
+      <textarea id="chatInput" rows="1" placeholder="Type a message…" data-t-ph="chatPlaceholder"></textarea>
+      <button class="chat-send" id="chatSend" aria-label="Send">➤</button>
+    </div>
+  </div>
+</div>
 </body>
 </html>
