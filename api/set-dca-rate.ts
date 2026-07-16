@@ -14,6 +14,7 @@ interface LedgerUser {
   dcaRateIsCustom?: boolean;
   dcaPaused?: boolean;
   dcaMode?: "auto" | "manual";
+  dcaRunsPerDay?: 1 | 2 | 3;
   lastActivity: string;
   [k: string]: unknown;
 }
@@ -54,18 +55,18 @@ async function writeLedgerToGitHub(token: string, ledger: Ledger, sha: string, m
   }
 }
 
-function parseRateMessage(msg: string): { rate: string; mode?: string; address: string; timestamp: number } | null {
+function parseRateMessage(msg: string): { rate: string; mode?: string; runs?: string; address: string; timestamp: number } | null {
   const lines = msg.split("\n");
   if (!lines[0]?.startsWith("Aura DCA Agent")) return null;
   const get = (prefix: string) => lines.find((l) => l.startsWith(prefix))?.slice(prefix.length);
   const rate = get("Rate: ");
   const address = get("Address: ");
   const ts = get("Timestamp: ");
-  // Mode is optional to stay backward-compatible with signatures produced
-  // before Auto/Manual was introduced. Absent → treated as "auto".
+  // Optional fields (backward-compatible with signatures from earlier versions).
   const mode = get("Mode: ");
+  const runs = get("Runs: ");
   if (rate === undefined || !address || !ts) return null;
-  return { rate, mode, address, timestamp: parseInt(ts, 10) };
+  return { rate, mode, runs, address, timestamp: parseInt(ts, 10) };
 }
 
 export default async function handler(req: VercelRequest, res: VercelResponse): Promise<void> {
@@ -81,8 +82,12 @@ export default async function handler(req: VercelRequest, res: VercelResponse): 
 
   const parsed = parseRateMessage(message);
   if (!parsed) { res.status(400).json({ error: "Invalid message format" }); return; }
-  const { rate, mode, address, timestamp } = parsed;
+  const { rate, mode, runs, address, timestamp } = parsed;
   const dcaMode: "auto" | "manual" = mode === "manual" ? "manual" : "auto";
+  // runs is optional; clamp to 1/2/3 if provided, else undefined (keep prior).
+  const parsedRuns = runs ? Number.parseInt(runs, 10) : NaN;
+  const dcaRunsPerDay: 1 | 2 | 3 | undefined =
+    parsedRuns === 1 || parsedRuns === 2 || parsedRuns === 3 ? (parsedRuns as 1 | 2 | 3) : undefined;
 
   if (Math.abs(Date.now() - timestamp) > MESSAGE_EXPIRY_MS) {
     res.status(400).json({ error: "Message expired. Please try again." }); return;
@@ -137,6 +142,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse): 
   user.dcaRateIsCustom = true;
   user.dcaPaused = rateNum === 0; // rate 0 = paused
   user.dcaMode = dcaMode;
+  if (dcaRunsPerDay) user.dcaRunsPerDay = dcaRunsPerDay;
   user.lastActivity = now;
 
   try {
@@ -146,5 +152,5 @@ export default async function handler(req: VercelRequest, res: VercelResponse): 
     res.status(500).json({ error: "Failed to save rate: " + (err instanceof Error ? err.message : String(err)) }); return;
   }
 
-  res.status(200).json({ success: true, address: key, dcaRatePerDay: user.dcaRatePerDay, paused: user.dcaPaused, mode: dcaMode });
+  res.status(200).json({ success: true, address: key, dcaRatePerDay: user.dcaRatePerDay, paused: user.dcaPaused, mode: dcaMode, runsPerDay: user.dcaRunsPerDay });
 }

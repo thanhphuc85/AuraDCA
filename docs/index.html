@@ -1088,7 +1088,7 @@
     <div class="dash-row2">
       <div class="card">
         <h3 style="margin:0 0 4px;">🤖 Your DCA Agent</h3>
-        <p class="cs" style="margin:0 0 12px;" id="agentSubtitle">Runs on the schedule you set — 3× a day on Arc Testnet when Auto, or on your command when Manual.</p>
+        <p class="cs" style="margin:0 0 12px;" id="agentSubtitle">Runs on the schedule you set — pick your cadence, or switch to Manual and trigger buys yourself with no daily limit.</p>
         <div class="agent-countdown" id="agentCountdown">
           <span class="ac-label">Next agent run</span>
           <span class="ac-timer" id="nextRunTimer">—</span>
@@ -1389,12 +1389,20 @@
       <div style="display:flex;gap:16px;flex-wrap:wrap;margin-top:10px;font-size:12.5px;">
         <label style="display:inline-flex;align-items:center;gap:6px;cursor:pointer;">
           <input type="radio" name="dcaMode" value="auto" id="rateModeAuto" checked />
-          <span data-t="rateModeAutoLbl">🤖 Auto — agent runs on schedule (3× / day)</span>
+          <span data-t="rateModeAutoLbl">🤖 Auto — agent runs on schedule</span>
         </label>
         <label style="display:inline-flex;align-items:center;gap:6px;cursor:pointer;">
           <input type="radio" name="dcaMode" value="manual" id="rateModeManual" />
-          <span data-t="rateModeManualLbl">✋ Manual — I trigger it myself</span>
+          <span data-t="rateModeManualLbl">✋ Manual — I trigger it (no daily limit)</span>
         </label>
+      </div>
+      <div id="runsPerDayRow" style="display:flex;align-items:center;gap:10px;margin-top:10px;font-size:12.5px;color:var(--muted);">
+        <label for="rateRunsPerDay" data-t="rateRunsLabel">Runs per day (Auto mode):</label>
+        <select id="rateRunsPerDay" style="padding:6px 10px;border-radius:8px;border:1px solid var(--glass-brd);background:var(--bg);color:var(--text);font-size:13px;">
+          <option value="1">1× / day (07 UTC)</option>
+          <option value="2">2× / day (07, 19 UTC)</option>
+          <option value="3" selected>3× / day (07, 13, 19 UTC)</option>
+        </select>
       </div>
       <div style="margin-top:10px;font-size:11px;color:var(--muted);margin-bottom:6px;" data-t="rateModeLabel">Quick DCA modes — deploy your balance over (or type any amount above):</div>
       <div style="display:flex;gap:8px;flex-wrap:wrap;">
@@ -4003,6 +4011,7 @@
     var custom = !!user.dcaRateIsCustom;
     var paused = !!user.dcaPaused || rate <= 0;
     var mode = user.dcaMode === "manual" ? "manual" : "auto";
+    var runsPerDay = user.dcaRunsPerDay === 1 || user.dcaRunsPerDay === 2 ? user.dcaRunsPerDay : 3;
     if (input && document.activeElement !== input) input.value = rate ? rate.toFixed(6).replace(/0+$/, "").replace(/\.$/, "") : "";
     // Reflect the stored mode in the radio group (only when the user isn't
     // actively editing it).
@@ -4010,6 +4019,12 @@
     if (autoR && manR && !autoR.matches(":focus") && !manR.matches(":focus")) {
       autoR.checked = mode === "auto"; manR.checked = mode === "manual";
     }
+    var runsSel = $("rateRunsPerDay");
+    if (runsSel && document.activeElement !== runsSel) runsSel.value = String(runsPerDay);
+    var runsRow = $("runsPerDayRow");
+    // Runs-per-day only applies to Auto; hide the row entirely in Manual mode
+    // so the "no daily limit" story is clear.
+    if (runsRow) runsRow.style.display = mode === "auto" ? "" : "none";
     var pauseBtn = $("ratePauseBtn");
     if (pauseBtn) pauseBtn.textContent = paused ? (t.rateResumeBtn || "Resume") : (t.ratePauseBtn || "Pause");
     var modeBadge = mode === "manual"
@@ -4030,10 +4045,13 @@
     // countdown (it doesn't apply to them) and see a matching subtitle.
     var sub = $("agentSubtitle"), cd = $("agentCountdown");
     if (mode === "manual") {
-      if (sub) sub.textContent = t.agentSubtitleManual || "Manual mode — the agent won't run for you until you trigger it from the chat.";
+      if (sub) sub.textContent = t.agentSubtitleManual || "Manual mode — trigger buys from chat, no daily limit.";
       if (cd) cd.style.display = "none";
     } else if (!paused) {
-      if (sub) sub.textContent = t.agentSubtitleAuto || "Runs automatically 3× a day on Arc Testnet.";
+      // Auto: describe the exact cadence the user chose (1×, 2× or 3× / day).
+      var freqTxt = runsPerDay === 1 ? "1×" : runsPerDay === 2 ? "2×" : "3×";
+      var tpl = t.agentSubtitleAuto || "Runs {n} a day on Arc Testnet — you can switch to Manual any time.";
+      if (sub) sub.textContent = tpl.replace("{n}", freqTxt);
       if (cd) cd.style.display = "";
     } else {
       if (sub) sub.textContent = t.agentSubtitlePaused || "Paused — turn it back on or switch to Manual to keep control.";
@@ -4081,6 +4099,9 @@
         || (document.querySelector('input[name="dcaMode"]:checked') || {}).value
         || "auto";
       if (rate === 0) selectedMode = "auto";
+      var runsSel = $("rateRunsPerDay");
+      var selectedRuns = runsSel && [1, 2, 3].indexOf(parseInt(runsSel.value, 10)) >= 0
+        ? parseInt(runsSel.value, 10) : 3;
 
       var apiBase = loadStore("aura-withdraw-api", "");
       var endpoint = apiBase ? apiBase.replace(/\/+$/, "") + "/api/set-dca-rate" : "/api/set-dca-rate";
@@ -4089,6 +4110,7 @@
       var message = "Aura DCA Agent — Set DCA Rate\n" +
         "Rate: " + rateStr + "\n" +
         "Mode: " + selectedMode + "\n" +
+        "Runs: " + selectedRuns + "\n" +
         "Address: " + state.account + "\n" +
         "Timestamp: " + timestamp;
 

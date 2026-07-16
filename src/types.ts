@@ -103,6 +103,11 @@ export interface UserAccount {
   //   trigger it themselves from the dashboard. rate/day still stored as the
   //   size of a per-command buy.
   dcaMode?: "auto" | "manual";
+  // How many scheduled runs the user wants per day (1, 2, or 3). The cron
+  // fires at 07 / 13 / 19 UTC; runsPerDay=1 picks only 07, =2 picks 07+19,
+  // =3 picks all three (default). Users who want more should use manual mode
+  // and trigger from the dashboard.
+  dcaRunsPerDay?: 1 | 2 | 3;
   lastChargedAt?: string; // ISO timestamp of the last run that spent for this user
 }
 

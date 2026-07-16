@@ -22,6 +22,11 @@ const MAX_CATCHUP_DAYS = 2;
  */
 export function computeScheduledSpends(ledger: Ledger, nowIso: string): ScheduleResult {
   const now = new Date(nowIso).getTime();
+  // The cron fires at 07 / 13 / 19 UTC. Derive which slot this run is (0/1/2)
+  // so we can honor each user's dcaRunsPerDay preference (1 = only slot 0,
+  // 2 = slots 0 + 2, 3 = all three).
+  const utcHour = new Date(nowIso).getUTCHours();
+  const currentSlot = utcHour < 12 ? 0 : utcHour < 18 ? 1 : 2;
   const spends: UserSpend[] = [];
   let total = 0;
 
@@ -30,6 +35,10 @@ export function computeScheduledSpends(ledger: Ledger, nowIso: string): Schedule
     // Manual-mode users are excluded from the scheduled cron; they only buy
     // when they trigger it themselves from the dashboard.
     if (user.dcaMode === "manual") continue;
+    const runsPerDay = user.dcaRunsPerDay === 1 || user.dcaRunsPerDay === 2 ? user.dcaRunsPerDay : 3;
+    // Slot filter: skip if this cron slot isn't in the user's chosen cadence.
+    if (runsPerDay === 1 && currentSlot !== 0) continue;
+    if (runsPerDay === 2 && currentSlot === 1) continue;
     const rate = Number.parseFloat(user.dcaRatePerDay ?? "0");
     const balance = Number.parseFloat(user.usdcBalance ?? "0");
     if (!(rate > 0) || !(balance > 0)) continue;
