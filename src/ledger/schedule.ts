@@ -1,4 +1,4 @@
-import type { Ledger, DistributionRecord } from "../types.js";
+import type { Ledger, UserAccount, DistributionRecord } from "../types.js";
 import { USDC_DECIMALS, CIRBTC_DECIMALS } from "./constants.js";
 import { logger } from "../logger.js";
 
@@ -12,45 +12,131 @@ export interface ScheduleResult {
   totalUsdc: number;
 }
 
+// Optional live market context, used to gate "smart"-mode users. drawdownPct is
+// the current cirBTC drawdown from its recent high (0–1); fearGreedIndex is the
+// 0–100 Fear & Greed reading (null when unavailable).
+export interface MarketContext {
+  drawdownPct?: number;
+  fearGreedIndex?: number | null;
+}
+
 // Cap per-user elapsed time so a long outage doesn't trigger a huge catch-up buy.
 const MAX_CATCHUP_DAYS = 2;
+const HOUR_MS = 3600 * 1000;
+const DAY_MS = 24 * HOUR_MS;
+
+function utcDate(ms: number): string {
+  return new Date(ms).toISOString().slice(0, 10); // YYYY-MM-DD
+}
+// UTC Monday (as YYYY-MM-DD) of the week containing `ms`.
+function utcWeekStart(ms: number): string {
+  const d = new Date(ms);
+  const dow = d.getUTCDay(); // 0=Sun
+  const diff = (dow + 6) % 7; // days since Monday
+  return utcDate(ms - diff * DAY_MS);
+}
+
+// Remaining cap after the rolling window's spend so far (with window rollover).
+function remainingCap(capStr: string | undefined, spentStr: string | undefined, windowKey: string | undefined, currentKey: string): number {
+  const cap = Number.parseFloat(capStr ?? "0");
+  if (!(cap > 0)) return Infinity; // no cap configured
+  const spent = windowKey === currentKey ? Number.parseFloat(spentStr ?? "0") : 0;
+  return Math.max(0, cap - spent);
+}
+
+// Is a rich-schedule user due to run at `now`? Interval frequencies compare
+// against lastChargedAt; weekly checks the UTC weekday + once-per-day.
+function isDueNow(user: UserAccount, now: number): boolean {
+  const lastMs = new Date(user.lastChargedAt ?? user.firstSeen).getTime();
+  const elapsedH = (now - lastMs) / HOUR_MS;
+  switch (user.dcaFrequency) {
+    case "hours": {
+      const every = Math.max(1, Math.min(24, Math.floor(user.dcaEveryHours ?? 24)));
+      return elapsedH >= every - 0.01;
+    }
+    case "days": {
+      const every = Math.max(1, Math.floor(user.dcaEveryDays ?? 1));
+      return elapsedH >= every * 24 - 0.5;
+    }
+    case "weekly": {
+      const days = Array.isArray(user.dcaWeekdays) ? user.dcaWeekdays : [];
+      const today = new Date(now).getUTCDay();
+      if (days.indexOf(today) < 0) return false;
+      return utcDate(lastMs) !== utcDate(now); // at most once per UTC day
+    }
+    case "daily":
+    default:
+      return elapsedH >= 24 - 0.5;
+  }
+}
+
+// Does a "smart"-mode user's market condition pass this run?
+function smartConditionMet(user: UserAccount, market: MarketContext): boolean {
+  if (user.dcaSmartMinDipPct != null && user.dcaSmartMinDipPct > 0) {
+    const dip = (market.drawdownPct ?? 0) * 100;
+    if (dip < user.dcaSmartMinDipPct) return false;
+  }
+  if (user.dcaSmartFearBelow != null && user.dcaSmartFearBelow > 0) {
+    const fg = market.fearGreedIndex;
+    if (fg == null || fg >= user.dcaSmartFearBelow) return false;
+  }
+  return true;
+}
 
 /**
- * Cách B — deterministic per-user recurring DCA. For each active user, the amount
- * to spend this run = their rate/day × days elapsed since we last charged them,
- * capped by their own USDC balance. The run swaps the SUM of these.
+ * Deterministic per-user recurring DCA. Each active user contributes a spend
+ * this run; the agent swaps the SUM. Two models coexist:
+ *   • Rich schedule (dcaFrequency set): spend a fixed dcaAmountPerRun whenever
+ *     the user's cadence is due, gated by smart conditions and daily/weekly caps.
+ *   • Legacy (no dcaFrequency): rate/day × elapsed at the fixed 07/13/19 UTC
+ *     slots, honoring dcaRunsPerDay.
  */
-export function computeScheduledSpends(ledger: Ledger, nowIso: string): ScheduleResult {
+export function computeScheduledSpends(ledger: Ledger, nowIso: string, market: MarketContext = {}): ScheduleResult {
   const now = new Date(nowIso).getTime();
-  // The cron fires at 07 / 13 / 19 UTC. Derive which slot this run is (0/1/2)
-  // so we can honor each user's dcaRunsPerDay preference (1 = only slot 0,
-  // 2 = slots 0 + 2, 3 = all three).
   const utcHour = new Date(nowIso).getUTCHours();
-  const currentSlot = utcHour < 12 ? 0 : utcHour < 18 ? 1 : 2;
+  const legacySlot = utcHour < 12 ? 0 : utcHour < 18 ? 1 : 2;
+  const isLegacySlotHour = utcHour === 7 || utcHour === 13 || utcHour === 19;
+  const dayKey = utcDate(now);
+  const weekKey = utcWeekStart(now);
   const spends: UserSpend[] = [];
   let total = 0;
 
   for (const user of Object.values(ledger.users)) {
     if (user.dcaPaused) continue;
-    // Manual-mode users are excluded from the scheduled cron; they only buy
-    // when they trigger it themselves from the dashboard.
-    if (user.dcaMode === "manual") continue;
-    const runsPerDay = user.dcaRunsPerDay === 1 || user.dcaRunsPerDay === 2 ? user.dcaRunsPerDay : 3;
-    // Slot filter: skip if this cron slot isn't in the user's chosen cadence.
-    if (runsPerDay === 1 && currentSlot !== 0) continue;
-    if (runsPerDay === 2 && currentSlot === 1) continue;
-    const rate = Number.parseFloat(user.dcaRatePerDay ?? "0");
+    if (user.dcaMode === "manual") continue; // manual users only buy on demand
     const balance = Number.parseFloat(user.usdcBalance ?? "0");
-    if (!(rate > 0) || !(balance > 0)) continue;
+    if (!(balance > 0)) continue;
 
-    const lastIso = user.lastChargedAt ?? user.firstSeen;
-    const lastMs = new Date(lastIso).getTime();
-    let elapsedDays = (now - lastMs) / (24 * 3600 * 1000);
-    if (!(elapsedDays > 0)) continue;
-    elapsedDays = Math.min(elapsedDays, MAX_CATCHUP_DAYS);
+    let spend = 0;
 
-    const intended = rate * elapsedDays;
-    const spend = Number.parseFloat(Math.min(intended, balance).toFixed(USDC_DECIMALS));
+    if (user.dcaFrequency) {
+      // --- Rich schedule ---
+      if (!isDueNow(user, now)) continue;
+      if (user.dcaMode === "smart" && !smartConditionMet(user, market)) continue;
+      let amount = Number.parseFloat(user.dcaAmountPerRun ?? "0");
+      if (!(amount > 0)) continue;
+      // Honor daily + weekly caps.
+      amount = Math.min(
+        amount,
+        remainingCap(user.dcaDailyCapUsdc, user.dcaSpentDayUsdc, user.dcaSpentDayDate, dayKey),
+        remainingCap(user.dcaWeeklyCapUsdc, user.dcaSpentWeekUsdc, user.dcaSpentWeekStart, weekKey),
+      );
+      spend = Number.parseFloat(Math.min(amount, balance).toFixed(USDC_DECIMALS));
+    } else {
+      // --- Legacy rate/day model at fixed slots ---
+      if (!isLegacySlotHour) continue;
+      const runsPerDay = user.dcaRunsPerDay === 1 || user.dcaRunsPerDay === 2 ? user.dcaRunsPerDay : 3;
+      if (runsPerDay === 1 && legacySlot !== 0) continue;
+      if (runsPerDay === 2 && legacySlot === 1) continue;
+      const rate = Number.parseFloat(user.dcaRatePerDay ?? "0");
+      if (!(rate > 0)) continue;
+      const lastMs = new Date(user.lastChargedAt ?? user.firstSeen).getTime();
+      let elapsedDays = (now - lastMs) / DAY_MS;
+      if (!(elapsedDays > 0)) continue;
+      elapsedDays = Math.min(elapsedDays, MAX_CATCHUP_DAYS);
+      spend = Number.parseFloat(Math.min(rate * elapsedDays, balance).toFixed(USDC_DECIMALS));
+    }
+
     if (spend > 0) {
       spends.push({ address: user.address, spend });
       total += spend;
@@ -108,12 +194,23 @@ export function applyScheduledDistribution(
     if (btcRemainder > 0) largest.cirBtcShare = (parseFloat(largest.cirBtcShare) + btcRemainder).toFixed(CIRBTC_DECIMALS);
   }
 
+  const nowMs = new Date(runTimestamp).getTime();
+  const dayKey = utcDate(nowMs);
+  const weekKey = utcWeekStart(nowMs);
   for (const alloc of allocations) {
     const user = ledger.users[alloc.address];
     if (!user) continue;
-    user.usdcBalance = Math.max(0, parseFloat(user.usdcBalance) - parseFloat(alloc.usdcShare)).toFixed(USDC_DECIMALS);
+    const share = parseFloat(alloc.usdcShare);
+    user.usdcBalance = Math.max(0, parseFloat(user.usdcBalance) - share).toFixed(USDC_DECIMALS);
     user.cirBtcBalance = (parseFloat(user.cirBtcBalance) + parseFloat(alloc.cirBtcShare)).toFixed(CIRBTC_DECIMALS);
-    user.totalSwapped = (parseFloat(user.totalSwapped) + parseFloat(alloc.usdcShare)).toFixed(USDC_DECIMALS);
+    user.totalSwapped = (parseFloat(user.totalSwapped) + share).toFixed(USDC_DECIMALS);
+    // Roll the daily/weekly spend windows forward, resetting when they lapse.
+    const daySpent = user.dcaSpentDayDate === dayKey ? parseFloat(user.dcaSpentDayUsdc ?? "0") : 0;
+    user.dcaSpentDayUsdc = (daySpent + share).toFixed(USDC_DECIMALS);
+    user.dcaSpentDayDate = dayKey;
+    const weekSpent = user.dcaSpentWeekStart === weekKey ? parseFloat(user.dcaSpentWeekUsdc ?? "0") : 0;
+    user.dcaSpentWeekUsdc = (weekSpent + share).toFixed(USDC_DECIMALS);
+    user.dcaSpentWeekStart = weekKey;
     user.lastChargedAt = runTimestamp;
     user.lastActivity = runTimestamp;
   }

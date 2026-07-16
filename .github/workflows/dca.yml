@@ -2,12 +2,11 @@ name: Daily DCA Bot
 
 on:
   schedule:
-    # Multiple windows throughout the day for flexible DCA timing.
-    # The agent is smart enough to skip if it already ran today
-    # (unless a dip is detected and budget remains).
-    - cron: "0 7 * * *"   # 07:00 UTC — morning window
-    - cron: "0 13 * * *"  # 13:00 UTC — midday window
-    - cron: "0 19 * * *"  # 19:00 UTC — evening window
+    # Wake every hour. Each user's own schedule (frequency: daily / every N
+    # hours / every N days / weekly, plus smart-mode conditions) decides whether
+    # this particular hour is one of their execution times — the code skips
+    # anyone who isn't due, so an hourly cron is cheap but supports any cadence.
+    - cron: "0 * * * *"
   workflow_dispatch:
     inputs:
       dry_run:

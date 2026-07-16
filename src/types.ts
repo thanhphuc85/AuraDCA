@@ -97,17 +97,37 @@ export interface UserAccount {
   dcaRatePerDay?: string; // USDC/day this user's schedule spends
   dcaRateIsCustom?: boolean; // true once the user sets it themselves (don't auto-recompute)
   dcaPaused?: boolean; // user paused their DCA
-  // "auto" (default): the scheduled cron includes this user in every run based
-  //   on their rate/day.
-  // "manual": the cron skips this user entirely; they only buy when they
-  //   trigger it themselves from the dashboard. rate/day still stored as the
-  //   size of a per-command buy.
-  dcaMode?: "auto" | "manual";
-  // How many scheduled runs the user wants per day (1, 2, or 3). The cron
-  // fires at 07 / 13 / 19 UTC; runsPerDay=1 picks only 07, =2 picks 07+19,
-  // =3 picks all three (default). Users who want more should use manual mode
-  // and trigger from the dashboard.
+  // Execution mode:
+  //   "auto"   — the scheduled cron runs on the user's frequency.
+  //   "manual" — cron skips this user; they only buy on demand from the UI.
+  //   "smart"  — like auto, but each scheduled run is additionally gated on
+  //              market conditions (min dip and/or Fear & Greed below N).
+  dcaMode?: "auto" | "manual" | "smart";
+
+  // --- Rich schedule (new model). When dcaFrequency is set, the scheduler uses
+  //     dcaAmountPerRun + the cadence below instead of the legacy rate/day. ---
+  dcaFrequency?: "daily" | "hours" | "days" | "weekly";
+  dcaEveryHours?: number;    // frequency "hours": run every N hours (1–24)
+  dcaEveryDays?: number;     // frequency "days": run every N days
+  dcaWeekdays?: number[];    // frequency "weekly": UTC weekdays, 0=Sun … 6=Sat
+  dcaAmountPerRun?: string;  // USDC spent per execution (new sizing model)
+  dcaDailyCapUsdc?: string;  // max USDC/day (absent or "0" = no cap)
+  dcaWeeklyCapUsdc?: string; // max USDC/week (absent or "0" = no cap)
+  dcaSmartMinDipPct?: number;  // smart: only run if drawdown-from-high ≥ this %
+  dcaSmartFearBelow?: number;  // smart: only run if Fear & Greed index < this
+
+  // Rolling spend windows, maintained by applyScheduledDistribution, used to
+  // enforce the daily/weekly caps. Dates are UTC YYYY-MM-DD.
+  dcaSpentDayUsdc?: string;
+  dcaSpentDayDate?: string;
+  dcaSpentWeekUsdc?: string;
+  dcaSpentWeekStart?: string; // UTC Monday of the tracked week
+
+  // --- Legacy model (kept for backward compatibility) ---
+  // How many scheduled runs per day at the fixed 07/13/19 UTC slots. Only used
+  // for accounts that predate the rich schedule (no dcaFrequency set).
   dcaRunsPerDay?: 1 | 2 | 3;
+
   lastChargedAt?: string; // ISO timestamp of the last run that spent for this user
 }
 

@@ -256,10 +256,18 @@ export async function runDailyDca(config: AppConfig): Promise<RunOutcome> {
     }, false, config.discordWebhookUrl, refCtx);
   }
 
-  // --- Cách B: deterministic per-user rate-driven sizing ---
-  // The buy amount is the SUM of each active user's scheduled spend (rate/day ×
-  // elapsed), capped by their own balance. The agent no longer sizes the buy.
-  const schedule = computeScheduledSpends(ledger, timestamp);
+  // --- Cách B: deterministic per-user schedule-driven sizing ---
+  // The buy amount is the SUM of each active user's scheduled spend; the agent
+  // no longer sizes the buy. Smart-mode users are additionally gated on live
+  // market context (cirBTC drawdown from recent high + Fear & Greed).
+  const recentPrices = cirBtcPriceSnapshots.slice(-30).map((s) => s.priceUsd).filter((p) => p > 0);
+  const priceHigh = recentPrices.length ? Math.max(...recentPrices) : 0;
+  const priceNow = recentPrices.length ? recentPrices[recentPrices.length - 1]! : 0;
+  const drawdownPct = priceHigh > 0 && priceNow > 0 ? Math.max(0, (priceHigh - priceNow) / priceHigh) : 0;
+  const schedule = computeScheduledSpends(ledger, timestamp, {
+    drawdownPct,
+    fearGreedIndex: marketBrief?.fearGreedIndex ?? null,
+  });
   const scheduledTotal = schedule.totalUsdc;
   const available = Number.parseFloat(usdcBalance) - minReserve;
   const minSwap = Number.parseFloat(config.guardrails.minSwapUsdc);

@@ -401,6 +401,20 @@
   .withdraw-row { display: flex; gap: 10px; margin-top: 14px; flex-wrap: wrap; }
   .withdraw-row input { flex: 1; min-width: 100px; padding: 8px 12px; border-radius: 10px; border: 1px solid var(--glass-brd); background: var(--bg); color: var(--text); font-size: 14px; }
   .withdraw-row select { padding: 8px 10px; border-radius: 10px; border: 1px solid var(--glass-brd); background: var(--bg); color: var(--text); font-size: 14px; }
+  /* ---- DCA schedule builder ---- */
+  .sched-label { font-size: 11.5px; font-weight: 600; color: var(--muted); margin-bottom: 5px; }
+  .sched-input { width: 100%; box-sizing: border-box; padding: 9px 11px; border-radius: 10px; border: 1px solid var(--glass-brd); background: var(--bg); color: var(--text); font-size: 13.5px; }
+  .sched-input:focus { outline: none; border-color: var(--violet); }
+  .sched-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  @media (max-width: 480px) { .sched-grid { grid-template-columns: 1fr; } }
+  .sched-modes { display: flex; gap: 8px; flex-wrap: wrap; }
+  .sched-radio { display: inline-flex; align-items: center; gap: 6px; cursor: pointer; font-size: 13px; padding: 7px 12px; border: 1px solid var(--glass-brd); border-radius: 10px; background: var(--bg); transition: border-color .15s, background .15s; }
+  .sched-radio:has(input:checked) { border-color: var(--violet); background: rgba(138,92,246,.08); }
+  .sched-cond { display: flex; align-items: center; gap: 8px; margin-top: 10px; }
+  .sched-num { width: 78px; }
+  .sched-weekdays { display: flex; gap: 6px; flex-wrap: wrap; }
+  .wd-chip { padding: 6px 11px; border-radius: 999px; border: 1px solid var(--glass-brd); background: var(--bg); color: var(--muted); font-size: 12px; font-weight: 600; cursor: pointer; font-family: Inter, sans-serif; transition: all .15s; }
+  .wd-chip.on { background: linear-gradient(135deg, var(--violet), var(--cyan)); border-color: transparent; color: #fff; }
   .wd-history { margin-top: 16px; }
   .wd-item { display: flex; gap: 10px; align-items: center; padding: 10px 0; border-bottom: 1px solid var(--glass-brd); font-size: 13px; }
   .wd-badge { display: inline-block; padding: 2px 8px; border-radius: 6px; font-size: 11px; font-weight: 600; }
@@ -1380,38 +1394,92 @@
     <div class="card">
       <h3 data-t="rateTitle">Your DCA schedule</h3>
       <p class="cs" data-t="rateSub">Set how much of your balance the agent buys per day. Sign to save — no gas, off-chain preference.</p>
-      <div class="rate-current" id="rateCurrent" style="margin:10px 0;font-size:13px;color:var(--muted);"></div>
-      <div class="withdraw-row">
-        <input id="rateAmount" type="number" min="0" step="0.000001" placeholder="Any USDC/day — no limit (0 = pause)" />
-        <button class="btn" id="rateBtn" data-t="rateBtn">Save rate</button>
+      <div class="rate-current" id="rateCurrent" style="margin:10px 0 14px;font-size:13px;color:var(--muted);"></div>
+
+      <!-- Mode -->
+      <div class="sched-label" data-t="schedModeLabel">Mode</div>
+      <div class="sched-modes">
+        <label class="sched-radio"><input type="radio" name="dcaMode" value="auto" id="rateModeAuto" checked /> <span data-t="rateModeAutoLbl">🤖 Auto</span></label>
+        <label class="sched-radio"><input type="radio" name="dcaMode" value="manual" id="rateModeManual" /> <span data-t="rateModeManualLbl">✋ Manual</span></label>
+        <label class="sched-radio"><input type="radio" name="dcaMode" value="smart" id="rateModeSmart" /> <span data-t="rateModeSmartLbl">🧠 Smart</span></label>
+      </div>
+      <p class="cs sched-mode-hint" id="schedModeHint" style="margin:4px 2px 12px;"></p>
+
+      <!-- Schedule builder (Auto / Smart) -->
+      <div id="schedBuilder">
+        <div class="sched-grid">
+          <div>
+            <div class="sched-label" data-t="schedFreqLabel">Frequency</div>
+            <select id="schedFreq" class="sched-input">
+              <option value="daily" data-t="schedFreqDaily">Daily</option>
+              <option value="hours" data-t="schedFreqHours">Every X hours</option>
+              <option value="days" data-t="schedFreqDays">Every X days</option>
+              <option value="weekly" data-t="schedFreqWeekly">Weekly (pick days)</option>
+            </select>
+          </div>
+          <div>
+            <div class="sched-label" data-t="schedAmountLabel">Amount per run (USDC)</div>
+            <input id="schedAmount" class="sched-input" type="number" min="0" step="0.000001" placeholder="e.g. 1" />
+          </div>
+        </div>
+
+        <div id="schedEveryHoursRow" class="sched-cond" style="display:none;">
+          <span class="sched-label" data-t="schedEveryHours">Every</span>
+          <input id="schedEveryHours" class="sched-input sched-num" type="number" min="1" max="24" step="1" value="6" />
+          <span class="cs" data-t="schedHoursUnit">hours</span>
+        </div>
+        <div id="schedEveryDaysRow" class="sched-cond" style="display:none;">
+          <span class="sched-label" data-t="schedEveryDays">Every</span>
+          <input id="schedEveryDays" class="sched-input sched-num" type="number" min="1" max="90" step="1" value="1" />
+          <span class="cs" data-t="schedDaysUnit">days</span>
+        </div>
+        <div id="schedWeekdaysRow" style="display:none;margin-top:10px;">
+          <div class="sched-label" data-t="schedWeekdaysLabel">Run on (UTC)</div>
+          <div class="sched-weekdays" id="schedWeekdays">
+            <button type="button" class="wd-chip" data-wd="1">Mon</button>
+            <button type="button" class="wd-chip" data-wd="2">Tue</button>
+            <button type="button" class="wd-chip" data-wd="3">Wed</button>
+            <button type="button" class="wd-chip" data-wd="4">Thu</button>
+            <button type="button" class="wd-chip" data-wd="5">Fri</button>
+            <button type="button" class="wd-chip" data-wd="6">Sat</button>
+            <button type="button" class="wd-chip" data-wd="0">Sun</button>
+          </div>
+        </div>
+
+        <div class="sched-grid" style="margin-top:12px;">
+          <div>
+            <div class="sched-label" data-t="schedDailyCap">Daily cap (optional)</div>
+            <input id="schedDailyCap" class="sched-input" type="number" min="0" step="0.000001" placeholder="No cap" />
+          </div>
+          <div>
+            <div class="sched-label" data-t="schedWeeklyCap">Weekly cap (optional)</div>
+            <input id="schedWeeklyCap" class="sched-input" type="number" min="0" step="0.000001" placeholder="No cap" />
+          </div>
+        </div>
+
+        <!-- Smart conditions -->
+        <div id="schedSmartRow" style="display:none;margin-top:12px;padding:12px;border:1px solid rgba(138,92,246,.3);border-radius:12px;background:rgba(138,92,246,.06);">
+          <div class="sched-label" style="color:var(--violet);" data-t="schedSmartLabel">🧠 Smart conditions — only buy when…</div>
+          <div class="sched-grid" style="margin-top:8px;">
+            <div>
+              <div class="sched-label" data-t="schedDipLabel">Dip from high ≥ (%)</div>
+              <input id="schedSmartDip" class="sched-input" type="number" min="0" step="0.1" placeholder="e.g. 5" />
+            </div>
+            <div>
+              <div class="sched-label" data-t="schedFearLabel">Fear &amp; Greed &lt;</div>
+              <input id="schedSmartFear" class="sched-input" type="number" min="0" max="100" step="1" placeholder="e.g. 30" />
+            </div>
+          </div>
+          <p class="cs" style="margin:8px 2px 0;" data-t="schedSmartHint">Leave a field blank to ignore it. Both set = both must hold.</p>
+        </div>
+      </div>
+
+      <div class="withdraw-row" style="margin-top:14px;">
+        <button class="btn" id="rateBtn" data-t="rateBtn">Save schedule</button>
         <button class="btn btn-ghost" id="ratePauseBtn" data-t="ratePauseBtn">Pause</button>
       </div>
-      <div style="display:flex;gap:16px;flex-wrap:wrap;margin-top:10px;font-size:12.5px;">
-        <label style="display:inline-flex;align-items:center;gap:6px;cursor:pointer;">
-          <input type="radio" name="dcaMode" value="auto" id="rateModeAuto" checked />
-          <span data-t="rateModeAutoLbl">🤖 Auto — agent runs on schedule</span>
-        </label>
-        <label style="display:inline-flex;align-items:center;gap:6px;cursor:pointer;">
-          <input type="radio" name="dcaMode" value="manual" id="rateModeManual" />
-          <span data-t="rateModeManualLbl">✋ Manual — I trigger it (no daily limit)</span>
-        </label>
-      </div>
-      <div id="runsPerDayRow" style="display:flex;align-items:center;gap:10px;margin-top:10px;font-size:12.5px;color:var(--muted);">
-        <label for="rateRunsPerDay" data-t="rateRunsLabel">Runs per day (Auto mode):</label>
-        <select id="rateRunsPerDay" style="padding:6px 10px;border-radius:8px;border:1px solid var(--glass-brd);background:var(--bg);color:var(--text);font-size:13px;">
-          <option value="1">1× / day (07 UTC)</option>
-          <option value="2">2× / day (07, 19 UTC)</option>
-          <option value="3" selected>3× / day (07, 13, 19 UTC)</option>
-        </select>
-      </div>
-      <div style="margin-top:10px;font-size:11px;color:var(--muted);margin-bottom:6px;" data-t="rateModeLabel">Quick DCA modes — deploy your balance over (or type any amount above):</div>
-      <div style="display:flex;gap:8px;flex-wrap:wrap;">
-        <button class="btn btn-ghost rate-preset" data-days="1" data-t="rateModeMax">🚀 Max · ~1d</button>
-        <button class="btn btn-ghost rate-preset" data-days="7" data-t="rateModeAggr">⚡ Aggressive · 7d</button>
-        <button class="btn btn-ghost rate-preset" data-days="14" data-t="rateModeFast">Fast · 14d</button>
-        <button class="btn btn-ghost rate-preset" data-days="30" data-t="rateModeBal">Balanced · 30d</button>
-        <button class="btn btn-ghost rate-preset" data-days="90" data-t="rateModeSlow">🐢 Slow · 90d</button>
-      </div>
+      <!-- Hidden legacy field kept so older code paths referencing it stay safe -->
+      <input id="rateAmount" type="hidden" value="" />
       <div class="status-note" id="rateStatus"></div>
     </div>
     <div class="card" id="distCard" style="display:none;">
@@ -4006,52 +4074,66 @@
       el.innerHTML = '<span style="color:var(--amber);">' + (t.rateNoAccount || "Deposit USDC first to start a DCA schedule.") + '</span>';
       return;
     }
-    var rate = parseFloat(user.dcaRatePerDay || "0");
     var bal = parseFloat(user.usdcBalance || "0");
-    var custom = !!user.dcaRateIsCustom;
-    var paused = !!user.dcaPaused || rate <= 0;
-    var mode = user.dcaMode === "manual" ? "manual" : "auto";
-    var runsPerDay = user.dcaRunsPerDay === 1 || user.dcaRunsPerDay === 2 ? user.dcaRunsPerDay : 3;
-    if (input && document.activeElement !== input) input.value = rate ? rate.toFixed(6).replace(/0+$/, "").replace(/\.$/, "") : "";
-    // Reflect the stored mode in the radio group (only when the user isn't
-    // actively editing it).
-    var autoR = $("rateModeAuto"), manR = $("rateModeManual");
-    if (autoR && manR && !autoR.matches(":focus") && !manR.matches(":focus")) {
-      autoR.checked = mode === "auto"; manR.checked = mode === "manual";
+    var paused = !!user.dcaPaused || parseFloat(user.dcaRatePerDay || "0") <= 0;
+    var mode = user.dcaMode === "manual" ? "manual" : user.dcaMode === "smart" ? "smart" : "auto";
+    var freq = user.dcaFrequency || "daily";
+    var amount = parseFloat(user.dcaAmountPerRun || user.dcaRatePerDay || "0");
+    var editing = document.activeElement && document.activeElement.closest && document.activeElement.closest("#schedBuilder, .sched-modes");
+
+    // Populate the builder from stored config (unless the user is mid-edit).
+    if (!editing) {
+      var autoR = $("rateModeAuto"), manR = $("rateModeManual"), smR = $("rateModeSmart");
+      if (autoR) autoR.checked = mode === "auto";
+      if (manR) manR.checked = mode === "manual";
+      if (smR) smR.checked = mode === "smart";
+      var setV = function (id, v) { var e = $(id); if (e && v != null) e.value = v; };
+      if (user.dcaFrequency && $("schedFreq")) $("schedFreq").value = freq;
+      if (amount > 0) setV("schedAmount", amount.toFixed(6).replace(/0+$/, "").replace(/\.$/, ""));
+      if (user.dcaEveryHours) setV("schedEveryHours", String(user.dcaEveryHours));
+      if (user.dcaEveryDays) setV("schedEveryDays", String(user.dcaEveryDays));
+      setV("schedDailyCap", user.dcaDailyCapUsdc && parseFloat(user.dcaDailyCapUsdc) > 0 ? parseFloat(user.dcaDailyCapUsdc).toString() : "");
+      setV("schedWeeklyCap", user.dcaWeeklyCapUsdc && parseFloat(user.dcaWeeklyCapUsdc) > 0 ? parseFloat(user.dcaWeeklyCapUsdc).toString() : "");
+      setV("schedSmartDip", user.dcaSmartMinDipPct != null ? String(user.dcaSmartMinDipPct) : "");
+      setV("schedSmartFear", user.dcaSmartFearBelow != null ? String(user.dcaSmartFearBelow) : "");
+      var wds = Array.isArray(user.dcaWeekdays) ? user.dcaWeekdays : [];
+      document.querySelectorAll("#schedWeekdays .wd-chip").forEach(function (c) {
+        c.classList.toggle("on", wds.indexOf(parseInt(c.getAttribute("data-wd"), 10)) >= 0);
+      });
+      if (typeof syncSchedUI === "function") syncSchedUI();
     }
-    var runsSel = $("rateRunsPerDay");
-    if (runsSel && document.activeElement !== runsSel) runsSel.value = String(runsPerDay);
-    var runsRow = $("runsPerDayRow");
-    // Runs-per-day only applies to Auto; hide the row entirely in Manual mode
-    // so the "no daily limit" story is clear.
-    if (runsRow) runsRow.style.display = mode === "auto" ? "" : "none";
+
     var pauseBtn = $("ratePauseBtn");
     if (pauseBtn) pauseBtn.textContent = paused ? (t.rateResumeBtn || "Resume") : (t.ratePauseBtn || "Pause");
-    var modeBadge = mode === "manual"
-      ? ' · <span style="color:var(--cyan);">✋ ' + (t.rateModeManualBadge || "Manual") + '</span>'
-      : ' · <span style="color:var(--green);">🤖 ' + (t.rateModeAutoBadge || "Auto") + '</span>';
+
+    // Human-readable cadence summary.
+    function cadenceText() {
+      if (mode === "manual") return t.cadManual || "on demand (Manual)";
+      if (freq === "hours") return (t.cadEvery || "every") + " " + (user.dcaEveryHours || 6) + "h";
+      if (freq === "days") return (t.cadEvery || "every") + " " + (user.dcaEveryDays || 1) + (t.cadDays || "d");
+      if (freq === "weekly") { var n = (user.dcaWeekdays || []).length; return (t.cadWeekly || "weekly") + " (" + n + (t.cadDaysShort || "d") + ")"; }
+      return t.cadDaily || "daily";
+    }
+    var modeBadge = mode === "manual" ? '<span style="color:var(--cyan);">✋ Manual</span>'
+      : mode === "smart" ? '<span style="color:var(--violet);">🧠 Smart</span>'
+      : '<span style="color:var(--green);">🤖 Auto</span>';
     if (paused) {
       el.innerHTML = '<span style="color:var(--amber);">⏸ ' + (t.ratePaused || "Paused") + '</span> · ' + (t.rateBalance || "Balance") + ' ' + fmt(bal, 2) + ' USDC';
+    } else if (mode === "manual") {
+      el.innerHTML = modeBadge + ' · ' + (t.rateBalance || "Balance") + ' ' + fmt(bal, 2) + ' USDC · <span style="opacity:.75;">' + (t.cadManualNote || "trigger from chat, no daily limit") + '</span>';
     } else {
-      var runwayDays = rate > 0 ? Math.floor(bal / rate) : 0;
-      el.innerHTML =
-        '<b>' + fmt(rate, 6) + ' USDC/' + (t.rateDay || "day") + '</b>' +
-        (custom ? '' : ' <span style="opacity:.7;">(' + (t.rateAuto || "auto") + ')</span>') +
-        modeBadge +
-        ' · ' + (t.rateRunway || "runway") + ' ~' + runwayDays + ' ' + (t.rateDays || "days") +
+      el.innerHTML = '<b>' + fmt(amount, 6) + ' USDC/' + (t.rateRun || "run") + '</b> · ' + modeBadge + ' · ' + cadenceText() +
         ' · ' + (t.rateBalance || "Balance") + ' ' + fmt(bal, 2) + ' USDC';
     }
-    // Reflect mode on the "Your DCA Agent" card: manual users hide the cron
-    // countdown (it doesn't apply to them) and see a matching subtitle.
+
+    // Reflect on the dashboard "Your DCA Agent" card.
     var sub = $("agentSubtitle"), cd = $("agentCountdown");
     if (mode === "manual") {
       if (sub) sub.textContent = t.agentSubtitleManual || "Manual mode — trigger buys from chat, no daily limit.";
       if (cd) cd.style.display = "none";
     } else if (!paused) {
-      // Auto: describe the exact cadence the user chose (1×, 2× or 3× / day).
-      var freqTxt = runsPerDay === 1 ? "1×" : runsPerDay === 2 ? "2×" : "3×";
-      var tpl = t.agentSubtitleAuto || "Runs {n} a day on Arc Testnet — you can switch to Manual any time.";
-      if (sub) sub.textContent = tpl.replace("{n}", freqTxt);
+      var pfx = mode === "smart" ? "🧠 Smart · " : "";
+      if (sub) sub.textContent = pfx + (t.agentSubtitleCadence || "Runs {c} on Arc Testnet — fully your schedule.").replace("{c}", cadenceText());
       if (cd) cd.style.display = "";
     } else {
       if (sub) sub.textContent = t.agentSubtitlePaused || "Paused — turn it back on or switch to Manual to keep control.";
@@ -4059,71 +4141,63 @@
     }
   }
 
+  // Expose so renderRateCard (defined elsewhere) can refresh the builder UI.
+  var syncSchedUI = function () {};
+
   (function setupRate() {
     var btn = $("rateBtn");
     if (!btn) return;
-    var input = $("rateAmount");
     var st = $("rateStatus");
+    var pauseBtn = $("ratePauseBtn");
+    var freqSel = $("schedFreq");
 
-    // Presets: set rate = balance / days
-    document.querySelectorAll(".rate-preset").forEach(function (p) {
-      p.addEventListener("click", function () {
-        var t = (typeof T !== "undefined" && T[currentLang]) ? T[currentLang] : {};
-        var days = parseInt(this.getAttribute("data-days"), 10) || 30;
-        var key = state.account && state.account.toLowerCase();
-        var user = key && _ledgerData && _ledgerData.users ? _ledgerData.users[key] : null;
-        var bal = user ? parseFloat(user.usdcBalance || "0") : 0;
-        if (bal > 0) {
-          var r = bal / days;
-          input.value = r.toFixed(6).replace(/0+$/, "").replace(/\.$/, "");
-          st.innerHTML = '<span style="color:var(--muted);">≈ <b>' + fmt(r, 6) + '</b> USDC/' + (t.rateDay || "day") +
-            ' · ' + (t.rateRunway || "runway") + ' ' + days + ' ' + (t.rateDays || "days") +
-            ' — ' + (t.rateClickSave || "click Save rate to confirm") + '</span>';
-        } else {
-          st.innerHTML = '<span style="color:var(--amber);">' + (t.rateNoAccount || "Deposit USDC first to start a DCA schedule.") + '</span>';
-        }
-      });
+    function ct() { return (typeof T !== "undefined" && T[currentLang]) ? T[currentLang] : {}; }
+    function selectedMode() { return (document.querySelector('input[name="dcaMode"]:checked') || {}).value || "auto"; }
+
+    // Show/hide conditional rows based on frequency + mode.
+    syncSchedUI = function () {
+      var t = ct();
+      var freq = freqSel ? freqSel.value : "daily";
+      var mode = selectedMode();
+      var show = function (id, on) { var el = $(id); if (el) el.style.display = on ? "" : "none"; };
+      show("schedBuilder", mode !== "manual");
+      show("schedEveryHoursRow", freq === "hours" && mode !== "manual");
+      show("schedEveryDaysRow", freq === "days" && mode !== "manual");
+      show("schedWeekdaysRow", freq === "weekly" && mode !== "manual");
+      show("schedSmartRow", mode === "smart");
+      var hint = $("schedModeHint");
+      if (hint) hint.textContent =
+        mode === "manual" ? (t.schedHintManual || "You trigger buys yourself from the chat — no schedule, no daily limit.")
+        : mode === "smart" ? (t.schedHintSmart || "Runs on your schedule, but only when the market conditions below are met.")
+        : (t.schedHintAuto || "The agent runs on the exact schedule you set below.");
+    };
+
+    if (freqSel) freqSel.addEventListener("change", syncSchedUI);
+    ["rateModeAuto", "rateModeManual", "rateModeSmart"].forEach(function (id) {
+      var r = $(id); if (r) r.addEventListener("change", syncSchedUI);
+    });
+    // Weekday chip toggles.
+    document.querySelectorAll("#schedWeekdays .wd-chip").forEach(function (c) {
+      c.addEventListener("click", function () { c.classList.toggle("on"); });
     });
 
-    var pauseBtn = $("ratePauseBtn");
+    function num(id) { var el = $(id); var n = el ? parseFloat(el.value) : NaN; return isNaN(n) ? null : n; }
 
-    async function submitRate(rate, overrideMode) {
-      var t = (typeof T !== "undefined" && T[currentLang]) ? T[currentLang] : {};
-      st.innerHTML = "";
-      if (!state.account || !state.provider) { st.innerHTML = '<span style="color:var(--amber);">' + (t.wdErrConnect || "Connect your wallet first.") + '</span>'; return; }
-      if (isNaN(rate) || rate < 0) { st.innerHTML = '<span style="color:var(--amber);">' + (t.rateErrAmount || "Enter a rate ≥ 0 (0 = pause).") + '</span>'; return; }
-
-      // Auto vs Manual. Pause always writes "auto" (no reason to pin a paused
-      // rate as manual); otherwise take the selected radio, defaulting to auto.
-      var selectedMode = overrideMode
-        || (document.querySelector('input[name="dcaMode"]:checked') || {}).value
-        || "auto";
-      if (rate === 0) selectedMode = "auto";
-      var runsSel = $("rateRunsPerDay");
-      var selectedRuns = runsSel && [1, 2, 3].indexOf(parseInt(runsSel.value, 10)) >= 0
-        ? parseInt(runsSel.value, 10) : 3;
-
+    // Sign `message` and POST to the rate endpoint; render the outcome.
+    async function signAndSave(message, okMsg) {
+      var t = ct();
       var apiBase = loadStore("aura-withdraw-api", "");
       var endpoint = apiBase ? apiBase.replace(/\/+$/, "") + "/api/set-dca-rate" : "/api/set-dca-rate";
-      var rateStr = rate.toFixed(6);
-      var timestamp = Date.now();
-      var message = "Aura DCA Agent — Set DCA Rate\n" +
-        "Rate: " + rateStr + "\n" +
-        "Mode: " + selectedMode + "\n" +
-        "Runs: " + selectedRuns + "\n" +
-        "Address: " + state.account + "\n" +
-        "Timestamp: " + timestamp;
-
       btn.disabled = true; if (pauseBtn) pauseBtn.disabled = true;
       st.innerHTML = '<span style="display:inline-flex;align-items:center;gap:8px;color:var(--amber);"><span class="spinner" style="width:16px;height:16px;border-width:2px;"></span> ' + (t.rateSigning || "Sign in your wallet…") + '</span>';
       try {
         var signature = await state.provider.request({ method: "personal_sign", params: [message, state.account] });
         st.innerHTML = '<span style="display:inline-flex;align-items:center;gap:8px;color:var(--amber);"><span class="spinner" style="width:16px;height:16px;border-width:2px;"></span> ' + (t.rateSaving || "Saving…") + '</span>';
         var res = await fetch(endpoint, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ message: message, signature: signature }) });
-        var result = await res.json();
+        var result = await res.json().catch(function () { return {}; });
         if (res.ok && result.success) {
-          st.innerHTML = '<span style="color:var(--green);">✅ ' + (result.paused ? (t.ratePausedOk || "DCA paused.") : (t.rateSavedOk || "Rate saved:") + ' ' + fmt(rate, 6) + ' USDC/' + (t.rateDay || "day")) + '</span>';
-          fetchLedger().then(function (l) { _ledgerData = l; renderPortfolio(_ledgerData); });
+          st.innerHTML = '<span style="color:var(--green);">✅ ' + okMsg + '</span>';
+          if (typeof fetchLedger === "function") fetchLedger().then(function (l) { _ledgerData = l; if (typeof renderPortfolio === "function") renderPortfolio(_ledgerData); });
         } else {
           st.innerHTML = '<span style="color:var(--red);">❌ ' + (result.error || "Failed") + '</span>';
         }
@@ -4135,23 +4209,54 @@
       }
     }
 
-    btn.addEventListener("click", function () { submitRate(parseFloat(input.value)); });
+    function submitSchedule() {
+      var t = ct();
+      st.innerHTML = "";
+      if (!state.account || !state.provider) { st.innerHTML = '<span style="color:var(--amber);">' + (t.wdErrConnect || "Connect your wallet first.") + '</span>'; return; }
+      var mode = selectedMode();
+      var amount = num("schedAmount");
+      if (!(amount > 0)) { st.innerHTML = '<span style="color:var(--amber);">' + (t.schedErrAmount || "Enter an amount per run greater than 0.") + '</span>'; return; }
+
+      var freq = freqSel ? freqSel.value : "daily";
+      var sched = { freq: freq, amountPerRun: amount.toFixed(6) };
+      if (freq === "hours") sched.everyHours = Math.max(1, Math.min(24, num("schedEveryHours") || 6));
+      if (freq === "days") sched.everyDays = Math.max(1, num("schedEveryDays") || 1);
+      if (freq === "weekly") {
+        var wds = Array.prototype.slice.call(document.querySelectorAll("#schedWeekdays .wd-chip.on"))
+          .map(function (c) { return parseInt(c.getAttribute("data-wd"), 10); });
+        if (!wds.length) { st.innerHTML = '<span style="color:var(--amber);">' + (t.schedErrWeekdays || "Pick at least one weekday.") + '</span>'; return; }
+        sched.weekdays = wds;
+      }
+      var dc = num("schedDailyCap"); if (dc && dc > 0) sched.dailyCap = dc.toFixed(6);
+      var wc = num("schedWeeklyCap"); if (wc && wc > 0) sched.weeklyCap = wc.toFixed(6);
+      if (mode === "smart") {
+        var dip = num("schedSmartDip"); if (dip && dip > 0) sched.smartDip = dip;
+        var fear = num("schedSmartFear"); if (fear && fear > 0) sched.smartFear = fear;
+        if (!sched.smartDip && !sched.smartFear) { st.innerHTML = '<span style="color:var(--amber);">' + (t.schedErrSmart || "Smart mode needs at least one condition (dip or Fear & Greed).") + '</span>'; return; }
+      }
+
+      var message = "Aura DCA Agent — Set DCA Rate\n" +
+        "Rate: " + amount.toFixed(6) + "\n" +
+        "Mode: " + mode + "\n" +
+        "Schedule: " + JSON.stringify(sched) + "\n" +
+        "Address: " + state.account + "\n" +
+        "Timestamp: " + Date.now();
+      signAndSave(message, (t.schedSavedOk || "Schedule saved.") + " " + fmt(amount, 6) + " USDC/run");
+    }
+
+    btn.addEventListener("click", submitSchedule);
 
     if (pauseBtn) {
       pauseBtn.addEventListener("click", function () {
-        var key = state.account && state.account.toLowerCase();
-        var user = key && _ledgerData && _ledgerData.users ? _ledgerData.users[key] : null;
-        var rate = user ? parseFloat(user.dcaRatePerDay || "0") : 0;
-        var paused = user ? (!!user.dcaPaused || rate <= 0) : true;
-        if (paused) {
-          // Resume: use the input value if set, else auto = balance/30
-          var bal = user ? parseFloat(user.usdcBalance || "0") : 0;
-          var resumeRate = parseFloat(input.value);
-          if (!(resumeRate > 0)) resumeRate = bal > 0 ? bal / 30 : 0;
-          submitRate(resumeRate);
-        } else {
-          submitRate(0);
-        }
+        var t = ct();
+        if (!state.account || !state.provider) { st.innerHTML = '<span style="color:var(--amber);">' + (t.wdErrConnect || "Connect your wallet first.") + '</span>'; return; }
+        var key = state.account.toLowerCase();
+        var user = _ledgerData && _ledgerData.users ? _ledgerData.users[key] : null;
+        var paused = user ? (!!user.dcaPaused || parseFloat(user.dcaRatePerDay || "0") <= 0) : true;
+        if (paused) { submitSchedule(); return; } // "Resume" saves the current builder
+        // Pause: sign rate 0 (no Schedule line → backend marks paused).
+        var message = "Aura DCA Agent — Set DCA Rate\nRate: 0.000000\nMode: auto\nAddress: " + state.account + "\nTimestamp: " + Date.now();
+        signAndSave(message, t.ratePausedOk || "DCA paused.");
       });
     }
   })();
@@ -4547,8 +4652,13 @@
       portCirBtcLabel: "cirBTC earned", portCirBtcSub: "In your wallet",
       portSwappedLabel: "Total DCA'd", portSwappedSub: "USDC → cirBTC all-time",
       portWithdrawTitle: "Withdraw your tokens", portWithdrawSub: "Sign a message to verify your identity — withdrawal completes in 10–30 seconds.",
-      rateTitle: "Your DCA schedule", rateSub: "Set how much of your balance the agent buys per day. Sign to save — no gas, off-chain preference.",
-      rateBtn: "Save rate",
+      rateTitle: "Your DCA schedule", rateSub: "Build exactly how the agent buys for you — frequency, amount per run, caps, and mode. Sign to save (no gas).",
+      rateBtn: "Save schedule",
+      schedModeLabel: "Mode", rateModeAutoLbl: "🤖 Auto", rateModeManualLbl: "✋ Manual", rateModeSmartLbl: "🧠 Smart",
+      schedFreqLabel: "Frequency", schedFreqDaily: "Daily", schedFreqHours: "Every X hours", schedFreqDays: "Every X days", schedFreqWeekly: "Weekly (pick days)",
+      schedAmountLabel: "Amount per run (USDC)", schedEveryHours: "Every", schedHoursUnit: "hours", schedEveryDays: "Every", schedDaysUnit: "days",
+      schedWeekdaysLabel: "Run on (UTC)", schedDailyCap: "Daily cap (optional)", schedWeeklyCap: "Weekly cap (optional)",
+      schedSmartLabel: "🧠 Smart conditions — only buy when…", schedDipLabel: "Dip from high ≥ (%)", schedFearLabel: "Fear & Greed <", schedSmartHint: "Leave a field blank to ignore it. Both set = both must hold.",
       rateModeLabel: "Quick DCA modes — deploy your balance over (or type any amount above):",
       rateModeMax: "🚀 Max · ~1d", rateModeAggr: "⚡ Aggressive · 7d", rateModeFast: "Fast · 14d", rateModeBal: "Balanced · 30d", rateModeSlow: "🐢 Slow · 90d",
       statSuccess: "Success", statDry: "Dry run", statSwapUnavail: "Swap route unavailable",
@@ -4657,8 +4767,13 @@
       portCirBtcLabel: "cirBTC đã nhận", portCirBtcSub: "Trong ví của bạn",
       portSwappedLabel: "Tổng đã DCA", portSwappedSub: "USDC → cirBTC tổng cộng",
       portWithdrawTitle: "Rút token", portWithdrawSub: "Ký xác nhận danh tính — rút tiền hoàn tất trong 10–30 giây.",
-      rateTitle: "Lịch DCA của bạn", rateSub: "Đặt mỗi ngày agent mua bao nhiêu từ số dư của bạn. Ký để lưu — không tốn gas, tùy chọn off-chain.",
-      rateBtn: "Lưu tốc độ",
+      rateTitle: "Lịch DCA của bạn", rateSub: "Tự thiết lập cách agent mua cho bạn — tần suất, số tiền mỗi lần, giới hạn, và chế độ. Ký để lưu (không tốn gas).",
+      rateBtn: "Lưu lịch",
+      schedModeLabel: "Chế độ", rateModeAutoLbl: "🤖 Tự động", rateModeManualLbl: "✋ Thủ công", rateModeSmartLbl: "🧠 Thông minh",
+      schedFreqLabel: "Tần suất", schedFreqDaily: "Hàng ngày", schedFreqHours: "Mỗi X giờ", schedFreqDays: "Mỗi X ngày", schedFreqWeekly: "Hàng tuần (chọn ngày)",
+      schedAmountLabel: "Số tiền mỗi lần (USDC)", schedEveryHours: "Mỗi", schedHoursUnit: "giờ", schedEveryDays: "Mỗi", schedDaysUnit: "ngày",
+      schedWeekdaysLabel: "Chạy vào (UTC)", schedDailyCap: "Giới hạn/ngày (tuỳ chọn)", schedWeeklyCap: "Giới hạn/tuần (tuỳ chọn)",
+      schedSmartLabel: "🧠 Điều kiện Smart — chỉ mua khi…", schedDipLabel: "Giảm từ đỉnh ≥ (%)", schedFearLabel: "Fear & Greed <", schedSmartHint: "Để trống một ô để bỏ qua. Đặt cả hai = phải thoả cả hai.",
       rateModeLabel: "Chế độ DCA nhanh — giải ngân số dư trong (hoặc nhập số bất kỳ ở trên):",
       rateModeMax: "🚀 Max · ~1 ngày", rateModeAggr: "⚡ Mạnh · 7 ngày", rateModeFast: "Nhanh · 14 ngày", rateModeBal: "Cân bằng · 30 ngày", rateModeSlow: "🐢 Chậm · 90 ngày",
       statSuccess: "Thành công", statDry: "Chạy thử", statSwapUnavail: "Tuyến swap tạm ngưng",
