@@ -2185,7 +2185,19 @@
   window.addEventListener("eip6963:announceProvider", function (event) {
     var detail = event.detail;
     if (detail && detail.info && detail.provider) {
+      // Only re-render on a GENUINELY new wallet. buildWalletEntries re-requests
+      // announcements, so re-rendering on every (re-)announce would loop
+      // forever: announce → render → request → announce → …
+      var isNew = !discoveredProviders[detail.info.rdns];
       discoveredProviders[detail.info.rdns] = { info: detail.info, provider: detail.provider };
+      if (isNew) {
+        // A late-arriving provider must flip its row "Install" → "Detected" and
+        // wire the real provider into the open modal.
+        var ov = document.getElementById("wmOverlay");
+        if (ov && ov.classList.contains("open") && typeof renderWalletModal === "function") {
+          try { renderWalletModal(); } catch (e) {}
+        }
+      }
     }
   });
   // Ask any injected wallets to (re-)announce themselves.
@@ -2836,6 +2848,12 @@
     $("wmGmailForm").classList.remove("open");
     $("wmStatus").textContent = "";
     document.body.style.overflow = "hidden";
+    // EIP-6963 announcements can land a few ms after the modal opens; re-render a
+    // couple of times so an injected wallet (e.g. MetaMask) reliably flips to
+    // "Detected" with its real provider instead of getting stuck on "Install".
+    requestWalletAnnounce();
+    setTimeout(function () { if ($("wmOverlay").classList.contains("open")) renderWalletModal(); }, 200);
+    setTimeout(function () { if ($("wmOverlay").classList.contains("open")) renderWalletModal(); }, 600);
   }
 
   function closeWalletModal() {
