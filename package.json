@@ -4,6 +4,9 @@
   "private": true,
   "type": "module",
   "description": "Agentic daily DCA bot for cirBTC on Arc Testnet, decisions made by Claude, guardrails enforced in code.",
+  "engines": {
+    "node": "22.x"
+  },
   "scripts": {
     "start": "tsx src/index.ts",
     "typecheck": "tsc --noEmit",
