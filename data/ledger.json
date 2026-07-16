@@ -25,11 +25,13 @@
       "totalWithdrawnCirBtc": "0",
       "totalWithdrawnUsdc": "2.000000",
       "firstSeen": "2026-07-10T16:07:29.490Z",
-      "lastActivity": "2026-07-15T20:19:53.589Z",
-      "dcaRatePerDay": "3.000000",
+      "lastActivity": "2026-07-16T07:37:05.335Z",
+      "dcaRatePerDay": "5.000000",
       "dcaPaused": false,
       "dcaRateIsCustom": true,
-      "lastRunNowAt": "2026-07-16T00:50:03.124Z"
+      "lastRunNowAt": "2026-07-16T00:50:03.124Z",
+      "dcaMode": "manual",
+      "dcaRunsPerDay": 1
     }
   },
   "deposits": [
