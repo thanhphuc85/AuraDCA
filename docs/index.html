@@ -5084,6 +5084,10 @@
             status.style.color = "var(--green)";
             status.textContent = ct().runOk(res.j.cirBtcOut);
             if (typeof fetchLedger === "function") fetchLedger().then(function (l) { _ledgerData = l; if (typeof renderPortfolio === "function") renderPortfolio(_ledgerData); });
+          } else if (res && res.ok && res.j.unavailable) {
+            // Signed intent accepted, but settlement isn't available right now
+            // (route outage). Informational — not an error, balance untouched.
+            status.style.color = "var(--amber)"; status.textContent = "ℹ️ " + res.j.message;
           } else {
             status.style.color = "var(--red)"; status.textContent = "❌ " + ((res && res.j && res.j.error) || ct().netErr);
             yes.disabled = false; no.disabled = false;

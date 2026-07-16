@@ -8,8 +8,7 @@
       "maxDuration": 30
     },
     "api/run-dca.ts": {
-      "maxDuration": 60,
-      "includeFiles": "node_modules/{@circle-fin,@solana,rpc-websockets,uuid,ws}/**"
+      "maxDuration": 10
     }
   },
   "rewrites": [
