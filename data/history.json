@@ -281,5 +281,17 @@
     "reasoning": "Market brief shows Extreme Fear (25) with a contrarian \"increase 10-15%\" bias, but the real cirBTC price feed, price-action, dip-ladder, and regime tools all still report insufficient/no data, so there is no dip or momentum signal to override the structural issue. Risk score is medium (36), driven entirely by a 10+ consecutive error streak and 0% reliability (not volatility or concentration, only 2% of ~42.8 USDC deployed) — and today's history already shows two error_swap_failed attempts at 3.666666 USDC with the identical \"No route available\" message, confirming the 20+ day structural routing/liquidity outage persists. Per my stored reflections' strategy adjustment to reduce probe frequency (every 5-7 days) and never attempt a third same-day swap on a confirmed-dead route, I'm withholding today (proceed=false) to preserve the safe idle balance until either a longer interval has passed or an external signal confirms the route is restored, at which point a larger catch-up allocation should resume given severely behind pacing (1/24 successful runs).",
     "walletUsdcBalance": "42.8385270565623072",
     "message": "Swap failed [no_route]: Swap failed [no_route]: Stablecoin Service createSwap failed: Route or resource not found. Details: No route available"
+  },
+  {
+    "date": "2026-07-16",
+    "timestamp": "2026-07-16T12:10:51.413Z",
+    "status": "error_swap_failed",
+    "requestedAmountUsdc": "5.000000",
+    "clampedAmountUsdc": "5.000000",
+    "boundBy": "user_schedule",
+    "tokenOut": "cirBTC",
+    "reasoning": "Rate-based DCA: 1 active user(s), executing 5.000000 USDC this run.",
+    "walletUsdcBalance": "37.8341271368623072",
+    "message": "Swap failed [no_route]: Swap failed [no_route]: Stablecoin Service createSwap failed: Route or resource not found. Details: No route available"
   }
 ]
