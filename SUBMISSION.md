@@ -61,6 +61,48 @@ GitHub Actions cron (daily)
 - **Vercel** serverless functions (`api/`) for the dashboard's signed actions — set-rate, run-DCA, withdraw, chat, welcome-email
 - **Single-file dashboard** (`docs/index.html`) — EIP-6963 wallet discovery, EIP-191 signing, EN/VI, light/dark
 
+## What we measured (and the pivot we killed)
+
+When the cirBTC route died, the tempting move was to pivot the thesis to something
+that still worked. We nearly did — a USDC/EURC treasury FX rebalancer: same
+scheduling engine, same guardrails, and EURC was the one pair still quoting.
+
+Instead we measured first, because the cirBTC failure had already taught us the
+lesson: **we had bet on something we never verified.** So before committing two
+weeks, we sampled the EURC rate (`npm run sample-fx`, read-only):
+
+```
+9 samples over 34 minutes → EURC/USD = 1.1451554658, every single time
+movement: 0.0000%   distinct values: 1
+```
+
+Arc Testnet pegs it. An FX rebalancer would never once cross a threshold — it
+would have had *nothing to do*. **We killed our own pivot in 30 minutes instead of
+discovering it in two weeks.**
+
+Putting the three probes together gives the real finding:
+
+| Asset | Measured state |
+|---|---|
+| cirBTC | No liquidity — `No route available`, 24/24 attempts over 9 days |
+| EURC | Quotes fine, but the price is **frozen** (0.0000% over 29 min) |
+| WBTC / WETH / USDT / DAI / … | Not wired to Arc Testnet at all |
+
+> **Arc Testnet has no asset carrying a price signal.** Every price-reactive agent
+> idea — DCA, FX rebalancing, dip-buying — is blocked here for the same root
+> cause, and no amount of code routes around it.
+
+That is why we did **not** pivot, and did not quietly retarget `TOKEN_OUT` to EURC
+to make the demo light up: it would have turned a BTC-accumulation agent into an
+FX trade against a frozen rate — a demo that "works" while proving nothing. The
+honest position is that the agent is correct and the environment is empty, and we
+have the data to show which.
+
+The three probes ([`check-routes`](scripts/check-routes.mjs),
+[`prove-swap`](scripts/prove-swap.mjs), [`sample-fx`](scripts/sample-fx.mjs)) are
+in the repo and reproducible. When blocked, we measured rather than guessed — and
+were willing to let the data kill our own ideas.
+
 ## What makes it stand out
 
 - **Real, verifiable execution** — not a demo video. There's an actual on-chain swap and green CI runs anyone can inspect.
@@ -80,7 +122,7 @@ GitHub Actions cron (daily)
 
 ## What's next
 
-- Multi-asset DCA (split across cirBTC / EURC by a Claude-decided allocation)
+- Multi-asset DCA (a Claude-decided split across assets) — worth building the day Arc carries **more than one asset with a live price**; today cirBTC is the only volatile one and EURC's rate is frozen, so there is nothing to allocate *between*
 - A live P&L / cost-basis panel — the dashboard markup is ready and turns on automatically once cirBTC swaps clear (Arc Testnet's USDC→cirBTC route has been in an outage the agent has been reasoning around)
 - Verified sender domain for the welcome email so it reaches any user, not just the operator's inbox
 - Mainnet-readiness review when Arc mainnet ships

@@ -63,6 +63,48 @@ GitHub Actions cron (hàng ngày)
 - **Vercel** serverless (`api/`) cho các action có ký của dashboard — set-rate, run-DCA, rút tiền, chat, email chào mừng
 - **Dashboard một file** (`docs/index.html`) — phát hiện ví EIP-6963, ký EIP-191, song ngữ Anh/Việt, sáng/tối
 
+## Những gì chúng tôi đã ĐO (và thesis chúng tôi tự giết)
+
+Khi route cirBTC chết, nước đi hấp dẫn là xoay thesis sang thứ còn chạy được.
+Chúng tôi suýt làm vậy — một agent rebalance ngân quỹ USDC/EURC: cùng engine lịch,
+cùng guardrails, và EURC là cặp duy nhất còn quote được.
+
+Nhưng chúng tôi **đo trước**, vì cú cirBTC đã dạy đúng bài học: **chúng tôi đã đặt
+cược vào thứ mình chưa bao giờ kiểm chứng.** Nên trước khi đổ vào 2 tuần, chúng tôi
+lấy mẫu tỉ giá EURC (`npm run sample-fx`, chỉ đọc):
+
+```
+9 mẫu trong 34 phút → EURC/USD = 1.1451554658, không sai một lần
+biến động: 0.0000%   số giá trị khác nhau: 1
+```
+
+Arc Testnet ghim cứng nó. Một FX rebalancer sẽ **không bao giờ chạm ngưỡng** — nó
+có đúng *0 việc để làm*. **Chúng tôi tự giết thesis của mình trong 30 phút, thay vì
+phát hiện ra sau 2 tuần.**
+
+Ghép cả ba phép đo lại mới ra phát hiện thật:
+
+| Tài sản | Trạng thái đo được |
+|---|---|
+| cirBTC | Không thanh khoản — `No route available`, 24/24 lần thử suốt 9 ngày |
+| EURC | Quote bình thường, nhưng giá **đứng im** (0.0000% trong 29 phút) |
+| WBTC / WETH / USDT / DAI / … | Không hề được wire cho Arc Testnet |
+
+> **Arc Testnet không có tài sản nào mang tín hiệu giá.** Mọi ý tưởng agent phản ứng
+> theo giá — DCA, rebalance FX, bắt dip — đều bị chặn bởi cùng một nguyên nhân gốc,
+> và không lượng code nào đi vòng qua được.
+
+Đó là lý do chúng tôi **không** pivot, và không lặng lẽ đổi `TOKEN_OUT` sang EURC
+để demo sáng đèn: làm vậy sẽ biến một agent tích luỹ BTC thành một lệnh ngoại hối
+đánh vào tỉ giá đóng băng — một demo "chạy được" nhưng không chứng minh điều gì.
+Lập trường trung thực là: **agent đúng, còn môi trường thì rỗng** — và chúng tôi có
+dữ liệu để chỉ ra bên nào là bên nào.
+
+Ba công cụ đo ([`check-routes`](scripts/check-routes.mjs),
+[`prove-swap`](scripts/prove-swap.mjs), [`sample-fx`](scripts/sample-fx.mjs)) đều
+nằm trong repo và tái lập được. Khi bị chặn, chúng tôi **đo thay vì đoán** — và sẵn
+sàng để dữ liệu giết chính ý tưởng của mình.
+
 ## Điểm nổi bật
 
 - **Thực thi thật, kiểm chứng được** — không phải video demo. Có giao dịch on-chain thật và các CI run xanh mà ai cũng kiểm tra được.
@@ -82,7 +124,7 @@ GitHub Actions cron (hàng ngày)
 
 ## Hướng phát triển tiếp
 
-- DCA đa tài sản (chia giữa cirBTC / EURC theo tỷ lệ do Claude quyết định)
+- DCA đa tài sản (Claude quyết định tỷ lệ phân bổ) — đáng làm vào ngày Arc có **nhiều hơn một tài sản với giá sống**; hiện cirBTC là tài sản biến động duy nhất còn tỉ giá EURC thì đóng băng, nên không có gì để phân bổ *giữa*
 - Bảng P&L / giá vốn trực tiếp — markup dashboard đã sẵn, tự bật khi các swap cirBTC thành công (route USDC→cirBTC trên Arc Testnet đang gặp outage mà agent vẫn lý luận xoay quanh)
 - Verify domain gửi email để email chào mừng tới được mọi user, không chỉ hộp thư người vận hành
 - Rà soát sẵn sàng cho mainnet khi Arc mainnet ra mắt
