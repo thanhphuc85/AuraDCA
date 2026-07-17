@@ -4,7 +4,7 @@
 
 *Encode Club × Circle — Programmable Money Hackathon (build on Arc)*
 
-Repo: https://github.com/thanhphuc85/ArcDCA
+Repo: https://github.com/thanhphuc85/AuraDCA
 On-chain proof: https://testnet.arcscan.app/tx/0x83097f432db9c013b3f8d7748b58f18484c2a5fde4ce500c221ee38524250933
 
 ---

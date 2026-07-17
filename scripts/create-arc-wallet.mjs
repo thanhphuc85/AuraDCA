@@ -29,7 +29,7 @@ if (!apiKey || !entitySecret) {
 const client = initiateDeveloperControlledWalletsClient({ apiKey, entitySecret });
 
 const walletSetResponse = await client.createWalletSet({
-  name: `arcdca-${new Date().toISOString().slice(0, 10)}`,
+  name: `auradca-${new Date().toISOString().slice(0, 10)}`,
 });
 const walletSetId = walletSetResponse.data?.walletSet?.id;
 if (!walletSetId) {

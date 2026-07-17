@@ -13,12 +13,12 @@ const MAX_MESSAGES = 24;
 const MAX_MSG_CHARS = 4000;
 
 const LEDGER_SOURCES = [
-  "https://cdn.jsdelivr.net/gh/thanhphuc85/ArcDCA@main/data/ledger.json",
-  "https://raw.githubusercontent.com/thanhphuc85/ArcDCA/main/data/ledger.json",
+  "https://cdn.jsdelivr.net/gh/thanhphuc85/AuraDCA@main/data/ledger.json",
+  "https://raw.githubusercontent.com/thanhphuc85/AuraDCA/main/data/ledger.json",
 ];
 const HISTORY_SOURCES = [
-  "https://cdn.jsdelivr.net/gh/thanhphuc85/ArcDCA@main/data/history.json",
-  "https://raw.githubusercontent.com/thanhphuc85/ArcDCA/main/data/history.json",
+  "https://cdn.jsdelivr.net/gh/thanhphuc85/AuraDCA@main/data/history.json",
+  "https://raw.githubusercontent.com/thanhphuc85/AuraDCA/main/data/history.json",
 ];
 
 interface LedgerUser {

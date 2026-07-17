@@ -926,7 +926,7 @@
     <a class="sb-link" data-target="leaderboardSection"><span class="ic">📊</span> Analytics</a>
     <a class="sb-link" data-target="settingsDrawer"><span class="ic">⚙️</span> Settings</a>
     <div class="sb-sep"></div>
-    <a class="sb-link" href="https://github.com/thanhphuc85/ArcDCA" target="_blank" rel="noopener"><span class="ic">💻</span> GitHub Source</a>
+    <a class="sb-link" href="https://github.com/thanhphuc85/AuraDCA" target="_blank" rel="noopener"><span class="ic">💻</span> GitHub Source</a>
     <a class="sb-link" href="https://testnet.arcscan.app" target="_blank" rel="noopener"><span class="ic">🔎</span> Arc Explorer ↗</a>
   </nav>
   <div class="sb-foot">Autonomous DCA on Arc Testnet</div>
@@ -1082,7 +1082,7 @@
     <p>Every day it asks <b>Claude</b> how much USDC to allocate, enforces hard spend guardrails in code, and executes a real <b>USDC → cirBTC</b> swap on Arc Testnet via Circle's Swap Kit — no server, no human in the loop.</p>
     <div class="cta">
       <button class="btn" id="connectHero">Connect Wallet</button>
-      <a class="btn ghost" href="https://github.com/thanhphuc85/ArcDCA" target="_blank" rel="noopener">View source ↗</a>
+      <a class="btn ghost" href="https://github.com/thanhphuc85/AuraDCA" target="_blank" rel="noopener">View source ↗</a>
       <a class="btn ghost" href="https://testnet.arcscan.app/tx/0x83097f432db9c013b3f8d7748b58f18484c2a5fde4ce500c221ee38524250933" target="_blank" rel="noopener">See a live swap ↗</a>
     </div>
     <div class="band reveal">
@@ -1580,15 +1580,15 @@
         </div>
         <div class="wm-status" id="wmStatus"></div>
       </div>
-      <div class="wm-footer" data-t="wmFooter">By connecting a wallet, you agree this is a <b>testnet demo</b> with no real value. <a href="https://github.com/thanhphuc85/ArcDCA" target="_blank" rel="noopener">View source</a>.</div>
+      <div class="wm-footer" data-t="wmFooter">By connecting a wallet, you agree this is a <b>testnet demo</b> with no real value. <a href="https://github.com/thanhphuc85/AuraDCA" target="_blank" rel="noopener">View source</a>.</div>
     </div>
   </div>
 
   <footer>
     <div>Aura DCA · Testnet only · not financial advice.</div>
     <div>
-      <a href="https://github.com/thanhphuc85/ArcDCA" target="_blank" rel="noopener">GitHub</a> ·
-      <a href="https://github.com/thanhphuc85/ArcDCA/blob/main/SUBMISSION.md" target="_blank" rel="noopener">Submission</a> ·
+      <a href="https://github.com/thanhphuc85/AuraDCA" target="_blank" rel="noopener">GitHub</a> ·
+      <a href="https://github.com/thanhphuc85/AuraDCA/blob/main/SUBMISSION.md" target="_blank" rel="noopener">Submission</a> ·
       <a href="https://testnet.arcscan.app" target="_blank" rel="noopener">ArcScan</a>
     </div>
   </footer>
@@ -2207,12 +2207,12 @@
   // jsDelivr CDN first (robust CORS, no rate-limit 429s; cached up to ~12h),
   // raw.githubusercontent as a fresher fallback.
   var HISTORY_SOURCES = [
-    "https://cdn.jsdelivr.net/gh/thanhphuc85/ArcDCA@main/data/history.json",
-    "https://raw.githubusercontent.com/thanhphuc85/ArcDCA/main/data/history.json",
+    "https://cdn.jsdelivr.net/gh/thanhphuc85/AuraDCA@main/data/history.json",
+    "https://raw.githubusercontent.com/thanhphuc85/AuraDCA/main/data/history.json",
   ];
   var REFLECTION_SOURCES = [
-    "https://cdn.jsdelivr.net/gh/thanhphuc85/ArcDCA@main/data/reflections.json",
-    "https://raw.githubusercontent.com/thanhphuc85/ArcDCA/main/data/reflections.json",
+    "https://cdn.jsdelivr.net/gh/thanhphuc85/AuraDCA@main/data/reflections.json",
+    "https://raw.githubusercontent.com/thanhphuc85/AuraDCA/main/data/reflections.json",
   ];
   // Try each source in order; the first that responds OK wins.
   function fetchSourcesOnce(sources) {
@@ -2237,8 +2237,8 @@
     });
   }
   var LEDGER_SOURCES = [
-    "https://cdn.jsdelivr.net/gh/thanhphuc85/ArcDCA@main/data/ledger.json",
-    "https://raw.githubusercontent.com/thanhphuc85/ArcDCA/main/data/ledger.json",
+    "https://cdn.jsdelivr.net/gh/thanhphuc85/AuraDCA@main/data/ledger.json",
+    "https://raw.githubusercontent.com/thanhphuc85/AuraDCA/main/data/ledger.json",
   ];
   function fetchHistory() {
     return fetchFromSources(HISTORY_SOURCES).catch(function (err) {
@@ -4628,7 +4628,7 @@
       wmBack: "Back", wmCreateSubmit: "Create wallet & sign in",
       wmGmailNote: "We'll email a confirmation to your inbox. This creates a wallet derived from your email (no seed phrase) — sign back in with the same email to restore it.",
       chatTitle: "Aura Assistant", chatSub: "Ask about your DCA, treasury & trades",
-      wmFooter: 'By connecting a wallet, you agree this is a <b>testnet demo</b> with no real value. <a href="https://github.com/thanhphuc85/ArcDCA" target="_blank" rel="noopener">View source</a>.',
+      wmFooter: 'By connecting a wallet, you agree this is a <b>testnet demo</b> with no real value. <a href="https://github.com/thanhphuc85/AuraDCA" target="_blank" rel="noopener">View source</a>.',
       wpBalanceSub: "Portfolio value on Arc Testnet",
       wpWelcome: "Welcome!", wpWelcomeDesc: "Get started with your first action below.",
       wpBuy: "Get testnet USDC", wpBuyDesc: "Use the Arc faucet to get free testnet tokens",
@@ -4744,7 +4744,7 @@
       wmBack: "Quay lại", wmCreateSubmit: "Tạo ví & đăng nhập",
       wmGmailNote: "Chúng tôi sẽ gửi email xác nhận về hộp thư của bạn. Thao tác này tạo ví suy ra từ email của bạn (không cần seed phrase) — đăng nhập lại bằng cùng email để khôi phục.",
       chatTitle: "Trợ lý Aura", chatSub: "Hỏi về DCA, ngân quỹ & giao dịch của bạn",
-      wmFooter: 'Bằng việc kết nối ví, bạn đồng ý đây là <b>demo testnet</b> không có giá trị thực. <a href="https://github.com/thanhphuc85/ArcDCA" target="_blank" rel="noopener">Xem mã nguồn</a>.',
+      wmFooter: 'Bằng việc kết nối ví, bạn đồng ý đây là <b>demo testnet</b> không có giá trị thực. <a href="https://github.com/thanhphuc85/AuraDCA" target="_blank" rel="noopener">Xem mã nguồn</a>.',
       wpBalanceSub: "Giá trị danh mục trên Arc Testnet",
       wpWelcome: "Chào mừng!", wpWelcomeDesc: "Bắt đầu với hành động đầu tiên bên dưới.",
       wpBuy: "Nhận USDC testnet", wpBuyDesc: "Dùng faucet Arc để nhận token testnet miễn phí",

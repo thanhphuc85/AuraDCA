@@ -22,7 +22,7 @@ const RATE_LIMIT_MS = 5 * 60 * 1000;
 const MESSAGE_EXPIRY_MS = 5 * 60 * 1000;
 
 const GITHUB_OWNER = "thanhphuc85";
-const GITHUB_REPO = "ArcDCA";
+const GITHUB_REPO = "AuraDCA";
 const LEDGER_PATH = "data/ledger.json";
 
 interface LedgerUser {

@@ -8,7 +8,7 @@
 
 <p align="center">
   <a href="https://aura-dca.vercel.app"><img src="https://img.shields.io/badge/%F0%9F%8C%90%20Live%20dashboard-aura--dca.vercel.app-2775CA" alt="Live dashboard" /></a>
-  <a href="https://github.com/thanhphuc85/ArcDCA/actions/workflows/dca.yml"><img src="https://github.com/thanhphuc85/ArcDCA/actions/workflows/dca.yml/badge.svg" alt="Daily DCA Bot" /></a>
+  <a href="https://github.com/thanhphuc85/AuraDCA/actions/workflows/dca.yml"><img src="https://github.com/thanhphuc85/AuraDCA/actions/workflows/dca.yml/badge.svg" alt="Daily DCA Bot" /></a>
   <a href="https://testnet.arcscan.app"><img src="https://img.shields.io/badge/Arc-Testnet-2ea44f" alt="Arc Testnet" /></a>
   <a href="https://www.anthropic.com"><img src="https://img.shields.io/badge/decisions%20by-Claude-8A2BE2" alt="Decisions by Claude" /></a>
   <a href="https://docs.arc.io/app-kit/swap.md"><img src="https://img.shields.io/badge/swaps%20via-Circle%20Swap%20Kit-2775CA" alt="Circle Swap Kit" /></a>
@@ -44,7 +44,7 @@ The wallet is a Circle **Developer-Controlled Wallet**: Circle custodies the sig
 This isn't a mockup. The agent has executed a **real swap on Arc Testnet**:
 
 - **Transaction:** [`0x83097f…50933`](https://testnet.arcscan.app/tx/0x83097f432db9c013b3f8d7748b58f18484c2a5fde4ce500c221ee38524250933) — swapped `0.10 USDC → cirBTC`
-- **The daily cron runs autonomously in CI:** see the green [Actions runs](https://github.com/thanhphuc85/ArcDCA/actions/workflows/dca.yml) and the bot's own `chore: record DCA run …` commits to [`data/history.json`](data/history.json).
+- **The daily cron runs autonomously in CI:** see the green [Actions runs](https://github.com/thanhphuc85/AuraDCA/actions/workflows/dca.yml) and the bot's own `chore: record DCA run …` commits to [`data/history.json`](data/history.json).
 
 ### ⚠️ Current status: the cirBTC pair is in an Arc Testnet liquidity outage
 
@@ -69,7 +69,7 @@ frequency, and **withholds spend to preserve capital**. The DCA target stays
 cirBTC (`TOKEN_OUT`); when Arc restores liquidity the agent resumes on its own,
 no change required.
 
-**Autonomous run in CI** — [verify live on the Actions tab →](https://github.com/thanhphuc85/ArcDCA/actions/workflows/dca.yml)
+**Autonomous run in CI** — [verify live on the Actions tab →](https://github.com/thanhphuc85/AuraDCA/actions/workflows/dca.yml)
 
 ![Daily DCA Bot run #4 succeeded in 24s on GitHub Actions](docs/ci-run.svg)
 

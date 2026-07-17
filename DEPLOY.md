@@ -10,14 +10,14 @@ The withdrawal API commits balance updates to `data/ledger.json`, so it needs a
 token with write access to this repo.
 
 1. https://github.com/settings/personal-access-tokens/new (fine-grained)
-2. Repository access → **Only select repositories** → `thanhphuc85/ArcDCA`
+2. Repository access → **Only select repositories** → `thanhphuc85/AuraDCA`
 3. Permissions → Repository permissions → **Contents: Read and write**
 4. Generate and copy the `github_pat_...` value.
 
 ## 2. Import the repo into Vercel
 
 1. https://vercel.com → sign in with GitHub → **Add New… → Project**
-2. Import `thanhphuc85/ArcDCA`
+2. Import `thanhphuc85/AuraDCA`
 3. **Framework Preset: Other** · Build Command: *(empty)* · Output Directory: *(empty)*
    (`vercel.json` already rewrites `/` to `docs/` and keeps `/api/*` as functions.)
 
@@ -43,7 +43,7 @@ token with write access to this repo.
 
 ## 4. Deploy & test
 
-1. Click **Deploy** (~1 min). You get a URL like `https://arcdca.vercel.app`.
+1. Click **Deploy** (~1 min). You get a URL like `https://aura-dca.vercel.app`.
    - Dashboard: `/`
    - Withdrawal API: `/api/withdraw`
 2. Open the dashboard, connect a wallet, go to **My Position → Withdraw**, enter an
