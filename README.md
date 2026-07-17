@@ -42,6 +42,29 @@ This isn't a mockup. The agent has executed a **real swap on Arc Testnet**:
 - **Transaction:** [`0x83097f…50933`](https://testnet.arcscan.app/tx/0x83097f432db9c013b3f8d7748b58f18484c2a5fde4ce500c221ee38524250933) — swapped `0.10 USDC → cirBTC`
 - **The daily cron runs autonomously in CI:** see the green [Actions runs](https://github.com/thanhphuc85/ArcDCA/actions/workflows/dca.yml) and the bot's own `chore: record DCA run …` commits to [`data/history.json`](data/history.json).
 
+### ⚠️ Current status: the cirBTC pair is in an Arc Testnet liquidity outage
+
+`data/history.json` currently shows a run of `error_swap_failed` entries. That is
+**not** the agent failing — Arc Testnet's `USDC → cirBTC` route has returned
+*"No route available"* on every attempt for 9+ consecutive days. Two things make
+that verifiable rather than an excuse:
+
+- **The execution path is provably live right now** — a real swap on a working
+  pair, executed today: [`0xe54ee0…e3a3`](https://testnet.arcscan.app/tx/0xe54ee0951bed8c7263075b393af40e78606b88e763ce9dd8b7498d6c6a89e3a3)
+  (`0.50 USDC → 0.402303 EURC`). Circle wallet → Swap Kit → Arc Testnet all work.
+  Reproduce with `npm run prove-swap`.
+- **The outage is isolated to cirBTC** — `npm run check-routes` probes every token
+  symbol the SDK knows and reports that `EURC` quotes fine while `cirBTC` has no
+  liquidity, and that every other asset (`WBTC`, `WETH`, `USDT`, …) isn't wired to
+  Arc Testnet at all. Arc is stablecoin-native — even its native gas token is USDC
+  — so **cirBTC is the only volatile asset available to DCA into**.
+
+Rather than burn fees on a dead route, the agent detects the structural outage,
+reasons about it in its [reflections](data/reflections.json), reduces probe
+frequency, and **withholds spend to preserve capital**. The DCA target stays
+cirBTC (`TOKEN_OUT`); when Arc restores liquidity the agent resumes on its own,
+no change required.
+
 **Autonomous run in CI** — [verify live on the Actions tab →](https://github.com/thanhphuc85/ArcDCA/actions/workflows/dca.yml)
 
 ![Daily DCA Bot run #4 succeeded in 24s on GitHub Actions](docs/ci-run.svg)

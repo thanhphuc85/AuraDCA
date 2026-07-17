@@ -69,6 +69,11 @@ GitHub Actions cron (hàng ngày)
 
 ## Khó khăn đã gặp
 
+- **Cặp cirBTC rơi vào outage thanh khoản** — khó khăn lớn nhất. `USDC → cirBTC` trả về *"No route available"* ở **mọi** lần thử suốt 9+ ngày liên tiếp, nên `data/history.json` là một dãy `error_swap_failed`. Chúng tôi xử lý nó như một bài toán **đo lường** chứ không phải cái cớ, và viết hai công cụ để mọi khẳng định đều kiểm chứng được:
+  - `npm run prove-swap` đã thực hiện **một swap thật hôm nay** trên cặp còn sống — [`0xe54ee0…e3a3`](https://testnet.arcscan.app/tx/0xe54ee0951bed8c7263075b393af40e78606b88e763ce9dd8b7498d6c6a89e3a3) (`0.50 USDC → 0.402303 EURC`). Circle wallet → Swap Kit → Arc Testnet **sống, có bằng chứng**; đường ống không phải vấn đề.
+  - `npm run check-routes` quét mọi token symbol mà SDK biết và cho thấy outage **chỉ giới hạn ở cirBTC**: EURC quote bình thường, còn lại (WBTC/WETH/USDT/DAI/…) **không hề được wire cho Arc Testnet**. Arc là chain stablecoin-native — đến native gas token cũng là USDC — nên **cirBTC là tài sản biến động duy nhất để DCA vào**.
+
+  Phần chúng tôi tự hào là **cách agent phản ứng**: nó nhận ra các lỗi này mang tính *cấu trúc chứ không thoáng qua*, tự ghi điều đó vào [reflections](data/reflections.json), **giảm tần suất thử để ngừng đốt phí**, và **ngừng chi tiêu để bảo toàn vốn** — suốt 20+ ngày, không ai giám sát. Một agent biết **khi nào KHÔNG nên hành động** mới là nửa khó của bài toán. Chúng tôi giữ nguyên `TOKEN_OUT=cirBTC`: đổi sang EURC sẽ khiến demo "chạy được" nhưng lặng lẽ biến một agent tích luỹ BTC thành một lệnh ngoại hối — thứ không user nào yêu cầu.
 - **Arc Testnet không có "altcoin thật"** — các DEX cộng đồng (ArcSwap/Presto/…) không có địa chỉ contract được xác minh công khai, nên chúng tôi chủ động chuẩn hóa theo Swap Kit chính thức của Circle (USDC↔EURC↔cirBTC) để submission thật sự chạy được.
 - **Đóng gói SDK của Circle** — yêu cầu Node ≥ 22 và có những đặc thù ESM named-export chỉ lộ ra trên một số phiên bản Node nhất định; đã ghim CI về Node 24 để khớp môi trường đã kiểm chứng.
 - **Config chuỗi rỗng trong CI** — biến GitHub Actions chưa set sẽ đến dưới dạng `""`, mà `.default()` của zod không lấp `""`; đã sửa bằng bước tiền xử lý chuyển rỗng thành undefined.
