@@ -10,7 +10,8 @@
     "test": "vitest run",
     "create-wallet": "node scripts/create-arc-wallet.mjs",
     "check-routes": "node scripts/check-routes.mjs",
-    "prove-swap": "node scripts/prove-swap.mjs"
+    "prove-swap": "node scripts/prove-swap.mjs",
+    "sample-fx": "node scripts/sample-fx.mjs"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.110.0",
