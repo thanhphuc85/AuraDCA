@@ -3939,6 +3939,12 @@
     }
   })();
 
+  // Kick one fresh fetch on load so ledger-backed tiles (e.g. Active Users) fill
+  // immediately instead of waiting for the first 30s auto-refresh tick — and so
+  // they load at all even if the tab starts hidden (the interval is gated on
+  // document.visibilityState, and the ledger is never cached like history is).
+  refreshDashboardData();
+
   // ---------- per-user portfolio ----------
   var _userOnChainDeposits = null;
 
