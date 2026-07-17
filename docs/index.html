@@ -1667,6 +1667,11 @@
     settingsDrawer: ["settingsDrawer"]
   };
   var MANAGED_SECTIONS = ["heroSection", "dashSection", "insightsSection", "portfolioSection", "trackSection", "memorySection", "approvalSection", "strategySection", "fundSection", "intelligenceSection", "leaderboardSection", "exportSection", "settingsDrawer"];
+  // URL slugs so each page is bookmarkable/shareable and the Back button works.
+  var SLUGS = { top: "dashboard", portfolioSection: "my-dca", trackSection: "live-runs", strategySection: "dip-signals", fundSection: "treasury", leaderboardSection: "analytics", settingsDrawer: "settings" };
+  var SLUG_TO_TARGET = {};
+  Object.keys(SLUGS).forEach(function (t) { SLUG_TO_TARGET[SLUGS[t]] = t; });
+  function slugFromHash() { return location.hash.replace(/^#\/?/, ""); }
 
   (function setupSidebar() {
     var sidebar = document.getElementById("sidebar");
@@ -1677,7 +1682,7 @@
     if (overlay) overlay.addEventListener("click", closeDrawer);
     var links = Array.prototype.slice.call(document.querySelectorAll(".sb-link[data-target]"));
 
-    window.showPage = function (target) {
+    window.showPage = function (target, fromHash) {
       if (!PAGES[target]) target = "top";
       _currentPage = target;
       var showIds = PAGES[target];
@@ -1699,7 +1704,14 @@
       links.forEach(function (l) { l.classList.toggle("active", l.getAttribute("data-target") === target); });
       window.scrollTo({ top: 0, behavior: "smooth" });
       if (window.innerWidth <= 980) closeDrawer();
+      // Reflect the page in the URL (skip when we're responding to a hash change).
+      if (!fromHash && slugFromHash() !== SLUGS[target]) location.hash = "/" + SLUGS[target];
     };
+
+    window.addEventListener("hashchange", function () {
+      var target = SLUG_TO_TARGET[slugFromHash()] || "top";
+      if (target !== _currentPage) window.showPage(target, true);
+    });
 
     links.forEach(function (link) {
       link.addEventListener("click", function () { window.showPage(this.getAttribute("data-target")); });
@@ -1715,7 +1727,8 @@
       });
     });
 
-    window.showPage("top");
+    // Honour a deep link on load; a bare URL stays clean on the home page.
+    window.showPage(SLUG_TO_TARGET[slugFromHash()] || "top", true);
   })();
 
   // ---------- live gas price ----------
