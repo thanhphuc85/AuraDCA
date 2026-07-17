@@ -60,8 +60,8 @@ của tài liệu này cố gây ấn tượng với bạn.
 swap thật hôm nay: [`0xe54ee0…e3a3`](https://testnet.arcscan.app/tx/0xe54ee0951bed8c7263075b393af40e78606b88e763ce9dd8b7498d6c6a89e3a3)
 (`0.50 USDC → 0.402303 EURC`). Bạn tự tái lập bằng `npm run prove-swap`.
 
-**Thị trường cirBTC thì không.** `USDC → cirBTC` trả về *"No route available"* ở cả
-24 lần thử suốt 9 ngày liên tiếp. Đó là **outage thanh khoản của Arc Testnet, không
+**Thị trường cirBTC thì không.** `USDC → cirBTC` trả về *"No route available"* ở
+mọi lần thử suốt 10+ ngày liên tiếp. Đó là **outage thanh khoản của Arc Testnet, không
 phải bug của agent** — và `npm run check-routes` cho thấy nó chỉ giới hạn ở cirBTC,
 tài sản biến động duy nhất mà Arc có (chain này stablecoin-native tới mức native gas
 token cũng là USDC).
@@ -69,7 +69,7 @@ token cũng là USDC).
 **Và agent đã xử lý đúng như ta mong muốn.** Nó nhận ra các lỗi này mang tính *cấu
 trúc chứ không thoáng qua*, ghi lại lập luận đó vào [reflections](data/reflections.json)
 của chính mình, giảm tần suất thử để ngừng đốt phí, và **ngừng chi tiêu để bảo toàn
-vốn** — suốt cả 9 ngày outage, không ai giám sát. Biết **khi nào KHÔNG hành động** mới là nửa
+vốn** — suốt cả 10+ ngày outage, không ai giám sát. Biết **khi nào KHÔNG hành động** mới là nửa
 khó của một agent tài chính tự trị, và đây chính là đoạn lịch sử nó bị thử thách thật.
 
 Chúng tôi đã có thể làm demo sáng đèn bằng cách trỏ `TOKEN_OUT` sang EURC. Chúng tôi
@@ -136,7 +136,7 @@ Những gì các phép đo thật sự xác lập:
 
 | Tài sản | Trạng thái đo được |
 |---|---|
-| cirBTC | Không thanh khoản — `No route available`, 24/24 lần thử suốt 9 ngày |
+| cirBTC | Không thanh khoản — `No route available` ở mọi lần thử, 10+ ngày và đang tiếp diễn |
 | EURC | Sống, và tỉ giá **có di chuyển** — theo bước ~mỗi giờ, biên độ ~0.22% |
 | WBTC / WETH / USDT / DAI / … | Không hề được wire cho Arc Testnet |
 

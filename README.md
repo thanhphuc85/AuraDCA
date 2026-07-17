@@ -44,13 +44,13 @@ The wallet is a Circle **Developer-Controlled Wallet**: Circle custodies the sig
 This isn't a mockup. The agent has executed a **real swap on Arc Testnet**:
 
 - **Transaction:** [`0x83097f…50933`](https://testnet.arcscan.app/tx/0x83097f432db9c013b3f8d7748b58f18484c2a5fde4ce500c221ee38524250933) — swapped `0.10 USDC → cirBTC`
-- **The daily cron runs autonomously in CI:** see the green [Actions runs](https://github.com/thanhphuc85/AuraDCA/actions/workflows/dca.yml) and the bot's own `chore: record DCA run …` commits to [`data/history.json`](data/history.json).
+- **The cron runs autonomously in CI:** see the green [Actions runs](https://github.com/thanhphuc85/AuraDCA/actions/workflows/dca.yml) and the bot's own `chore: record DCA run …` commits to [`data/history.json`](data/history.json).
 
 ### ⚠️ Current status: the cirBTC pair is in an Arc Testnet liquidity outage
 
 `data/history.json` currently shows a run of `error_swap_failed` entries. That is
 **not** the agent failing — Arc Testnet's `USDC → cirBTC` route has returned
-*"No route available"* on every attempt for 9+ consecutive days. Two things make
+*"No route available"* on every attempt for 10+ consecutive days. Two things make
 that verifiable rather than an excuse:
 
 - **The execution path is provably live right now** — a real swap on a working
@@ -79,7 +79,7 @@ no change required.
 
 <sub>The two cards above summarize the real, independently verifiable events — the links are the source of truth.</sub>
 
-A real audit-trail entry the agent wrote (`data/history.json`), showing Claude's own reasoning:
+Here's the shape of a `success` entry the agent records for a swap like the one above — the **on-chain transaction is the source of truth**, and `data/history.json` currently holds the `error_swap_failed` outage run described below, so this success record is shown here for reference, with Claude's own reasoning:
 
 ```jsonc
 {

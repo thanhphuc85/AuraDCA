@@ -59,7 +59,7 @@ today: [`0xe54ee0…e3a3`](https://testnet.arcscan.app/tx/0xe54ee0951bed8c726307
 (`0.50 USDC → 0.402303 EURC`). Reproduce it yourself with `npm run prove-swap`.
 
 **The cirBTC market does not.** `USDC → cirBTC` has returned *"No route available"*
-on all 24 attempts across 9 consecutive days. It's a liquidity outage on Arc
+on every attempt across 10+ consecutive days. It's a liquidity outage on Arc
 Testnet, not a bug in the agent — and `npm run check-routes` shows it's isolated
 to cirBTC, which is the only volatile asset Arc carries (the chain is
 stablecoin-native down to its USDC gas token).
@@ -67,7 +67,7 @@ stablecoin-native down to its USDC gas token).
 **The agent handled it the way we'd want it to.** It recognised the failures as
 *structural rather than transient*, recorded that reasoning in its own
 [reflections](data/reflections.json), cut its probe frequency to stop burning
-fees, and withheld spend to preserve capital across all 9 days of the outage,
+fees, and withheld spend to preserve capital across all 10+ days of the outage,
 unsupervised. Knowing when *not* to act is the harder half of an autonomous money
 agent, and this is the run of history where it was tested for real.
 
@@ -136,7 +136,7 @@ What the probes actually establish:
 
 | Asset | Measured state |
 |---|---|
-| cirBTC | No liquidity — `No route available`, 24/24 attempts over 9 days |
+| cirBTC | No liquidity — `No route available` on every attempt, 10+ days and counting |
 | EURC | Live, and the rate does move — in ~hourly steps of ~0.22% |
 | WBTC / WETH / USDT / DAI / … | Not wired to Arc Testnet at all |
 
