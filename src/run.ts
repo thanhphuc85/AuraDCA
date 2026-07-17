@@ -295,7 +295,7 @@ export async function runDailyDca(config: AppConfig): Promise<RunOutcome> {
   try {
     const context: DecisionContext = {
       date,
-      dayCount: dayCount(history),
+      dayCount: dayCount(history, date),
       walletUsdcBalance: usdcBalance,
       guardrails: config.guardrails,
       dcaStrategy: config.dcaStrategy,

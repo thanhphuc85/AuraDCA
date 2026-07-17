@@ -3,7 +3,7 @@ import { z } from "zod";
 import type { HistoryEntry, Reflection } from "../types.js";
 import { withRetry } from "../retry.js";
 import { logger } from "../logger.js";
-import { totalSpent } from "../history/store.js";
+import { totalSpent, dayCount } from "../history/store.js";
 
 const reflectionSchema = z.object({
   insight: z.string().min(1),
@@ -67,7 +67,11 @@ export async function generateReflection(
 ): Promise<Reflection | null> {
   try {
     const client = new Anthropic({ apiKey });
-    const dayNumber = allHistory.length;
+    // Distinct dates, not run count. `allHistory.length` told the agent it was on
+    // "day 21" after a week of 3-runs-a-day, and it reasoned about the outage's
+    // duration from that — writing reflections that overstated it by ~3x. With an
+    // hourly cron the run count would drift 24x faster than real time.
+    const dayNumber = dayCount(allHistory, latestEntry.date);
     const cumSpent = totalSpent(allHistory);
 
     const userPrompt = `Latest run result:\n${JSON.stringify(latestEntry, null, 2)}\n\nRecent history (last 8 runs):\n${JSON.stringify(

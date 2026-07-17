@@ -67,9 +67,9 @@ stablecoin-native down to its USDC gas token).
 **The agent handled it the way we'd want it to.** It recognised the failures as
 *structural rather than transient*, recorded that reasoning in its own
 [reflections](data/reflections.json), cut its probe frequency to stop burning
-fees, and withheld spend to preserve capital — for 20+ days, unsupervised. Knowing
-when *not* to act is the harder half of an autonomous money agent, and this is the
-run of history where it was tested for real.
+fees, and withheld spend to preserve capital across all 9 days of the outage,
+unsupervised. Knowing when *not* to act is the harder half of an autonomous money
+agent, and this is the run of history where it was tested for real.
 
 We could have made the demo light up by pointing `TOKEN_OUT` at EURC. We didn't:
 that turns a BTC-accumulation agent into an FX trade — a working demo of a
@@ -96,7 +96,7 @@ GitHub Actions cron (hourly — each user's own cadence decides if this hour is 
 - **Circle Swap Kit** (`@circle-fin/swap-kit`) + **Developer-Controlled Wallets** (`@circle-fin/developer-controlled-wallets`) + Circle Wallets adapter
 - **Arc Testnet** (Circle's stablecoin-native EVM L1; gas paid in USDC)
 - **GitHub Actions** for scheduling, secrets, and the commit-back audit trail
-- **Vitest** unit tests on the safety-critical guardrail logic
+- **Vitest** — 29 unit tests on the safety-critical paths: `clampDecision()` guardrails, the pooled pro-rata settlement, and the campaign-day arithmetic the agent reasons from
 - **Vercel** serverless functions (`api/`) for the dashboard's signed actions — set-rate, run-DCA, withdraw, chat, welcome-email
 - **Single-file dashboard** (`docs/index.html`) — EIP-6963 wallet discovery, EIP-191 signing, EN/VI, light/dark
 
@@ -161,6 +161,7 @@ wrong.
 
 - **The cirBTC pair went into a liquidity outage** — the headline one, covered in [Does it run?](#does-it-run--the-honest-state) and [What we measured](#what-we-measured-and-the-pivot-we-killed). Short version: we treated it as a measurement problem rather than an excuse, and shipped probes that make every claim here falsifiable.
 - **Arc Testnet has no "real altcoin"** — community DEXs (ArcSwap/Presto/…) lacked publicly verified contract addresses, so we deliberately standardized on Circle's official Swap Kit (USDC↔EURC↔cirBTC) for a submission that actually runs.
+- **Our own metric was lying to the agent.** `dayCount()` returned `history.length + 1` — the *run* count — but it reaches Claude in the decision context as `dayCount` and it reasons about pacing with it. At three runs a day the agent believed it was on "day 21" after a week, and its reflections overstated the outage's length by ~3x; once the cron went hourly it would have drifted 24x per real day. Found while fact-checking this document against `history.json` — the "20+ days" we had written came from the agent's own corrupted arithmetic. `dayCount` now counts distinct dates and is regression-tested. **An agent reasoning from a mislabeled number is confidently wrong, and nothing in the output looks broken** — which is the whole argument for keeping the money-authority in tested code rather than in the model.
 - **Circle SDK packaging** — required Node ≥ 22 and had ESM named-export quirks that only surface on specific Node versions; pinned CI to Node 24 to match the verified runtime.
 - **Empty-string config in CI** — unset GitHub Actions variables arrive as `""`, which zod's `.default()` doesn't fill; fixed with an explicit empty-to-undefined preprocess.
 

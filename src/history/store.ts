@@ -29,8 +29,19 @@ export function recentHistory(history: HistoryEntry[], limit = 8): HistoryEntry[
   return history.slice(-limit);
 }
 
-export function dayCount(history: HistoryEntry[]): number {
-  return history.length + 1;
+/**
+ * How many distinct days this campaign has been running, counting today.
+ *
+ * This value is handed to Claude as `dayCount` and it reasons about pacing with
+ * it, so it has to mean what it says. It previously returned `history.length + 1`
+ * — the RUN count — which was already wrong at 3 runs/day (the agent believed it
+ * was on "day 21" after a week) and became badly wrong once the cron went hourly,
+ * where it would advance 24 "days" per real day.
+ */
+export function dayCount(history: HistoryEntry[], today?: string): number {
+  const days = new Set(history.map((e) => e.date).filter(Boolean));
+  if (today) days.add(today);
+  return Math.max(1, days.size);
 }
 
 export function alreadySpentToday(history: HistoryEntry[], date: string): string {
