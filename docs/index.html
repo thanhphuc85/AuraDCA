@@ -1080,9 +1080,8 @@
   <div id="reconnectBar"></div>
 
   <div class="hero" id="heroSection">
-    <span class="chip"><span class="dot"></span> Encode × Circle · Programmable Money Hackathon</span>
     <h1>An agent that <span class="grad">dollar-cost-averages</span> for you.</h1>
-    <p>Every day it asks <b>Claude</b> how much USDC to allocate, enforces hard spend guardrails in code, and executes a real <b>USDC → cirBTC</b> swap on Arc Testnet via Circle's Swap Kit — no server, no human in the loop.</p>
+    <p><b>Claude</b> decides the strategy — <b>code owns every number that touches money.</b> Each run settles a real <b>USDC → cirBTC</b> swap on Arc Testnet through Circle's Swap Kit, authorized by your own wallet. No server, no human in the loop.</p>
     <div class="cta">
       <button class="btn" id="connectHero">Connect Wallet</button>
       <a class="btn ghost" href="https://github.com/thanhphuc85/AuraDCA" target="_blank" rel="noopener">View source ↗</a>
@@ -4620,9 +4619,8 @@
   // ---------- multi-language (EN/VN) ----------
   var T = {
     en: {
-      heroChip: "Encode × Circle · Programmable Money Hackathon",
       heroH1a: "An agent that ", heroGrad: "dollar-cost-averages", heroH1b: " for you.",
-      heroDesc: 'Every day it asks <b>Claude</b> how much USDC to allocate, enforces hard spend guardrails in code, and executes a real <b>USDC → cirBTC</b> swap on Arc Testnet via Circle\'s Swap Kit — no server, no human in the loop.',
+      heroDesc: '<b>Claude</b> decides the strategy — <b>code owns every number that touches money.</b> Each run settles a real <b>USDC → cirBTC</b> swap on Arc Testnet through Circle\'s Swap Kit, authorized by your own wallet. No server, no human in the loop.',
       connectWallet: "Connect Wallet", viewSource: "View source ↗", liveSwap: "See a live swap ↗",
       usdcDeployed: "USDC deployed", agentRuns: "Agent runs", lastDecision: "Last decision",
       howEye: "How it works", howTitle: "Claude recommends. Code decides.",
@@ -4736,9 +4734,8 @@
       portWdPending: "Pending", portWdCompleted: "Completed", portWdFailed: "Failed", portWdProcessing: "Processing",
     },
     vi: {
-      heroChip: "Encode × Circle · Hackathon Tiền Lập Trình",
       heroH1a: "Agent tự động ", heroGrad: "DCA bình quân giá", heroH1b: " cho bạn.",
-      heroDesc: 'Mỗi ngày agent hỏi <b>Claude</b> nên phân bổ bao nhiêu USDC, áp dụng rào chắn chi tiêu cứng trong code, và thực hiện swap <b>USDC → cirBTC</b> thật trên Arc Testnet qua Circle Swap Kit — không server, không cần người can thiệp.',
+      heroDesc: '<b>Claude</b> quyết định chiến lược — <b>code nắm mọi con số động đến tiền.</b> Mỗi lượt chạy thực hiện một swap <b>USDC → cirBTC</b> thật trên Arc Testnet qua Circle Swap Kit, được chính ví của bạn ký duyệt. Không server, không cần người can thiệp.',
       connectWallet: "Kết nối ví", viewSource: "Mã nguồn ↗", liveSwap: "Xem giao dịch ↗",
       usdcDeployed: "USDC đã triển khai", agentRuns: "Lần chạy", lastDecision: "Quyết định gần nhất",
       howEye: "Cách hoạt động", howTitle: "Claude đề xuất. Code quyết định.",
@@ -4871,8 +4868,6 @@
     if (h1) h1.innerHTML = t.heroH1a + '<span class="grad">' + t.heroGrad + '</span>' + t.heroH1b;
     var heroP = document.querySelector(".hero > p");
     if (heroP) heroP.innerHTML = t.heroDesc;
-    var chip = document.querySelector(".hero .chip");
-    if (chip) chip.innerHTML = '<span class="dot"></span> ' + t.heroChip;
     // CTA buttons
     var heroConnectBtn = $("connectHero");
     if (heroConnectBtn) heroConnectBtn.textContent = t.connectWallet;
