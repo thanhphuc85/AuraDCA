@@ -26,6 +26,8 @@ Một bot DCA hàng ngày cho **cirBTC** trên **Arc Testnet**, giải quyết m
 1. **Claude quyết định chiến lược.** Mỗi lần chạy, agent đưa cho Claude số dư ví hiện tại, số ngày đã DCA, ngân sách còn lại và lịch sử giao dịch gần đây, rồi hỏi — qua một tool call bắt buộc và được validate theo schema — hôm nay nên mua bao nhiêu USDC và tại sao. Đây là "agentic" thật sự: Claude đọc lịch sử của chính nó, dàn đều chi tiêu, và thậm chí **từ chối giao dịch** khi nhận ra ngân sách ngày đã hết.
 2. **Code nắm giữ tiền.** Câu trả lời của Claude chỉ là *đề xuất*. Một hàm thuần túy, đã unit-test là `clampDecision()` mới là nơi duy nhất quyết định số tiền thực sự được swap — nó tự tính lại giới hạn từ các guardrail cứng (tối đa/ngày, số dư dự trữ tối thiểu, ngưỡng bụi, ngân sách chiến dịch tùy chọn) và không bao giờ tin vào phép tính của LLM. Mỗi lần chạy đều ghi lại *ràng buộc nào* đã giới hạn kết quả, nên nhật ký kiểm toán luôn minh bạch.
 
+Logo của chúng tôi chính là sự phân tách đó, được vẽ ra: hai quỹ đạo không bao giờ chứa nhau, và chỉ gặp nhau tại đúng nơi một quyết định được đưa ra.
+
 Bản thân giao dịch swap đi qua SDK **Swap Kit** chính thức của Circle — con đường swap duy nhất được document chính thức và khả dụng ổn định trên Arc Testnet (USDC / EURC / cirBTC). Ví là **Developer-Controlled Wallet** của Circle, nên không có private key thô nào để rò rỉ.
 
 Toàn bộ chạy trên **GitHub Actions cron** — không cần server. Mỗi lần chạy commit kết quả ngược lại `data/history.json` trong repo, tạo ra một nhật ký kiểm toán công khai, chống chỉnh sửa, lớn dần theo thời gian.
@@ -71,39 +73,47 @@ cùng guardrails, và EURC là cặp duy nhất còn quote được.
 
 Nhưng chúng tôi **đo trước**, vì cú cirBTC đã dạy đúng bài học: **chúng tôi đã đặt
 cược vào thứ mình chưa bao giờ kiểm chứng.** Nên trước khi đổ vào 2 tuần, chúng tôi
-lấy mẫu tỉ giá EURC (`npm run sample-fx`, chỉ đọc):
+lấy mẫu tỉ giá EURC (`npm run sample-fx`, chỉ đọc).
+
+Nửa giờ đầu trông như án tử — chín lần đọc giống hệt nhau, `1.1451554658` không sai
+một lần. Chúng tôi suýt gạch bỏ pivot này là bất khả thi. Rồi chúng tôi **để sampler
+chạy tiếp**:
 
 ```
-9 mẫu trong 34 phút → EURC/USD = 1.1451554658, không sai một lần
-biến động: 0.0000%   số giá trị khác nhau: 1
+03:04 → 03:48   1.1451554658   (đứng im 48 phút)
+03:53           1.1426120287   ← −0.2226%
+03:58           1.1426120287
 ```
 
-Arc Testnet ghim cứng nó. Một FX rebalancer sẽ **không bao giờ chạm ngưỡng** — nó
-có đúng *0 việc để làm*. **Chúng tôi tự giết thesis của mình trong 30 phút, thay vì
-phát hiện ra sau 2 tuần.**
+**Tỉ giá không hề bị ghim — oracle chỉ cập nhật theo bước thô, khoảng mỗi giờ, và
+cửa sổ lấy mẫu đầu tiên của chúng tôi rơi trọn vẹn vào bên trong một bước.** Chỉ với
+nửa giờ dữ liệu, chúng tôi đã tự tin báo cáo một thị trường đóng băng. Phát hiện thật
+không phải "EURC chết", mà là "chúng tôi chưa lấy mẫu đủ lâu để thấy nó thở".
 
-Ghép cả ba phép đo lại mới ra phát hiện thật:
+Sự đính chính đó chỉ xảy ra vì chúng tôi **tiếp tục đo sau khi đã tưởng có câu trả
+lời** — và đây là phần chúng tôi bảo vệ mạnh nhất. Ba công cụ đo
+([`check-routes`](scripts/check-routes.mjs), [`prove-swap`](scripts/prove-swap.mjs),
+[`sample-fx`](scripts/sample-fx.mjs)) đều nằm trong repo và tái lập được;
+`data/fx-samples.json` là chuỗi dữ liệu thô đứng sau các con số trên.
+
+Những gì các phép đo thật sự xác lập:
 
 | Tài sản | Trạng thái đo được |
 |---|---|
 | cirBTC | Không thanh khoản — `No route available`, 24/24 lần thử suốt 9 ngày |
-| EURC | Quote bình thường, nhưng giá **đứng im** (0.0000% trong 29 phút) |
+| EURC | Sống, và tỉ giá **có di chuyển** — theo bước ~mỗi giờ, biên độ ~0.22% |
 | WBTC / WETH / USDT / DAI / … | Không hề được wire cho Arc Testnet |
 
-> **Arc Testnet không có tài sản nào mang tín hiệu giá.** Mọi ý tưởng agent phản ứng
-> theo giá — DCA, rebalance FX, bắt dip — đều bị chặn bởi cùng một nguyên nhân gốc,
-> và không lượng code nào đi vòng qua được.
+Vậy là pivot **khả thi thật**. Chúng tôi vẫn không làm — nhưng vì một lý do sống sót
+qua cả sự đính chính: **đổi `TOKEN_OUT` sang EURC sẽ biến một agent tích luỹ BTC
+thành một lệnh ngoại hối.** Demo sẽ sáng đèn, và nó sẽ là một sản phẩm khác với thứ
+người dùng cần. cirBTC là tài sản biến động duy nhất Arc Testnet có, và DCA vào nó
+chính là thesis; một cặp stablecoin FX không phải thứ thay thế được, dù nó đang tiện
+tay quote được.
 
-Đó là lý do chúng tôi **không** pivot, và không lặng lẽ đổi `TOKEN_OUT` sang EURC
-để demo sáng đèn: làm vậy sẽ biến một agent tích luỹ BTC thành một lệnh ngoại hối
-đánh vào tỉ giá đóng băng — một demo "chạy được" nhưng không chứng minh điều gì.
-Lập trường trung thực là: **agent đúng, còn môi trường thì rỗng** — và chúng tôi có
-dữ liệu để chỉ ra bên nào là bên nào.
-
-Ba công cụ đo ([`check-routes`](scripts/check-routes.mjs),
-[`prove-swap`](scripts/prove-swap.mjs), [`sample-fx`](scripts/sample-fx.mjs)) đều
-nằm trong repo và tái lập được. Khi bị chặn, chúng tôi **đo thay vì đoán** — và sẵn
-sàng để dữ liệu giết chính ý tưởng của mình.
+Lập trường trung thực: **agent đúng, thị trường cirBTC thì rỗng** — và chúng tôi có
+dữ liệu để chỉ ra bên nào là bên nào, kể cả dữ liệu chứng minh kết luận đầu tiên của
+chính chúng tôi là sai.
 
 ## Điểm nổi bật
 
@@ -124,7 +134,7 @@ sàng để dữ liệu giết chính ý tưởng của mình.
 
 ## Hướng phát triển tiếp
 
-- DCA đa tài sản (Claude quyết định tỷ lệ phân bổ) — đáng làm vào ngày Arc có **nhiều hơn một tài sản với giá sống**; hiện cirBTC là tài sản biến động duy nhất còn tỉ giá EURC thì đóng băng, nên không có gì để phân bổ *giữa*
+- DCA đa tài sản (Claude quyết định tỷ lệ phân bổ) — cần **nhiều hơn một tài sản đáng để DCA vào**. cirBTC là tài sản biến động duy nhất Arc Testnet có và thanh khoản của nó đang mất; EURC thì sống và tỉ giá có di chuyển, nhưng một cặp stablecoin FX không phải đích DCA thứ hai. Mở khoá vào ngày thị trường cirBTC trở lại.
 - Bảng P&L / giá vốn trực tiếp — markup dashboard đã sẵn, tự bật khi các swap cirBTC thành công (route USDC→cirBTC trên Arc Testnet đang gặp outage mà agent vẫn lý luận xoay quanh)
 - Verify domain gửi email để email chào mừng tới được mọi user, không chỉ hộp thư người vận hành
 - Rà soát sẵn sàng cho mainnet khi Arc mainnet ra mắt

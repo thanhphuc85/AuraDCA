@@ -24,6 +24,8 @@ A daily DCA (dollar-cost-averaging) bot for **cirBTC** on **Arc Testnet** that r
 1. **Claude decides the strategy.** On each run the agent feeds Claude the live wallet balance, day count, remaining budget, and recent trade history, then asks — via a forced, schema-validated tool call — how much USDC to buy today and why. This is genuinely agentic: Claude reads its own history, paces spending, and even declines to trade when it recognizes the daily budget is already spent.
 2. **Code owns the money.** Claude's answer is only a *recommendation*. A pure, unit-tested function `clampDecision()` is the sole authority on the amount actually swapped — it re-derives the cap from hard guardrails (max/day, minimum reserve, dust threshold, optional campaign budget) and never trusts the LLM's arithmetic. Every run records which constraint bound the result, so the audit trail is transparent.
 
+Our logo is that split, drawn: two orbits that never contain each other and meet only where a decision is made.
+
 The swap itself goes through Circle's official **Swap Kit** SDK — the only officially documented, reliably-available swap path on Arc Testnet (USDC / EURC / cirBTC). The wallet is a Circle **Developer-Controlled Wallet**, so there's no raw private key to leak.
 
 It runs entirely on a **GitHub Actions cron** — no server to host. Each run commits its result back to `data/history.json` in the repo, producing a public, tamper-evident audit trail that grows over time.
@@ -69,39 +71,48 @@ scheduling engine, same guardrails, and EURC was the one pair still quoting.
 
 Instead we measured first, because the cirBTC failure had already taught us the
 lesson: **we had bet on something we never verified.** So before committing two
-weeks, we sampled the EURC rate (`npm run sample-fx`, read-only):
+weeks, we sampled the EURC rate (`npm run sample-fx`, read-only).
+
+The first half hour looked damning — nine identical readings, `1.1451554658`
+every time. We very nearly wrote the pivot off as impossible. Then we kept the
+sampler running:
 
 ```
-9 samples over 34 minutes → EURC/USD = 1.1451554658, every single time
-movement: 0.0000%   distinct values: 1
+03:04 → 03:48   1.1451554658   (held for 48 minutes)
+03:53           1.1426120287   ← −0.2226%
+03:58           1.1426120287
 ```
 
-Arc Testnet pegs it. An FX rebalancer would never once cross a threshold — it
-would have had *nothing to do*. **We killed our own pivot in 30 minutes instead of
-discovering it in two weeks.**
+**The rate isn't pegged — the oracle just updates in coarse, roughly hourly
+steps, and our first sample window had fallen entirely inside one of them.** A
+half-hour of data would have had us confidently reporting a frozen market. The
+finding wasn't "EURC is dead"; it was "we hadn't sampled long enough to see it
+breathe."
 
-Putting the three probes together gives the real finding:
+That correction only happened because we kept measuring after we thought we had
+the answer — and it's the part of this we'd defend hardest. The three probes
+([`check-routes`](scripts/check-routes.mjs), [`prove-swap`](scripts/prove-swap.mjs),
+[`sample-fx`](scripts/sample-fx.mjs)) all live in the repo and are reproducible;
+`data/fx-samples.json` is the raw series behind the numbers above.
+
+What the probes actually establish:
 
 | Asset | Measured state |
 |---|---|
 | cirBTC | No liquidity — `No route available`, 24/24 attempts over 9 days |
-| EURC | Quotes fine, but the price is **frozen** (0.0000% over 29 min) |
+| EURC | Live, and the rate does move — in ~hourly steps of ~0.22% |
 | WBTC / WETH / USDT / DAI / … | Not wired to Arc Testnet at all |
 
-> **Arc Testnet has no asset carrying a price signal.** Every price-reactive agent
-> idea — DCA, FX rebalancing, dip-buying — is blocked here for the same root
-> cause, and no amount of code routes around it.
+So the pivot was viable after all. We still didn't take it — but for a reason that
+survives the correction: **retargeting `TOKEN_OUT` to EURC would turn a
+BTC-accumulation agent into an FX trade.** The demo would light up, and it would
+be a different product than the one anyone asked for. cirBTC is the only volatile
+asset Arc Testnet carries, and DCA into it is the thesis; a stablecoin FX pair is
+not a substitute for it, however conveniently it happens to be quoting.
 
-That is why we did **not** pivot, and did not quietly retarget `TOKEN_OUT` to EURC
-to make the demo light up: it would have turned a BTC-accumulation agent into an
-FX trade against a frozen rate — a demo that "works" while proving nothing. The
-honest position is that the agent is correct and the environment is empty, and we
-have the data to show which.
-
-The three probes ([`check-routes`](scripts/check-routes.mjs),
-[`prove-swap`](scripts/prove-swap.mjs), [`sample-fx`](scripts/sample-fx.mjs)) are
-in the repo and reproducible. When blocked, we measured rather than guessed — and
-were willing to let the data kill our own ideas.
+The honest position: the agent is correct, cirBTC's market is empty, and we have
+the data to show which — including the data that proved our own first conclusion
+wrong.
 
 ## What makes it stand out
 
@@ -122,7 +133,7 @@ were willing to let the data kill our own ideas.
 
 ## What's next
 
-- Multi-asset DCA (a Claude-decided split across assets) — worth building the day Arc carries **more than one asset with a live price**; today cirBTC is the only volatile one and EURC's rate is frozen, so there is nothing to allocate *between*
+- Multi-asset DCA (a Claude-decided split across assets) — needs **more than one asset worth averaging into**. cirBTC is the only volatile asset Arc Testnet carries and its liquidity is out; EURC is live and its rate moves, but a stablecoin FX pair isn't a second DCA target. This unlocks the day cirBTC's market returns.
 - A live P&L / cost-basis panel — the dashboard markup is ready and turns on automatically once cirBTC swaps clear (Arc Testnet's USDC→cirBTC route has been in an outage the agent has been reasoning around)
 - Verified sender domain for the welcome email so it reaches any user, not just the operator's inbox
 - Mainnet-readiness review when Arc mainnet ships

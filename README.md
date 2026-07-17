@@ -213,6 +213,30 @@ Go to the **Actions** tab → **Daily DCA Bot** → **Run workflow**, leave `dry
 
 Each entry has a `status` field: `success` / `dry_run` for completed runs, `skipped_*` for routine no-ops (low balance, LLM declined, guardrail clamped to zero), and `error_*` for failures. `requestedAmountUsdc` is what Claude proposed; `clampedAmountUsdc` is what the guardrails actually allowed, with `boundBy` showing which constraint bound the result.
 
+## The name and the mark
+
+**Aura** is the product. **Arc** is the ground it stands on — never part of the name.
+
+The mark is two orbits, crossing:
+
+<p align="center">
+  <img src="docs/logo.svg" alt="The Aura mark: two crossing orbits" width="72" height="72" />
+</p>
+
+It's the architecture, drawn. **Two independent paths — Claude's judgment and the
+code's guardrails — meeting at every decision.** Claude reasons about the market
+and proposes; [`clampDecision()`](src/decision/guardrails.ts) re-derives the limit
+from hard rules and owns the number that actually gets spent. Neither orbit
+contains the other. They only ever intersect at the moment a decision is made —
+which is exactly where the safety of an LLM-driven money agent lives.
+
+The second reading is the strategy itself: **orbits repeat.** They don't
+accelerate on good news or flinch on bad. That indifference to noise is what
+dollar-cost averaging *is* — and, during a 9-day route outage, it's what kept the
+agent from spending into a dead market.
+
+Violet fades to cyan along each path: judgment resolving into execution.
+
 ## Brand & trademark
 
 **Aura DCA is an independent project built on Arc. It is not affiliated with, endorsed by, or a product of Circle.**

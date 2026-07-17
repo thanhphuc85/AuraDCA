@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Aura DCA Agent — autonomous daily DCA on Arc Testnet</title>
+<title>Aura DCA — autonomous daily DCA, built on Arc</title>
 <meta name="description" content="An LLM-driven daily dollar-cost-averaging agent on Arc Testnet. Connect your wallet to view your Arc balance and the agent's live on-chain track record." />
 <link rel="icon" href="logo.svg" />
 <script>
@@ -941,8 +941,8 @@
   <div class="wrap hd">
     <div class="brand">
       <button class="sb-burger" id="sbBurger" title="Menu">☰</button>
-      <img src="logo.svg" alt="Aura DCA Agent logo" />
-      <div><b>Aura DCA Agent</b><span>Autonomous daily DCA · Arc Testnet</span></div>
+      <img src="logo.svg" alt="Aura DCA logo" />
+      <div><b>Aura DCA</b><span>Autonomous daily DCA · built on Arc</span></div>
     </div>
     <div class="hd-right">
       <span class="net-chip"><span class="net-dot"></span><span class="net-txt">Arc Testnet</span></span>
@@ -1585,7 +1585,7 @@
   </div>
 
   <footer>
-    <div>Aura DCA Agent · Testnet only · not financial advice.</div>
+    <div>Aura DCA · Testnet only · not financial advice.</div>
     <div>
       <a href="https://github.com/thanhphuc85/ArcDCA" target="_blank" rel="noopener">GitHub</a> ·
       <a href="https://github.com/thanhphuc85/ArcDCA/blob/main/SUBMISSION.md" target="_blank" rel="noopener">Submission</a> ·
@@ -1804,7 +1804,7 @@
       var origText = tgTestBtn.textContent;
       tgTestBtn.innerHTML = '<span class="btn-loading"><span class="spinner"></span> Sending…</span>';
       st.innerHTML = '';
-      sendTelegram(tgSettings.token, tgSettings.chatId, "✅ Aura DCA Agent — test notification works!")
+      sendTelegram(tgSettings.token, tgSettings.chatId, "✅ Aura DCA — test notification works!")
         .then(function () { st.innerHTML = '<span style="color:var(--green);">✓ Test message sent!</span>'; })
         .catch(function (e) { st.innerHTML = '<span style="color:var(--red);">✗ Failed: ' + (e.message || e) + '</span>'; })
         .finally(function () { tgTestBtn.disabled = false; tgTestBtn.textContent = origText; });
@@ -1868,7 +1868,7 @@
     if (tg.events === "success" && !isSuccess) return;
     if (tg.events === "error" && !isError) return;
     var icon = isSuccess ? "✅" : (isError ? "❌" : "ℹ️");
-    var msg = icon + " <b>Aura DCA Agent</b>\n" +
+    var msg = icon + " <b>Aura DCA</b>\n" +
       "Date: " + (latest.date || "?") + "\n" +
       "Status: " + (latest.status || "?").replace(/_/g, " ") + "\n" +
       (latest.clampedAmountUsdc ? "Amount: " + latest.clampedAmountUsdc + " USDC\n" : "") +
@@ -4623,7 +4623,7 @@
       lbLeaderboard: "Depositor leaderboard",
       dataEye: "Data", dataTitle: "Export your data",
       dataSub: "Download run history and reflections for offline analysis.",
-      footerDisclaimer: "Aura DCA Agent · Testnet only · not financial advice.",
+      footerDisclaimer: "Aura DCA · Testnet only · not financial advice.",
       wmTitle: "Connect Wallet", wmOr: "or", wmCreate: "Create account", wmSignin: "Sign in",
       wmBack: "Back", wmCreateSubmit: "Create wallet & sign in",
       wmGmailNote: "We'll email a confirmation to your inbox. This creates a wallet derived from your email (no seed phrase) — sign back in with the same email to restore it.",
@@ -4739,7 +4739,7 @@
       lbLeaderboard: "Bảng xếp hạng người nạp",
       dataEye: "Dữ liệu", dataTitle: "Xuất dữ liệu",
       dataSub: "Tải lịch sử chạy và phản chiếu để phân tích offline.",
-      footerDisclaimer: "Aura DCA Agent · Chỉ dùng trên Testnet · không phải tư vấn tài chính.",
+      footerDisclaimer: "Aura DCA · Chỉ dùng trên Testnet · không phải tư vấn tài chính.",
       wmTitle: "Kết nối ví", wmOr: "hoặc", wmCreate: "Tạo tài khoản", wmSignin: "Đăng nhập",
       wmBack: "Quay lại", wmCreateSubmit: "Tạo ví & đăng nhập",
       wmGmailNote: "Chúng tôi sẽ gửi email xác nhận về hộp thư của bạn. Thao tác này tạo ví suy ra từ email của bạn (không cần seed phrase) — đăng nhập lại bằng cùng email để khôi phục.",
