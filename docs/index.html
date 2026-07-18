@@ -998,45 +998,6 @@
           <option value="0">Disabled — always fetch fresh</option>
         </select>
       </div>
-      <div class="setting-group">
-        <label for="setApprovalMode">Manual approval mode</label>
-        <select id="setApprovalMode">
-          <option value="0">Off — agent runs automatically</option>
-          <option value="1">On — require approval before swap</option>
-        </select>
-      </div>
-    </div>
-    <h3 style="margin:18px 0 14px;">Dip signals (advisory)</h3>
-    <p style="font-size:11px;color:var(--muted);margin:0 0 12px;">Buy sizing is now per-user — set your own rate in <b>Your DCA schedule</b>. The values below are the agent's advisory dip tiers (market context only) and are read-only here.</p>
-    <div class="settings-grid">
-      <div class="setting-group">
-        <label for="setBaseAmt">Base DCA amount (USDC)</label>
-        <input type="number" id="setBaseAmt" min="0.01" step="0.01" placeholder="1.00" />
-      </div>
-      <div class="setting-group">
-        <label for="setMildPct">Mild dip threshold (%)</label>
-        <input type="number" id="setMildPct" min="1" max="50" step="1" placeholder="5" />
-      </div>
-      <div class="setting-group">
-        <label for="setModPct">Moderate dip threshold (%)</label>
-        <input type="number" id="setModPct" min="1" max="50" step="1" placeholder="10" />
-      </div>
-      <div class="setting-group">
-        <label for="setStrongPct">Strong dip threshold (%)</label>
-        <input type="number" id="setStrongPct" min="1" max="80" step="1" placeholder="20" />
-      </div>
-      <div class="setting-group">
-        <label for="setMildMult">Mild multiplier</label>
-        <input type="number" id="setMildMult" min="1" max="10" step="0.1" placeholder="1.2" />
-      </div>
-      <div class="setting-group">
-        <label for="setModMult">Moderate multiplier</label>
-        <input type="number" id="setModMult" min="1" max="10" step="0.1" placeholder="1.5" />
-      </div>
-      <div class="setting-group">
-        <label for="setStrongMult">Strong multiplier</label>
-        <input type="number" id="setStrongMult" min="1" max="10" step="0.1" placeholder="2.0" />
-      </div>
     </div>
     <h3 style="margin:18px 0 14px;">Telegram Notifications</h3>
     <div class="settings-grid">
@@ -1071,9 +1032,6 @@
       </div>
     </div>
     <p style="font-size:11px;color:var(--muted);margin:8px 0 0;" data-t="setWdApiHelp">Leave empty to use this site's own <code>/api/withdraw</code> (works when deployed to Vercel). Only set a URL to route withdrawals through a different backend. Processed in real-time (10–30s).</p>
-    <h3 style="margin:18px 0 14px;" data-t="approvalHistoryTitle">Approval History</h3>
-    <div id="settingsApprovalHistory" style="max-height:250px;overflow-y:auto;border:1px solid var(--glass-brd);border-radius:14px;"></div>
-    <button class="btn ghost" id="clearApprovalHistBtn" style="margin-top:8px;padding:6px 14px;font-size:11px;">Clear history</button>
     <div class="settings-saved" id="settingsSaved">Settings saved</div>
   </div>
 
@@ -1224,19 +1182,6 @@
     </div>
   </div>
 
-  <section class="reveal" id="approvalSection" style="display:none;">
-    <div class="eyebrow" data-t="approvalEye">Approval Center</div>
-    <div class="h2" data-t="approvalTitle">Review agent decisions<span class="approval-mode-badge on" id="approvalModeBadge">Manual</span></div>
-    <p class="sub" data-t="approvalSub">The agent proposes a DCA trade — you approve or reject before any swap executes.</p>
-
-    <div id="approvalPending"></div>
-
-    <div class="card" style="margin-top:16px;">
-      <h3 data-t="approvalHistoryTitle">Approval history</h3>
-      <p class="cs" id="approvalHistorySub" data-t="approvalHistorySub">Your past decisions on agent proposals</p>
-      <div id="approvalHistory"></div>
-    </div>
-  </section>
 
   <section class="reveal" id="trackSection">
     <div class="eyebrow">Live track record</div>
@@ -1659,13 +1604,13 @@
   var PAGES = {
     top: ["heroSection", "dashSection", "insightsSection"],
     portfolioSection: ["portfolioSection"],
-    trackSection: ["trackSection", "memorySection", "approvalSection"],
+    trackSection: ["trackSection", "memorySection"],
     strategySection: ["strategySection"],
     fundSection: ["fundSection"],
     leaderboardSection: ["intelligenceSection", "leaderboardSection", "exportSection"],
     settingsDrawer: ["settingsDrawer"]
   };
-  var MANAGED_SECTIONS = ["heroSection", "dashSection", "insightsSection", "portfolioSection", "trackSection", "memorySection", "approvalSection", "strategySection", "fundSection", "intelligenceSection", "leaderboardSection", "exportSection", "settingsDrawer"];
+  var MANAGED_SECTIONS = ["heroSection", "dashSection", "insightsSection", "portfolioSection", "trackSection", "memorySection", "strategySection", "fundSection", "intelligenceSection", "leaderboardSection", "exportSection", "settingsDrawer"];
   // URL slugs so each page is bookmarkable/shareable and the Back button works.
   var SLUGS = { top: "dashboard", portfolioSection: "my-dca", trackSection: "live-runs", strategySection: "dip-signals", fundSection: "treasury", leaderboardSection: "analytics", settingsDrawer: "settings" };
   var SLUG_TO_TARGET = {};
@@ -1759,10 +1704,8 @@
     var sc = document.getElementById("setCacheToggle");
     if (sr) sr.value = String(userSettings.autoRefresh || 0);
     if (sd && userSettings.defaultDeposit) sd.value = userSettings.defaultDeposit;
-    if (sro) sro.value = String(userSettings.tableRows || 12);
+    if (sro) { sro.value = String(userSettings.tableRows || 10); if (!sro.value) sro.value = "10"; } // self-heal a legacy value with no matching option
     if (sc) sc.value = userSettings.cacheEnabled === false ? "0" : "1";
-    var sam = document.getElementById("setApprovalMode");
-    if (sam) sam.value = userSettings.approvalMode ? "1" : "0";
 
     var sba = document.getElementById("setBaseAmt");
     var smp = document.getElementById("setMildPct");
@@ -1784,12 +1727,10 @@
     function onChange() {
       userSettings.autoRefresh = parseInt(sr.value, 10) || 0;
       userSettings.defaultDeposit = sd.value;
-      userSettings.tableRows = parseInt(sro.value, 10) || 12;
+      userSettings.tableRows = parseInt(sro.value, 10) || 10;
       userSettings.cacheEnabled = sc.value !== "0";
-      userSettings.approvalMode = sam.value === "1";
       if (!userSettings.cacheEnabled) clearCache();
       saveSettings();
-      renderApprovalSection();
       setupAutoRefresh();
     }
     function onStratChange() {
@@ -1803,7 +1744,7 @@
       saveDcaStrategy();
       if (_historyData) renderStrategy(_historyData);
     }
-    [sr, sd, sro, sc, sam].forEach(function (el) { if (el) el.addEventListener("change", onChange); });
+    [sr, sd, sro, sc].forEach(function (el) { if (el) el.addEventListener("change", onChange); });
     [sba, smp, smop, ssp, smm, smom, ssm].forEach(function (el) { if (el) el.addEventListener("change", onStratChange); });
 
     var tgToken = document.getElementById("setTgToken");
@@ -2169,13 +2110,6 @@
           '<td><span class="ah-verdict ' + (isA ? "approved" : "rejected") + '">' + (isA ? (t.apApproved || "Approved") : (t.apRejected || "Rejected")) + '</span></td></tr>';
       }).join("") + '</tbody></table>';
   }
-  $("clearApprovalHistBtn").addEventListener("click", function () {
-    approvalData.history = [];
-    saveApprovals();
-    renderSettingsApprovalHistory();
-    renderApprovalSection();
-    flashSaved();
-  });
 
   var ARC = {
     chainIdHex: "0x4cef52",           // 5042002
@@ -3773,7 +3707,7 @@
       if (s && s.indexOf("skip") === 0) return "row-skip";
       return "row-error";
     }
-    var limit = state.showAllRuns ? history.length : (userSettings.tableRows || 12);
+    var limit = state.showAllRuns ? history.length : (userSettings.tableRows || 10);
     var reversed = history.slice().reverse();
     var successCount = history.filter(function(e){ return e.status === "success"; }).length;
     var dryCount = history.filter(function(e){ return e.status === "dry_run"; }).length;
@@ -3781,7 +3715,7 @@
     var skipCount = history.length - successCount - dryCount - errCount;
     $("runsCount").innerHTML = history.length + ' runs · <span style="color:#6ee7b7">' + successCount + ' success</span> · <span style="color:#8fc0ff">' + dryCount + ' dry</span>' + (errCount ? ' · <span style="color:#fda4af">' + errCount + ' error</span>' : '') + (skipCount > 0 ? ' · <span style="color:#fbcf6b">' + skipCount + ' skipped</span>' : '');
     var showAllBtn = $("showAllRuns");
-    if (history.length > (userSettings.tableRows || 12)) {
+    if (history.length > (userSettings.tableRows || 10)) {
       showAllBtn.style.display = "";
       showAllBtn.textContent = state.showAllRuns ? "Show less" : "Show all (" + history.length + ")";
     } else { showAllBtn.style.display = "none"; }
