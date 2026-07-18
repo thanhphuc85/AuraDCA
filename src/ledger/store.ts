@@ -16,14 +16,22 @@ export function normalizeAddress(addr: string): string {
 }
 
 export async function readLedger(): Promise<Ledger> {
+  let raw: string;
   try {
-    const raw = await readFile(LEDGER_FILE_PATH, "utf-8");
-    const parsed = JSON.parse(raw);
-    return parsed && typeof parsed === "object" && parsed.version === 1 ? (parsed as Ledger) : emptyLedger();
+    raw = await readFile(LEDGER_FILE_PATH, "utf-8");
   } catch (err) {
     if ((err as NodeJS.ErrnoException).code === "ENOENT") return emptyLedger();
-    throw err;
+    throw err; // any other read error is real — don't mask it
   }
+  const parsed = JSON.parse(raw); // malformed JSON throws here, which is what we want
+  // A file that exists but doesn't look like our ledger must NOT be silently
+  // replaced with an empty one: the very next writeLedger would persist that
+  // empty ledger and wipe every user's balance. Only a genuinely-missing file
+  // (ENOENT above) yields an empty ledger; anything else fails loudly.
+  if (!parsed || typeof parsed !== "object" || parsed.version !== 1 || typeof parsed.users !== "object") {
+    throw new Error(`Refusing to load an unrecognized ledger at ${LEDGER_FILE_PATH} (bad shape or version) — not continuing, to avoid overwriting balances.`);
+  }
+  return parsed as Ledger;
 }
 
 export async function writeLedger(ledger: Ledger): Promise<void> {
