@@ -182,5 +182,32 @@
       "probe-frequency",
       "budget-idle"
     ]
+  },
+  {
+    "id": "ref-1784404574438",
+    "date": "2026-07-18",
+    "timestamp": "2026-07-18T19:56:14.438Z",
+    "runStatus": "error_swap_failed",
+    "insight": "The cirBTC route has been completely dead for 32+ consecutive runs (11+ calendar days), yet the system keeps executing 4 separate attempts on the same day (07-18: $6, $1, $1, $6) despite explicit stored reflections advising against same-day retries — the \"withhold\" reasoning is being written AFTER the failed attempt already executed, not before it, meaning the reflection is not actually preventing the wasted call.",
+    "patterns": [
+      "100% failure rate sustained across 32+ runs and 11+ distinct days, zero new information from any probe size ($0.10-$6.00)",
+      "Same-day repeat attempts continue happening (4x on 07-18 alone) despite multiple prior reflections explicitly warning against this exact behavior",
+      "Reasoning text consistently says 'withholding further attempts today' but this is logged AFTER another failed attempt already occurred in the same run, indicating the guardrail is descriptive/post-hoc rather than preventive",
+      "Risk score stable at medium (36), driven purely by error streak, not by actual market volatility or concentration (only 3% of ~35 USDC deployed)",
+      "Cumulative spent stuck at 1.000000 USDC after 12 days of campaign — severe pacing shortfall, not due to caps/clamping but due to structural route failure"
+    ],
+    "strategyAdjustment": "Stop attempting swaps on cirBTC entirely until an explicit external confirmation of route restoration is obtained — the current 'reduce probe frequency to every 5-7 days' adjustment is not being followed since 4 attempts still happened in a single day. Next run: check if today is within a 5-7 day window since the last attempt before invoking the swap at all; if not, skip the run without calling the swap function. Also consider escalating this as a campaign-level blocker requiring human/external intervention (e.g., check if cirBTC token or route was deprecated/delisted) rather than continuing automated daily probing, since 32 consecutive failures across 11+ days strongly suggests this is not a transient liquidity issue but a permanent deprecation.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "1.000000",
+    "dayNumber": 12,
+    "walletBalance": "35.313125741836296748",
+    "tags": [
+      "error-recovery",
+      "route-outage",
+      "pacing",
+      "guardrail-failure",
+      "budget",
+      "same-day-retry"
+    ]
   }
 ]
