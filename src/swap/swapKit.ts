@@ -1,8 +1,6 @@
 import { SwapKit } from "@circle-fin/swap-kit";
 import { createCircleWalletsAdapter } from "@circle-fin/adapter-circle-wallets";
 import { ARC_TESTNET_EXPLORER } from "../config.js";
-import { withRetry } from "../retry.js";
-import { logger } from "../logger.js";
 
 export type SwapErrorCategory =
   | "no_route"
@@ -51,8 +49,6 @@ function classifyError(err: unknown): SwapErrorCategory {
   return "unknown";
 }
 
-const RETRYABLE_CATEGORIES = new Set<SwapErrorCategory>(["rate_limited", "network_error", "timeout", "unknown"]);
-
 export async function executeSwap(params: SwapParamsInput): Promise<SwapExecutionResult> {
   if (params.dryRun) {
     return { dryRun: true };
@@ -69,26 +65,22 @@ export async function executeSwap(params: SwapParamsInput): Promise<SwapExecutio
     });
 
     const kit = new SwapKit();
-    const result = await withRetry(
-      () => kit.swap({
-        from: { adapter, chain: "Arc_Testnet", address: params.walletAddress },
-        tokenIn: "USDC",
-        tokenOut: params.tokenOut,
-        amountIn: params.amountUsdc,
-        config: { kitKey: params.kitKey },
-      }),
-      {
-        maxRetries: 2,
-        initialBackoffMs: 2000,
-        label: "SwapKit swap",
-        shouldRetry: (err) => {
-          const cat = classifyError(err);
-          const retryable = RETRYABLE_CATEGORIES.has(cat);
-          if (!retryable) logger.warn(`Swap error is non-retryable (${cat}), skipping retry`);
-          return retryable;
-        },
-      },
-    );
+    // A swap is NOT idempotent: once kit.swap has broadcast the transaction, a
+    // failure that surfaces afterwards (timeout, dropped connection, an
+    // unparseable response — all classified network/timeout/unknown) is
+    // ambiguous. Retrying would re-broadcast and could execute the swap twice,
+    // draining the agent wallet 2x while users are credited once. There is no
+    // reliable way to tell a pre-broadcast failure from a post-broadcast one, so
+    // we do NOT retry the swap here. The hourly cron is the safe retry: it only
+    // advances lastChargedAt on a successful distribution, so a failed run is
+    // simply re-attempted next hour with fresh on-chain state.
+    const result = await kit.swap({
+      from: { adapter, chain: "Arc_Testnet", address: params.walletAddress },
+      tokenIn: "USDC",
+      tokenOut: params.tokenOut,
+      amountIn: params.amountUsdc,
+      config: { kitKey: params.kitKey },
+    });
 
     return {
       dryRun: false,
