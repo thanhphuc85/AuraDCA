@@ -125,7 +125,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse): 
   const { token, amount, address, timestamp } = parsed;
 
   const now = Date.now();
-  if (Math.abs(now - timestamp) > MESSAGE_EXPIRY_MS) {
+  if (!Number.isFinite(timestamp) || Math.abs(now - timestamp) > MESSAGE_EXPIRY_MS) {
     res.status(400).json({ error: "Message expired. Please try again." }); return;
   }
 

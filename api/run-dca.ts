@@ -44,7 +44,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse): 
   if (!parsed) { res.status(400).json({ error: "Invalid message format" }); return; }
   const { amount, address, timestamp } = parsed;
 
-  if (Math.abs(Date.now() - timestamp) > MESSAGE_EXPIRY_MS) { res.status(400).json({ error: "Message expired. Please try again." }); return; }
+  if (!Number.isFinite(timestamp) || Math.abs(Date.now() - timestamp) > MESSAGE_EXPIRY_MS) { res.status(400).json({ error: "Message expired. Please try again." }); return; }
 
   let recovered: string;
   try { recovered = ethers.verifyMessage(message, signature).toLowerCase(); }
@@ -61,6 +61,6 @@ export default async function handler(req: VercelRequest, res: VercelResponse): 
     unavailable: true,
     amountUsdc: amount,
     message:
-      "On-demand DCA can't settle right now: the USDC → cirBTC route on Arc Testnet is in an outage, so a buy won't go through. Your balance was not touched — your scheduled DCA still runs automatically 3× a day, and this will work again once the route recovers.",
+      "On-demand DCA can't settle right now: the USDC → cirBTC route on Arc Testnet is in an outage, so a buy won't go through. Your balance was not touched — your scheduled DCA still runs automatically on the schedule you set, and this will work again once the route recovers.",
   });
 }

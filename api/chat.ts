@@ -133,7 +133,7 @@ const TOOLS: Anthropic.Tool[] = [
   },
   {
     name: "propose_set_dca_rate",
-    description: "PROPOSE changing the user's daily DCA rate and/or execution mode. This does NOT apply the change — it asks the frontend to show a Confirm button the user must click and sign with their wallet. Use when the user asks to change/increase/decrease/pause their DCA rate, or switch between Auto and Manual modes. Rate is in USDC per day; 0 means pause. Mode: 'auto' = agent runs on schedule (3× / day); 'manual' = agent skips the user in scheduled runs, they trigger buys themselves.",
+    description: "PROPOSE changing the user's daily DCA rate and/or execution mode. This does NOT apply the change — it asks the frontend to show a Confirm button the user must click and sign with their wallet. Use when the user asks to change/increase/decrease/pause their DCA rate, or switch between Auto and Manual modes. Rate is in USDC per day; 0 means pause. Mode: 'auto' = agent runs on the schedule the user set; 'manual' = agent skips the user in scheduled runs, they trigger buys themselves.",
     input_schema: {
       type: "object",
       properties: {

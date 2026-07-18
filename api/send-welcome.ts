@@ -30,7 +30,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse): 
       <h2 style="margin:0 0 8px;">Welcome to Aura DCA Agent 👋</h2>
       <p>Hi ${safeName}, your account is ready. The agent will dollar-cost-average USDC → cirBTC on Arc Testnet for you.</p>
       ${addr ? `<p style="margin:16px 0;padding:12px 14px;background:#f0f3f9;border-radius:10px;font-family:ui-monospace,Menlo,monospace;font-size:13px;">Your DCA wallet:<br/><b>${addr}</b></p>` : ""}
-      <p>Set your daily DCA rate in the dashboard, then the agent handles the rest — 3 runs a day, no action needed.</p>
+      <p>Set your daily DCA rate in the dashboard, then the agent handles the rest on the schedule you set — no action needed.</p>
       <p style="font-size:12px;color:#5e6880;margin-top:20px;">This is a testnet demo with no real value. If you didn't sign up, you can ignore this email.</p>
     </div>`;
 

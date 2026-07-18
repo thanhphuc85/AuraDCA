@@ -118,7 +118,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse): 
   const dcaRunsPerDay: 1 | 2 | 3 | undefined =
     parsedRuns === 1 || parsedRuns === 2 || parsedRuns === 3 ? (parsedRuns as 1 | 2 | 3) : undefined;
 
-  if (Math.abs(Date.now() - timestamp) > MESSAGE_EXPIRY_MS) {
+  if (!Number.isFinite(timestamp) || Math.abs(Date.now() - timestamp) > MESSAGE_EXPIRY_MS) {
     res.status(400).json({ error: "Message expired. Please try again." }); return;
   }
 
