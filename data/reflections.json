@@ -209,5 +209,32 @@
       "budget",
       "same-day-retry"
     ]
+  },
+  {
+    "id": "ref-1784491207480",
+    "date": "2026-07-19",
+    "timestamp": "2026-07-19T20:00:07.480Z",
+    "runStatus": "error_swap_failed",
+    "insight": "The cirBTC route outage (34+ consecutive failed runs, 11+ days) finally showed one success on 07-19 for $1.00, but today's run repeated the exact anti-pattern I've flagged before: multiple same-day retries ($5.00 attempted twice, plus two below-min skips) after the $1.00 daily cap was already consumed, wasting cycles and generating error noise for zero informational gain.",
+    "patterns": [
+      "Same-day repeat swap attempts after daily cap exhaustion continue to occur despite prior reflections explicitly warning against this (07-18 and 07-19 both show 4-5 duplicate attempts per day)",
+      "cirBTC route is now intermittently functional (1 success out of ~35 attempts) rather than fully dead, suggesting sporadic liquidity/route availability rather than permanent outage",
+      "Daily cap of $1.00 is consistently binding and fully consumed by the first successful swap, making all subsequent same-day requests (regardless of size $5-$6) guaranteed failures",
+      "Price feed and dip/regime tools remain data-starved (only 1 real price point) across 13+ days, so signal-based decisioning has been inert the entire campaign",
+      "Cumulative spend of only $2.00 by day 13 vs an implied ~$13 pace (if $1/day) shows the agent is far behind schedule due to the outage, but the recent success suggests catch-up may now be possible"
+    ],
+    "strategyAdjustment": "Stop issuing multiple swap requests within the same run/day once alreadySpentTodayUsdc >= dailyCap; the allocation tool should short-circuit to proceed=false immediately after detecting cap exhaustion instead of re-running compute_allocation with new larger amounts ($5-$6) that are guaranteed to fail. Since the route showed its first success in 34+ runs on 07-19, treat this as a signal route may be intermittently viable — reduce probe frequency further only for amounts above the daily cap, but allow one clean attempt per calendar day at the $1 cap size. Also flag to whatever orchestrates multiple same-day invocations that repeated calls are producing error_swap_failed noise without new information; this looks like a scheduling/orchestration bug worth fixing outside the agent's own decision loop.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "2.000000",
+    "dayNumber": 13,
+    "walletBalance": "34.292676622860296748",
+    "tags": [
+      "clamping",
+      "error-recovery",
+      "pacing",
+      "daily-cap",
+      "route-outage",
+      "orchestration-bug"
+    ]
   }
 ]
