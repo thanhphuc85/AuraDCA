@@ -1336,6 +1336,14 @@
       </div>
       <p class="cs sched-mode-hint" id="schedModeHint" style="margin:4px 2px 12px;"></p>
 
+      <!-- Token to DCA into -->
+      <div class="sched-label" data-t="schedTokenLabel">Token to buy</div>
+      <select id="schedToken" class="sched-input" style="margin-bottom:4px;">
+        <option value="cirBTC">cirBTC — tokenized BTC</option>
+        <option value="EURC">EURC — euro stablecoin</option>
+      </select>
+      <p class="cs" id="schedTokenHint" style="margin:4px 2px 12px;color:var(--muted);"></p>
+
       <!-- Schedule builder (Auto / Smart) -->
       <div id="schedBuilder">
         <div class="sched-grid">
@@ -3652,7 +3660,19 @@
     $("portSwapped").textContent = user ? fmt(parseFloat(user.totalSwapped || "0"), 2) : "0";
     $("portUsdc").textContent = "…";
     $("portAllowance").textContent = "…";
-    $("portCirBtc").textContent = "…";
+    // The "earned" card follows the token this user DCAs into. cirBTC is read
+    // on-chain from their wallet; other tokens show the agent's ledger credit
+    // (their pooled share) since we don't hold every token's contract here.
+    var dcaToken = (user && user.dcaTokenOut) || "cirBTC";
+    var pcbEl = $("portCirBtc");
+    var pcbLabelEl = pcbEl && pcbEl.parentElement ? pcbEl.parentElement.querySelector(".port-label") : null;
+    if (pcbLabelEl) pcbLabelEl.textContent = dcaToken + " " + (t.portEarnedWord || "earned");
+    if (dcaToken === "cirBTC") {
+      pcbEl.textContent = "…";
+    } else {
+      var tbal = (user && user.tokenBalances && user.tokenBalances[dcaToken]) || "0";
+      pcbEl.textContent = fmt(parseFloat(tbal), 6);
+    }
     (async function () {
       var acct = state.account;
       try { $("portUsdc").textContent = fmt(Number(await tokenBalanceOf(ARC.usdc, acct)) / 1e6, 2); } catch (e) { $("portUsdc").textContent = "—"; }
@@ -3661,7 +3681,9 @@
         var allowRaw = await safeRpcCall("eth_call", [{ to: ARC.usdc, data: data }, "latest"]);
         $("portAllowance").textContent = fmt(Number(BigInt(allowRaw || "0x0")) / 1e6, 2);
       } catch (e) { $("portAllowance").textContent = "—"; }
-      try { $("portCirBtc").textContent = fmt(Number(await tokenBalanceOf(ARC.cirbtc, acct)) / 1e8, 8); } catch (e) { $("portCirBtc").textContent = "—"; }
+      if (dcaToken === "cirBTC") {
+        try { $("portCirBtc").textContent = fmt(Number(await tokenBalanceOf(ARC.cirbtc, acct)) / 1e8, 8); } catch (e) { $("portCirBtc").textContent = "—"; }
+      }
     })();
 
     if (typeof renderRateCard === "function") renderRateCard(user);
@@ -3782,7 +3804,7 @@
     var mode = user.dcaMode === "manual" ? "manual" : user.dcaMode === "smart" ? "smart" : "auto";
     var freq = user.dcaFrequency || "daily";
     var amount = parseFloat(user.dcaAmountPerRun || user.dcaRatePerDay || "0");
-    var editing = document.activeElement && document.activeElement.closest && document.activeElement.closest("#schedBuilder, .sched-modes");
+    var editing = document.activeElement && document.activeElement.closest && document.activeElement.closest("#schedBuilder, .sched-modes, #schedToken");
 
     // Populate the builder from stored config (unless the user is mid-edit).
     if (!editing) {
@@ -3792,6 +3814,7 @@
       if (smR) smR.checked = mode === "smart";
       var setV = function (id, v) { var e = $(id); if (e && v != null) e.value = v; };
       if (user.dcaFrequency && $("schedFreq")) $("schedFreq").value = freq;
+      setV("schedToken", user.dcaTokenOut || "cirBTC");
       if (amount > 0) setV("schedAmount", amount.toFixed(6).replace(/0+$/, "").replace(/\.$/, ""));
       if (user.dcaEveryHours) setV("schedEveryHours", String(user.dcaEveryHours));
       if (user.dcaEveryDays) setV("schedEveryDays", String(user.dcaEveryDays));
@@ -3825,7 +3848,7 @@
     } else if (mode === "manual") {
       el.innerHTML = modeBadge + ' · ' + (t.rateBalance || "Balance") + ' ' + fmt(bal, 2) + ' USDC · <span style="opacity:.75;">' + (t.cadManualNote || "trigger from chat, no daily limit") + '</span>';
     } else {
-      el.innerHTML = '<b>' + fmt(amount, 6) + ' USDC/' + (t.rateRun || "run") + '</b> · ' + modeBadge + ' · ' + cadenceText() +
+      el.innerHTML = '<b>' + fmt(amount, 6) + ' USDC → ' + ((user.dcaTokenOut) || 'cirBTC') + '</b> · ' + modeBadge + ' · ' + cadenceText() +
         ' · ' + (t.rateBalance || "Balance") + ' ' + fmt(bal, 2) + ' USDC';
     }
 
@@ -3873,9 +3896,15 @@
         mode === "manual" ? (t.schedHintManual || "You trigger buys yourself from the chat — no schedule, no daily limit.")
         : mode === "smart" ? (t.schedHintSmart || "Runs on your schedule, but only when the market conditions below are met.")
         : (t.schedHintAuto || "The agent runs on the exact schedule you set below.");
+      var tokSel = $("schedToken");
+      var tokHint = $("schedTokenHint");
+      if (tokSel && tokHint) tokHint.textContent = tokSel.value === "EURC"
+        ? (t.schedTokenEurc || "EURC — euro stablecoin. Its swap route is live on Arc Testnet today.")
+        : (t.schedTokenCirbtc || "cirBTC — tokenized BTC. Its route is in a liquidity outage right now; the agent holds spend until it returns.");
     };
 
     if (freqSel) freqSel.addEventListener("change", syncSchedUI);
+    var tokSelEl = $("schedToken"); if (tokSelEl) tokSelEl.addEventListener("change", syncSchedUI);
     ["rateModeAuto", "rateModeManual", "rateModeSmart"].forEach(function (id) {
       var r = $(id); if (r) r.addEventListener("change", syncSchedUI);
     });
@@ -3938,13 +3967,15 @@
         if (!sched.smartDip && !sched.smartFear) { st.innerHTML = '<span style="color:var(--amber);">' + (t.schedErrSmart || "Smart mode needs at least one condition (dip or Fear & Greed).") + '</span>'; return; }
       }
 
+      var token = ($("schedToken") || {}).value || "cirBTC";
       var message = "Aura DCA Agent — Set DCA Rate\n" +
         "Rate: " + amount.toFixed(6) + "\n" +
         "Mode: " + mode + "\n" +
+        "TokenOut: " + token + "\n" +
         "Schedule: " + JSON.stringify(sched) + "\n" +
         "Address: " + state.account + "\n" +
         "Timestamp: " + Date.now();
-      signAndSave(message, (t.schedSavedOk || "Schedule saved.") + " " + fmt(amount, 6) + " USDC/run");
+      signAndSave(message, (t.schedSavedOk || "Schedule saved.") + " " + fmt(amount, 6) + " USDC/run → " + token);
     }
 
     btn.addEventListener("click", submitSchedule);
