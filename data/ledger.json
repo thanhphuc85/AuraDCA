@@ -38,7 +38,7 @@
       "dcaDailyCapUsdc": "10.000000",
       "dcaTokenOut": "EURC",
       "tokenBalances": {
-        "EURC": "0.001252"
+        "EURC": "0.881252"
       },
       "dcaSpentDayUsdc": "1.000000",
       "dcaSpentDayDate": "2026-07-19",
@@ -179,8 +179,10 @@
       "address": "0xdd6045a634ef2c61d6070552b556aae40099e84b",
       "token": "EURC",
       "amount": "0.88000000",
-      "status": "processing",
-      "requestedAt": "2026-07-20T02:47:03.943Z"
+      "status": "failed",
+      "requestedAt": "2026-07-20T02:47:03.943Z",
+      "processedAt": "2026-07-20T02:47:05.068Z",
+      "error": "Invalid amounts in transfer request."
     }
   ]
 }
