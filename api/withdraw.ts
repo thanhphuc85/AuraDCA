@@ -14,10 +14,10 @@ const CIRBTC_CONTRACT = "0xf0c4a4ce82a5746abaad9425360ab04fbba432bf";
 const USDC_DECIMALS = 6;
 const CIRBTC_DECIMALS = 8;
 const EURC_DECIMALS = 6;
-// EURC's ERC-20 address on Arc Testnet isn't hardcoded — set EURC_CONTRACT in the
-// environment once it's verified. Withdrawing EURC is rejected until it is, rather
-// than risk sending to an unverified address.
-const EURC_CONTRACT = process.env.EURC_CONTRACT?.trim();
+// EURC's ERC-20 address on Arc Testnet. Verified on-chain from the prove-swap tx
+// (0xe54ee0…): it's the token delivered to the agent wallet as 0.402303 EURC, and
+// its symbol()/decimals() read "EURC" / 6. Env var still wins if ever set.
+const EURC_CONTRACT = process.env.EURC_CONTRACT?.trim() || "0x89b50855aa3be2f677cd6303cec089b5f319d72a";
 
 interface TokenSpec { contract: string | undefined; decimals: number; min: number; max: number }
 const TOKENS: Record<string, TokenSpec> = {

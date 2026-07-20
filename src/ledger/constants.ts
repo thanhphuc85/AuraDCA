@@ -1,6 +1,8 @@
 export const ARC_TESTNET_RPC = "https://rpc.testnet.arc.network";
 export const ARC_USDC_CONTRACT = "0x3600000000000000000000000000000000000000";
 export const ARC_CIRBTC_CONTRACT = "0xf0c4a4ce82a5746abaad9425360ab04fbba432bf";
+// Verified on-chain from the prove-swap tx 0xe54ee0… (symbol()="EURC", decimals=6).
+export const ARC_EURC_CONTRACT = "0x89b50855aa3be2f677cd6303cec089b5f319d72a";
 export const ARC_AGENT_ADDRESS = "0x00Ebbd3aFCCaD08970ED8FdaE591244c8475a0aC";
 export const USDC_DECIMALS = 6;
 export const CIRBTC_DECIMALS = 8;
