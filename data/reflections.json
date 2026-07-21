@@ -261,5 +261,31 @@
       "error-recovery",
       "configuration-issue"
     ]
+  },
+  {
+    "id": "ref-1784650036322",
+    "date": "2026-07-21",
+    "timestamp": "2026-07-21T16:07:16.322Z",
+    "runStatus": "skipped_guardrail_clamped",
+    "insight": "Campaign is stalled: 6 consecutive \"scheduled_below_min\" skips across 2026-07-19 to 07-21 with 0 active users scheduling any USDC, following the last real activity on 07-19 (a $5 request but only $1 daily cap consumed, then error_swap_failed on retry). At day 15, cumulative spent is only $2.00, far behind any reasonable pacing target.",
+    "patterns": [
+      "Repeated 'scheduled_below_min' clamps (6 in a row) indicate the scheduled per-run amount is 0 USDC, not a market-driven guardrail — this is a scheduling/config issue, not a risk-based skip.",
+      "Prior run history shows a pattern of same-day repeat attempts after cap exhaustion (flagged in 07-19 reasoning) leading to wasted cycles and an error_swap_failed status.",
+      "No new price/dip/regime signal data has been referenced since 07-19 brief (Fear&Greed 28, bearish bias) — signal pipeline appears stale or unused during the skip streak.",
+      "Wallet balance is healthy ($34.29 USDC) and not a constraint; the binding issue is entirely on the 'scheduled' amount being 0."
+    ],
+    "strategyAdjustment": "Investigate why scheduled amount is 0 USDC for 6+ consecutive runs — this suggests either 0 active users are configured/enrolled or a scheduling bug, and continuing to run the agent without fixing this wastes cycles indefinitely. Before next run, verify user schedule/enrollment status and daily cap configuration; if 0 active users is intentional (e.g., paused campaign), the agent should flag this explicitly rather than logging repeated clamped skips. If unintentional, restore a valid per-run schedule amount (e.g., ≥$0.10, ideally aligned with the $1/day cap that worked on 07-19) so the campaign can resume accumulating cirBTC and catch up on the pacing shortfall (only $2 spent by day 15).",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "2.000000",
+    "dayNumber": 15,
+    "walletBalance": "34.292676622860296748",
+    "tags": [
+      "scheduling-bug",
+      "zero-active-users",
+      "pacing-behind",
+      "clamping",
+      "budget-underutilization",
+      "stalled-campaign"
+    ]
   }
 ]
