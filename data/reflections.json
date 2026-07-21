@@ -236,5 +236,30 @@
       "route-outage",
       "orchestration-bug"
     ]
+  },
+  {
+    "id": "ref-1784592967194",
+    "date": "2026-07-21",
+    "timestamp": "2026-07-21T00:16:07.194Z",
+    "runStatus": "skipped_guardrail_clamped",
+    "insight": "The campaign has effectively stalled: 6 consecutive \"scheduled_below_min\" skips (0 active users, $0 scheduled) across 2026-07-19 to 07-21, plus one failed swap attempt on 07-19 from a same-day retry after the daily cap was already spent. Only $2.00 has been spent by day 15 of the campaign, indicating either the active user base has dropped to zero or the scheduling logic is broken.",
+    "patterns": [
+      "Repeated 'scheduled_below_min' clamps with requestedAmountUsdc=0.000000 and '0 active user(s)' message across 6+ runs, not a market-driven skip but a configuration/participation issue",
+      "One error_swap_failed on 07-19 was self-inflicted: agent retried same-day after daily cap ($1.00) was already fully consumed, wasting a cycle despite prior reflections warning against this",
+      "No real dip/momentum signal data available (only 1 real price point recorded) - regime and dip-ladder tools are effectively non-functional this run",
+      "Cumulative spend of $2.00 over 15 days is far behind any reasonable pacing target, suggesting budget utilization is critically low, not due to guardrail conservatism but due to zero active scheduled amount"
+    ],
+    "strategyAdjustment": "Stop attempting swaps when the run message explicitly states '0 active user(s)' - this is not a guardrail clamp to retry around, it signals no user/schedule is configured to allocate a nonzero amount, so repeated same-day or same-state attempts are pure wasted cycles. Escalate/flag for investigation into why active user count is 0 and why scheduled amount is $0.000000 instead of retrying the swap logic. Also, do not retry a swap in the same day after daily cap is already fully consumed (as happened 07-19) — check alreadySpentTodayUsdc before attempting. Until the 0-active-user root cause is resolved, treat every run as a no-op and avoid burning error/retry cycles.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "2.000000",
+    "dayNumber": 15,
+    "walletBalance": "34.292676622860296748",
+    "tags": [
+      "clamping",
+      "budget",
+      "pacing",
+      "error-recovery",
+      "configuration-issue"
+    ]
   }
 ]
