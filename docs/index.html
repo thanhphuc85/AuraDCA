@@ -1412,7 +1412,17 @@
               <input id="schedSmartFear" class="sched-input" type="number" min="0" max="100" step="1" placeholder="e.g. 30" />
             </div>
           </div>
-          <p class="cs" style="margin:8px 2px 0;" data-t="schedSmartHint">Leave a field blank to ignore it. Both set = both must hold.</p>
+          <div class="sched-grid" style="margin-top:8px;">
+            <div>
+              <div class="sched-label" data-t="schedSensLabel">Sensitivity (0.1–5)</div>
+              <input id="schedSmartSens" class="sched-input" type="number" min="0.1" max="5" step="0.1" placeholder="1 (default)" />
+            </div>
+            <div>
+              <div class="sched-label" data-t="schedMaxMultLabel">Max multiplier (1–5×)</div>
+              <input id="schedSmartMax" class="sched-input" type="number" min="1" max="5" step="0.1" placeholder="3 (default)" />
+            </div>
+          </div>
+          <p class="cs" style="margin:8px 2px 0;" data-t="schedSmartHint">Dip/fear = when to buy. Sensitivity = how hard to lean in; Max = the ceiling. Blank = defaults (1× / 3×).</p>
           <p style="margin:8px 2px 0;font-size:11.5px;line-height:1.5;color:var(--amber);" data-t="schedSmartWarn">⚠️ Smart only buys when your conditions hold — if the market keeps rising, the agent may not buy for a long stretch. Use a lower threshold (2–3%) if you still want to keep buying regularly.</p>
         </div>
       </div>
@@ -2116,18 +2126,22 @@
     var hi = Math.max.apply(null, prices), now = prices[prices.length - 1];
     return hi > 0 && now > 0 ? Math.max(0, (hi - now) / hi) : 0;
   }
-  function smartMultJS(dd, fg) {
-    var m = 1;
-    if (dd > 0) m += Math.min(2.0, dd / 0.10);
-    if (fg != null && isFinite(fg)) m += ((50 - fg) / 50) * 1.0;
-    return Math.max(0.5, Math.min(3.0, m));
+  function smartMultJS(dd, fg, sensitivity, maxMult) {
+    var sens = sensitivity > 0 ? sensitivity : 1;
+    var cap = maxMult >= 1 ? maxMult : 3.0;
+    var dev = 0;
+    if (dd > 0) dev += Math.min(2.0, dd / 0.10);
+    if (fg != null && isFinite(fg)) dev += ((50 - fg) / 50) * 1.0;
+    return Math.max(0.5, Math.min(cap, 1 + sens * dev));
   }
   function renderSmartLive() {
     var el = document.getElementById("smartLive");
     if (!el) return;
     if (_fng == null) { el.innerHTML = "Loading live market…"; return; }
     var dd = smartDrawdown();
-    var mult = smartMultJS(dd, _fng.value);
+    var sens = parseFloat((document.getElementById("schedSmartSens") || {}).value);
+    var cap = parseFloat((document.getElementById("schedSmartMax") || {}).value);
+    var mult = smartMultJS(dd, _fng.value, sens, cap);
     var amtEl = document.getElementById("schedAmount");
     var amt = amtEl ? parseFloat(amtEl.value) : NaN;
     var tok = (document.getElementById("schedToken") || {}).value || "cirBTC";
@@ -3929,6 +3943,8 @@
       setV("schedWeeklyCap", user.dcaWeeklyCapUsdc && parseFloat(user.dcaWeeklyCapUsdc) > 0 ? parseFloat(user.dcaWeeklyCapUsdc).toString() : "");
       setV("schedSmartDip", user.dcaSmartMinDipPct != null ? String(user.dcaSmartMinDipPct) : "");
       setV("schedSmartFear", user.dcaSmartFearBelow != null ? String(user.dcaSmartFearBelow) : "");
+      setV("schedSmartSens", user.dcaSmartSensitivity != null ? String(user.dcaSmartSensitivity) : "");
+      setV("schedSmartMax", user.dcaSmartMaxMult != null ? String(user.dcaSmartMaxMult) : "");
       var wds = Array.isArray(user.dcaWeekdays) ? user.dcaWeekdays : [];
       document.querySelectorAll("#schedWeekdays .wd-chip").forEach(function (c) {
         c.classList.toggle("on", wds.indexOf(parseInt(c.getAttribute("data-wd"), 10)) >= 0);
@@ -4013,7 +4029,9 @@
 
     if (freqSel) freqSel.addEventListener("change", syncSchedUI);
     var tokSelEl = $("schedToken"); if (tokSelEl) tokSelEl.addEventListener("change", syncSchedUI);
-    var amtEl = $("schedAmount"); if (amtEl) amtEl.addEventListener("input", function () { if (typeof renderSmartLive === "function") renderSmartLive(); });
+    ["schedAmount", "schedSmartSens", "schedSmartMax"].forEach(function (id) {
+      var el = $(id); if (el) el.addEventListener("input", function () { if (typeof renderSmartLive === "function") renderSmartLive(); });
+    });
     ["rateModeAuto", "rateModeManual", "rateModeSmart"].forEach(function (id) {
       var r = $(id); if (r) r.addEventListener("change", syncSchedUI);
     });
@@ -4088,6 +4106,8 @@
         var dip = num("schedSmartDip"); if (dip && dip > 0) sched.smartDip = dip;
         var fear = num("schedSmartFear"); if (fear && fear > 0) sched.smartFear = fear;
         if (!sched.smartDip && !sched.smartFear) { st.innerHTML = '<span style="color:var(--amber);">' + (t.schedErrSmart || "Smart mode needs at least one condition (dip or Fear & Greed).") + '</span>'; return; }
+        var sens = num("schedSmartSens"); if (sens && sens > 0) sched.smartSensitivity = Math.max(0.1, Math.min(5, sens));
+        var mx = num("schedSmartMax"); if (mx && mx >= 1) sched.smartMaxMult = Math.max(1, Math.min(5, mx));
       }
 
       var token = ($("schedToken") || {}).value || "cirBTC";
@@ -4104,6 +4124,7 @@
         dcaFrequency: sched.freq, dcaEveryHours: sched.everyHours, dcaEveryDays: sched.everyDays,
         dcaWeekdays: sched.weekdays, dcaDailyCapUsdc: sched.dailyCap, dcaWeeklyCapUsdc: sched.weeklyCap,
         dcaSmartMinDipPct: sched.smartDip, dcaSmartFearBelow: sched.smartFear,
+        dcaSmartSensitivity: sched.smartSensitivity, dcaSmartMaxMult: sched.smartMaxMult,
       };
       signAndSave(message, (t.schedSavedOk || "Schedule saved.") + " " + fmt(amount, 6) + " USDC/run → " + token, optimistic);
     }

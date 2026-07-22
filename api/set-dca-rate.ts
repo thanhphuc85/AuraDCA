@@ -30,6 +30,8 @@ interface LedgerUser {
   dcaWeeklyCapUsdc?: string;
   dcaSmartMinDipPct?: number;
   dcaSmartFearBelow?: number;
+  dcaSmartSensitivity?: number;
+  dcaSmartMaxMult?: number;
   dcaTokenOut?: string;
   lastActivity: string;
   [k: string]: unknown;
@@ -81,6 +83,8 @@ interface SchedulePayload {
   weeklyCap?: string;
   smartDip?: number;
   smartFear?: number;
+  smartSensitivity?: number;
+  smartMaxMult?: number;
 }
 
 function parseRateMessage(msg: string): { rate: string; mode?: string; runs?: string; token?: string; schedule?: SchedulePayload; address: string; timestamp: number } | null {
@@ -205,6 +209,11 @@ export default async function handler(req: VercelRequest, res: VercelResponse): 
       user.dcaWeeklyCapUsdc = usdc(schedule.weeklyCap);
       user.dcaSmartMinDipPct = dcaMode === "smart" ? num(schedule.smartDip) : undefined;
       user.dcaSmartFearBelow = dcaMode === "smart" ? num(schedule.smartFear) : undefined;
+      // Smart-sizing tuning, clamped to safe ranges (defaults 1 / 3 when unset).
+      const sens = num(schedule.smartSensitivity);
+      const cap = num(schedule.smartMaxMult);
+      user.dcaSmartSensitivity = dcaMode === "smart" && sens != null ? Math.max(0.1, Math.min(5, sens)) : undefined;
+      user.dcaSmartMaxMult = dcaMode === "smart" && cap != null ? Math.max(1, Math.min(5, cap)) : undefined;
       // A configured schedule sizes buys by amountPerRun; keep rate for display.
       user.dcaPaused = false;
     }

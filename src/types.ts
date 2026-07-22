@@ -124,6 +124,8 @@ export interface UserAccount {
   dcaWeeklyCapUsdc?: string; // max USDC/week (absent or "0" = no cap)
   dcaSmartMinDipPct?: number;  // smart: only run if drawdown-from-high ≥ this %
   dcaSmartFearBelow?: number;  // smart: only run if Fear & Greed index < this
+  dcaSmartSensitivity?: number; // smart: how hard the market read scales the buy (default 1)
+  dcaSmartMaxMult?: number;     // smart: ceiling on the size multiplier (default 3)
   // Which token this user dollar-cost-averages into (symbol, see
   // SUPPORTED_DCA_TOKENS). Absent = the default (cirBTC). The user picks it; the
   // agent only advises. Users choosing different tokens are pooled per-token —

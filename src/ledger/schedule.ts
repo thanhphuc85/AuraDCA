@@ -107,24 +107,35 @@ function smartConditionMet(user: UserAccount, market: MarketContext): boolean {
 // live price exists), bounded to a safe range — and the caller still clamps the
 // result by the user's daily/weekly caps, wallet balance, and clampDecision, so
 // the multiplier can never breach a hard limit.
-const SMART_DIP_REF = 0.10;   // a 10% drawdown contributes +1.0x
-const SMART_DIP_CAP = 2.0;    // …capped so an extreme dip alone can't exceed +2.0x
-const SMART_FEAR_WEIGHT = 1.0; // extreme fear (0) → +1.0x, extreme greed (100) → −1.0x
-const SMART_MIN_MULT = 0.5;   // never buy less than half the base
-const SMART_MAX_MULT = 3.0;   // never buy more than triple the base
+const SMART_DIP_REF = 0.10;   // a 10% drawdown contributes +1.0 to the deviation
+const SMART_DIP_CAP = 2.0;    // …capped so an extreme dip alone can't exceed +2.0
+const SMART_FEAR_WEIGHT = 1.0; // extreme fear (0) → +1.0, extreme greed (100) → −1.0
+const SMART_MIN_MULT = 0.5;   // hard floor — never buy less than half the base
+export const SMART_DEFAULT_MAX_MULT = 3.0; // default ceiling if the user sets none
+export const SMART_DEFAULT_SENSITIVITY = 1.0;
+
+// Per-user tuning of the smart-sizing curve.
+export interface SmartSizingOpts {
+  sensitivity?: number; // scales how hard the market read moves the buy (default 1)
+  maxMult?: number;     // ceiling on the multiplier (default SMART_DEFAULT_MAX_MULT)
+}
 
 /**
- * How much a smart-mode buy scales this run, in [SMART_MIN_MULT, SMART_MAX_MULT].
+ * How much a smart-mode buy scales this run, in [SMART_MIN_MULT, maxMult].
  * Buy MORE in dips and fear, LESS in froth; a neutral or unknown market returns
- * exactly 1.0 (ordinary DCA), so missing data can only be safe.
+ * exactly 1.0 (ordinary DCA), so missing data can only be safe. `sensitivity`
+ * and `maxMult` let a user dial the aggressiveness; defaults reproduce the
+ * original fixed [0.5, 3.0] curve.
  */
-export function smartSizeMultiplier(market: MarketContext): number {
-  let mult = 1;
+export function smartSizeMultiplier(market: MarketContext, opts: SmartSizingOpts = {}): number {
+  const sensitivity = opts.sensitivity != null && opts.sensitivity > 0 ? opts.sensitivity : SMART_DEFAULT_SENSITIVITY;
+  const maxMult = opts.maxMult != null && opts.maxMult >= 1 ? opts.maxMult : SMART_DEFAULT_MAX_MULT;
+  let dev = 0; // deviation from a neutral market
   const dd = market.drawdownPct ?? 0;
-  if (dd > 0) mult += Math.min(SMART_DIP_CAP, dd / SMART_DIP_REF);
+  if (dd > 0) dev += Math.min(SMART_DIP_CAP, dd / SMART_DIP_REF);
   const fg = market.fearGreedIndex;
-  if (fg != null && Number.isFinite(fg)) mult += ((50 - fg) / 50) * SMART_FEAR_WEIGHT;
-  return Math.max(SMART_MIN_MULT, Math.min(SMART_MAX_MULT, mult));
+  if (fg != null && Number.isFinite(fg)) dev += ((50 - fg) / 50) * SMART_FEAR_WEIGHT;
+  return Math.max(SMART_MIN_MULT, Math.min(maxMult, 1 + sensitivity * dev));
 }
 
 /**
@@ -163,7 +174,7 @@ export function computeScheduledSpends(ledger: Ledger, nowIso: string, market: M
       // Smart mode scales the buy by how cheap the market looks (dip + fear),
       // bounded — then the caps below still clamp the result.
       if (user.dcaMode === "smart") {
-        sizeMultiplier = smartSizeMultiplier(market);
+        sizeMultiplier = smartSizeMultiplier(market, { sensitivity: user.dcaSmartSensitivity, maxMult: user.dcaSmartMaxMult });
         amount *= sizeMultiplier;
       }
       // Honor daily + weekly caps.

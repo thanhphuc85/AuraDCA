@@ -54,6 +54,24 @@ describe("smartSizeMultiplier — dynamic smart-mode sizing", () => {
     expect(smartSizeMultiplier({ drawdownPct: 0.15, fearGreedIndex: 20 })).toBe(3); // 1+1.5+0.6 → 3.0
     expect(smartSizeMultiplier({ drawdownPct: 0, fearGreedIndex: 100 })).toBe(0.5); // 1−1.0 = 0 → floor
   });
+
+  it("per-user sensitivity dials the aggressiveness; defaults reproduce the old curve", () => {
+    // fear=10 → deviation 0.8. Default sensitivity 1 → 1.8×.
+    expect(smartSizeMultiplier({ fearGreedIndex: 10 })).toBeCloseTo(1.8, 6);
+    expect(smartSizeMultiplier({ fearGreedIndex: 10 }, { sensitivity: 2 })).toBeCloseTo(2.6, 6); // 1 + 2×0.8
+    expect(smartSizeMultiplier({ fearGreedIndex: 10 }, { sensitivity: 0.5 })).toBeCloseTo(1.4, 6); // 1 + 0.5×0.8
+  });
+
+  it("per-user maxMult caps the multiplier below the default 3.0", () => {
+    // Deep dip + fear wants 3.0, but a user cap of 1.5 wins.
+    expect(smartSizeMultiplier({ drawdownPct: 0.5, fearGreedIndex: 10 }, { maxMult: 1.5 })).toBe(1.5);
+    // A higher cap lets a big deviation through (sensitivity 2 × dev 2.8 = 5.6 → 5.0 cap).
+    expect(smartSizeMultiplier({ drawdownPct: 0.2, fearGreedIndex: 10 }, { sensitivity: 2, maxMult: 5 })).toBe(5);
+  });
+
+  it("ignores non-positive/invalid opts, falling back to defaults", () => {
+    expect(smartSizeMultiplier({ fearGreedIndex: 10 }, { sensitivity: 0, maxMult: 0.5 })).toBeCloseTo(1.8, 6);
+  });
 });
 
 describe("smart mode scales the scheduled spend", () => {
