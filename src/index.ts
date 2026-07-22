@@ -1,8 +1,12 @@
 import { loadConfig, ConfigError } from "./config.js";
 import { runDailyDca } from "./run.js";
 import { appendEntry } from "./history/store.js";
+import { createWallet } from "./wallet.js";
+import { attestLedgerState } from "./attest/attestor.js";
 import { logger } from "./logger.js";
 import { notifyAll } from "./notify.js";
+
+const LEDGER_PATH = "data/ledger.json";
 
 async function main(): Promise<void> {
   let config;
@@ -29,6 +33,26 @@ async function main(): Promise<void> {
 
   const outcome = await runDailyDca(config);
   logger.info(`Run finished with status: ${outcome.entry.status}`, outcome.entry.message);
+
+  // On-chain audit anchor: hash the ledger we just committed and record it in the
+  // AuraAttestation contract. Best-effort and gated — inert unless a contract is
+  // configured and ATTESTATION_ENABLED=true — so it can never affect the run's
+  // outcome or exit code.
+  if (config.attestationEnabled && config.attestationContract) {
+    try {
+      const wallet = await createWallet(config.circleApiKey, config.circleEntitySecret, config.walletId);
+      const res = await attestLedgerState({
+        wallet,
+        contractAddress: config.attestationContract,
+        enabled: true,
+        ledgerPath: LEDGER_PATH,
+        ref: outcome.entry.timestamp,
+      });
+      if (!res.attested) logger.warn(`On-chain attestation not recorded: ${res.skipped ?? "unknown"}`);
+    } catch (err) {
+      logger.error("On-chain attestation step failed (non-fatal)", err);
+    }
+  }
 
   if (outcome.isFatal) {
     process.exitCode = 1;

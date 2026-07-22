@@ -11,7 +11,9 @@
     "create-wallet": "node scripts/create-arc-wallet.mjs",
     "check-routes": "node scripts/check-routes.mjs",
     "prove-swap": "node scripts/prove-swap.mjs",
-    "sample-fx": "node scripts/sample-fx.mjs"
+    "sample-fx": "node scripts/sample-fx.mjs",
+    "attest": "tsx src/attestOnce.ts",
+    "verify-attest": "tsx src/verifyAttest.ts"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.110.0",

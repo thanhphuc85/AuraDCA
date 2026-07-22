@@ -46,6 +46,13 @@ const envSchema = z.object({
   DCA_DIP_DEEP_MULTIPLIER: z.preprocess(emptyToUndefined, z.coerce.number().min(1).max(10).default(2.5)),
   DCA_LADDER_VOL_WIDEN: z.preprocess(emptyToUndefined, z.coerce.number().min(1).max(3).default(1.3)),
   DCA_LADDER_MAX_BALANCE_FRACTION: z.preprocess(emptyToUndefined, z.coerce.number().min(0).max(1).default(0.5)),
+  // On-chain audit anchor (AuraAttestation.sol). Both optional and OFF by default:
+  // the agent only writes attestations once the contract is deployed and this is
+  // switched on, so the feature is inert until you opt in.
+  ATTESTATION_CONTRACT: z.preprocess(emptyToUndefined, z.string().regex(/^0x[a-fA-F0-9]{40}$/).optional()),
+  ATTESTATION_ENABLED: z
+    .preprocess(emptyToUndefined, z.string().default("false"))
+    .transform((v) => v.toLowerCase() === "true"),
   WITHDRAWAL_ADDRESS: z.preprocess(emptyToUndefined, z.string().regex(/^0x[a-fA-F0-9]{40}$/).optional()),
   WITHDRAWAL_TOKEN: z.preprocess(emptyToUndefined, z.enum(["USDC", "cirBTC"]).optional()),
   WITHDRAWAL_AMOUNT: z.preprocess(emptyToUndefined, decimalString.optional()),
@@ -67,6 +74,8 @@ export interface AppConfig {
   dryRun: boolean;
   allowanceMode: boolean;
   discordWebhookUrl?: string;
+  attestationContract?: string;
+  attestationEnabled: boolean;
   guardrails: GuardrailConfig;
   dcaStrategy: DcaStrategy;
   withdrawalInput?: WithdrawalInput;
@@ -120,6 +129,8 @@ export function loadConfig(): AppConfig {
     dryRun: env.DRY_RUN,
     allowanceMode: env.ALLOWANCE_MODE,
     discordWebhookUrl: env.DISCORD_WEBHOOK_URL,
+    attestationContract: env.ATTESTATION_CONTRACT,
+    attestationEnabled: env.ATTESTATION_ENABLED,
     guardrails: {
       maxDailyUsdc: env.MAX_DAILY_USDC,
       minUsdcReserve: env.MIN_USDC_RESERVE,

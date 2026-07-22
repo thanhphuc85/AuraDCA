@@ -5,6 +5,10 @@ export interface Wallet {
   address: `0x${string}`;
   getUsdcTokenBalance(): Promise<string>;
   sendTokens(params: { tokenAddress: string; destinationAddress: string; amount: string }): Promise<{ txHash?: string }>;
+  // Execute an arbitrary contract call from this wallet (used for on-chain audit
+  // attestations). Returns Circle's transaction id; resolve to a tx hash via the
+  // usual polling if needed. Never used on the money path — see AuraAttestation.
+  executeContract(params: { contractAddress: string; callData: string }): Promise<{ txId?: string }>;
 }
 
 export async function createWallet(apiKey: string, entitySecret: string, walletId: string): Promise<Wallet> {
@@ -42,6 +46,18 @@ export async function createWallet(apiKey: string, entitySecret: string, walletI
         { maxRetries: 2, label: "Circle sendTokens" },
       );
       return { txHash: txResponse.data?.id };
+    },
+    async executeContract(params) {
+      const txResponse = await withRetry(
+        () => client.createContractExecutionTransaction({
+          walletId,
+          contractAddress: params.contractAddress,
+          callData: params.callData as `0x${string}`,
+          fee: { type: "level", config: { feeLevel: "HIGH" } },
+        }),
+        { maxRetries: 2, label: "Circle executeContract" },
+      );
+      return { txId: txResponse.data?.id };
     },
   };
 }
