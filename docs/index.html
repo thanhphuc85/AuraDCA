@@ -1401,6 +1401,7 @@
         <!-- Smart conditions -->
         <div id="schedSmartRow" style="display:none;margin-top:12px;padding:12px;border:1px solid rgba(138,92,246,.3);border-radius:12px;background:rgba(138,92,246,.06);">
           <div class="sched-label" style="color:var(--violet);" data-t="schedSmartLabel">🧠 Smart conditions — only buy when…</div>
+          <div id="smartLive" style="margin-top:10px;padding:9px 12px;border-radius:10px;background:rgba(52,224,238,.06);border:1px solid rgba(52,224,238,.2);font-size:12.5px;line-height:1.55;color:var(--muted);">Loading live market…</div>
           <div class="sched-grid" style="margin-top:8px;">
             <div>
               <div class="sched-label" data-t="schedDipLabel">Dip from high ≥ (%)</div>
@@ -2087,6 +2088,58 @@
   }
   fetchEurUsd();
   setInterval(fetchEurUsd, 3600 * 1000);
+
+  // ---- Smart-mode live sizing preview ----
+  // Mirrors src/ledger/schedule.ts smartSizeMultiplier so users see, right now,
+  // how hard the agent would buy this run. Fear & Greed is live (alternative.me);
+  // the cirBTC dip is derived from swap history (≈0 during the route outage, but
+  // it kicks in once real prices return). Keep this formula in sync with the TS.
+  var _fng = null; // { value:Number, cls:String }
+  function fetchFearGreed() {
+    fetch("https://api.alternative.me/fng/?limit=1", { cache: "no-store" })
+      .then(function (r) { return r.ok ? r.json() : null; })
+      .then(function (j) { var d = j && j.data && j.data[0]; if (d && d.value != null) { _fng = { value: parseInt(d.value, 10), cls: d.value_classification || "" }; renderSmartLive(); } })
+      .catch(function () {});
+  }
+  function smartDrawdown() {
+    if (!_historyData || !_historyData.length) return 0;
+    var prices = [];
+    for (var i = 0; i < _historyData.length; i++) {
+      var e = _historyData[i];
+      if ((e.status === "success" || e.status === "dry_run") && e.clampedAmountUsdc && e.amountOut) {
+        var u = parseFloat(e.clampedAmountUsdc), b = parseFloat(e.amountOut);
+        if (u > 0 && b > 0) prices.push(u / b);
+      }
+    }
+    prices = prices.slice(-30);
+    if (prices.length < 2) return 0;
+    var hi = Math.max.apply(null, prices), now = prices[prices.length - 1];
+    return hi > 0 && now > 0 ? Math.max(0, (hi - now) / hi) : 0;
+  }
+  function smartMultJS(dd, fg) {
+    var m = 1;
+    if (dd > 0) m += Math.min(2.0, dd / 0.10);
+    if (fg != null && isFinite(fg)) m += ((50 - fg) / 50) * 1.0;
+    return Math.max(0.5, Math.min(3.0, m));
+  }
+  function renderSmartLive() {
+    var el = document.getElementById("smartLive");
+    if (!el) return;
+    if (_fng == null) { el.innerHTML = "Loading live market…"; return; }
+    var dd = smartDrawdown();
+    var mult = smartMultJS(dd, _fng.value);
+    var amtEl = document.getElementById("schedAmount");
+    var amt = amtEl ? parseFloat(amtEl.value) : NaN;
+    var tok = (document.getElementById("schedToken") || {}).value || "cirBTC";
+    var preview = amt > 0 ? ' · this run ≈ <b>' + fmt(amt * mult, 6) + ' USDC → ' + tok + '</b>' : '';
+    var color = mult > 1.05 ? 'var(--green)' : (mult < 0.95 ? 'var(--amber)' : 'var(--cyan)');
+    el.innerHTML =
+      'Live: Fear &amp; Greed <b>' + _fng.value + '</b> (' + _fng.cls + ')' +
+      (dd > 0 ? ' · cirBTC dip ' + fmt(dd * 100, 1) + '%' : '') +
+      ' → sizing <b style="color:' + color + ';">' + fmt(mult, 2) + '×</b>' + preview;
+  }
+  fetchFearGreed();
+  setInterval(fetchFearGreed, 5 * 60 * 1000);
 
   var _walletRefreshTimer = null;
   function startWalletAutoRefresh() {
@@ -3955,10 +4008,12 @@
       if (tokSel && tokHint) tokHint.textContent = tokSel.value === "EURC"
         ? (t.schedTokenEurc || "EURC — euro stablecoin. Its swap route is live on Arc Testnet today.")
         : (t.schedTokenCirbtc || "cirBTC — tokenized BTC. Its route is in a liquidity outage right now; the agent holds spend until it returns.");
+      if (mode === "smart" && typeof renderSmartLive === "function") renderSmartLive();
     };
 
     if (freqSel) freqSel.addEventListener("change", syncSchedUI);
     var tokSelEl = $("schedToken"); if (tokSelEl) tokSelEl.addEventListener("change", syncSchedUI);
+    var amtEl = $("schedAmount"); if (amtEl) amtEl.addEventListener("input", function () { if (typeof renderSmartLive === "function") renderSmartLive(); });
     ["rateModeAuto", "rateModeManual", "rateModeSmart"].forEach(function (id) {
       var r = $(id); if (r) r.addEventListener("change", syncSchedUI);
     });
