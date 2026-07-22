@@ -287,5 +287,31 @@
       "budget-underutilization",
       "stalled-campaign"
     ]
+  },
+  {
+    "id": "ref-1784714909723",
+    "date": "2026-07-22",
+    "timestamp": "2026-07-22T10:08:29.723Z",
+    "runStatus": "skipped_guardrail_clamped",
+    "insight": "The DCA campaign is effectively stalled: 0 active users means scheduled amount is 0.000000 USDC every run, which is trivially below the 0.1 min swap threshold — this is not a market/guardrail issue but a configuration/participation issue upstream of the trading logic.",
+    "patterns": [
+      "8 consecutive skipped_guardrail_clamped runs across 2026-07-20 to 2026-07-22, all boundBy scheduled_below_min",
+      "requestedAmountUsdc has been exactly 0.000000 in every recent run, not just below min but literally zero",
+      "Cumulative spent stuck at 2.000000 USDC since day 16 despite wallet holding 34.29 USDC available",
+      "No errors, no signal-based skips, no dip-buying activity — pure participation/scheduling failure"
+    ],
+    "strategyAdjustment": "Stop treating this as a market-timing or clamping problem — the root cause is '0 active user(s)' in scheduling. Next run should check upstream user/allocation configuration rather than adjusting buy amounts or thresholds. If this is a persistent test/demo environment issue, flag it explicitly rather than repeating the same reflection about min-swap clamping. Consider recommending a manual/default fallback allocation when active user count is 0 but wallet balance (34.29 USDC) is sufficient to fund trades, so the campaign doesn't stay indefinitely stalled.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "2.000000",
+    "dayNumber": 16,
+    "walletBalance": "34.292676622860296748",
+    "tags": [
+      "clamping",
+      "pacing",
+      "budget",
+      "configuration-error",
+      "zero-scheduled-amount",
+      "stalled-campaign"
+    ]
   }
 ]
