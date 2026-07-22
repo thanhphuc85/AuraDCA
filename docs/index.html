@@ -5113,11 +5113,30 @@
     }
 
     // ---- sensitive-action confirmation cards (Claude proposes, user confirms) ----
+    function proposalExtra(p) {
+      if (!p || p.action !== "set_dca_rate") return "";
+      var bits = [];
+      if (p.tokenOut) bits.push("→ " + p.tokenOut);
+      var s = p.schedule;
+      if (s && typeof s === "object") {
+        if (s.freq === "hours" && s.everyHours) bits.push("every " + s.everyHours + "h");
+        else if (s.freq === "days" && s.everyDays) bits.push("every " + s.everyDays + "d");
+        else if (s.freq === "weekly") bits.push("weekly");
+        else if (s.freq) bits.push(s.freq);
+        if (s.dailyCap) bits.push("≤" + s.dailyCap + "/day");
+        if (s.weeklyCap) bits.push("≤" + s.weeklyCap + "/wk");
+        if (s.smartDip) bits.push("dip≥" + s.smartDip + "%");
+        if (s.smartFear) bits.push("F&G<" + s.smartFear);
+        if (s.smartSensitivity) bits.push("sens " + s.smartSensitivity);
+        if (s.smartMaxMult) bits.push("max ×" + s.smartMaxMult);
+      }
+      return bits.length ? " · " + bits.join(" · ") : "";
+    }
     function addConfirm(p) {
       var card = document.createElement("div");
       card.className = "chat-confirm";
       var title = p.action === "set_dca_rate" ? ct().confirmRate : ct().confirmRun;
-      var detail = p.action === "set_dca_rate" ? ct().rateDetail(p.rate, p.mode) : ct().runDetail(p.amountUsdc);
+      var detail = p.action === "set_dca_rate" ? (ct().rateDetail(p.rate, p.mode) + proposalExtra(p)) : ct().runDetail(p.amountUsdc);
       card.innerHTML = '<p class="cc-title">⚠️ </p><p class="cc-detail"></p><div class="cc-actions"><button class="cc-yes"></button><button class="cc-no"></button></div><p class="cc-status"></p>';
       card.querySelector(".cc-title").appendChild(document.createTextNode(title));
       card.querySelector(".cc-detail").textContent = detail;
@@ -5125,26 +5144,34 @@
       yes.textContent = ct().confirmBtn; no.textContent = ct().cancelBtn;
       no.addEventListener("click", function () { yes.disabled = true; no.disabled = true; status.style.color = "var(--muted)"; status.textContent = ct().cancelled; });
       yes.addEventListener("click", function () {
-        if (p.action === "set_dca_rate") confirmRate(p.rate, p.mode, yes, no, status);
+        if (p.action === "set_dca_rate") confirmRate(p, yes, no, status);
         else confirmRun(p.amountUsdc, yes, no, status);
       });
       body.appendChild(card); scrollDown();
     }
 
-    function confirmRate(rate, proposedMode, yes, no, status) {
+    function confirmRate(p, yes, no, status) {
       if (!state.account || !state.provider) { status.style.color = "var(--amber)"; status.textContent = ct().connectFirst; return; }
       yes.disabled = true; no.disabled = true;
       status.style.color = "var(--amber)"; status.textContent = ct().signing;
-      var rateStr = Number(rate).toFixed(6);
-      // If Claude didn't propose a specific mode, keep the user's current one
-      // (default auto). Pause always resolves to "auto".
+      var rate = Number(p.rate) || 0;
+      var rateStr = rate.toFixed(6);
+      // Keep the user's current mode/token when the proposal doesn't change them.
+      // Pause (rate 0) always resolves to "auto".
       var key = state.account && state.account.toLowerCase();
       var currentUser = key && _ledgerData && _ledgerData.users ? _ledgerData.users[key] : null;
-      var currentMode = currentUser && currentUser.dcaMode === "manual" ? "manual" : "auto";
-      var mode = proposedMode === "manual" ? "manual" : (proposedMode === "auto" ? "auto" : currentMode);
-      if (Number(rate) === 0) mode = "auto";
+      var currentMode = currentUser && (currentUser.dcaMode === "manual" || currentUser.dcaMode === "smart") ? currentUser.dcaMode : "auto";
+      var pm = p.mode;
+      var mode = (pm === "manual" || pm === "auto" || pm === "smart") ? pm : currentMode;
+      if (rate === 0) mode = "auto";
+      var currentToken = currentUser && currentUser.dcaTokenOut ? currentUser.dcaTokenOut : "cirBTC";
+      var token = (p.tokenOut === "cirBTC" || p.tokenOut === "EURC") ? p.tokenOut : currentToken;
       var timestamp = Date.now();
-      var message = "Aura DCA Agent — Set DCA Rate\n" + "Rate: " + rateStr + "\n" + "Mode: " + mode + "\n" + "Address: " + state.account + "\n" + "Timestamp: " + timestamp;
+      var lines = ["Aura DCA Agent — Set DCA Rate", "Rate: " + rateStr, "Mode: " + mode, "TokenOut: " + token];
+      if (p.schedule && typeof p.schedule === "object") lines.push("Schedule: " + JSON.stringify(p.schedule));
+      lines.push("Address: " + state.account);
+      lines.push("Timestamp: " + timestamp);
+      var message = lines.join("\n");
       var apiBase = loadStore("aura-withdraw-api", "");
       var endpoint = apiBase ? apiBase.replace(/\/+$/, "") + "/api/set-dca-rate" : "/api/set-dca-rate";
       state.provider.request({ method: "personal_sign", params: [message, state.account] })
