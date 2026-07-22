@@ -5,7 +5,8 @@
 *Encode Club × Circle — Programmable Money Hackathon (build on Arc)*
 
 Repo: https://github.com/thanhphuc85/AuraDCA
-On-chain proof: https://testnet.arcscan.app/tx/0x83097f432db9c013b3f8d7748b58f18484c2a5fde4ce500c221ee38524250933
+On-chain proof (swap): https://testnet.arcscan.app/tx/0x83097f432db9c013b3f8d7748b58f18484c2a5fde4ce500c221ee38524250933
+On-chain audit anchor (contract): https://testnet.arcscan.app/address/0x4948c662630c7dE36BD59089085850c00996F661
 
 ---
 
@@ -34,6 +35,8 @@ In **Smart mode** the agent's read of the market moves the number directly: `sma
 **3. Non-custodial by construction.** Users never hand over keys. Every state change — set schedule, run now, withdraw — is authorised by an **EIP-191 signature** the user makes in their own wallet and the server verifies before touching the ledger. The agent can execute the strategy; it can never invent a user's consent.
 
 **4. It remembers.** After each run Claude writes a reflection to `data/reflections.json` and can recall past ones when deciding — which is how it recognised the cirBTC outage as *structural* and stopped burning fees on it.
+
+**5. It anchors its own audit trail on-chain.** The pooled ledger (`data/ledger.json` — everyone's balances and allocations) is committed to git each run, but git alone is only as trustworthy as the repo. So after each run the agent hashes the committed ledger and records that hash in [`AuraAttestation.sol`](contracts/AuraAttestation.sol), a **purpose-built smart contract on Arc Testnet** ([`0x4948c6…F661`](https://testnet.arcscan.app/address/0x4948c662630c7dE36BD59089085850c00996F661)) that only the agent's wallet may write to. Anyone can recompute `keccak256(data/ledger.json)` at a run's commit and check it against the on-chain `latestHash` — the off-chain books become tamper-evident on-chain. **The contract holds no funds and touches no balances**; a bug there can't move a token, which is why the whole path is best-effort and gated off by default. First attestation, live: [`0x2ddace…3e85`](https://testnet.arcscan.app/tx/0x2ddace0e81c82fda8691f030094cd0a9ddac78d8365116832fe4551884f13e85) (verify it yourself, read-only, with `npm run verify-attest`).
 
 The swap itself goes through Circle's official **Swap Kit** SDK — the only officially documented, reliably-available swap path on Arc Testnet (USDC / EURC / cirBTC). The wallet is a Circle **Developer-Controlled Wallet**, so there's no raw private key to leak.
 
@@ -93,6 +96,7 @@ GitHub Actions cron (hourly — each user's own cadence decides if this hour is 
   → Circle Swap Kit: ONE USDC → token swap per token group (or dry-run stub)
   → applyScheduledDistribution(): split each group pro-rata back to its users
   → append to data/history.json  →  commit back to repo
+  → AuraAttestation.attest(keccak256(data/ledger.json)) — anchor the committed state on-chain
 ```
 
 ## Tech stack
@@ -101,6 +105,7 @@ GitHub Actions cron (hourly — each user's own cadence decides if this hour is 
 - **Anthropic Claude** (`@anthropic-ai/sdk`) — the decision engine, via forced tool-use + zod validation
 - **Circle Swap Kit** (`@circle-fin/swap-kit`) + **Developer-Controlled Wallets** (`@circle-fin/developer-controlled-wallets`) + Circle Wallets adapter
 - **Arc Testnet** (Circle's stablecoin-native EVM L1; gas paid in USDC)
+- **Solidity** — [`AuraAttestation.sol`](contracts/AuraAttestation.sol), a fund-less on-chain audit anchor deployed on Arc Testnet; the agent records `keccak256(data/ledger.json)` each run and anyone can reproduce it read-only with `npm run verify-attest`
 - **GitHub Actions** for scheduling, secrets, and the commit-back audit trail
 - **Vitest** — 49 unit tests on the safety-critical paths: `clampDecision()` guardrails, the pooled pro-rata settlement (including per-token grouping), the smart-sizing multiplier (dip + Fear & Greed, per-user sensitivity/cap bounds), and the outage-/campaign-day arithmetic the agent reasons from
 - **Vercel** serverless functions (`api/`) for the dashboard's signed actions — set-rate, run-DCA, withdraw, chat, welcome-email
