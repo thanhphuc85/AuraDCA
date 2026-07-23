@@ -45,7 +45,10 @@
       "dcaSpentWeekUsdc": "2.000000",
       "dcaSpentWeekStart": "2026-07-20",
       "lastChargedAt": "2026-07-23T22:56:46.743Z",
-      "dcaWeeklyCapUsdc": "10.000000"
+      "dcaWeeklyCapUsdc": "10.000000",
+      "totalWithdrawn": {
+        "EURC": "0.881252"
+      }
     },
     "0xfc337ba1f00e8092fe2d073fed0072a0a43d2219": {
       "address": "0xfc337ba1f00e8092fe2d073fed0072a0a43d2219",
@@ -280,8 +283,11 @@
       "address": "0xdd6045a634ef2c61d6070552b556aae40099e84b",
       "token": "EURC",
       "amount": "0.881252",
-      "status": "processing",
-      "requestedAt": "2026-07-23T23:07:19.760Z"
+      "status": "completed",
+      "requestedAt": "2026-07-23T23:07:19.760Z",
+      "txHash": "0x0c6f665bd27adff5f17e559a308a97ad6de9ee5b99dc404454c1891514c52653",
+      "processedAt": "2026-07-23T23:07:21.732Z",
+      "circleTxId": "db4f9157-cdcf-5f58-84a7-d0d4af58fbdc"
     }
   ]
 }
