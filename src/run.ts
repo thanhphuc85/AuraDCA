@@ -320,8 +320,26 @@ export async function runDailyDca(config: AppConfig): Promise<RunOutcome> {
   // remaining daily cap, campaign budget, dust floor. The user schedule is only
   // the *request*; the code owns the number. (The per-user daily/weekly caps were
   // already applied inside computeScheduledSpends; this is the global ceiling.)
+  // Nothing due this run is an ordinary outcome, not a decision — short-circuit
+  // so the audit trail says so plainly instead of borrowing clampDecision's
+  // "llm_declined" skip reason, which would be flatly untrue here.
+  if (scheduledTotal <= 0) {
+    logger.info("No user was due this run; skipping");
+    return writeAndReturn({
+      date,
+      timestamp,
+      status: "skipped_guardrail_clamped",
+      requestedAmountUsdc: "0.000000",
+      clampedAmountUsdc: "0",
+      boundBy: "no_scheduled_spend",
+      tokenOut: config.tokenOut,
+      walletUsdcBalance: usdcBalance,
+      message: `No buy this run: no user was due (0 scheduled USDC across ${Object.keys(ledger.users).length} account(s))`,
+    }, false, config.discordWebhookUrl, refCtx);
+  }
+
   const clamp = clampDecision(
-    { proceed: scheduledTotal > 0, amountUsdc: scheduledTotal.toFixed(6), reasoning: "per-user schedule sum" },
+    { proceed: true, amountUsdc: scheduledTotal.toFixed(6), reasoning: "per-user schedule sum" },
     {
       guardrails: config.guardrails,
       walletUsdcBalance: usdcBalance,
