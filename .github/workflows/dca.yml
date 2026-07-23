@@ -71,6 +71,15 @@ jobs:
           # run unless the workflow_dispatch input unchecks it.
           DRY_RUN: ${{ (github.event_name == 'workflow_dispatch' && (inputs.dry_run == true || vars.LIVE_TRADING_ENABLED != 'true')) || (github.event_name == 'schedule' && vars.LIVE_TRADING_ENABLED != 'true') }}
           DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+          # On-chain audit anchor (contracts/AuraAttestation.sol). Inert unless
+          # both are set, so the cron only attests once you opt in.
+          ATTESTATION_CONTRACT: ${{ vars.ATTESTATION_CONTRACT }}
+          ATTESTATION_ENABLED: ${{ vars.ATTESTATION_ENABLED }}
+          # Always-on Telegram alerts (src/notify.ts). Token is a secret; chat id
+          # and filter are non-sensitive variables.
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ vars.TELEGRAM_CHAT_ID }}
+          TELEGRAM_NOTIFY_ON: ${{ vars.TELEGRAM_NOTIFY_ON }}
           DCA_BASE_AMOUNT: ${{ vars.DCA_BASE_AMOUNT }}
           DCA_DIP_MILD_THRESHOLD: ${{ vars.DCA_DIP_MILD_THRESHOLD }}
           DCA_DIP_MODERATE_THRESHOLD: ${{ vars.DCA_DIP_MODERATE_THRESHOLD }}

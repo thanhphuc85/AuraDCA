@@ -86,10 +86,87 @@ export async function notifyDiscord(entry: HistoryEntry, webhookUrl?: string): P
   });
 }
 
+// ---- Telegram (server-side, always-on) ----
+// Unlike the dashboard's browser notifier (which only fires while a tab is open),
+// this runs inside the cron, so the autonomous agent pushes an alert on every run
+// regardless of whether anyone is watching. Configured via env/secrets:
+//   TELEGRAM_BOT_TOKEN, TELEGRAM_CHAT_ID, and optional TELEGRAM_NOTIFY_ON
+//   ("smart" default = success + errors, skipping routine skips; "all"; "errors").
+
+const ARC_EXPLORER = "https://testnet.arcscan.app";
+
+function escHtml(s: string): string {
+  return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+}
+
+function shouldNotifyTelegram(status: string, mode: string): boolean {
+  const isError = status.startsWith("error_");
+  if (mode === "errors") return isError;
+  if (mode === "all") return true;
+  // "smart" (default): the events a human actually cares about — a buy landed or
+  // something broke — but not routine "nothing due / below min" skips.
+  return isError || status === "success" || status === "dry_run";
+}
+
+function buildTelegramHtml(entry: HistoryEntry): string {
+  const emoji = STATUS_EMOJI[entry.status] ?? "❓";
+  const lines: string[] = [`${emoji} <b>Aura DCA — ${escHtml(entry.status.replaceAll("_", " "))}</b>`];
+
+  if (entry.status === "success" && entry.clampedAmountUsdc) {
+    const out = entry.amountOut ? ` → ${escHtml(entry.amountOut)} ${escHtml(entry.tokenOut)}` : ` → ${escHtml(entry.tokenOut)}`;
+    lines.push(`🪙 <b>${escHtml(entry.clampedAmountUsdc)} USDC${out}</b>`);
+  } else {
+    lines.push(`🪙 target: <b>${escHtml(entry.tokenOut)}</b>`);
+  }
+
+  const ss = entry.smartSizing;
+  if (ss && ss.multiplier != null) {
+    const parts = [`${ss.source === "llm" ? "⚡" : ""}🧠 <b>smart ×${ss.multiplier.toFixed(2)}</b>`];
+    if (ss.fearGreed != null) parts.push(`F&amp;G ${ss.fearGreed}`);
+    if (ss.drawdownPct && ss.drawdownPct > 0) parts.push(`dip ${(ss.drawdownPct * 100).toFixed(1)}%`);
+    lines.push(parts.join(" · "));
+  }
+
+  if (entry.boundBy) lines.push(`🔒 bound by <code>${escHtml(entry.boundBy)}</code>`);
+  if (entry.walletUsdcBalance) lines.push(`💰 balance ${escHtml(entry.walletUsdcBalance)} USDC`);
+  if (entry.txHash) {
+    const url = entry.explorerUrl || `${ARC_EXPLORER}/tx/${entry.txHash}`;
+    lines.push(`🔗 <a href="${escHtml(url)}">tx ${escHtml(entry.txHash.slice(0, 10))}…</a>`);
+  }
+  const note = entry.reasoning || entry.message;
+  if (note) lines.push(`💬 <i>${escHtml(note.slice(0, 350))}</i>`);
+
+  return lines.join("\n");
+}
+
+export async function notifyTelegram(entry: HistoryEntry): Promise<void> {
+  const token = process.env.TELEGRAM_BOT_TOKEN?.trim();
+  const chatId = process.env.TELEGRAM_CHAT_ID?.trim();
+  if (!token || !chatId) return;
+  const mode = (process.env.TELEGRAM_NOTIFY_ON?.trim() || "smart").toLowerCase();
+  if (!shouldNotifyTelegram(entry.status, mode)) return;
+
+  const res = await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      chat_id: chatId,
+      text: buildTelegramHtml(entry),
+      parse_mode: "HTML",
+      disable_web_page_preview: true,
+    }),
+  });
+  if (!res.ok) {
+    const body = await res.text().catch(() => "");
+    throw new Error(`Telegram sendMessage ${res.status}: ${body.slice(0, 200)}`);
+  }
+}
+
 export async function notifyAll(entry: HistoryEntry, webhookUrl?: string): Promise<void> {
   await Promise.allSettled([
     writeJobSummary(entry),
     notifyDiscord(entry, webhookUrl),
+    notifyTelegram(entry),
   ]).then((results) => {
     for (const r of results) {
       if (r.status === "rejected") logger.warn(`Notification failed: ${r.reason}`);
