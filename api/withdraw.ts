@@ -258,7 +258,11 @@ export default async function handler(req: VercelRequest, res: VercelResponse): 
       blockchain: "ARC-TESTNET",
       tokenAddress,
       destinationAddress: address,
-      amount: [amount],
+      // Normalize to the token's own decimals rather than passing the client's
+      // string through verbatim — Circle rejects amounts with more decimal
+      // places than the token carries ("Invalid amounts in transfer request"),
+      // and a stale client once signed an 8-dp amount for 6-dp EURC.
+      amount: [amountNum.toFixed(decimals)],
       fee: { type: "level", config: { feeLevel: "HIGH" } },
     });
     txId = txRes.data?.id;

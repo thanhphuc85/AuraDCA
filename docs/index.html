@@ -4287,7 +4287,10 @@
       st.innerHTML = "";
 
       try {
-        var decimals = token === "USDC" ? 6 : 8;
+        // Per-token decimals: USDC and EURC are 6-decimal tokens, cirBTC is 8.
+        // Circle rejects amounts with more decimal places than the token carries
+        // ("Invalid amounts in transfer request"), so this must match exactly.
+        var decimals = token === "cirBTC" ? 8 : 6;
         var amountStr = amount.toFixed(decimals);
         var timestamp = Date.now();
         var message = "Aura DCA Agent — Withdrawal Request\n" +
