@@ -2104,11 +2104,23 @@
   // how hard the agent would buy this run. Fear & Greed is live (alternative.me);
   // the cirBTC dip is derived from swap history (≈0 during the route outage, but
   // it kicks in once real prices return). Keep this formula in sync with the TS.
-  var _fng = null; // { value:Number, cls:String }
+  var _fng = null; // { value:Number, cls:String } — latest reading
+  var _fngSeries = null; // chronological array of recent daily F&G values (0-100)
   function fetchFearGreed() {
-    fetch("https://api.alternative.me/fng/?limit=1", { cache: "no-store" })
+    fetch("https://api.alternative.me/fng/?limit=15", { cache: "no-store" })
       .then(function (r) { return r.ok ? r.json() : null; })
-      .then(function (j) { var d = j && j.data && j.data[0]; if (d && d.value != null) { _fng = { value: parseInt(d.value, 10), cls: d.value_classification || "" }; renderSmartLive(); if (typeof renderStrategy === "function") renderStrategy(_historyData); } })
+      .then(function (j) {
+        var arr = j && Array.isArray(j.data) ? j.data : null;
+        var d = arr && arr[0];
+        if (d && d.value != null) {
+          _fng = { value: parseInt(d.value, 10), cls: d.value_classification || "" };
+          // alternative.me returns newest-first; reverse to oldest→newest.
+          _fngSeries = arr.map(function (x) { return parseInt(x.value, 10); }).filter(function (v) { return isFinite(v); }).reverse();
+          renderSmartLive();
+          if (typeof renderStrategy === "function") renderStrategy(_historyData);
+          if (typeof renderIntelligence === "function" && _historyData) renderIntelligence(_historyData, _reflectionData);
+        }
+      })
       .catch(function () {});
   }
   function smartDrawdown() {
@@ -2154,6 +2166,25 @@
   }
   fetchFearGreed();
   setInterval(fetchFearGreed, 5 * 60 * 1000);
+
+  // Live BTC price series (the underlying a BTC-DCA agent tracks). Used for the
+  // Analytics market-regime + momentum tiles so they work even while the cirBTC
+  // route is in outage and there are no cirBTC fills to price from. Best-effort:
+  // on any failure the tiles fall back to realized cirBTC fills.
+  var _btc = null; // recent daily BTC closes (USD)
+  function fetchBtc() {
+    fetch("https://api.coingecko.com/api/v3/coins/bitcoin/market_chart?vs_currency=usd&days=14&interval=daily", { cache: "no-store" })
+      .then(function (r) { return r.ok ? r.json() : null; })
+      .then(function (j) {
+        if (j && Array.isArray(j.prices) && j.prices.length) {
+          _btc = j.prices.map(function (p) { return p[1]; }).filter(function (x) { return x > 0; });
+          if (typeof renderIntelligence === "function" && _historyData) renderIntelligence(_historyData, _reflectionData);
+        }
+      })
+      .catch(function () {});
+  }
+  fetchBtc();
+  setInterval(fetchBtc, 10 * 60 * 1000);
 
   var _walletRefreshTimer = null;
   function startWalletAutoRefresh() {
@@ -4795,6 +4826,14 @@
       }
     });
 
+    // Market basis for regime + momentum, in order of preference — each works
+    // regardless of the cirBTC route outage: real BTC price, else the Fear & Greed
+    // series (the agent's own signal), else realized cirBTC fills.
+    var mkt, mktSrc;
+    if (Array.isArray(_btc) && _btc.length >= 3) { mkt = _btc; mktSrc = "BTC 7d"; }
+    else if (Array.isArray(_fngSeries) && _fngSeries.length >= 3) { mkt = _fngSeries; mktSrc = "Fear & Greed"; }
+    else { mkt = prices; mktSrc = "cirBTC"; }
+
     // --- Risk Score ---
     var riskScore = 0;
     var riskFactors = [];
@@ -4843,12 +4882,12 @@
     // --- Market Regime ---
     var regimeEl = $("intelRegimeVal");
     var regimeSub = $("intelRegimeSub");
-    if (prices.length < 3) {
+    if (mkt.length < 3) {
       regimeEl.textContent = "—";
       regimeEl.className = "intel-val regime-nodata";
       regimeSub.textContent = T[currentLang].intelRegimeNoData || "Need more data";
     } else {
-      var rp = prices.slice(-7);
+      var rp = mkt.slice(-7);
       var rpMean = rp.reduce(function (a, b) { return a + b; }, 0) / rp.length;
       var rpVar = rp.reduce(function (a, p) { return a + Math.pow(p - rpMean, 2); }, 0) / rp.length;
       var rpCv = rpMean > 0 ? Math.sqrt(rpVar) / rpMean : 0;
@@ -4872,7 +4911,7 @@
       else { regime = T[currentLang].intelRegimeRange || "Ranging"; regimeClass = "regime-range"; }
       regimeEl.textContent = regime;
       regimeEl.className = "intel-val " + regimeClass;
-      regimeSub.textContent = "CV " + (rpCv * 100).toFixed(1) + "%";
+      regimeSub.textContent = "CV " + (rpCv * 100).toFixed(1) + "% · " + mktSrc;
       regimeSub.style.background = "rgba(255,255,255,.06)";
       regimeSub.style.color = "var(--muted)";
     }
@@ -4901,8 +4940,8 @@
     var momEl = $("intelMomentumVal");
     var momGauge = $("intelMomentumGauge");
     var momSub = $("intelMomentumSub");
-    if (prices.length >= 2) {
-      var momPrices = prices.slice(-7);
+    if (mkt.length >= 2) {
+      var momPrices = mkt.slice(-7);
       var fHalf = momPrices.slice(0, Math.floor(momPrices.length / 2));
       var sHalf = momPrices.slice(Math.floor(momPrices.length / 2));
       var avgF = fHalf.reduce(function (a, b) { return a + b; }, 0) / fHalf.length;
@@ -4913,7 +4952,7 @@
       var momPct = Math.min(100, Math.abs(momVal) * 5);
       momGauge.style.width = momPct + "%";
       momGauge.style.background = momVal >= 0 ? "var(--green)" : "var(--red)";
-      momSub.textContent = momVal > 2 ? (T[currentLang].intelMomBullish || "Bullish") : (momVal < -2 ? (T[currentLang].intelMomBearish || "Bearish") : (T[currentLang].intelMomNeutral || "Neutral"));
+      momSub.textContent = (momVal > 2 ? (T[currentLang].intelMomBullish || "Bullish") : (momVal < -2 ? (T[currentLang].intelMomBearish || "Bearish") : (T[currentLang].intelMomNeutral || "Neutral"))) + " · " + mktSrc;
     } else {
       momEl.textContent = "—";
       momGauge.style.width = "0%";
