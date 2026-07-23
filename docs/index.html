@@ -1251,19 +1251,7 @@
   <section class="reveal" id="fundSection">
     <div class="eyebrow">Fund the agent</div>
     <div class="h2" data-t="fundTitle">Deposit to DCA treasury</div>
-    <p class="sub" data-t="fundSub">Send testnet USDC to the agent's wallet — it dollar-cost-averages the pooled balance into cirBTC autonomously.</p>
-
-    <div class="card" style="margin-bottom:16px;border:1px solid var(--blue);">
-      <h3 data-t="apvTitle">🔑 Approve allowance — non-custodial (recommended)</h3>
-      <p class="cs" data-t="apvSub">Keep your USDC in your own wallet. Approve how much the agent may spend over time — it pulls only your scheduled amount each run. Revoke anytime.</p>
-      <div id="allowanceCurrent" style="margin:10px 0;font-size:13px;color:var(--muted);"></div>
-      <div class="withdraw-row">
-        <input id="approveAmt" type="number" min="0" step="0.01" placeholder="Amount to approve (USDC)" />
-        <button class="btn" id="approveBtn" data-t="apvBtn">Approve</button>
-        <button class="btn btn-ghost" id="revokeBtn" data-t="apvRevokeBtn">Revoke</button>
-      </div>
-      <div class="status-note" id="approveStatus"></div>
-    </div>
+    <p class="sub" data-t="fundSub">Send testnet USDC to the agent's wallet — each run it pools everyone's scheduled buys per token and settles one on-chain swap into the token each user chose (cirBTC or EURC).</p>
 
     <div class="card">
       <div class="deposit-layout">
@@ -1282,7 +1270,7 @@
             </div>
           </div>
           <div class="deposit-stats">
-            <div class="deposit-stat"><div class="ds-val" id="treasuryBal">—</div><div class="ds-label">Treasury balance (USDC)</div></div>
+            <div class="deposit-stat"><div class="ds-val" id="treasuryBal">—</div><div class="ds-label">Treasury balance (USDC)</div><div class="ds-label" id="treasuryTokens" style="margin-top:5px;opacity:.8;line-height:1.5;"></div></div>
             <div class="deposit-stat"><div class="ds-val" id="treasuryNet">Arc Testnet</div><div class="ds-label">Network</div></div>
           </div>
           <div class="deposit-form">
@@ -1292,14 +1280,14 @@
           <div class="status-note" id="depositStatus"></div>
         </div>
       </div>
-      <p class="note" id="fundNoteEl" style="margin-top:16px;" data-t="fundNote">⚠️ <b>Testnet demo.</b> Your deposit is tracked per-wallet. Withdrawals are processed during the next agent run.</p>
+      <p class="note" id="fundNoteEl" style="margin-top:16px;" data-t="fundNote">⚠️ <b>Testnet demo.</b> Your deposit is tracked per-wallet in the public ledger. Withdrawals are processed in real time (10–30s) — you sign, the agent sends, and the ledger is credited only after the transfer confirms on-chain.</p>
     </div>
   </section>
 
   <section class="reveal" id="portfolioSection" style="display:none;">
     <div class="eyebrow" data-t="portEye">My Portfolio</div>
     <div class="h2" data-t="portTitle">Your DCA account</div>
-    <p class="sub" data-t="portSub">Your funds stay in your own wallet — the agent only pulls your scheduled DCA amount via the allowance you approve.</p>
+    <p class="sub" data-t="portSub">Your schedule, your signature — every change is authorised by your own wallet, and the agent spends only what your schedule and caps allow.</p>
     <div class="portfolio-grid">
       <div class="port-card"><div class="port-val" id="portUsdc">—</div><div class="port-label" data-t="portUsdcLabel">USDC in wallet</div><div class="port-sub" data-t="portUsdcSub">Your own balance</div></div>
       <div class="port-card"><div class="port-val" id="portAllowance">—</div><div class="port-label" data-t="portAllowanceLabel">Allowance</div><div class="port-sub" data-t="portAllowanceSub">Approved to agent</div></div>
@@ -1859,6 +1847,7 @@
     faucet: "https://faucet.circle.com",
     usdc: "0x3600000000000000000000000000000000000000",   // ERC-20 USDC, 6 decimals
     cirbtc: "0xf0c4a4ce82a5746abaad9425360ab04fbba432bf", // cirBTC, 8 decimals
+    eurc: "0x89b50855aa3be2f677cd6303cec089b5f319d72a",   // EURC, 6 decimals (verified on-chain)
     agent: "0x00Ebbd3aFCCaD08970ED8FdaE591244c8475a0aC",  // the agent's Circle wallet (DCA treasury)
   };
   var state = { account: null, loginType: null, provider: null, showAllRuns: false };
@@ -2819,24 +2808,41 @@
     while (frac.length < decimals) frac += "0";
     return BigInt(whole || "0") * (BigInt(10) ** BigInt(decimals)) + BigInt(frac || "0");
   }
-  async function readUsdcBalance(holder) {
+  async function readTokenBalance(token, holder) {
     var data = "0x70a08231" + holder.slice(2).toLowerCase().padStart(64, "0");
     // Prefer the connected wallet's provider; fall back to a direct RPC call.
     var rpcProvider = state.provider || window.ethereum;
     if (rpcProvider) {
-      try { return BigInt(await rpcProvider.request({ method: "eth_call", params: [{ to: ARC.usdc, data: data }, "latest"] }) || "0x0"); } catch (e) {}
+      try { return BigInt(await rpcProvider.request({ method: "eth_call", params: [{ to: token, data: data }, "latest"] }) || "0x0"); } catch (e) {}
     }
     var r = await fetch(ARC.rpc, { method: "POST", headers: { "content-type": "application/json" },
-      body: JSON.stringify({ jsonrpc: "2.0", id: 1, method: "eth_call", params: [{ to: ARC.usdc, data: data }, "latest"] }) });
+      body: JSON.stringify({ jsonrpc: "2.0", id: 1, method: "eth_call", params: [{ to: token, data: data }, "latest"] }) });
     var j = await r.json();
     return BigInt(j.result || "0x0");
   }
+  async function readUsdcBalance(holder) { return readTokenBalance(ARC.usdc, holder); }
   var _treasuryTimer = null;
   async function refreshTreasury() {
     try {
       var bal = Number(await readUsdcBalance(ARC.agent)) / 1e6;
       $("treasuryBal").textContent = fmt(bal, 2);
     } catch (e) { $("treasuryBal").textContent = "—"; }
+
+    // The treasury is multi-token now — USDC alone no longer describes what the
+    // agent holds. Read each supported target straight from chain; a token that
+    // fails to read is simply omitted rather than shown as a false zero.
+    var el = $("treasuryTokens");
+    if (!el) return;
+    try {
+      var res = await Promise.all([
+        readTokenBalance(ARC.cirbtc, ARC.agent).catch(function () { return null; }),
+        readTokenBalance(ARC.eurc, ARC.agent).catch(function () { return null; })
+      ]);
+      var parts = [];
+      if (res[0] != null) parts.push("cirBTC " + fmt(Number(res[0]) / 1e8, 8));
+      if (res[1] != null) parts.push("EURC " + fmt(Number(res[1]) / 1e6, 2));
+      el.textContent = parts.length ? "Holdings: " + parts.join(" · ") : "";
+    } catch (e) { el.textContent = ""; }
   }
   function startTreasuryAutoRefresh() {
     if (_treasuryTimer) clearInterval(_treasuryTimer);
@@ -4533,9 +4539,9 @@
       memEye: "Agent memory", memTitle: "What the agent has learned",
       memSub: "After every run, the agent reflects on its decisions and outcomes — building persistent memory that shapes future strategy.",
       fundEye: "Fund the agent", fundTitle: "Deposit to DCA treasury",
-      fundSub: "Send testnet USDC to the agent's wallet — it dollar-cost-averages the pooled balance into cirBTC autonomously.",
+      fundSub: "Send testnet USDC to the agent's wallet — each run it pools everyone's scheduled buys per token and settles one on-chain swap into the token each user chose (cirBTC or EURC).",
       qrTitle: "Scan to deposit", qrSub: "Send testnet USDC to this address on Arc Testnet",
-      fundNote: '⚠️ <b>Testnet demo.</b> Your deposit is tracked per-wallet. Withdrawals are processed during the next agent run.',
+      fundNote: '⚠️ <b>Testnet demo.</b> Your deposit is tracked per-wallet in the public ledger. Withdrawals are processed in real time (10–30s) — you sign, the agent sends, and the ledger is credited only after the transfer confirms on-chain.',
       lbEye: "Public Treasury", lbTitle: "Community deposits",
       lbSub: "Everyone who has deposited USDC into the agent's DCA treasury — fully transparent, sourced from on-chain data.",
       lbLeaderboard: "Depositor leaderboard",
@@ -4583,7 +4589,7 @@
       rbWelcome: "Welcome back!", rbReconnectPrompt: "Reconnect", rbLastSeen: "last seen",
       rbReconnectBtn: "Reconnect", rbMinAgo: "m ago", rbHourAgo: "h ago",
       portEye: "My Portfolio", portTitle: "Your DCA account",
-      portSub: "Your funds stay in your own wallet — the agent only pulls your scheduled DCA amount via the allowance you approve.",
+      portSub: "Your schedule, your signature — every change is authorised by your own wallet, and the agent spends only what your schedule and caps allow.",
       portUsdcLabel: "USDC in wallet", portUsdcSub: "Your own balance",
       portAllowanceLabel: "Allowance", portAllowanceSub: "Approved to agent",
       portCirBtcLabel: "cirBTC earned", portCirBtcSub: "In your wallet",
@@ -4648,9 +4654,9 @@
       memEye: "Bộ nhớ Agent", memTitle: "Agent đã học được gì",
       memSub: "Sau mỗi lần chạy, agent phản chiếu về quyết định và kết quả — xây dựng bộ nhớ bền vững định hình chiến lược tương lai.",
       fundEye: "Nạp tiền", fundTitle: "Gửi USDC vào quỹ DCA",
-      fundSub: "Gửi USDC testnet vào ví agent — nó sẽ tự động DCA số dư chung thành cirBTC.",
+      fundSub: "Gửi USDC testnet vào ví agent — mỗi lượt chạy, agent gộp lệnh mua theo lịch của mọi người theo từng token và settle một cú swap on-chain vào token mà mỗi user đã chọn (cirBTC hoặc EURC).",
       qrTitle: "Quét để nạp tiền", qrSub: "Gửi USDC testnet đến địa chỉ này trên Arc Testnet",
-      fundNote: '⚠️ <b>Demo testnet.</b> Tiền gửi được theo dõi theo ví. Rút tiền được xử lý trong lần chạy agent tiếp theo.',
+      fundNote: '⚠️ <b>Demo testnet.</b> Tiền gửi được theo dõi theo từng ví trong sổ cái công khai. Rút tiền xử lý thời gian thực (10–30s) — bạn ký, agent gửi, và sổ cái chỉ ghi có sau khi giao dịch xác nhận on-chain.',
       lbEye: "Quỹ công khai", lbTitle: "Đóng góp cộng đồng",
       lbSub: "Tất cả những ai đã gửi USDC vào quỹ DCA của agent — hoàn toàn minh bạch, nguồn từ dữ liệu on-chain.",
       lbLeaderboard: "Bảng xếp hạng người nạp",
@@ -4698,7 +4704,7 @@
       rbWelcome: "Chào mừng trở lại!", rbReconnectPrompt: "Kết nối lại", rbLastSeen: "lần cuối",
       rbReconnectBtn: "Kết nối lại", rbMinAgo: " phút trước", rbHourAgo: " giờ trước",
       portEye: "Danh mục của tôi", portTitle: "Tài khoản DCA",
-      portSub: "Tiền vẫn ở trong ví của bạn — agent chỉ kéo đúng số DCA theo lịch qua allowance bạn cấp.",
+      portSub: "Lịch của bạn, chữ ký của bạn — mọi thay đổi đều do ví bạn ủy quyền, và agent chỉ chi trong đúng lịch cùng các cap bạn đặt.",
       portUsdcLabel: "USDC trong ví", portUsdcSub: "Số dư của bạn",
       portAllowanceLabel: "Allowance", portAllowanceSub: "Đã cấp cho agent",
       portCirBtcLabel: "cirBTC đã nhận", portCirBtcSub: "Trong ví của bạn",
