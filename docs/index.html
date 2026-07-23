@@ -4350,7 +4350,37 @@
           }
 
           $("wdAmount").value = "";
-          fetchLedger().then(function (l) { _ledgerData = l; renderPortfolio(_ledgerData); });
+          // The public ledger is served through a CDN that can cache for minutes
+          // to hours, so refetching here usually returns the PRE-withdrawal state
+          // and would clobber the UI with stale numbers (the stale-read-after-save
+          // bug, withdrawal edition). Patch the in-memory ledger with the
+          // server-confirmed outcome instead; the next natural page load
+          // reconciles once the CDN catches up.
+          try {
+            if (_ledgerData && _ledgerData.users && _ledgerData.users[key]) {
+              var wUser = _ledgerData.users[key];
+              var wAmt = parseFloat(result.amount) || amount;
+              if (token === "USDC") {
+                wUser.usdcBalance = Math.max(0, parseFloat(wUser.usdcBalance || "0") - wAmt).toFixed(6);
+                wUser.totalWithdrawnUsdc = (parseFloat(wUser.totalWithdrawnUsdc || "0") + wAmt).toFixed(6);
+              } else if (token === "cirBTC") {
+                wUser.cirBtcBalance = Math.max(0, parseFloat(wUser.cirBtcBalance || "0") - wAmt).toFixed(8);
+                wUser.totalWithdrawnCirBtc = (parseFloat(wUser.totalWithdrawnCirBtc || "0") + wAmt).toFixed(8);
+              } else {
+                wUser.tokenBalances = wUser.tokenBalances || {};
+                wUser.tokenBalances[token] = Math.max(0, parseFloat(wUser.tokenBalances[token] || "0") - wAmt).toFixed(6);
+              }
+              _ledgerData.withdrawals = _ledgerData.withdrawals || [];
+              _ledgerData.withdrawals.push({
+                id: result.withdrawalId || ("local-" + Date.now()),
+                address: key, token: token, amount: amountStr,
+                status: result.status === "processing" ? "processing" : "completed",
+                requestedAt: new Date().toISOString(), processedAt: new Date().toISOString(),
+                txHash: result.txHash
+              });
+              renderPortfolio(_ledgerData);
+            }
+          } catch (patchErr) { /* display-only; the ledger on GitHub is already correct */ }
         } else {
           setStep(2, "fail");
           st.innerHTML = '<span style="color:var(--red);">❌ ' + (result.error || "Unknown error") + '</span>';
