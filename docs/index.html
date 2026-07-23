@@ -1895,21 +1895,26 @@
   // Ask any injected wallets to (re-)announce themselves.
   function requestWalletAnnounce() { window.dispatchEvent(new Event("eip6963:requestProvider")); }
   requestWalletAnnounce();
-  // jsDelivr CDN first (robust CORS, no rate-limit 429s; cached up to ~12h),
-  // raw.githubusercontent as a fresher fallback.
+  // raw.githubusercontent FIRST: it serves fresh data within ~minutes, which a
+  // dashboard with real-time withdrawals and hourly swaps needs. jsDelivr is the
+  // availability fallback only — its @main cache can be ~12h stale, which used to
+  // make completed withdrawals invisible for hours when it was the primary.
   var HISTORY_SOURCES = [
-    "https://cdn.jsdelivr.net/gh/thanhphuc85/AuraDCA@main/data/history.json",
     "https://raw.githubusercontent.com/thanhphuc85/AuraDCA/main/data/history.json",
+    "https://cdn.jsdelivr.net/gh/thanhphuc85/AuraDCA@main/data/history.json",
   ];
   var REFLECTION_SOURCES = [
-    "https://cdn.jsdelivr.net/gh/thanhphuc85/AuraDCA@main/data/reflections.json",
     "https://raw.githubusercontent.com/thanhphuc85/AuraDCA/main/data/reflections.json",
+    "https://cdn.jsdelivr.net/gh/thanhphuc85/AuraDCA@main/data/reflections.json",
   ];
-  // Try each source in order; the first that responds OK wins.
+  // Try each source in order; the first that responds OK wins. The raw URL gets a
+  // per-minute cache-buster (its CDN keys on the query string), capping staleness
+  // at ~1 minute without hammering a fresh URL on every call.
   function fetchSourcesOnce(sources) {
     return sources.reduce(function (p, url) {
       return p.catch(function () {
-        return fetch(url, { cache: "no-store" }).then(function (r) {
+        var u = url.indexOf("raw.githubusercontent") >= 0 ? url + "?t=" + Math.floor(Date.now() / 60000) : url;
+        return fetch(u, { cache: "no-store" }).then(function (r) {
           if (!r.ok) throw new Error("HTTP " + r.status);
           return r.json();
         });
@@ -1928,8 +1933,8 @@
     });
   }
   var LEDGER_SOURCES = [
-    "https://cdn.jsdelivr.net/gh/thanhphuc85/AuraDCA@main/data/ledger.json",
     "https://raw.githubusercontent.com/thanhphuc85/AuraDCA/main/data/ledger.json",
+    "https://cdn.jsdelivr.net/gh/thanhphuc85/AuraDCA@main/data/ledger.json",
   ];
   function fetchHistory() {
     return fetchFromSources(HISTORY_SOURCES).catch(function (err) {
