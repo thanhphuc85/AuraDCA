@@ -28,10 +28,10 @@ function buildMarkdown(entry: HistoryEntry): string {
     `| Token | ${entry.tokenOut} |`,
   ];
 
-  if (entry.requestedAmountUsdc) lines.push(`| Requested | ${entry.requestedAmountUsdc} USDC |`);
-  if (entry.clampedAmountUsdc) lines.push(`| Executed | ${entry.clampedAmountUsdc} USDC |`);
+  if (entry.requestedAmountUsdc) lines.push(`| Requested | ${fmtAmt(entry.requestedAmountUsdc)} USDC |`);
+  if (entry.clampedAmountUsdc) lines.push(`| Executed | ${fmtAmt(entry.clampedAmountUsdc)} USDC |`);
   if (entry.boundBy) lines.push(`| Bound by | ${entry.boundBy} |`);
-  if (entry.walletUsdcBalance) lines.push(`| Balance | ${entry.walletUsdcBalance} USDC |`);
+  if (entry.walletUsdcBalance) lines.push(`| Balance | ${fmtAmt(entry.walletUsdcBalance)} USDC |`);
   if (entry.txHash) {
     const link = entry.explorerUrl ? `[${entry.txHash.slice(0, 10)}…](${entry.explorerUrl})` : entry.txHash;
     lines.push(`| Tx | ${link} |`);
@@ -61,8 +61,8 @@ export async function notifyDiscord(entry: HistoryEntry, webhookUrl?: string): P
     { name: "Status", value: `${emoji} ${entry.status}`, inline: true },
     { name: "Token", value: entry.tokenOut, inline: true },
   ];
-  if (entry.clampedAmountUsdc) fields.push({ name: "Amount", value: `${entry.clampedAmountUsdc} USDC`, inline: true });
-  if (entry.walletUsdcBalance) fields.push({ name: "Balance", value: `${entry.walletUsdcBalance} USDC`, inline: true });
+  if (entry.clampedAmountUsdc) fields.push({ name: "Amount", value: `${fmtAmt(entry.clampedAmountUsdc)} USDC`, inline: true });
+  if (entry.walletUsdcBalance) fields.push({ name: "Balance", value: `${fmtAmt(entry.walletUsdcBalance)} USDC`, inline: true });
   if (entry.txHash) {
     const link = entry.explorerUrl ? `[View](${entry.explorerUrl})` : entry.txHash;
     fields.push({ name: "Tx", value: link, inline: true });
@@ -108,13 +108,30 @@ function shouldNotifyTelegram(status: string, mode: string): boolean {
   return isError || status === "success" || status === "dry_run";
 }
 
+// Arc's native USDC gas token carries 18 decimals, so raw balances read like
+// "34.285238006485523924". Trim to something a human can scan, without rounding
+// a real amount away to zero.
+function fmtAmt(v: string | undefined, dp = 4): string {
+  const n = Number.parseFloat(v ?? "");
+  if (!Number.isFinite(n)) return String(v ?? "");
+  const s = n.toFixed(dp).replace(/\.?0+$/, "");
+  // Never round a real amount down to "0" — show dust raw rather than lie.
+  if (n > 0 && Number.parseFloat(s) === 0) return String(v);
+  return s;
+}
+
 function buildTelegramHtml(entry: HistoryEntry): string {
   const emoji = STATUS_EMOJI[entry.status] ?? "❓";
   const lines: string[] = [`${emoji} <b>Aura DCA — ${escHtml(entry.status.replaceAll("_", " "))}</b>`];
 
-  if (entry.status === "success" && entry.clampedAmountUsdc) {
-    const out = entry.amountOut ? ` → ${escHtml(entry.amountOut)} ${escHtml(entry.tokenOut)}` : ` → ${escHtml(entry.tokenOut)}`;
-    lines.push(`🪙 <b>${escHtml(entry.clampedAmountUsdc)} USDC${out}</b>`);
+  // Lead with the number that matters — for a dry run too, where the planned
+  // amount is the whole point of the alert.
+  const amt = entry.clampedAmountUsdc;
+  if ((entry.status === "success" || entry.status === "dry_run") && amt && Number.parseFloat(amt) > 0) {
+    const out = entry.amountOut
+      ? ` → ${escHtml(fmtAmt(entry.amountOut, 8))} ${escHtml(entry.tokenOut)}`
+      : ` → ${escHtml(entry.tokenOut)}`;
+    lines.push(`🪙 <b>${escHtml(fmtAmt(amt))} USDC${out}</b>`);
   } else {
     lines.push(`🪙 target: <b>${escHtml(entry.tokenOut)}</b>`);
   }
@@ -128,7 +145,7 @@ function buildTelegramHtml(entry: HistoryEntry): string {
   }
 
   if (entry.boundBy) lines.push(`🔒 bound by <code>${escHtml(entry.boundBy)}</code>`);
-  if (entry.walletUsdcBalance) lines.push(`💰 balance ${escHtml(entry.walletUsdcBalance)} USDC`);
+  if (entry.walletUsdcBalance) lines.push(`💰 balance ${escHtml(fmtAmt(entry.walletUsdcBalance))} USDC`);
   if (entry.txHash) {
     const url = entry.explorerUrl || `${ARC_EXPLORER}/tx/${entry.txHash}`;
     lines.push(`🔗 <a href="${escHtml(url)}">tx ${escHtml(entry.txHash.slice(0, 10))}…</a>`);
