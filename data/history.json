@@ -742,5 +742,17 @@
     "tokenOut": "cirBTC",
     "walletUsdcBalance": "34.283352109640723924",
     "message": "No buy this run: no user was due (0 scheduled USDC across 2 account(s))"
+  },
+  {
+    "date": "2026-07-23",
+    "timestamp": "2026-07-23T13:58:50.225Z",
+    "status": "error_swap_failed",
+    "requestedAmountUsdc": "5.000000",
+    "clampedAmountUsdc": "5.000000",
+    "boundBy": "user_schedule",
+    "tokenOut": "cirBTC",
+    "reasoning": "Rate-based DCA: 1 active user(s), executing 5.000000 USDC this run.",
+    "walletUsdcBalance": "34.282225568753454548",
+    "message": "Swap failed [cirBTC/no_route]: Swap failed [no_route]: Stablecoin Service createSwap failed: Route or resource not found. Details: No route available"
   }
 ]
