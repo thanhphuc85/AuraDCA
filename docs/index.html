@@ -3554,11 +3554,17 @@
 
   // Agent card quick-action buttons.
   (function setupAgentCardBtns() {
-    function jump(id) { var el = document.getElementById(id); if (el) window.scrollTo({ top: el.getBoundingClientRect().top + window.scrollY - 80, behavior: "smooth" }); }
+    // These targets live on OTHER pages. The dashboard shows one section at a
+    // time, so scrolling to a hidden section did nothing at all — switch pages.
+    function go(target) {
+      if (typeof window.showPage === "function") { window.showPage(target); return; }
+      var el = document.getElementById(target);
+      if (el) window.scrollTo({ top: el.getBoundingClientRect().top + window.scrollY - 80, behavior: "smooth" });
+    }
     var s = document.getElementById("agentGoSchedule");
-    if (s) s.addEventListener("click", function () { if (!state.account) { openWalletModal(); return; } jump("portfolioSection"); });
+    if (s) s.addEventListener("click", function () { if (!state.account) { openWalletModal(); return; } go("portfolioSection"); });
     var a = document.getElementById("agentGoApprove");
-    if (a) a.addEventListener("click", function () { jump("fundSection"); });
+    if (a) a.addEventListener("click", function () { go("fundSection"); });
   })();
 
   function render(history) {
