@@ -1189,7 +1189,10 @@
     </div>
 
     <div class="card" style="margin-top:16px;display:none;" id="priceChartCard">
-      <h3 data-t="priceChartTitle">cirBTC / USDC Price</h3>
+      <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;">
+        <h3 id="priceChartTitle" style="margin:0;">Fill price</h3>
+        <div id="priceChartTabs" style="display:flex;gap:6px;"></div>
+      </div>
       <p class="cs" id="priceSub"><span class="skel skel-line w60" style="display:inline-block;height:12px;"></span></p>
       <div id="priceChartHost"><div class="chart-loading"><div class="spinner"></div><span style="font-size:13px;color:var(--muted);">Loading price data…</span></div></div>
     </div>
@@ -1471,6 +1474,11 @@
     <div class="h2" data-t="lbTitle">Community deposits</div>
     <p class="sub" data-t="lbSub">Everyone who has deposited USDC into the agent's DCA treasury — fully transparent, sourced from on-chain data.</p>
     <div class="lb-summary" id="lbSummary"></div>
+    <div class="card" style="margin-bottom:16px;display:none;" id="tokenSplitCard">
+      <h3>DCA targets — who buys what</h3>
+      <p class="cs">Active schedules grouped by the token each wallet chose. Daily totals come from each schedule (per-run amount × cadence, capped by the wallet's daily cap).</p>
+      <div id="tokenSplitList"></div>
+    </div>
     <div class="card">
       <h3 data-t="lbLeaderboard">Depositor leaderboard</h3>
       <p class="cs" id="lbCount">Loading on-chain data…</p>
@@ -4440,28 +4448,60 @@
     });
   })();
 
-  // ---------- price chart (cirBTC/USDC) ----------
+  // ---------- fill-price chart (per token) ----------
+  // Fills are grouped by tokenOut and charted per token. The old version pooled
+  // every successful swap under a hard-coded "cirBTC / USDC" label — once EURC
+  // fills landed, it was charting EURC rates with a cirBTC caption.
+  var _fillsByToken = null;
+  var _fillTok = null;
   function renderPriceChart(history) {
-    var host = $("priceChartHost");
     var card = $("priceChartCard");
-    var swaps = [];
+    var byTok = {};
     history.forEach(function (e) {
       if (!SUCCESS[e.status]) return;
       var usdcIn = parseFloat(e.clampedAmountUsdc || "0") || 0;
-      var btcOut = parseFloat(e.amountOut || "0") || 0;
-      if (usdcIn > 0 && btcOut > 0) swaps.push({ date: e.date, price: usdcIn / btcOut, usdcIn: usdcIn, btcOut: btcOut });
+      var out = parseFloat(e.amountOut || "0") || 0;
+      if (!(usdcIn > 0 && out > 0)) return;
+      var tok = e.tokenOut || "cirBTC";
+      (byTok[tok] = byTok[tok] || []).push({ date: e.date, price: usdcIn / out, usdcIn: usdcIn, out: out });
     });
-    if (!swaps.length) {
-      card.style.display = "none";
-      return;
-    }
+    var toks = Object.keys(byTok).sort();
+    if (!toks.length) { card.style.display = "none"; return; }
     card.style.display = "";
+    _fillsByToken = byTok;
+    // Keep the user's tab choice while it still has data; else default to the
+    // token with the most recent fill.
+    if (!_fillTok || !byTok[_fillTok]) {
+      var lastTok = toks[0], lastDate = "";
+      toks.forEach(function (t) { var d = byTok[t][byTok[t].length - 1].date || ""; if (d >= lastDate) { lastDate = d; lastTok = t; } });
+      _fillTok = lastTok;
+    }
+    var tabs = $("priceChartTabs");
+    if (tabs) {
+      tabs.innerHTML = toks.length > 1 ? toks.map(function (t) {
+        var on = t === _fillTok;
+        return '<button class="btn ghost" data-ftok="' + t + '" style="padding:4px 12px;font-size:12px;' + (on ? 'border-color:var(--violet);color:var(--violet);' : '') + '">' + t + '</button>';
+      }).join("") : "";
+      Array.prototype.slice.call(tabs.querySelectorAll("[data-ftok]")).forEach(function (b) {
+        b.addEventListener("click", function () { _fillTok = this.getAttribute("data-ftok"); drawFillChart(); });
+      });
+    }
+    drawFillChart();
+  }
+  function drawFillChart() {
+    var host = $("priceChartHost");
+    var swaps = (_fillsByToken && _fillsByToken[_fillTok]) || [];
+    if (!swaps.length) return;
+    var tok = _fillTok;
+    var outDp = tok === "cirBTC" ? 8 : 6;
+    var title = $("priceChartTitle");
+    if (title) title.textContent = "USDC → " + tok + " fill price";
     var latest = swaps[swaps.length - 1];
     var prev = swaps.length > 1 ? swaps[swaps.length - 2] : latest;
     var change = prev.price > 0 ? ((latest.price - prev.price) / prev.price * 100) : 0;
     var changeStr = (change >= 0 ? "+" : "") + change.toFixed(2) + "%";
     var changeColor = change >= 0 ? "var(--green)" : "var(--red)";
-    $("priceSub").innerHTML = "Latest: <b>" + fmt(latest.price, 4) + " USDC/cirBTC</b> <span style='color:" + changeColor + ";font-weight:700;'>" + changeStr + "</span> · " + swaps.length + " data points";
+    $("priceSub").innerHTML = "Latest: <b>" + fmt(latest.price, 4) + " USDC/" + tok + "</b> <span style='color:" + changeColor + ";font-weight:700;'>" + changeStr + "</span> · " + swaps.length + " fill(s)";
 
     var W = 920, H = 220, padL = 54, padR = 12, padT = 16, padB = 28;
     var prices = swaps.map(function (s) { return s.price; });
@@ -4503,7 +4543,7 @@
       var closest = 0, minD = Infinity;
       for (var k = 0; k < n; k++) { var d = Math.abs(x(k) - sx); if (d < minD) { minD = d; closest = k; } }
       var s = swaps[closest];
-      showTip(ev, '<div class="tt-label">' + s.date + '</div><div class="tt-val">' + fmt(s.price, 4) + ' USDC/cirBTC</div><div class="tt-sub">' + fmt(s.usdcIn, 4) + ' → ' + fmt(s.btcOut, 8) + ' cirBTC</div>');
+      showTip(ev, '<div class="tt-label">' + s.date + '</div><div class="tt-val">' + fmt(s.price, 4) + ' USDC/' + tok + '</div><div class="tt-sub">' + fmt(s.usdcIn, 4) + ' → ' + fmt(s.out, outDp) + ' ' + tok + '</div>');
     });
     host.querySelector("svg").addEventListener("mouseleave", hideTip);
   }
@@ -4542,6 +4582,56 @@
     }).join("");
   }
 
+  // ---------- DCA target split (which token each wallet buys) ----------
+  // Multi-token pooling is the engine's core feature, but nothing on the
+  // dashboard showed how the schedules split across tokens. Daily totals mirror
+  // the scheduler's own math: per-run amount × cadence, capped per wallet.
+  function renderTokenSplit(ledger) {
+    var card = $("tokenSplitCard"), list = $("tokenSplitList");
+    if (!card || !list) return;
+    var users = ledger && ledger.users ? Object.values(ledger.users) : [];
+    var byTok = {};
+    users.forEach(function (u) {
+      if (u.dcaPaused || u.dcaMode === "manual") return;
+      var daily = 0;
+      if (u.dcaFrequency) {
+        var perRun = parseFloat(u.dcaAmountPerRun || "0");
+        if (!(perRun > 0)) return;
+        var runsPerDay = u.dcaFrequency === "hours" ? 24 / Math.max(1, u.dcaEveryHours || 24)
+          : u.dcaFrequency === "days" ? 1 / Math.max(1, u.dcaEveryDays || 1)
+          : u.dcaFrequency === "weekly" ? ((u.dcaWeekdays || []).length / 7)
+          : 1;
+        daily = perRun * runsPerDay;
+        var cap = parseFloat(u.dcaDailyCapUsdc || "0");
+        if (cap > 0) daily = Math.min(daily, cap);
+      } else {
+        daily = parseFloat(u.dcaRatePerDay || "0");
+        if (!(daily > 0)) return;
+      }
+      var tok = u.dcaTokenOut || "cirBTC";
+      if (!byTok[tok]) byTok[tok] = { wallets: 0, daily: 0, smart: 0 };
+      byTok[tok].wallets++;
+      byTok[tok].daily += daily;
+      if (u.dcaMode === "smart") byTok[tok].smart++;
+    });
+    var toks = Object.keys(byTok).sort();
+    if (!toks.length) { card.style.display = "none"; return; }
+    card.style.display = "";
+    list.innerHTML = toks.map(function (t) {
+      var d = byTok[t];
+      var note = t === "cirBTC"
+        ? '<span style="color:var(--amber);">route in outage — agent rides it out</span>'
+        : '<span style="color:var(--green);">live route</span>';
+      return '<div class="lb-row">' +
+        '<div style="flex:1;min-width:0;"><b>' + t + '</b> <span style="font-size:11px;margin-left:6px;">' + note + '</span></div>' +
+        '<div style="text-align:right;">' +
+          '<div class="lb-amt">≈ ' + fmt(d.daily, 2) + ' USDC/day</div>' +
+          '<div style="font-size:11px;color:var(--muted);">' + d.wallets + ' wallet(s)' + (d.smart ? ' · 🧠 ' + d.smart + ' smart' : '') + '</div>' +
+        '</div>' +
+      '</div>';
+    }).join("");
+  }
+
   // ---------- leaderboard / treasury deposits ----------
   // Deposits come from the committed ledger, which the agent builds by scanning
   // USDC Transfer logs into its wallet on every run. The browser used to redo
@@ -4556,6 +4646,7 @@
         try { var fresh = await fetchLedger(); if (fresh) { _ledgerData = fresh; ledger = fresh; } } catch (e) {}
       }
       sec.style.display = "";
+      renderTokenSplit(ledger);
       var deps = (ledger && Array.isArray(ledger.deposits)) ? ledger.deposits : null;
 
       if (!deps) {
@@ -4650,7 +4741,6 @@
       stratSub: "The agent monitors cirBTC price trends and automatically increases allocation when prices dip — buying more when it's cheaper.",
       trackEye: "Live track record", trackTitle: "What the agent has done",
       trackSub: "Every run is recorded on-chain and committed to the repo — full transparency.",
-      priceChartTitle: "cirBTC / USDC Price",
       perfEye: "Performance", perfTitle: "Portfolio dashboard",
       memEye: "Agent memory", memTitle: "What the agent has learned",
       memSub: "After every run, the agent reflects on its decisions and outcomes — building persistent memory that shapes future strategy.",
@@ -4765,7 +4855,6 @@
       stratSub: "Agent theo dõi xu hướng giá cirBTC và tự động tăng phân bổ khi giá giảm — mua nhiều hơn khi rẻ hơn.",
       trackEye: "Hồ sơ trực tiếp", trackTitle: "Agent đã làm gì",
       trackSub: "Mỗi lần chạy được ghi on-chain và commit vào repo — minh bạch hoàn toàn.",
-      priceChartTitle: "Giá cirBTC / USDC",
       perfEye: "Hiệu suất", perfTitle: "Bảng điều khiển danh mục",
       memEye: "Bộ nhớ Agent", memTitle: "Agent đã học được gì",
       memSub: "Sau mỗi lần chạy, agent phản chiếu về quyết định và kết quả — xây dựng bộ nhớ bền vững định hình chiến lược tương lai.",
