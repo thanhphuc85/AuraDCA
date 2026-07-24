@@ -4,8 +4,9 @@
 
 *Encode Club × Circle — Programmable Money Hackathon (build on Arc)*
 
+Live: https://aura-dca.vercel.app
 Repo: https://github.com/thanhphuc85/AuraDCA
-On-chain proof (swap): https://testnet.arcscan.app/tx/0x83097f432db9c013b3f8d7748b58f18484c2a5fde4ce500c221ee38524250933
+**Pooled 2-user swap, settled pro-rata:** https://testnet.arcscan.app/tx/0xd8a19fef1527
 On-chain audit anchor (contract): https://testnet.arcscan.app/address/0x4948c662630c7dE36BD59089085850c00996F661
 
 ---
@@ -30,7 +31,7 @@ In **Smart mode** the agent doesn't just gate the buy — it **sizes** it, and t
 
 > Our logo is that split, drawn: two orbits that never contain each other, meeting only where a decision is made.
 
-**2. Many users, one swap, fair settlement.** Each wallet sets its own cadence, amount and caps. Every run the agent computes each user's due spend, executes the **sum as a single swap**, then distributes the received cirBTC **pro-rata by contribution** — scaling every share down together if a guardrail capped the total, and assigning the rounding remainder deterministically so the books always close. One transaction serves everyone; nobody subsidises anyone. ([`schedule.ts`](src/ledger/schedule.ts), unit-tested.)
+**2. Many users, one swap, fair settlement.** Each wallet sets its own cadence, amount and caps. Every run the agent computes each user's due spend, executes the **sum as a single swap**, then distributes the received token **pro-rata by contribution** — scaling every share down together if a guardrail capped the total, and assigning the rounding remainder deterministically so the books always close. One transaction serves everyone; nobody subsidises anyone. ([`schedule.ts`](src/ledger/schedule.ts), unit-tested — and [proven on-chain](#does-it-run--the-honest-state): two wallets, one swap, split to the last unit.)
 
 **3. Non-custodial by construction.** Users never hand over keys. Every state change — set schedule, run now, withdraw — is authorised by an **EIP-191 signature** the user makes in their own wallet and the server verifies before touching the ledger. The agent can execute the strategy; it can never invent a user's consent.
 
@@ -53,19 +54,39 @@ On top of the autonomous cron, we shipped a full **dashboard** (live at **[aura-
 - **Vector memory + reflection.** After each run Claude writes a reflection to `data/reflections.json`; the dashboard surfaces this "agent memory" plus an **Agent intelligence** panel (risk / market regime / confidence / pattern alerts) derived from the run history.
 - **Smart, dynamic sizing.** Opt into Smart mode and each scheduled buy is sized by live market conditions (drawdown + Fear & Greed), within a sensitivity and ceiling you set — with a live preview of this run's multiplier before you sign, and a `🧠 ×M` badge on every executed run.
 - **Multi-agent decisions.** A Claude Haiku market-analyst produces a brief that the main decision agent factors into its allocation.
+- **It tells you what it did.** The cron pushes a Telegram alert on every meaningful run — the amount, the token, the smart multiplier it used (and whether the agent or the formula chose it), what bound the size, and the tx link — so the agent reports to you without the dashboard being open.
 
 ## Does it run? — the honest state
 
-You will open [`data/history.json`](data/history.json) and see a wall of
-`error_swap_failed`. Here is that, straight, before anything else in this document
-tries to impress you.
+You will open [`data/history.json`](data/history.json) and see many
+`error_swap_failed` rows. Here is that, straight, before anything else in this
+document tries to impress you. And here is the other half, equally straight: the
+thesis of this project — *many users, one swap, settled pro-rata* — has now
+executed on-chain, unsupervised, on the hourly cron.
 
-**The pipeline runs.** Circle wallet → Swap Kit → Arc Testnet executed a real swap
-today: [`0xe54ee0…e3a3`](https://testnet.arcscan.app/tx/0xe54ee0951bed8c7263075b393af40e78606b88e763ce9dd8b7498d6c6a89e3a3)
-(`0.50 USDC → 0.402303 EURC`). Reproduce it yourself with `npm run prove-swap`.
+**The flagship claim, proven live.** Run `2026-07-23T22:56Z`: two independent
+wallets were due 1 USDC each, the agent pooled them into **one** swap and split
+the proceeds by contribution —
+[`0xd8a19f…1527`](https://testnet.arcscan.app/tx/0xd8a19fef1527ed91122ba29ec1ea9a845be1a7e3f3005450252f143956c07a19) (`2.00 USDC → 1.793953 EURC`).
+
+| Wallet | Contributed | Received | Share |
+|---|---|---|---|
+| `0xdd6045a6…` | 1.000000 USDC | 0.896977 EURC | 50.0% |
+| `0xfc337ba1…` | 1.000000 USDC | 0.896976 EURC | 50.0% |
+
+`0.896977 + 0.896976 = 1.793953` — the books close exactly, with the rounding
+remainder assigned deterministically. It repeated the next run
+(`2026-07-24T00:04Z`, [`0x0a7bd7…2d77`](https://testnet.arcscan.app/tx/0x0a7bd7182d773a20b8665610f58523c2bfe3edf0a515f1d419b9fc5ec71519d7)).
+Four successful swaps are recorded in total; every one of them is in
+[`data/history.json`](data/history.json) with its tx hash.
+
+**The audit anchor runs itself, too.** The cron has written **14 attestations (and counting)**
+to [`AuraAttestation`](https://testnet.arcscan.app/address/0x4948c662630c7dE36BD59089085850c00996F661)
+without a human in the loop — each one the keccak256 of the ledger it just
+committed.
 
 **The cirBTC market does not.** `USDC → cirBTC` has returned *"No route available"*
-on every attempt across 12+ consecutive days. It's a liquidity outage on Arc
+on every attempt across 14 distinct calendar days (2026-07-08 → 2026-07-23). It's a liquidity outage on Arc
 Testnet, not a bug in the agent — and `npm run check-routes` shows it's isolated
 to cirBTC, which is the only volatile asset Arc carries (the chain is
 stablecoin-native down to its USDC gas token).
@@ -73,16 +94,21 @@ stablecoin-native down to its USDC gas token).
 **The agent handled it the way we'd want it to.** It recognised the failures as
 *structural rather than transient*, recorded that reasoning in its own
 [reflections](data/reflections.json), cut its probe frequency to stop burning
-fees, and withheld spend to preserve capital across all 12+ days of the outage,
+fees, and withheld spend to preserve capital across all all 16 days of the outage,
 unsupervised. Knowing when *not* to act is the harder half of an autonomous money
 agent, and this is the run of history where it was tested for real.
 
 So we didn't paper over the outage by forcing the demo onto whatever still quotes.
 Instead we made the **target token a per-user choice**: pick EURC and your buys
-settle live today (proven on-chain); leave it on cirBTC and the agent rides out
-the outage. EURC isn't a fig leaf over a dead pair — it's a real option, and
-BTC-accumulation stays intact for anyone who wants it. [What we measured](#what-we-measured-and-the-pivot-we-killed)
-is why we trust EURC enough to offer it.
+settle live today (proven on-chain, hourly); leave it on cirBTC and the agent
+rides out the outage. EURC isn't a fig leaf over a dead pair — it's a real option,
+and BTC-accumulation stays intact for anyone who wants it.
+[What we measured](#what-we-measured-and-the-pivot-we-killed) is why we trust EURC
+enough to offer it.
+
+Both halves are live side by side right now — the dashboard's **DCA targets** panel
+shows EURC wallets buying on a working route while the cirBTC wallet waits out a
+dead one, from the same scheduler, in the same runs.
 
 ## How it works (flow)
 
@@ -106,7 +132,7 @@ GitHub Actions cron (hourly — each user's own cadence decides if this hour is 
 - **Circle Swap Kit** (`@circle-fin/swap-kit`) + **Developer-Controlled Wallets** (`@circle-fin/developer-controlled-wallets`) + Circle Wallets adapter
 - **Arc Testnet** (Circle's stablecoin-native EVM L1; gas paid in USDC)
 - **Solidity** — [`AuraAttestation.sol`](contracts/AuraAttestation.sol), a fund-less on-chain audit anchor deployed on Arc Testnet; the agent records `keccak256(data/ledger.json)` each run and anyone can reproduce it read-only with `npm run verify-attest`
-- **GitHub Actions** for scheduling, secrets, and the commit-back audit trail
+- **GitHub Actions** for scheduling, secrets, and the commit-back audit trail — the same run also writes the on-chain attestation and pushes the Telegram alert
 - **Vitest** — 65 unit tests on the safety-critical paths: `clampDecision()` guardrails (now the authority on the pooled swap total, too), the pooled pro-rata settlement (including per-token grouping), the smart-sizing envelope (formula + the clamp on the agent's own proposed multiplier, per-user sensitivity/cap bounds), the on-chain audit hash, and the outage-/campaign-day arithmetic the agent reasons from
 - **Vercel** serverless functions (`api/`) for the dashboard's signed actions — set-rate, run-DCA, withdraw, chat, welcome-email
 - **Single-file dashboard** (`docs/index.html`) — EIP-6963 wallet discovery, EIP-191 signing, EN/VI, light/dark
@@ -147,7 +173,7 @@ What the probes actually establish:
 
 | Asset | Measured state |
 |---|---|
-| cirBTC | No liquidity — `No route available` on every attempt, 12+ days and counting |
+| cirBTC | No liquidity — `No route available` on every attempt, 14 distinct days and counting |
 | EURC | Live, and the rate does move — in ~hourly steps of ~0.22% |
 | WBTC / WETH / USDT / DAI / … | Not wired to Arc Testnet at all |
 
@@ -166,26 +192,30 @@ wrong.
 
 ## What makes it stand out
 
-- **Real, verifiable execution** — not a demo video. There's an actual on-chain swap and green CI runs anyone can inspect.
-- **Safety architecture** — the LLM-recommends / code-decides split is the whole point, and it's enforced by a tested pure function plus a two-switch live-trading gate (`DRY_RUN` + `LIVE_TRADING_ENABLED`).
-- **Genuinely autonomous** — self-hosted on free CI, self-documenting via committed history, and it reasons over its own past runs.
+- **The hard claim is proven, not asserted** — "many users, one swap, settled pro-rata" is the part most agent projects only describe. Ours did it on-chain, unsupervised, twice: two wallets pooled into one swap and split to the last unit.
+- **Real, verifiable execution** — not a demo video. Real swaps, real per-user distributions, and green CI runs anyone can inspect.
+- **Safety architecture** — the LLM-recommends / code-decides split is the whole point, and it's enforced by a tested pure function plus a two-switch live-trading gate (`DRY_RUN` + `LIVE_TRADING_ENABLED`). The agent's own market read moves the buy size, but only inside bounds code owns.
+- **It audits itself on-chain** — 14+ attestations written by the cron with no human involved; anyone can recompute the hash from the public repo.
+- **Genuinely autonomous** — self-hosted on free CI, self-documenting via committed history, reasoning over its own past runs, and reporting to Telegram on every run.
 
 ## Challenges we ran into
 
 - **The cirBTC pair went into a liquidity outage** — the headline one, covered in [Does it run?](#does-it-run--the-honest-state) and [What we measured](#what-we-measured-and-the-pivot-we-killed). Short version: we treated it as a measurement problem rather than an excuse, and shipped probes that make every claim here falsifiable.
 - **Arc Testnet has no "real altcoin"** — community DEXs (ArcSwap/Presto/…) lacked publicly verified contract addresses, so we deliberately standardized on Circle's official Swap Kit (USDC↔EURC↔cirBTC) for a submission that actually runs.
 - **Our own metric was lying to the agent.** `dayCount()` returned `history.length + 1` — the *run* count — but it reaches Claude in the decision context as `dayCount` and it reasons about pacing with it. At three runs a day the agent believed it was on "day 21" after a week, and its reflections overstated the outage's length by ~3x; once the cron went hourly it would have drifted 24x per real day. Found while fact-checking this document against `history.json` — the "20+ days" we had written came from the agent's own corrupted arithmetic. `dayCount` now counts distinct dates and is regression-tested. **An agent reasoning from a mislabeled number is confidently wrong, and nothing in the output looks broken** — which is the whole argument for keeping the money-authority in tested code rather than in the model.
+- **A failed read is not a zero.** Arc's public RPC rate-limits bursts (`-32011`), and several dashboard readers coerced that error response to `0x0`. The treasury showed `cirBTC 0 · EURC 0` while the wallet held 22.68 EURC on-chain, and the deposits page rendered "No deposits yet" against a ledger holding 35 USDC across 4 deposits. Nothing looked broken — it looked *empty*, which is far more dangerous on a page whose entire claim is transparency. Readers now retry with backoff and **throw** instead of fabricating a zero; callers render "—" or omit the row. Same lesson as `dayCount`, one layer out: **a wrong number that looks plausible beats a loud error at hiding itself.**
 - **Circle SDK packaging** — required Node ≥ 22 and had ESM named-export quirks that only surface on specific Node versions; pinned CI to Node 24 to match the verified runtime.
+- **Token decimals are not interchangeable.** EURC withdrawals failed with "Invalid amounts in transfer request" because the client formatted every non-USDC token to 8 decimals; EURC carries 6, and Circle rejects the extra places. Fixed on both ends — the client maps decimals per token, and the API re-normalizes before calling Circle, so no stale client can reproduce it.
 - **Empty-string config in CI** — unset GitHub Actions variables arrive as `""`, which zod's `.default()` doesn't fill; fixed with an explicit empty-to-undefined preprocess.
 
 ## What's next
 
 - **Per-user token choice already ships** — each wallet picks its target (cirBTC or EURC today), and the run settles one pooled swap per token. The next step is a Claude-*decided* split across multiple **volatile** assets, which needs Arc to wire more than one; it unlocks the day cirBTC's market returns or Arc lists others.
-- A live P&L / cost-basis panel — the dashboard markup is ready and turns on automatically once cirBTC swaps clear (Arc Testnet's USDC→cirBTC route has been in an outage the agent has been reasoning around)
+- A live P&L / cost-basis panel — the per-token fill chart already plots the real EURC rate the agent paid on each run; cost-basis is the next layer, and cirBTC joins automatically the day its route returns
 - Verified sender domain for the welcome email so it reaches any user, not just the operator's inbox
 - Mainnet-readiness review when Arc mainnet ships
 
-> Since the first submission we grew this from a headless cron bot into a usable product: a per-user, non-custodial dashboard, a conversational Claude assistant with confirm-to-sign actions, real-time withdrawals and on-demand DCA, and the agent's own vector memory — all still governed by the same code-owns-the-money guardrail.
+> Since the first submission we grew this from a headless cron bot into a usable product — and then proved the part that mattered. The pooled multi-user swap stopped being an architecture diagram and became two on-chain transactions splitting to the last unit; the agent gained bounded authority over its own buy size; and it now anchors its ledger on-chain and reports to Telegram every run, with nobody watching. Same code-owns-the-money guardrail throughout.
 
 ## Brand & trademark
 

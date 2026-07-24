@@ -41,16 +41,17 @@ The wallet is a Circle **Developer-Controlled Wallet**: Circle custodies the sig
 
 ## Live demo — verified on-chain
 
-This isn't a mockup. The agent has executed a **real swap on Arc Testnet**:
+This isn't a mockup. The flagship claim — **many users, one swap, settled pro-rata** — has executed on-chain, unsupervised:
 
-- **Transaction:** [`0x83097f…50933`](https://testnet.arcscan.app/tx/0x83097f432db9c013b3f8d7748b58f18484c2a5fde4ce500c221ee38524250933) — swapped `0.10 USDC → cirBTC`
+- **Pooled 2-user swap:** [`0xd8a19f…1527`](https://testnet.arcscan.app/tx/0xd8a19fef1527ed91122ba29ec1ea9a845be1a7e3f3005450252f143956c07a19) — two wallets, 1 USDC each, pooled into one `2.00 USDC → 1.793953 EURC` swap and split 0.896977 / 0.896976 (50/50, to the last unit).
+- **On-chain audit anchor:** the cron has written 14+ attestations of the committed ledger to [`AuraAttestation`](https://testnet.arcscan.app/address/0x4948c662630c7dE36BD59089085850c00996F661) — verify any of them read-only with `npm run verify-attest`.
 - **The cron runs autonomously in CI:** see the green [Actions runs](https://github.com/thanhphuc85/AuraDCA/actions/workflows/dca.yml) and the bot's own `chore: record DCA run …` commits to [`data/history.json`](data/history.json).
 
 ### ⚠️ Current status: the cirBTC pair is in an Arc Testnet liquidity outage
 
 `data/history.json` currently shows a run of `error_swap_failed` entries. That is
 **not** the agent failing — Arc Testnet's `USDC → cirBTC` route has returned
-*"No route available"* on every attempt for 12+ consecutive days. Two things make
+*"No route available"* on every attempt for 14 distinct calendar days (2026-07-08 → 2026-07-23). Two things make
 that verifiable rather than an excuse:
 
 - **The execution path is provably live right now** — a real swap on a working
