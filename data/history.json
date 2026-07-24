@@ -848,5 +848,32 @@
     "amountOut": "1.736819",
     "walletUsdcBalance": "49.202687200119472149",
     "message": "Swapped 2.000000 USDC -> EURC across 2 user(s)"
+  },
+  {
+    "date": "2026-07-24",
+    "timestamp": "2026-07-24T07:30:44.283Z",
+    "status": "success",
+    "requestedAmountUsdc": "2.000000",
+    "clampedAmountUsdc": "2.000000",
+    "boundBy": "user_schedule",
+    "tokenOut": "EURC",
+    "reasoning": "Rate-based DCA: 3 active user(s), executing 7.000000 USDC this run.",
+    "txHash": "0x4a36b5b5400cba77202e98b96d772ee3ad34c5d583329236c2a9d257aa271b78",
+    "explorerUrl": "https://testnet.arcscan.app/tx/0x4a36b5b5400cba77202e98b96d772ee3ad34c5d583329236c2a9d257aa271b78",
+    "amountOut": "1.476581",
+    "walletUsdcBalance": "47.184636675251472149",
+    "message": "Swapped 2.000000 USDC -> EURC across 2 user(s)"
+  },
+  {
+    "date": "2026-07-24",
+    "timestamp": "2026-07-24T07:30:44.283Z",
+    "status": "error_swap_failed",
+    "requestedAmountUsdc": "5.000000",
+    "clampedAmountUsdc": "5.000000",
+    "boundBy": "user_schedule",
+    "tokenOut": "cirBTC",
+    "reasoning": "Rate-based DCA: 3 active user(s), executing 7.000000 USDC this run.",
+    "walletUsdcBalance": "47.184636675251472149",
+    "message": "Swap failed [cirBTC/no_route]: Swap failed [no_route]: Stablecoin Service createSwap failed: Route or resource not found. Details: No route available"
   }
 ]
