@@ -1021,5 +1021,16 @@
     "tokenOut": "cirBTC",
     "walletUsdcBalance": "34.025924339801894125",
     "message": "No buy this run: no user was due (0 scheduled USDC across 5 account(s))"
+  },
+  {
+    "date": "2026-07-25",
+    "timestamp": "2026-07-25T11:10:04.760Z",
+    "status": "skipped_guardrail_clamped",
+    "requestedAmountUsdc": "0.000000",
+    "clampedAmountUsdc": "0",
+    "boundBy": "no_scheduled_spend",
+    "tokenOut": "cirBTC",
+    "walletUsdcBalance": "34.024364330438319809",
+    "message": "No buy this run: no user was due (0 scheduled USDC across 5 account(s))"
   }
 ]
