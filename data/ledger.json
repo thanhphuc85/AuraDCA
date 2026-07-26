@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "lastScannedBlock": 53660811,
+  "lastScannedBlock": 53668541,
   "users": {
     "0x615a9b4d30e81cc6658d6b94e9b9609a34dc97b5": {
       "address": "0x615a9b4d30e81cc6658d6b94e9b9609a34dc97b5",
@@ -18,14 +18,14 @@
     },
     "0xdd6045a634ef2c61d6070552b556aae40099e84b": {
       "address": "0xdd6045a634ef2c61d6070552b556aae40099e84b",
-      "usdcBalance": "17.000000",
+      "usdcBalance": "16.000000",
       "cirBtcBalance": "0",
       "totalDeposited": "35.000000",
-      "totalSwapped": "14.000000",
+      "totalSwapped": "15.000000",
       "totalWithdrawnCirBtc": "0",
       "totalWithdrawnUsdc": "4.000000",
       "firstSeen": "2026-07-10T16:07:29.490Z",
-      "lastActivity": "2026-07-25T22:56:29.610Z",
+      "lastActivity": "2026-07-26T00:02:32.620Z",
       "dcaRatePerDay": "1.000000",
       "dcaPaused": false,
       "dcaRateIsCustom": true,
@@ -38,13 +38,13 @@
       "dcaDailyCapUsdc": "10.000000",
       "dcaTokenOut": "EURC",
       "tokenBalances": {
-        "EURC": "9.387534"
+        "EURC": "10.099385"
       },
-      "dcaSpentDayUsdc": "3.000000",
-      "dcaSpentDayDate": "2026-07-25",
-      "dcaSpentWeekUsdc": "13.000000",
+      "dcaSpentDayUsdc": "1.000000",
+      "dcaSpentDayDate": "2026-07-26",
+      "dcaSpentWeekUsdc": "14.000000",
       "dcaSpentWeekStart": "2026-07-20",
-      "lastChargedAt": "2026-07-25T22:56:29.610Z",
+      "lastChargedAt": "2026-07-26T00:02:32.620Z",
       "dcaWeeklyCapUsdc": "30.000000",
       "totalWithdrawn": {
         "EURC": "1.281252"
@@ -440,6 +440,21 @@
         }
       ],
       "timestamp": "2026-07-25T22:56:55.067Z"
+    },
+    {
+      "runTimestamp": "2026-07-26T00:02:32.620Z",
+      "tokenOut": "EURC",
+      "totalUsdcSwapped": "1.000000",
+      "totalCirBtcReceived": "0.711851",
+      "allocations": [
+        {
+          "address": "0xdd6045a634ef2c61d6070552b556aae40099e84b",
+          "usdcShare": "1.000000",
+          "cirBtcShare": "0.711851",
+          "poolFraction": "1.00000000"
+        }
+      ],
+      "timestamp": "2026-07-26T00:02:55.947Z"
     }
   ],
   "withdrawals": [
