@@ -4,7 +4,7 @@
 
 *Encode Club × Circle — Programmable Money Hackathon (build on Arc)*
 
-Live: https://aura-dca.vercel.app
+Live: https://aura-dca.xyz
 Repo: https://github.com/thanhphuc85/AuraDCA
 **Pooled 2-user swap, settled pro-rata:** https://testnet.arcscan.app/tx/0xd8a19fef1527
 On-chain audit anchor (contract): https://testnet.arcscan.app/address/0x4948c662630c7dE36BD59089085850c00996F661
@@ -45,7 +45,7 @@ It runs entirely on a **GitHub Actions cron** — no server to host. Each run co
 
 ### The dashboard — from bot to product
 
-On top of the autonomous cron, we shipped a full **dashboard** (live at **[aura-dca.vercel.app](https://aura-dca.vercel.app)**) that turns the agent into something people can actually use:
+On top of the autonomous cron, we shipped a full **dashboard** (live at **[aura-dca.xyz](https://aura-dca.xyz)**) that turns the agent into something people can actually use:
 
 ![The Aura DCA dashboard](docs/dashboard.png)
 

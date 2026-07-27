@@ -1786,7 +1786,7 @@
       if (!warn) return;
       var configured = loadStore("aura-withdraw-api", "");
       if (isStaticHost() && !configured) {
-        warn.textContent = "⚠️ This page is served from a static host with no /api/* — withdrawals, schedule changes, run-now and chat need a URL here. Use https://aura-dca.vercel.app";
+        warn.textContent = "⚠️ This page is served from a static host with no /api/* — withdrawals, schedule changes, run-now and chat need a URL here. Use https://aura-dca.xyz";
         warn.style.display = "";
       } else {
         warn.style.display = "none";

@@ -4,7 +4,7 @@
 
 *Encode Club × Circle — Programmable Money Hackathon (build trên Arc)*
 
-Live: https://aura-dca.vercel.app
+Live: https://aura-dca.xyz
 Repo: https://github.com/thanhphuc85/AuraDCA
 **Swap gộp 2 user, chia pro-rata:** https://testnet.arcscan.app/tx/0xd8a19fef1527
 Neo audit on-chain (contract): https://testnet.arcscan.app/address/0x4948c662630c7dE36BD59089085850c00996F661
@@ -47,7 +47,7 @@ Toàn bộ chạy trên **GitHub Actions cron** — không cần server. Mỗi l
 
 ### Dashboard — từ bot thành sản phẩm
 
-Trên nền cron tự động, chúng tôi xây thêm một **dashboard** hoàn chỉnh (chạy tại **[aura-dca.vercel.app](https://aura-dca.vercel.app)**), biến agent thành thứ người dùng thật sự dùng được:
+Trên nền cron tự động, chúng tôi xây thêm một **dashboard** hoàn chỉnh (chạy tại **[aura-dca.xyz](https://aura-dca.xyz)**), biến agent thành thứ người dùng thật sự dùng được:
 
 ![Dashboard Aura DCA](docs/dashboard.png)
 
