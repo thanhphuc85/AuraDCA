@@ -34,8 +34,28 @@ export async function readLedger(): Promise<Ledger> {
   return parsed as Ledger;
 }
 
+// Keep the on-disk ledger bounded. `distributions` grows O(runs × users) and is
+// re-committed to git every run, so at scale it would bloat the repo and slow
+// every read/commit. Cap it to the most recent N records — the full history
+// still lives in history.json and, immutably, in the on-chain swap tx hashes;
+// the dashboard only renders recent allocations anyway. Tune via env if needed.
+export const MAX_DISTRIBUTION_RECORDS = Math.max(
+  1,
+  Number.parseInt(process.env.MAX_DISTRIBUTION_RECORDS ?? "", 10) || 200,
+);
+
+/**
+ * Return the ledger to persist, with `distributions` capped to the most recent
+ * `max` records. Pure and non-mutating: the input object keeps every record, so
+ * in-memory callers are unaffected — only the serialized copy is trimmed.
+ */
+export function boundedForWrite(ledger: Ledger, max: number = MAX_DISTRIBUTION_RECORDS): Ledger {
+  if (!Array.isArray(ledger.distributions) || ledger.distributions.length <= max) return ledger;
+  return { ...ledger, distributions: ledger.distributions.slice(-max) };
+}
+
 export async function writeLedger(ledger: Ledger): Promise<void> {
-  await writeFile(LEDGER_FILE_PATH, `${JSON.stringify(ledger, null, 2)}\n`, "utf-8");
+  await writeFile(LEDGER_FILE_PATH, `${JSON.stringify(boundedForWrite(ledger), null, 2)}\n`, "utf-8");
 }
 
 function emptyUser(address: string, now: string): UserAccount {
