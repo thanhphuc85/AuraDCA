@@ -11,6 +11,14 @@
       "maxDuration": 10
     }
   },
+  "redirects": [
+    {
+      "source": "/:path*",
+      "has": [{ "type": "host", "value": "aura-dca.vercel.app" }],
+      "destination": "https://aura-dca.xyz/:path*",
+      "permanent": true
+    }
+  ],
   "rewrites": [
     { "source": "/((?!api/).*)", "destination": "/docs/$1" }
   ],
