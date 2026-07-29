@@ -2604,44 +2604,93 @@
       sdk.execute(challengeId, function (err) { if (err) reject(err); else resolve(); });
     });
   }
-  async function connectCircleGoogle() {
-    var cfg = await loadCircleConfig();
-    if (!cfg || !cfg.configured) throw new Error("circle-not-configured");
-    var mod = await import(/* @vite-ignore */ CIRCLE_WEB_SDK);
-    var W3SSdk = mod.W3SSdk;
-    // 1) a bare SDK just to read the deviceId
-    var deviceId = await new W3SSdk({ appSettings: { appId: cfg.appId } }).getDeviceId();
-    // 2) exchange it for the social-login device token pair (server holds the key)
-    var tok = await circleApi("socialToken", { deviceId: deviceId });
-    // 3) full SDK with login config, then trigger Google OAuth
-    var login = await new Promise(function (resolve, reject) {
-      var sdk = new W3SSdk({
-        appSettings: { appId: cfg.appId },
-        loginConfigs: {
-          deviceToken: tok.deviceToken,
-          deviceEncryptionKey: tok.deviceEncryptionKey,
-          google: { clientId: cfg.googleClientId, redirectUri: window.location.origin },
-        },
-      }, function (error, result) {
-        if (error) { reject(error); return; }
-        resolve({ sdk: sdk, userToken: result.userToken, encryptionKey: result.encryptionKey });
-      });
-      sdk.performGoogleLogin();
-    });
-    circleState.sdk = login.sdk;
-    circleState.userToken = login.userToken;
-    circleState.encryptionKey = login.encryptionKey;
-    // 4) create the Arc wallet (challenge), unless the user already has one
-    var init = await circleApi("initWallet", { userToken: login.userToken });
-    if (init.challengeId) await circleExecute(login.sdk, init.challengeId);
-    // 5) resolve the wallet address
-    var listed = await circleApi("listWallets", { userToken: login.userToken });
+  var CIRCLE_PENDING_KEY = "aura-circle-pending";
+  function circleGoogleConfig(cfg, tok) {
+    return {
+      appSettings: { appId: cfg.appId },
+      loginConfigs: {
+        deviceToken: tok.deviceToken,
+        deviceEncryptionKey: tok.deviceEncryptionKey,
+        // selectAccountPrompt:true => prompt=select_account. Without it the SDK
+        // uses prompt=none (silent SSO) which shows NO account chooser and fails
+        // quietly — that was the "nothing happens" bug.
+        google: { clientId: cfg.googleClientId, redirectUri: window.location.origin, selectAccountPrompt: true },
+      },
+    };
+  }
+  // After login completes (same session or on redirect return), provision the Arc
+  // wallet and record it.
+  async function finishCircleWallet(sdk, userToken, encryptionKey) {
+    circleState.sdk = sdk;
+    circleState.userToken = userToken;
+    circleState.encryptionKey = encryptionKey;
+    var init = await circleApi("initWallet", { userToken: userToken });
+    if (init.challengeId) await circleExecute(sdk, init.challengeId);
+    var listed = await circleApi("listWallets", { userToken: userToken });
     var arc = (listed.wallets || []).filter(function (w) { return String(w.blockchain || "").toUpperCase().indexOf("ARC") >= 0; });
     var w = arc[0] || (listed.wallets || [])[0];
     if (!w) throw new Error("No wallet returned from Circle");
     circleState.walletId = w.id;
     circleState.address = w.address;
     return { address: w.address, walletId: w.id };
+  }
+  // Kick off Google login. performGoogleLogin() does a FULL-PAGE redirect, so we
+  // persist the device tokens first and finish the flow in resumeCircleGoogle()
+  // when Google sends the user back with the OAuth response in the URL hash.
+  async function startCircleGoogleLogin() {
+    var cfg = await loadCircleConfig();
+    if (!cfg || !cfg.configured) throw new Error("circle-not-configured");
+    var mod = await import(/* @vite-ignore */ CIRCLE_WEB_SDK);
+    var W3SSdk = mod.W3SSdk;
+    var deviceId = await new W3SSdk({ appSettings: { appId: cfg.appId } }).getDeviceId();
+    var tok = await circleApi("socialToken", { deviceId: deviceId });
+    try { localStorage.setItem(CIRCLE_PENDING_KEY, JSON.stringify({ deviceToken: tok.deviceToken, deviceEncryptionKey: tok.deviceEncryptionKey })); } catch (e) {}
+    var sdk = new W3SSdk(circleGoogleConfig(cfg, tok), function () {});
+    sdk.performGoogleLogin(); // navigates away to accounts.google.com
+  }
+  // On page load: if we're returning from Google (pending tokens + OAuth hash),
+  // rebuild the SDK so its constructor auto-handles the hash and fires the login
+  // callback, then provision the wallet and reflect it in the UI.
+  async function resumeCircleGoogle() {
+    var pendingRaw = null;
+    try { pendingRaw = localStorage.getItem(CIRCLE_PENDING_KEY); } catch (e) {}
+    var provider = null;
+    try { provider = localStorage.getItem("socialLoginProvider"); } catch (e) {}
+    var hash = window.location.hash || "";
+    if (!pendingRaw || provider !== "GOOGLE" || hash.indexOf("id_token") < 0) return;
+    var pending = JSON.parse(pendingRaw);
+    var cfg = await loadCircleConfig();
+    if (!cfg || !cfg.configured) return;
+    var mod = await import(/* @vite-ignore */ CIRCLE_WEB_SDK);
+    var W3SSdk = mod.W3SSdk;
+    try {
+      var login = await new Promise(function (resolve, reject) {
+        var sdk = new W3SSdk(circleGoogleConfig(cfg, pending), function (error, result) {
+          if (error) { reject(new Error(error.message || ("Circle login error " + error.code))); return; }
+          resolve({ sdk: sdk, userToken: result.userToken, encryptionKey: result.encryptionKey });
+        });
+        // The constructor's setupInstance() calls execSocialLoginStatusCheck(),
+        // which reads the hash and drives the callback above.
+      });
+      try { localStorage.removeItem(CIRCLE_PENDING_KEY); } catch (e) {}
+      var real = await finishCircleWallet(login.sdk, login.userToken, login.encryptionKey);
+      state.account = real.address; state.loginType = "gmail"; state.provider = null;
+      saveWalletAddr(real.address);
+      try { localStorage.setItem("aura-gmail-wallet", JSON.stringify({ address: real.address, circle: true })); } catch (e) {}
+      var nb = 0, u2 = 0, cb2 = 0;
+      try {
+        nb = Number(BigInt((await rpcCall("eth_getBalance", [real.address, "latest"])) || "0x0")) / 1e18;
+        u2 = Number(await tokenBalanceOf(ARC.usdc, real.address)) / 1e6;
+        cb2 = Number(await tokenBalanceOf(ARC.cirbtc, real.address)) / 1e8;
+      } catch (e) {}
+      var txs0 = []; try { txs0 = await fetchRecentTxs(real.address); } catch (e) {}
+      try { showWalletProfile(real.address, nb, u2, cb2, "gmail", txs0); if (typeof renderPortfolio === "function") renderPortfolio(_ledgerData); }
+      catch (re) { if (typeof updateHeaderWallet === "function") updateHeaderWallet(real.address, "gmail"); }
+    } catch (err) {
+      try { localStorage.removeItem(CIRCLE_PENDING_KEY); } catch (e) {}
+      console.error("Circle resume failed:", err);
+      alert("Google sign-in couldn't finish: " + (err && err.message ? err.message : err));
+    }
   }
 
   async function connectGmail(overrideName, overrideEmail) {
@@ -2653,23 +2702,8 @@
     var cfg = await loadCircleConfig();
     if (cfg && cfg.configured) {
       try {
-        status.innerHTML = '<span style="display:inline-flex;align-items:center;gap:8px;"><span class="spinner" style="width:16px;height:16px;border-width:2px;"></span> Signing in with Google…</span>';
-        var real = await connectCircleGoogle();
-        state.account = real.address;
-        state.loginType = "gmail";
-        state.provider = null; // Circle wallets sign via challenge, not EIP-1193
-        saveWalletAddr(real.address);
-        try { localStorage.setItem("aura-gmail-wallet", JSON.stringify({ name: nameVal, email: emailVal, address: real.address, circle: true })); } catch (e2) {}
-        var rb0 = $("reconnectBar"); if (rb0) rb0.innerHTML = "";
-        var nb = 0, u2 = 0, cb2 = 0;
-        try {
-          nb = Number(BigInt((await rpcCall("eth_getBalance", [real.address, "latest"])) || "0x0")) / 1e18;
-          u2 = Number(await tokenBalanceOf(ARC.usdc, real.address)) / 1e6;
-          cb2 = Number(await tokenBalanceOf(ARC.cirbtc, real.address)) / 1e8;
-        } catch (e3) {}
-        var txs0 = []; try { txs0 = await fetchRecentTxs(real.address); } catch (e4) {}
-        try { showWalletProfile(real.address, nb, u2, cb2, "gmail", txs0); if (typeof renderPortfolio === "function") renderPortfolio(_ledgerData); }
-        catch (re) { closeWalletModal(); if (typeof updateHeaderWallet === "function") updateHeaderWallet(real.address, "gmail"); }
+        status.innerHTML = '<span style="display:inline-flex;align-items:center;gap:8px;"><span class="spinner" style="width:16px;height:16px;border-width:2px;"></span> Redirecting to Google…</span>';
+        await startCircleGoogleLogin(); // full-page redirect; wallet is provisioned on return in resumeCircleGoogle()
         return;
       } catch (cerr) {
         if (String(cerr && cerr.message) === "circle-not-configured") { /* fall through to demo */ }
@@ -2890,6 +2924,10 @@
   $("connectMetamask").addEventListener("click", function () { connectMetamask(); });
   $("connectGmail").addEventListener("click", function () { openWalletModal(); $("wmCreateBtn").click(); });
   $("gmailSubmit").addEventListener("click", connectGmail);
+
+  // Finish a Google login if we've just been redirected back from Google
+  // (guarded: no-ops unless the pending flag + OAuth hash are both present).
+  try { resumeCircleGoogle(); } catch (e) { console.warn("resumeCircleGoogle:", e); }
 
   // Header + Hero buttons open modal
   $("connectBtn").addEventListener("click", openWalletModal);
