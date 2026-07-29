@@ -157,6 +157,11 @@
     -webkit-background-clip: text; background-clip: text; color: transparent; animation: shift 6s linear infinite; }
   @keyframes shift { to { background-position: 200% center; } }
   .hero p { color: var(--muted); font-size: clamp(16px,2vw,19px); max-width: 620px; margin: 0 auto; }
+  .agent-upgrade { display: inline-block; margin: 18px auto 0; font-size: 12.5px; font-weight: 600; line-height: 1.4;
+    color: #f5d9a8; background: rgba(245,158,11,.10); border: 1px solid rgba(245,158,11,.32); border-radius: 999px; padding: 7px 16px; max-width: 90%; }
+  .agent-upgrade b { color: #ffd98a; font-weight: 700; }
+  [data-theme="light"] .agent-upgrade { color: #92600a; background: rgba(245,158,11,.08); border-color: rgba(245,158,11,.28); }
+  [data-theme="light"] .agent-upgrade b { color: #7a4e05; }
   .cta { display: flex; gap: 12px; margin: 28px 0 6px; flex-wrap: wrap; justify-content: center; }
 
   /* live stat band */
@@ -1039,6 +1044,7 @@
   <div class="hero" id="heroSection">
     <h1>An agent that <span class="grad">dollar-cost-averages</span> for you.</h1>
     <p><b>Claude</b> decides the strategy — <b>code owns every number that touches money.</b> Pick any token the network supports; each run pools everyone's buys by token and settles a real swap through Circle's Swap Kit on Arc Testnet, authorized by your own wallet. No server, no human in the loop.</p>
+    <div class="agent-upgrade" title="A direction we're building — not yet shipped: the agent pays for its own data & inference over x402 + Circle Gateway on Arc.">🚧 Agent-stack upgrade in progress — <b>x402 / Circle Nanopayments</b> on Arc</div>
     <div class="cta">
       <button class="btn" id="connectHero">Connect Wallet</button>
       <a class="btn ghost" href="https://github.com/thanhphuc85/AuraDCA" target="_blank" rel="noopener">View source ↗</a>
