@@ -4,7 +4,7 @@ import { readHistory, appendEntry, recentHistory, dayCount, alreadySpentToday, r
 import { readReflections, appendReflection } from "./history/reflectionStore.js";
 import { readLedger, writeLedger, ensureDefaultRates } from "./ledger/store.js";
 import { scanDeposits } from "./ledger/scanner.js";
-import { computeScheduledSpends, applyScheduledDistribution, groupSpendsByToken, smartSizeMultiplier } from "./ledger/schedule.js";
+import { computeScheduledSpends, applyScheduledDistribution, groupSpendsByToken, smartSizeMultiplier, activeDailyBudgetTotal } from "./ledger/schedule.js";
 import { computeAllowanceSpends, pullUsdcFromUser, sendTokenToUser } from "./ledger/allowance.js";
 import { requestWithdrawal, processPendingWithdrawals } from "./ledger/withdraw.js";
 import { ARC_TESTNET_RPC, ARC_USDC_CONTRACT, ARC_CIRBTC_CONTRACT, dcaTokenInfo } from "./ledger/constants.js";
@@ -338,10 +338,25 @@ export async function runDailyDca(config: AppConfig): Promise<RunOutcome> {
     }, false, config.discordWebhookUrl, refCtx);
   }
 
+  // Auto-scale the global daily ceiling with the active user base. The effective
+  // cap is the smaller of the operator's absolute circuit-breaker
+  // (env MAX_DAILY_USDC) and the sum of every active user's own daily cap. Since
+  // each user is already bounded by their per-user cap, that sum is the largest
+  // total that can legitimately be spent in a day — so as the crowd grows the
+  // ceiling rises with it and nobody is diluted pro-rata by a static number,
+  // while the env value still hard-caps runaway spend. (0 = no per-user caps set
+  // → fall back to the raw env ceiling.)
+  const envMaxDaily = Number.parseFloat(config.guardrails.maxDailyUsdc);
+  const budgetTotal = activeDailyBudgetTotal(ledger);
+  const effectiveMaxDaily = budgetTotal > 0 ? Math.min(envMaxDaily, budgetTotal) : envMaxDaily;
+  if (budgetTotal > 0 && effectiveMaxDaily !== envMaxDaily) {
+    logger.info(`Daily ceiling auto-scaled to ${effectiveMaxDaily} USDC (Σ active per-user caps) under env cap ${envMaxDaily}`);
+  }
+
   const clamp = clampDecision(
     { proceed: true, amountUsdc: scheduledTotal.toFixed(6), reasoning: "per-user schedule sum" },
     {
-      guardrails: config.guardrails,
+      guardrails: { ...config.guardrails, maxDailyUsdc: effectiveMaxDaily.toFixed(6) },
       walletUsdcBalance: usdcBalance,
       alreadySpentTodayUsdc: alreadySpentToday(history, date),
       remainingCampaignBudgetUsdc: remainingCampaignBudget(history, config.guardrails.campaignTotalBudgetUsdc),

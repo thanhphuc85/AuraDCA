@@ -244,6 +244,32 @@ export function computeScheduledSpends(ledger: Ledger, nowIso: string, market: M
 }
 
 /**
+ * Sum of the daily budgets of every user who could legitimately DCA today
+ * (funded, not paused, not manual). Because each user is already bounded by
+ * their own daily cap, this sum is the largest total that can legitimately be
+ * spent in one day. Used to auto-scale the global daily ceiling with the active
+ * user base, so a growing crowd is never diluted pro-rata by a static number,
+ * while an absolute env ceiling still hard-caps runaway spend. Falls back to the
+ * legacy per-day rate when a user has no explicit daily cap.
+ */
+export function activeDailyBudgetTotal(ledger: Ledger): number {
+  let total = 0;
+  for (const user of Object.values(ledger.users)) {
+    if (user.dcaPaused) continue;
+    if (user.dcaMode === "manual") continue;
+    if (!(Number.parseFloat(user.usdcBalance ?? "0") > 0)) continue;
+    const cap = Number.parseFloat(user.dcaDailyCapUsdc ?? "");
+    if (Number.isFinite(cap) && cap > 0) {
+      total += cap;
+      continue;
+    }
+    const rate = Number.parseFloat(user.dcaRatePerDay ?? "");
+    if (Number.isFinite(rate) && rate > 0) total += rate;
+  }
+  return Number.parseFloat(total.toFixed(USDC_DECIMALS));
+}
+
+/**
  * Attribute an executed swap back to the per-user schedule for ONE token group:
  * each user gets the received token in proportion to their scheduled spend, and
  * their USDC is debited by the amount actually executed (scaled down if a
