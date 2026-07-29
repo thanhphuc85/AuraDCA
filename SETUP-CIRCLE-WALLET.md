@@ -61,5 +61,7 @@ automatically.
   re-login before depositing. (Phase 2: persist/refresh via `createUserToken`.)
 - Withdrawals still go through the MetaMask/SIWE path; the Circle signMessage branch
   is Phase 2.
-- The Web SDK is loaded from esm.sh; if it fails to load in the browser, pin/host a
-  local copy. Everything is gated, so an unconfigured deploy is unaffected.
+- The Web SDK is loaded from jsDelivr's `+esm` build (esm.sh can't bundle its
+  firebase dep). That build exports `W3SSdk` but not the `SocialLoginProvider`
+  enum, so the code calls `sdk.performGoogleLogin()` directly. Everything is
+  gated, so an unconfigured deploy is unaffected.

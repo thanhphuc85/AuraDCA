@@ -2581,7 +2581,10 @@
   // are set, connectGmail() uses this real path; otherwise it falls back to the
   // legacy deterministic-address demo below (which cannot transact). userToken is
   // a short-lived session kept in memory; a reload requires re-login.
-  var CIRCLE_WEB_SDK = "https://esm.sh/@circle-fin/w3s-pw-web-sdk@1.1.11";
+  // jsDelivr's +esm build (esm.sh fails to bundle this SDK's firebase dep — it
+  // throws "Object prototype may only be an Object or null"). This build exports
+  // W3SSdk but NOT the SocialLoginProvider enum, so we call performGoogleLogin().
+  var CIRCLE_WEB_SDK = "https://cdn.jsdelivr.net/npm/@circle-fin/w3s-pw-web-sdk@1.1.11/+esm";
   var circleState = { sdk: null, userToken: null, encryptionKey: null, walletId: null, address: null, config: null };
 
   function circleApi(action, payload) {
@@ -2605,7 +2608,7 @@
     var cfg = await loadCircleConfig();
     if (!cfg || !cfg.configured) throw new Error("circle-not-configured");
     var mod = await import(/* @vite-ignore */ CIRCLE_WEB_SDK);
-    var W3SSdk = mod.W3SSdk, SocialLoginProvider = mod.SocialLoginProvider;
+    var W3SSdk = mod.W3SSdk;
     // 1) a bare SDK just to read the deviceId
     var deviceId = await new W3SSdk({ appSettings: { appId: cfg.appId } }).getDeviceId();
     // 2) exchange it for the social-login device token pair (server holds the key)
@@ -2623,7 +2626,7 @@
         if (error) { reject(error); return; }
         resolve({ sdk: sdk, userToken: result.userToken, encryptionKey: result.encryptionKey });
       });
-      sdk.performLogin(SocialLoginProvider.GOOGLE);
+      sdk.performGoogleLogin();
     });
     circleState.sdk = login.sdk;
     circleState.userToken = login.userToken;
