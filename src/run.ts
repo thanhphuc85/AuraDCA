@@ -431,7 +431,12 @@ export async function runDailyDca(config: AppConfig): Promise<RunOutcome> {
     const users = groupSpends.length;
     const groupScheduled = groupSpends.reduce((s, x) => s + x.spend, 0);
     const groupExec = Number.parseFloat((groupScheduled * scale).toFixed(6));
-    const boundBy = scale < 1 ? "wallet_available_after_reserve" : "user_schedule";
+    // When the pooled total was clamped (scale < 1), report the guardrail that
+    // ACTUALLY bound it — clampDecision already picked the real binding (daily
+    // cap, wallet reserve, campaign budget, …). Hard-coding "wallet_available_
+    // after_reserve" here mislabels e.g. a daily-cap clamp, which is dishonest in
+    // an audit trail whose whole point is that the number is trustworthy.
+    const boundBy = scale < 1 ? clamp.boundBy : "user_schedule";
 
     if (groupExec < minSwap) {
       entries.push({
