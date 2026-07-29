@@ -17,27 +17,31 @@ automatically.
 
 ## What YOU must do (console steps — I can't do these for you)
 
-### 1. Circle Console → get the App ID + enable social login
-- Console: <https://console.circle.com> → your project (same one whose
-  `CIRCLE_API_KEY` the agent already uses — **testnet** environment).
-- **Programmable Wallets → User-Controlled → Configurator**: copy the **App ID**.
-- Enable **Social logins → Google**, and register the redirect URI
-  `https://aura-dca.xyz` (and `http://localhost:3000` if you test locally).
+> Do these in order — Google first (to get the Client ID), then Circle (paste it, copy the App ID).
 
-### 2. Google Cloud Console → OAuth client
-- <https://console.cloud.google.com> → APIs & Services → Credentials →
-  **Create OAuth client ID** → *Web application*.
+### 1. Google Cloud Console → OAuth client (do this FIRST)
+- <https://console.cloud.google.com> → create/select a project → **Google Auth
+  Platform** → complete the consent screen → **Create OAuth client** → *Web
+  application*.
 - **Authorized JavaScript origins**: `https://aura-dca.xyz`
-- **Authorized redirect URIs**: exactly what Circle's configurator tells you to use
-  (usually `https://aura-dca.xyz` and Circle's callback). Copy the **Client ID**.
-- Add the Client ID back into Circle's Google social-login config (step 1).
+- **Authorized redirect URIs**: `https://aura-dca.xyz` (+ `http://localhost:3000`
+  if you test locally). **The redirect URI lives here in Google Cloud, not in
+  Circle.** It must match `window.location.origin` the SDK sends.
+- Copy the **Client ID**.
+
+### 2. Circle Console → paste Client ID + copy the App ID
+- Console: <https://console.circle.com> → the project whose `CIRCLE_API_KEY` the
+  agent already uses (**testnet** environment).
+- **Wallets → User Controlled → Configurator** — the **App ID** is shown on this page.
+- On the same page: **Authentication Methods → Social Logins → Google** → paste the
+  Google **Client ID** into the **"Client ID (Web)"** field.
 
 ### 3. Vercel → environment variables (Project → Settings → Environment Variables)
 | Name | Value | Notes |
 |---|---|---|
 | `CIRCLE_API_KEY` | *(already set for the agent)* | reuse the same testnet key |
-| `CIRCLE_APP_ID` | from step 1 | public, but keep it in env |
-| `GOOGLE_CLIENT_ID` | from step 2 | public |
+| `CIRCLE_APP_ID` | from step 2 (Circle Configurator) | public, but keep it in env |
+| `GOOGLE_CLIENT_ID` | from step 1 (Google Cloud) | public |
 | `AGENT_WALLET_ADDRESS` | `0x00Ebbd3aFCCaD08970ED8FdaE591244c8475a0aC` | optional; defaults to this |
 
 > ⚠️ Do **not** paste any API **secret** or OAuth **client secret** into chat. Set
