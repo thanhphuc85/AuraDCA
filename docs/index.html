@@ -4354,11 +4354,22 @@
       var t = ct();
       var endpoint = apiUrl("/api/set-dca-rate");
       btn.disabled = true; if (pauseBtn) pauseBtn.disabled = true;
-      st.innerHTML = '<span style="display:inline-flex;align-items:center;gap:8px;color:var(--amber);"><span class="spinner" style="width:16px;height:16px;border-width:2px;"></span> ' + (t.rateSigning || "Sign in your wallet…") + '</span>';
+      var isCircle = state.loginType === "gmail" && circleState.userToken && circleState.walletId;
+      st.innerHTML = '<span style="display:inline-flex;align-items:center;gap:8px;color:var(--amber);"><span class="spinner" style="width:16px;height:16px;border-width:2px;"></span> ' + (isCircle ? (t.rateSaving || "Saving…") : (t.rateSigning || "Sign in your wallet…")) + '</span>';
       try {
-        var signature = await state.provider.request({ method: "personal_sign", params: [message, state.account] });
-        st.innerHTML = '<span style="display:inline-flex;align-items:center;gap:8px;color:var(--amber);"><span class="spinner" style="width:16px;height:16px;border-width:2px;"></span> ' + (t.rateSaving || "Saving…") + '</span>';
-        var res = await fetch(endpoint, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ message: message, signature: signature }) });
+        // MetaMask/injected wallets prove ownership with a personal_sign. Circle
+        // (Gmail) wallets have no EIP-1193 provider, so authorize the request with
+        // the Circle session (userToken + walletId) — the backend verifies with
+        // Circle that the token owns the wallet whose address is in the message.
+        var body;
+        if (isCircle) {
+          body = { message: message, circleUserToken: circleState.userToken, circleWalletId: circleState.walletId };
+        } else {
+          var signature = await state.provider.request({ method: "personal_sign", params: [message, state.account] });
+          st.innerHTML = '<span style="display:inline-flex;align-items:center;gap:8px;color:var(--amber);"><span class="spinner" style="width:16px;height:16px;border-width:2px;"></span> ' + (t.rateSaving || "Saving…") + '</span>';
+          body = { message: message, signature: signature };
+        }
+        var res = await fetch(endpoint, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) });
         var result = await res.json().catch(function () { return {}; });
         if (res.ok && result.success) {
           st.innerHTML = '<span style="color:var(--green);">✅ ' + okMsg + '</span>';
@@ -4391,7 +4402,7 @@
     function submitSchedule() {
       var t = ct();
       st.innerHTML = "";
-      if (!state.account || !state.provider) { st.innerHTML = '<span style="color:var(--amber);">' + (t.wdErrConnect || "Connect your wallet first.") + '</span>'; return; }
+      if (!state.account || (!state.provider && !circleState.userToken)) { st.innerHTML = '<span style="color:var(--amber);">' + (t.wdErrConnect || "Connect your wallet first.") + '</span>'; return; }
       var mode = selectedMode();
       var amount = num("schedAmount");
       if (!(amount > 0)) { st.innerHTML = '<span style="color:var(--amber);">' + (t.schedErrAmount || "Enter an amount per run greater than 0.") + '</span>'; return; }
@@ -4440,7 +4451,7 @@
     if (pauseBtn) {
       pauseBtn.addEventListener("click", function () {
         var t = ct();
-        if (!state.account || !state.provider) { st.innerHTML = '<span style="color:var(--amber);">' + (t.wdErrConnect || "Connect your wallet first.") + '</span>'; return; }
+        if (!state.account || (!state.provider && !circleState.userToken)) { st.innerHTML = '<span style="color:var(--amber);">' + (t.wdErrConnect || "Connect your wallet first.") + '</span>'; return; }
         var key = state.account.toLowerCase();
         var user = _ledgerData && _ledgerData.users ? _ledgerData.users[key] : null;
         var paused = user ? (!!user.dcaPaused || parseFloat(user.dcaRatePerDay || "0") <= 0) : true;

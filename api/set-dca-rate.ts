@@ -1,5 +1,31 @@
 import type { VercelRequest, VercelResponse } from "@vercel/node";
 import { ethers } from "ethers";
+import { createRequire } from "node:module";
+
+// Circle SDK loaded externally (see api/wallet.ts) to avoid esbuild bundling.
+const nodeRequire = createRequire(import.meta.url);
+let _ucwClient: any = null;
+function ucwClient(): any {
+  if (_ucwClient) return _ucwClient;
+  const apiKey = process.env.CIRCLE_API_KEY;
+  if (!apiKey) throw new Error("CIRCLE_API_KEY not configured");
+  const { initiateUserControlledWalletsClient } = nodeRequire("@circle-fin/user-controlled-wallets");
+  _ucwClient = initiateUserControlledWalletsClient({ apiKey });
+  return _ucwClient;
+}
+// A Circle (Gmail) wallet has no EIP-1193 key to personal_sign with. Prove
+// ownership instead by confirming the Circle session token owns the wallet whose
+// address is in the signed message.
+async function circleOwnsAddress(userToken: string, walletId: string, address: string): Promise<boolean> {
+  try {
+    const r = await ucwClient().listWallets({ userToken });
+    const wallets = r.data?.wallets || [];
+    const w = wallets.find((x: any) => x.id === walletId);
+    return !!w && String(w.address).toLowerCase() === address.toLowerCase();
+  } catch {
+    return false;
+  }
+}
 
 const MESSAGE_EXPIRY_MS = 5 * 60 * 1000;
 
@@ -118,8 +144,11 @@ export default async function handler(req: VercelRequest, res: VercelResponse): 
   if (req.method === "OPTIONS") { res.status(200).end(); return; }
   if (req.method !== "POST") { res.status(405).json({ error: "Method not allowed" }); return; }
 
-  const { message, signature } = (req.body ?? {}) as { message?: string; signature?: string };
-  if (!message || !signature) { res.status(400).json({ error: "Missing message or signature" }); return; }
+  const { message, signature, circleUserToken, circleWalletId } = (req.body ?? {}) as {
+    message?: string; signature?: string; circleUserToken?: string; circleWalletId?: string;
+  };
+  const hasCircle = !!(circleUserToken && circleWalletId);
+  if (!message || (!signature && !hasCircle)) { res.status(400).json({ error: "Missing message or authorization" }); return; }
 
   const parsed = parseRateMessage(message);
   if (!parsed) { res.status(400).json({ error: "Invalid message format" }); return; }
@@ -140,14 +169,20 @@ export default async function handler(req: VercelRequest, res: VercelResponse): 
     res.status(400).json({ error: "Message expired. Please try again." }); return;
   }
 
-  let recovered: string;
-  try {
-    recovered = ethers.verifyMessage(message, signature).toLowerCase();
-  } catch {
-    res.status(401).json({ error: "Invalid signature" }); return;
-  }
-  if (recovered !== address.toLowerCase()) {
-    res.status(401).json({ error: "Signature does not match address" }); return;
+  if (hasCircle) {
+    // Circle (Gmail) wallet: authorize via the Circle session instead of ECDSA.
+    const ok = await circleOwnsAddress(circleUserToken!, circleWalletId!, address);
+    if (!ok) { res.status(401).json({ error: "Circle session does not own this wallet" }); return; }
+  } else {
+    let recovered: string;
+    try {
+      recovered = ethers.verifyMessage(message, signature!).toLowerCase();
+    } catch {
+      res.status(401).json({ error: "Invalid signature" }); return;
+    }
+    if (recovered !== address.toLowerCase()) {
+      res.status(401).json({ error: "Signature does not match address" }); return;
+    }
   }
 
   const rateNum = parseFloat(rate);
