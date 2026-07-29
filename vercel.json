@@ -13,6 +13,12 @@
   },
   "redirects": [
     {
+      "source": "/",
+      "has": [{ "type": "host", "value": "aura-dca.vercel.app" }],
+      "destination": "https://aura-dca.xyz/",
+      "permanent": true
+    },
+    {
       "source": "/:path*",
       "has": [{ "type": "host", "value": "aura-dca.vercel.app" }],
       "destination": "https://aura-dca.xyz/:path*",
