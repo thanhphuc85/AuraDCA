@@ -210,6 +210,7 @@ wrong.
 
 ## What's next
 
+- **Agent-stack upgrade in progress — Circle Nanopayments (x402) on Arc.** Beyond *spending* USDC to accumulate, the agent will *pay for its own inputs* — market data and inference — over **x402 + Circle Gateway** on Arc, funding its operation straight from the treasury. It's a genuinely different primitive from the DCA swap (pay-per-call for a service, not accumulate a token), so we're building it as an **additive module** that can't destabilise the proven pipeline. To be clear: this is a **direction we're actively building**, not a shipped feature — the honest line matters more than the buzzword.
 - **Per-user token choice already ships** — each wallet picks its target (cirBTC or EURC today), and the run settles one pooled swap per token. The next step is a Claude-*decided* split across multiple **volatile** assets, which needs Arc to wire more than one; it unlocks the day cirBTC's market returns or Arc lists others.
 - A live P&L / cost-basis panel — the per-token fill chart already plots the real EURC rate the agent paid on each run; cost-basis is the next layer, and cirBTC joins automatically the day its route returns
 - Verified sender domain for the welcome email so it reaches any user, not just the operator's inbox

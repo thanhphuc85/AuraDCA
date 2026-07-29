@@ -203,6 +203,7 @@ chính chúng tôi là sai.
 
 ## Hướng phát triển tiếp
 
+- **Đang nâng cấp agent stack — Circle Nanopayments (x402) trên Arc.** Ngoài việc *chi* USDC để tích luỹ, agent sẽ *tự trả cho đầu vào của chính nó* — dữ liệu thị trường và suy luận — qua **x402 + Circle Gateway** trên Arc, nuôi hoạt động thẳng từ treasury. Đây là **primitive khác** với swap DCA (trả-theo-lượt-gọi cho một dịch vụ, không phải tích luỹ token), nên chúng tôi xây như **module cộng thêm**, không làm lung lay pipeline đã proven. Nói rõ: đây là **hướng đang xây**, chưa phải tính năng đã ship — sự trung thực quan trọng hơn cái buzzword.
 - **Lựa chọn token theo user đã ship** — mỗi ví tự chọn đích (cirBTC hoặc EURC hôm nay), mỗi lượt chạy settle một swap gộp cho mỗi token. Bước tiếp theo là để Claude *tự quyết* tỷ lệ phân bổ trên nhiều tài sản **biến động** — cần Arc wire thêm hơn một; mở khoá vào ngày thị trường cirBTC trở lại hoặc Arc niêm yết token khác.
 - Bảng P&L / giá vốn trực tiếp — chart giá-fill theo token đã vẽ đúng tỉ giá EURC thật agent trả mỗi run; giá vốn là lớp tiếp theo, và cirBTC tự nhập cuộc ngày route trở lại
 - Verify domain gửi email để email chào mừng tới được mọi user, không chỉ hộp thư người vận hành
