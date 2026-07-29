@@ -1605,5 +1605,20 @@
     "amountOut": "4.555465",
     "walletUsdcBalance": "305.427900023186297238",
     "message": "Swapped 6.000000 USDC -> EURC across 6 user(s)"
+  },
+  {
+    "date": "2026-07-29",
+    "timestamp": "2026-07-29T10:38:28.250Z",
+    "status": "success",
+    "requestedAmountUsdc": "6.000000",
+    "clampedAmountUsdc": "6.000000",
+    "boundBy": "user_schedule",
+    "tokenOut": "EURC",
+    "reasoning": "Rate-based DCA: 6 active user(s), executing 6.000000 USDC this run.",
+    "txHash": "0xd672cbcb8f0c431ff321bf79f6bd04e9f80034acfb8e0f4e6eb67cfb61823bf4",
+    "explorerUrl": "https://testnet.arcscan.app/tx/0xd672cbcb8f0c431ff321bf79f6bd04e9f80034acfb8e0f4e6eb67cfb61823bf4",
+    "amountOut": "4.524748",
+    "walletUsdcBalance": "299.414928999186297238",
+    "message": "Swapped 6.000000 USDC -> EURC across 6 user(s)"
   }
 ]
