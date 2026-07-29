@@ -2642,10 +2642,15 @@
     if (!cfg || !cfg.configured) throw new Error("circle-not-configured");
     var mod = await import(/* @vite-ignore */ CIRCLE_WEB_SDK);
     var W3SSdk = mod.W3SSdk;
-    var deviceId = await new W3SSdk({ appSettings: { appId: cfg.appId } }).getDeviceId();
+    // Use ONE SDK instance for the whole flow. Creating a second `new W3SSdk(cfg)`
+    // AFTER getDeviceId() left loginConfigs.google unstored, so performGoogleLogin
+    // hit its "missing google config" guard and silently did nothing. Reuse this
+    // instance and set the config via updateConfigs() instead.
+    var sdk = new W3SSdk({ appSettings: { appId: cfg.appId } });
+    var deviceId = await sdk.getDeviceId();
     var tok = await circleApi("socialToken", { deviceId: deviceId });
     try { localStorage.setItem(CIRCLE_PENDING_KEY, JSON.stringify({ deviceToken: tok.deviceToken, deviceEncryptionKey: tok.deviceEncryptionKey })); } catch (e) {}
-    var sdk = new W3SSdk(circleGoogleConfig(cfg, tok), function () {});
+    sdk.updateConfigs(circleGoogleConfig(cfg, tok), function () {});
     sdk.performGoogleLogin(); // navigates away to accounts.google.com
   }
   // On page load: if we're returning from Google (pending tokens + OAuth hash),
@@ -2665,12 +2670,14 @@
     var W3SSdk = mod.W3SSdk;
     try {
       var login = await new Promise(function (resolve, reject) {
-        var sdk = new W3SSdk(circleGoogleConfig(cfg, pending), function (error, result) {
+        var sdk = new W3SSdk();
+        // updateConfigs() -> setupInstance() -> execSocialLoginStatusCheck(),
+        // which reads the OAuth hash and drives the callback below. (Passing the
+        // config to the constructor doesn't reliably store it; updateConfigs does.)
+        sdk.updateConfigs(circleGoogleConfig(cfg, pending), function (error, result) {
           if (error) { reject(new Error(error.message || ("Circle login error " + error.code))); return; }
           resolve({ sdk: sdk, userToken: result.userToken, encryptionKey: result.encryptionKey });
         });
-        // The constructor's setupInstance() calls execSocialLoginStatusCheck(),
-        // which reads the hash and drives the callback above.
       });
       try { localStorage.removeItem(CIRCLE_PENDING_KEY); } catch (e) {}
       var real = await finishCircleWallet(login.sdk, login.userToken, login.encryptionKey);
