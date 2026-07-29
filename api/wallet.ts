@@ -99,6 +99,16 @@ export default async function handler(req: VercelRequest, res: VercelResponse): 
         return;
       }
 
+      // Create an Arc wallet for an EXISTING user (one who already set a PIN via
+      // initWallet but has no wallet yet). Returns a challengeId to execute.
+      case "createWallets": {
+        const userToken = String(body.userToken || "");
+        if (!userToken) { res.status(400).json({ error: "userToken required" }); return; }
+        const r = await client().createWallets({ userToken, blockchains: [ARC_BLOCKCHAIN], accountType: "EOA" });
+        res.status(200).json({ challengeId: r.data.challengeId });
+        return;
+      }
+
       // Build an ERC-20 USDC transfer challenge from the user's wallet to the
       // agent treasury. destinationAddress is server-fixed to AGENT_ADDRESS.
       case "depositChallenge": {

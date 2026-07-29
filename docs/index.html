@@ -2618,17 +2618,35 @@
       },
     };
   }
+  // Poll listWallets a few times — wallet provisioning is async after a challenge.
+  async function pollCircleWallet(userToken, tries) {
+    for (var i = 0; i < (tries || 4); i++) {
+      var listed = await circleApi("listWallets", { userToken: userToken });
+      var ws = listed.wallets || [];
+      var arc = ws.filter(function (w) { return String(w.blockchain || "").toUpperCase().indexOf("ARC") >= 0; });
+      var w = arc[0] || ws[0];
+      if (w) return w;
+      await new Promise(function (r) { setTimeout(r, 2000); });
+    }
+    return null;
+  }
   // After login completes (same session or on redirect return), provision the Arc
-  // wallet and record it.
+  // wallet and record it. Handles both a brand-new user (initWallet returns a
+  // PIN+wallet challenge) and an existing user with no wallet yet (create one
+  // explicitly via createWallets).
   async function finishCircleWallet(sdk, userToken, encryptionKey) {
     circleState.sdk = sdk;
     circleState.userToken = userToken;
     circleState.encryptionKey = encryptionKey;
     var init = await circleApi("initWallet", { userToken: userToken });
     if (init.challengeId) await circleExecute(sdk, init.challengeId);
-    var listed = await circleApi("listWallets", { userToken: userToken });
-    var arc = (listed.wallets || []).filter(function (w) { return String(w.blockchain || "").toUpperCase().indexOf("ARC") >= 0; });
-    var w = arc[0] || (listed.wallets || [])[0];
+    var w = await pollCircleWallet(userToken);
+    if (!w) {
+      // Existing user (initWallet said "already exists") but no wallet — create one.
+      var cw = await circleApi("createWallets", { userToken: userToken });
+      if (cw.challengeId) await circleExecute(sdk, cw.challengeId);
+      w = await pollCircleWallet(userToken);
+    }
     if (!w) throw new Error("No wallet returned from Circle");
     circleState.walletId = w.id;
     circleState.address = w.address;
