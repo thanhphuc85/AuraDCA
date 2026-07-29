@@ -2659,10 +2659,11 @@
   async function resumeCircleGoogle() {
     var pendingRaw = null;
     try { pendingRaw = localStorage.getItem(CIRCLE_PENDING_KEY); } catch (e) {}
-    var provider = null;
-    try { provider = localStorage.getItem("socialLoginProvider"); } catch (e) {}
     var hash = window.location.hash || "";
-    if (!pendingRaw || provider !== "GOOGLE" || hash.indexOf("id_token") < 0) return;
+    // Gate on our own pending flag + an OAuth-response-looking hash. (Earlier this
+    // checked provider === "GOOGLE", but the SDK stores it as "Google" — that
+    // mismatch made the return leg no-op, so the wallet was never created.)
+    if (!pendingRaw || !hash || !/(id_token|access_token)=/.test(hash)) return;
     var pending = JSON.parse(pendingRaw);
     var cfg = await loadCircleConfig();
     if (!cfg || !cfg.configured) return;
