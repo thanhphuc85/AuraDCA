@@ -76,6 +76,8 @@
   .dc-ic { font-size: 20px; margin-bottom: 8px; }
   .dc-val { font-family: Sora, Inter, sans-serif; font-size: 26px; font-weight: 800; letter-spacing: -.02em; }
   .dc-lbl { font-size: 12px; color: var(--muted); margin-top: 4px; }
+  .dc-sub { font-size: 10.5px; color: var(--muted); opacity: .7; margin-top: 2px; }
+  .dash-freshness { font-size: 11.5px; color: var(--muted); opacity: .82; margin: -4px 0 16px; display: flex; gap: 6px; align-items: flex-start; line-height: 1.5; }
   .dash-row2 { display: grid; grid-template-columns: 1fr; gap: 16px; }
   @media (min-width: 820px) { .dash-row2 { grid-template-columns: 2fr 3fr; } }
   .agent-countdown { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; margin: 14px 0; padding: 14px 16px; border-radius: 14px; background: linear-gradient(135deg, rgba(138,92,246,.12), rgba(47,134,230,.08)); border: 1px solid var(--glass-brd); }
@@ -1061,9 +1063,10 @@
     <div class="dash-stats">
       <div class="dash-card"><div class="dc-ic">💸</div><div class="dc-val" id="dsDeployed"><div class="skel skel-num"></div></div><div class="dc-lbl">Total USDC Deployed</div></div>
       <div class="dash-card"><div class="dc-ic">📅</div><div class="dc-val" id="dsToday"><div class="skel skel-num"></div></div><div class="dc-lbl">Today's DCA</div></div>
-      <div class="dash-card"><div class="dc-ic">👥</div><div class="dc-val" id="dsUsers"><div class="skel skel-num"></div></div><div class="dc-lbl">Active Users</div></div>
+      <div class="dash-card" title="Wallets with a funded DCA schedule (balance > 0) — the ones the agent actually charges each run."><div class="dc-ic">👥</div><div class="dc-val" id="dsUsers"><div class="skel skel-num"></div></div><div class="dc-lbl">Active Users</div><div class="dc-sub" id="dsUsersSub"></div></div>
       <div class="dash-card"><div class="dc-ic">✅</div><div class="dc-val" id="dsSuccess"><div class="skel skel-num"></div></div><div class="dc-lbl">Success Rate</div></div>
     </div>
+    <div class="dash-freshness" id="dashFreshness">📊 Ledger figures update on each agent run (~hourly). A new deposit or wallet appears once the next run scans it on-chain — it isn't instant.</div>
     <div class="dash-row2">
       <div class="card">
         <h3 style="margin:0 0 4px;">🤖 Your DCA Agent</h3>
@@ -2925,7 +2928,8 @@
         method: "eth_sendTransaction",
         params: [{ from: state.account, to: ARC.usdc, data: data }],
       });
-      status.innerHTML = '<span style="color:var(--green);">✓ ' + (t.depSuccess || "Deposited") + ' ' + fmt(amt, 4) + ' USDC</span> · <a href="' + ARC.explorer + '/tx/' + txHash + '" target="_blank" rel="noopener">view tx ↗</a>';
+      status.innerHTML = '<span style="color:var(--green);">✓ ' + (t.depSuccess || "Deposited") + ' ' + fmt(amt, 4) + ' USDC</span> · <a href="' + ARC.explorer + '/tx/' + txHash + '" target="_blank" rel="noopener">view tx ↗</a>'
+        + '<div style="margin-top:6px;font-size:11.5px;color:var(--muted);opacity:.85;line-height:1.5;">⏳ ' + (t.depPending || "Confirmed on-chain. It’ll show in your balance & the dashboard after the next agent run scans it (~hourly) — not instantly.") + '</div>';
       $("depositAmt").value = "";
       setTimeout(refreshTreasury, 3500);
     } catch (err) {
@@ -3613,8 +3617,15 @@
     var td = $("dsToday"); if (td) td.textContent = fmt(todaySum, 4);
     var ledgerLoaded = !!(_ledgerData && _ledgerData.users);
     var users = ledgerLoaded ? Object.keys(_ledgerData.users).map(function (k) { return _ledgerData.users[k]; }) : [];
-    var active = users.filter(function (u) { return parseFloat(u.dcaRatePerDay || "0") > 0 && !u.dcaPaused; }).length;
+    // "Active" = wallets on a schedule that are actually fundable this run
+    // (balance > 0). This matches the run's own "N active user(s)" count, so the
+    // tile can't disagree with the latest decision. The sub-line shows how many
+    // have a schedule at all, so an unfunded wallet isn't invisible.
+    var scheduled = users.filter(function (u) { return parseFloat(u.dcaRatePerDay || "0") > 0 && !u.dcaPaused; });
+    var active = scheduled.filter(function (u) { return parseFloat(u.usdcBalance || "0") > 0; }).length;
     var us = $("dsUsers"); if (us && ledgerLoaded) us.textContent = String(active);
+    var uss = $("dsUsersSub");
+    if (uss && ledgerLoaded) uss.textContent = active === scheduled.length ? "" : "of " + scheduled.length + " with a schedule";
     var done = history.filter(function (e) { return e.status === "success" || e.status === "dry_run"; }).length;
     var sr = $("dsSuccess"); if (sr) sr.textContent = history.length ? Math.round(done / history.length * 100) + "%" : "—";
     var last = history[history.length - 1];
@@ -4785,6 +4796,7 @@
       depErrConnect: "Connect your wallet first.", depErrAmount: "Enter an amount greater than 0.",
       depConfirm: "Confirm in wallet…", depSuccess: "Deposited", depCancelled: "Transaction cancelled.",
       depFailed: "Transfer failed: ", depBtn: "Deposit to agent",
+      depPending: "Confirmed on-chain. It’ll show in your balance & the dashboard after the next agent run scans it (~hourly) — not instantly.",
       walletCancelled: "Connection cancelled.", walletFailed: "Connection failed",
       portDistTitle: "DCA allocation history", portDistSub: "How the agent's swaps were distributed to your account.",
       portNoAccount: "No account found. Deposit USDC to the agent to start DCA.",
@@ -4896,6 +4908,7 @@
       depErrConnect: "Kết nối ví trước.", depErrAmount: "Nhập số tiền lớn hơn 0.",
       depConfirm: "Xác nhận trong ví…", depSuccess: "Đã nạp", depCancelled: "Đã hủy giao dịch.",
       depFailed: "Chuyển tiền thất bại: ", depBtn: "Nạp vào agent",
+      depPending: "Đã xác nhận on-chain. Số dư & dashboard sẽ hiện sau khi agent chạy lần kế tiếp quét được (~mỗi giờ) — không tức thì.",
       walletCancelled: "Đã hủy kết nối.", walletFailed: "Kết nối thất bại",
       portDistTitle: "Lịch sử phân bổ DCA", portDistSub: "Cách swap của agent được phân bổ cho tài khoản bạn.",
       portNoAccount: "Chưa có tài khoản. Gửi USDC vào agent để bắt đầu DCA.",
