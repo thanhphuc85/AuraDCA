@@ -7,6 +7,9 @@
     "api/chat.ts": {
       "maxDuration": 30
     },
+    "api/wallet.ts": {
+      "maxDuration": 30
+    },
     "api/run-dca.ts": {
       "maxDuration": 10
     }

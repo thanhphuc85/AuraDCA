@@ -2575,10 +2575,106 @@
     var hex = Math.abs(hash).toString(16).padStart(40, "0").slice(0, 40);
     return "0x" + hex;
   }
+  // ---------- Circle User-Controlled Wallet (real Gmail/social login) ----------
+  // Phase 1: sign in with Google -> a real non-custodial Circle wallet on Arc.
+  // Gated on server config: when CIRCLE_APP_ID + GOOGLE_CLIENT_ID + CIRCLE_API_KEY
+  // are set, connectGmail() uses this real path; otherwise it falls back to the
+  // legacy deterministic-address demo below (which cannot transact). userToken is
+  // a short-lived session kept in memory; a reload requires re-login.
+  var CIRCLE_WEB_SDK = "https://esm.sh/@circle-fin/w3s-pw-web-sdk@1.1.11";
+  var circleState = { sdk: null, userToken: null, encryptionKey: null, walletId: null, address: null, config: null };
+
+  function circleApi(action, payload) {
+    return fetch(apiUrl("/api/wallet"), {
+      method: "POST", headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(Object.assign({ action: action }, payload || {})),
+    }).then(function (r) { return r.json().then(function (j) { if (!r.ok) throw new Error(j.error || ("HTTP " + r.status)); return j; }); });
+  }
+  function loadCircleConfig() {
+    if (circleState.config) return Promise.resolve(circleState.config);
+    return circleApi("config").then(function (c) { circleState.config = c; return c; }).catch(function () { return { configured: false }; });
+  }
+  // Run the SDK challenge (wallet creation or a transaction) and resolve on success.
+  function circleExecute(sdk, challengeId) {
+    return new Promise(function (resolve, reject) {
+      sdk.setAuthentication({ userToken: circleState.userToken, encryptionKey: circleState.encryptionKey });
+      sdk.execute(challengeId, function (err) { if (err) reject(err); else resolve(); });
+    });
+  }
+  async function connectCircleGoogle() {
+    var cfg = await loadCircleConfig();
+    if (!cfg || !cfg.configured) throw new Error("circle-not-configured");
+    var mod = await import(/* @vite-ignore */ CIRCLE_WEB_SDK);
+    var W3SSdk = mod.W3SSdk, SocialLoginProvider = mod.SocialLoginProvider;
+    // 1) a bare SDK just to read the deviceId
+    var deviceId = await new W3SSdk({ appSettings: { appId: cfg.appId } }).getDeviceId();
+    // 2) exchange it for the social-login device token pair (server holds the key)
+    var tok = await circleApi("socialToken", { deviceId: deviceId });
+    // 3) full SDK with login config, then trigger Google OAuth
+    var login = await new Promise(function (resolve, reject) {
+      var sdk = new W3SSdk({
+        appSettings: { appId: cfg.appId },
+        loginConfigs: {
+          deviceToken: tok.deviceToken,
+          deviceEncryptionKey: tok.deviceEncryptionKey,
+          google: { clientId: cfg.googleClientId, redirectUri: window.location.origin },
+        },
+      }, function (error, result) {
+        if (error) { reject(error); return; }
+        resolve({ sdk: sdk, userToken: result.userToken, encryptionKey: result.encryptionKey });
+      });
+      sdk.performLogin(SocialLoginProvider.GOOGLE);
+    });
+    circleState.sdk = login.sdk;
+    circleState.userToken = login.userToken;
+    circleState.encryptionKey = login.encryptionKey;
+    // 4) create the Arc wallet (challenge), unless the user already has one
+    var init = await circleApi("initWallet", { userToken: login.userToken });
+    if (init.challengeId) await circleExecute(login.sdk, init.challengeId);
+    // 5) resolve the wallet address
+    var listed = await circleApi("listWallets", { userToken: login.userToken });
+    var arc = (listed.wallets || []).filter(function (w) { return String(w.blockchain || "").toUpperCase().indexOf("ARC") >= 0; });
+    var w = arc[0] || (listed.wallets || [])[0];
+    if (!w) throw new Error("No wallet returned from Circle");
+    circleState.walletId = w.id;
+    circleState.address = w.address;
+    return { address: w.address, walletId: w.id };
+  }
+
   async function connectGmail(overrideName, overrideEmail) {
     var status = $("walletStatus");
     var nameVal = overrideName || $("gmailName").value.trim() || ($("wmGmailName") ? $("wmGmailName").value.trim() : "");
     var emailVal = overrideEmail || $("gmailEmail").value.trim() || ($("wmGmailEmail") ? $("wmGmailEmail").value.trim() : "");
+
+    // Prefer the REAL Circle wallet path when the server is configured for it.
+    var cfg = await loadCircleConfig();
+    if (cfg && cfg.configured) {
+      try {
+        status.innerHTML = '<span style="display:inline-flex;align-items:center;gap:8px;"><span class="spinner" style="width:16px;height:16px;border-width:2px;"></span> Signing in with Google…</span>';
+        var real = await connectCircleGoogle();
+        state.account = real.address;
+        state.loginType = "gmail";
+        state.provider = null; // Circle wallets sign via challenge, not EIP-1193
+        saveWalletAddr(real.address);
+        try { localStorage.setItem("aura-gmail-wallet", JSON.stringify({ name: nameVal, email: emailVal, address: real.address, circle: true })); } catch (e2) {}
+        var rb0 = $("reconnectBar"); if (rb0) rb0.innerHTML = "";
+        var nb = 0, u2 = 0, cb2 = 0;
+        try {
+          nb = Number(BigInt((await rpcCall("eth_getBalance", [real.address, "latest"])) || "0x0")) / 1e18;
+          u2 = Number(await tokenBalanceOf(ARC.usdc, real.address)) / 1e6;
+          cb2 = Number(await tokenBalanceOf(ARC.cirbtc, real.address)) / 1e8;
+        } catch (e3) {}
+        var txs0 = []; try { txs0 = await fetchRecentTxs(real.address); } catch (e4) {}
+        try { showWalletProfile(real.address, nb, u2, cb2, "gmail", txs0); if (typeof renderPortfolio === "function") renderPortfolio(_ledgerData); }
+        catch (re) { closeWalletModal(); if (typeof updateHeaderWallet === "function") updateHeaderWallet(real.address, "gmail"); }
+        return;
+      } catch (cerr) {
+        if (String(cerr && cerr.message) === "circle-not-configured") { /* fall through to demo */ }
+        else { status.textContent = "Google sign-in failed: " + (cerr && cerr.message ? cerr.message : cerr); return; }
+      }
+    }
+
+    // Fallback demo path (no server config yet): deterministic address, no keys.
     if (!emailVal || !emailVal.includes("@")) {
       status.textContent = "Please enter a valid email address.";
       return;
@@ -2912,10 +3008,48 @@
     if (_treasuryTimer) clearInterval(_treasuryTimer);
     _treasuryTimer = setInterval(refreshTreasury, 30000);
   }
+  // Deposit from a real Circle wallet: build a transfer challenge server-side,
+  // let the user approve it in Circle's hosted UI, then poll to completion.
+  async function circleDeposit(amountStr) {
+    var status = $("depositStatus");
+    var btn = $("depositBtn");
+    var t = (typeof T !== "undefined" && T[currentLang]) ? T[currentLang] : {};
+    if (!circleState.userToken || !circleState.sdk) {
+      status.innerHTML = '<span style="color:var(--amber);">Session expired — please sign in with Google again to deposit.</span>';
+      return;
+    }
+    if (btn) { btn.disabled = true; btn.innerHTML = '<span class="btn-loading"><span class="spinner"></span> ' + (t.depConfirm || "Confirm…") + '</span>'; }
+    status.innerHTML = '<span style="display:inline-flex;align-items:center;gap:8px;color:var(--amber);"><span class="spinner" style="width:16px;height:16px;border-width:2px;"></span> ' + (t.depConfirm || "Confirm the transfer…") + '</span>';
+    try {
+      var ch = await circleApi("depositChallenge", { userToken: circleState.userToken, walletId: circleState.walletId, amount: amountStr });
+      await circleExecute(circleState.sdk, ch.challengeId);
+      // Poll the transaction to a terminal state (best-effort; non-fatal on timeout).
+      var state2 = "PENDING";
+      for (var i = 0; i < 20 && ["PENDING", "INITIATED", "QUEUED", "SENT", "CONFIRMED"].indexOf(state2) >= 0; i++) {
+        await new Promise(function (r) { setTimeout(r, 3000); });
+        try { var st = await circleApi("txStatus", { userToken: circleState.userToken, id: ch.transactionId }); state2 = (st.transaction && st.transaction.state) || state2; } catch (e) { break; }
+      }
+      status.innerHTML = '<span style="color:var(--green);">✓ ' + (t.depSuccess || "Deposited") + ' ' + fmt(parseFloat(amountStr), 4) + ' USDC</span>'
+        + '<div style="margin-top:6px;font-size:11.5px;color:var(--muted);opacity:.85;line-height:1.5;">⏳ ' + (t.depPending || "Confirmed on-chain. It’ll show after the next agent run scans it (~hourly).") + '</div>';
+      $("depositAmt").value = "";
+      setTimeout(refreshTreasury, 3500);
+    } catch (err) {
+      status.innerHTML = '<span style="color:var(--red);">✗ ' + (err && err.message ? err.message : err) + '</span>';
+    } finally {
+      if (btn) { btn.disabled = false; btn.textContent = t.depBtn || "Deposit to agent"; }
+    }
+  }
+
   async function deposit() {
     var status = $("depositStatus");
     var btn = $("depositBtn");
     var t = (typeof T !== "undefined" && T[currentLang]) ? T[currentLang] : {};
+    // Circle (Google) wallets sign via challenge, not EIP-1193 — route them out.
+    if (state.loginType === "gmail" && circleState.walletId) {
+      var amtC = parseFloat($("depositAmt").value);
+      if (!(amtC > 0)) { status.innerHTML = '<span style="color:var(--amber);">' + (t.depErrAmount || "Enter an amount greater than 0.") + '</span>'; return; }
+      return circleDeposit($("depositAmt").value);
+    }
     if (!state.provider || !state.account) { status.innerHTML = '<span style="color:var(--amber);">' + (t.depErrConnect || "Connect your wallet first.") + '</span>'; return; }
     var amt = parseFloat($("depositAmt").value);
     if (!(amt > 0)) { status.innerHTML = '<span style="color:var(--amber);">' + (t.depErrAmount || "Enter an amount greater than 0.") + '</span>'; return; }
