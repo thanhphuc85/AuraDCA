@@ -12,6 +12,9 @@
     },
     "api/run-dca.ts": {
       "maxDuration": 10
+    },
+    "api/trigger-dca.ts": {
+      "maxDuration": 10
     }
   },
   "redirects": [
