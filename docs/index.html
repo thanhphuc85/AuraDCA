@@ -2604,6 +2604,11 @@
       sdk.execute(challengeId, function (err) { if (err) reject(err); else resolve(); });
     });
   }
+  // Held in sessionStorage (NOT localStorage): the deviceToken/deviceEncryptionKey
+  // pair only needs to survive the same-tab Google OAuth redirect, and
+  // sessionStorage is scoped to this tab and cleared when it closes — so these
+  // login-session secrets never linger on disk for another script or session to
+  // read. Still removed explicitly the moment the login resolves (see below).
   var CIRCLE_PENDING_KEY = "aura-circle-pending";
   function circleGoogleConfig(cfg, tok) {
     return {
@@ -2667,7 +2672,7 @@
     var sdk = new W3SSdk({ appSettings: { appId: cfg.appId } });
     var deviceId = await sdk.getDeviceId();
     var tok = await circleApi("socialToken", { deviceId: deviceId });
-    try { localStorage.setItem(CIRCLE_PENDING_KEY, JSON.stringify({ deviceToken: tok.deviceToken, deviceEncryptionKey: tok.deviceEncryptionKey })); } catch (e) {}
+    try { sessionStorage.setItem(CIRCLE_PENDING_KEY, JSON.stringify({ deviceToken: tok.deviceToken, deviceEncryptionKey: tok.deviceEncryptionKey })); } catch (e) {}
     sdk.updateConfigs(circleGoogleConfig(cfg, tok), function () {});
     sdk.performGoogleLogin(); // navigates away to accounts.google.com
   }
@@ -2676,7 +2681,7 @@
   // callback, then provision the wallet and reflect it in the UI.
   async function resumeCircleGoogle() {
     var pendingRaw = null;
-    try { pendingRaw = localStorage.getItem(CIRCLE_PENDING_KEY); } catch (e) {}
+    try { pendingRaw = sessionStorage.getItem(CIRCLE_PENDING_KEY); } catch (e) {}
     var hash = window.location.hash || "";
     // Gate on our own pending flag + an OAuth-response-looking hash. (Earlier this
     // checked provider === "GOOGLE", but the SDK stores it as "Google" — that
@@ -2698,7 +2703,7 @@
           resolve({ sdk: sdk, userToken: result.userToken, encryptionKey: result.encryptionKey });
         });
       });
-      try { localStorage.removeItem(CIRCLE_PENDING_KEY); } catch (e) {}
+      try { sessionStorage.removeItem(CIRCLE_PENDING_KEY); } catch (e) {}
       var real = await finishCircleWallet(login.sdk, login.userToken, login.encryptionKey);
       state.account = real.address; state.loginType = "gmail"; state.provider = null;
       saveWalletAddr(real.address);
@@ -2713,7 +2718,7 @@
       try { showWalletProfile(real.address, nb, u2, cb2, "gmail", txs0); if (typeof renderPortfolio === "function") renderPortfolio(_ledgerData); }
       catch (re) { if (typeof updateHeaderWallet === "function") updateHeaderWallet(real.address, "gmail"); }
     } catch (err) {
-      try { localStorage.removeItem(CIRCLE_PENDING_KEY); } catch (e) {}
+      try { sessionStorage.removeItem(CIRCLE_PENDING_KEY); } catch (e) {}
       console.error("Circle resume failed:", err);
       alert("Google sign-in couldn't finish: " + (err && err.message ? err.message : err));
     }
