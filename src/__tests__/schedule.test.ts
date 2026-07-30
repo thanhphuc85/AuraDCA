@@ -174,15 +174,18 @@ describe("computeScheduledSpends — rich schedule", () => {
     expect(computeScheduledSpends(l, NOW).spends).toHaveLength(0);
   });
 
-  it("every-N-hours: due when elapsed ≥ interval, spends amountPerRun", () => {
+  it("every-N-hours: due when a new UTC bucket has been entered", () => {
+    // every 6h → UTC buckets 00/06/12/18. last=03:00 is in [00,06); NOW=10:00 is
+    // in [06,12) → a new bucket, so due.
     const l = mkLedger([mkUser("0xa", { dcaFrequency: "hours", dcaEveryHours: 6, dcaAmountPerRun: "2.500000", lastChargedAt: "2026-06-15T03:00:00.000Z" })]);
-    const r = computeScheduledSpends(l, NOW); // 7h elapsed ≥ 6
+    const r = computeScheduledSpends(l, NOW);
     expect(r.spends).toEqual([{ address: "0xa", spend: 2.5, tokenOut: "cirBTC" }]);
   });
 
-  it("every-N-hours: NOT due when elapsed < interval", () => {
+  it("every-N-hours: NOT due twice within the same UTC bucket", () => {
+    // every 6h → last=07:00 and NOW=10:00 are both in the [06,12) bucket → skip.
     const l = mkLedger([mkUser("0xa", { dcaFrequency: "hours", dcaEveryHours: 6, dcaAmountPerRun: "2.5", lastChargedAt: "2026-06-15T07:00:00.000Z" })]);
-    expect(computeScheduledSpends(l, NOW).spends).toHaveLength(0); // only 3h elapsed
+    expect(computeScheduledSpends(l, NOW).spends).toHaveLength(0);
   });
 
   it("weekly: runs only on chosen UTC weekday, once/day", () => {
@@ -225,6 +228,87 @@ describe("computeScheduledSpends — rich schedule", () => {
     expect(computeScheduledSpends(l, NOW, { fearGreedIndex: 45 }).spends).toHaveLength(0);
     expect(computeScheduledSpends(l, NOW, { fearGreedIndex: 20 }).spends).toHaveLength(1);
     expect(computeScheduledSpends(l, NOW, { fearGreedIndex: null }).spends).toHaveLength(0);
+  });
+});
+
+describe("every-N-hours — UTC-anchored buckets", () => {
+  // Mimic the real hourly cron: walk hour by hour from `startIso`; whenever the
+  // user is due, record the UTC fire time and advance lastChargedAt to it (as
+  // applyScheduledDistribution would). Returns the ISO timestamps it fired at.
+  function simulateHourlyFires(every: number, startIso: string, hours: number): string[] {
+    const start = new Date(startIso).getTime();
+    const l = mkLedger([mkUser("0xa", { dcaFrequency: "hours", dcaEveryHours: every, dcaAmountPerRun: "1", lastChargedAt: startIso })]);
+    const fires: string[] = [];
+    for (let h = 1; h <= hours; h++) {
+      const nowIso = new Date(start + h * 3600_000).toISOString();
+      if (computeScheduledSpends(l, nowIso).spends.length > 0) {
+        fires.push(nowIso);
+        l.users["0xa"]!.lastChargedAt = nowIso;
+      }
+    }
+    return fires;
+  }
+
+  it("a divisor of 24 (every 6h) fires on the UTC clock: 00/06/12/18, incl. midnight", () => {
+    const fires = simulateHourlyFires(6, "2026-06-15T00:00:00.000Z", 24);
+    expect(fires.map((f) => new Date(f).getUTCHours())).toEqual([6, 12, 18, 0]);
+  });
+
+  it("an odd interval (every 7h) keeps a uniform 7h spacing across midnight — no stubby slot", () => {
+    const fires = simulateHourlyFires(7, "2026-06-15T00:00:00.000Z", 48);
+    expect(fires.length).toBeGreaterThanOrEqual(5); // spans two midnights
+    const ms = fires.map((f) => new Date(f).getTime());
+    const gaps = ms.slice(1).map((t, i) => (t - ms[i]!) / 3600_000);
+    expect(gaps.every((g) => g === 7)).toBe(true); // every consecutive fire is exactly 7h apart
+  });
+
+  it("a missed cron hour still fires once, late within the new bucket", () => {
+    // every 6h → buckets 00/06/12/18. last=05:00 sits in [00,06); the 06:00 tick
+    // is 'missed', so the first tick in the new [06,12) bucket is 07:00 → fires.
+    const l = mkLedger([mkUser("0xa", { dcaFrequency: "hours", dcaEveryHours: 6, dcaAmountPerRun: "1", lastChargedAt: "2026-06-15T05:00:00.000Z" })]);
+    expect(computeScheduledSpends(l, "2026-06-15T07:00:00.000Z").spends).toHaveLength(1);
+    // …and having fired at 07:00, it will not fire again until the [12,18) bucket.
+    const after = mkLedger([mkUser("0xb", { dcaFrequency: "hours", dcaEveryHours: 6, dcaAmountPerRun: "1", lastChargedAt: "2026-06-15T07:00:00.000Z" })]);
+    expect(computeScheduledSpends(after, "2026-06-15T11:00:00.000Z").spends).toHaveLength(0);
+  });
+});
+
+describe("daily / every-N-days — UTC-midnight-anchored buckets", () => {
+  // Walk a DAILY cron across `days` days from `startIso`; when due, record the
+  // fire time and advance lastChargedAt (as a real run would).
+  function simulateDailyFires(over: Partial<UserAccount>, startIso: string, days: number): string[] {
+    const start = new Date(startIso).getTime();
+    const l = mkLedger([mkUser("0xa", { dcaAmountPerRun: "1", lastChargedAt: startIso, ...over })]);
+    const fires: string[] = [];
+    for (let d = 1; d <= days; d++) {
+      const nowIso = new Date(start + d * 86_400_000).toISOString();
+      if (computeScheduledSpends(l, nowIso).spends.length > 0) {
+        fires.push(nowIso);
+        l.users["0xa"]!.lastChargedAt = nowIso;
+      }
+    }
+    return fires;
+  }
+
+  it("daily: due once the UTC day rolls over, not twice in the same UTC day", () => {
+    const rolled = mkLedger([mkUser("0xa", { dcaFrequency: "daily", dcaAmountPerRun: "1", lastChargedAt: "2026-06-14T20:00:00.000Z" })]);
+    expect(computeScheduledSpends(rolled, "2026-06-15T00:00:00.000Z").spends).toHaveLength(1); // fires at 00:00 UTC
+    const sameDay = mkLedger([mkUser("0xb", { dcaFrequency: "daily", dcaAmountPerRun: "1", lastChargedAt: "2026-06-15T02:00:00.000Z" })]);
+    expect(computeScheduledSpends(sameDay, "2026-06-15T23:00:00.000Z").spends).toHaveLength(0); // still the same UTC day
+  });
+
+  it("daily: a missed 00:00 tick still fires once later that UTC day", () => {
+    const l = mkLedger([mkUser("0xa", { dcaFrequency: "daily", dcaAmountPerRun: "1", lastChargedAt: "2026-06-14T09:00:00.000Z" })]);
+    expect(computeScheduledSpends(l, "2026-06-15T09:00:00.000Z").spends).toHaveLength(1); // new UTC day, 00:00 missed
+  });
+
+  it("every-N-days keeps a uniform N-day spacing anchored to midnight, across a month boundary", () => {
+    const fires = simulateDailyFires({ dcaFrequency: "days", dcaEveryDays: 3 }, "2026-06-01T00:00:00.000Z", 30);
+    expect(fires.length).toBeGreaterThanOrEqual(8); // spans June → July
+    expect(fires.every((f) => new Date(f).getUTCHours() === 0)).toBe(true);
+    const ms = fires.map((f) => new Date(f).getTime());
+    const gaps = ms.slice(1).map((t, i) => (t - ms[i]!) / 86_400_000);
+    expect(gaps.every((g) => g === 3)).toBe(true); // every consecutive fire is exactly 3 UTC days apart
   });
 });
 

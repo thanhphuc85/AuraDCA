@@ -67,19 +67,39 @@ function remainingCap(capStr: string | undefined, spentStr: string | undefined, 
   return Math.max(0, cap - spent);
 }
 
-// Is a rich-schedule user due to run at `now`? Interval frequencies compare
-// against lastChargedAt; weekly checks the UTC weekday + once-per-day.
+// Is a rich-schedule user due to run at `now`? Every cadence is anchored to UTC:
+// "hours" fires on an `every`-hour grid from the epoch, "daily"/"days" on an
+// `every`-day grid from the epoch (a UTC midnight), and "weekly" on the chosen
+// UTC weekday, at most once per UTC day.
 function isDueNow(user: UserAccount, now: number): boolean {
   const lastMs = new Date(user.lastChargedAt ?? user.firstSeen).getTime();
-  const elapsedH = (now - lastMs) / HOUR_MS;
   switch (user.dcaFrequency) {
     case "hours": {
       const every = Math.max(1, Math.min(24, Math.floor(user.dcaEveryHours ?? 24)));
-      return elapsedH >= every - 0.01;
+      // UTC-anchored grid: partition time into `every`-hour buckets measured from
+      // the Unix epoch (itself 00:00 UTC) and fire once per bucket. For divisors
+      // of 24 the buckets line up with the UTC clock every day (every 6h →
+      // 00/06/12/18 UTC); for odd intervals (5h, 7h…) the spacing stays a uniform
+      // `every` hours across midnight instead of resetting to a stubby final slot.
+      // Comparing buckets (not an exact-hour modulo) means a missed cron hour
+      // still fires late within the same bucket, and never twice.
+      const bucket = (ms: number) => Math.floor(ms / HOUR_MS / every);
+      return bucket(now) > bucket(lastMs);
     }
-    case "days": {
-      const every = Math.max(1, Math.floor(user.dcaEveryDays ?? 1));
-      return elapsedH >= every * 24 - 0.5;
+    case "days":
+    case "daily":
+    default: {
+      // Same idea as "hours", one level up: partition into `every`-day buckets
+      // from the Unix epoch (a UTC midnight) and fire once per bucket, on the
+      // first cron tick of the new UTC day (00:00 UTC, or later that day if the
+      // 00:00 tick was missed). daily → every=1 (once per UTC day); every N days
+      // keeps a uniform N-day spacing anchored to midnight, never resetting at a
+      // month/year boundary.
+      const every = user.dcaFrequency === "days"
+        ? Math.max(1, Math.floor(user.dcaEveryDays ?? 1))
+        : 1;
+      const bucket = (ms: number) => Math.floor(ms / DAY_MS / every);
+      return bucket(now) > bucket(lastMs);
     }
     case "weekly": {
       const days = Array.isArray(user.dcaWeekdays) ? user.dcaWeekdays : [];
@@ -87,9 +107,6 @@ function isDueNow(user: UserAccount, now: number): boolean {
       if (days.indexOf(today) < 0) return false;
       return utcDate(lastMs) !== utcDate(now); // at most once per UTC day
     }
-    case "daily":
-    default:
-      return elapsedH >= 24 - 0.5;
   }
 }
 
@@ -171,6 +188,10 @@ export function applySmartMultiplier(deviation: number, opts: SmartSizingOpts = 
  * this run; the agent swaps the SUM. Two models coexist:
  *   • Rich schedule (dcaFrequency set): spend a fixed dcaAmountPerRun whenever
  *     the user's cadence is due, gated by smart conditions and daily/weekly caps.
+ *     Every cadence is anchored to UTC (see isDueNow): "hours"/"daily"/"days"
+ *     fire on an epoch-based grid (a UTC midnight), so intervals land on the UTC
+ *     clock rather than drifting from each user's first run; "weekly" fires on
+ *     the chosen UTC weekday.
  *   • Legacy (no dcaFrequency): rate/day × elapsed at the fixed 07/13/19 UTC
  *     slots, honoring dcaRunsPerDay.
  */
