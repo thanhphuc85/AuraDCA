@@ -1856,5 +1856,16 @@
     "amountOut": "6.224306",
     "walletUsdcBalance": "315.06620794981167745",
     "message": "Swapped 8.000000 USDC -> EURC across 8 user(s)"
+  },
+  {
+    "date": "2026-07-30",
+    "timestamp": "2026-07-30T19:24:02.259Z",
+    "status": "skipped_guardrail_clamped",
+    "requestedAmountUsdc": "0.000000",
+    "clampedAmountUsdc": "0",
+    "boundBy": "no_scheduled_spend",
+    "tokenOut": "cirBTC",
+    "walletUsdcBalance": "307.04223502109167745",
+    "message": "No buy this run: no user was due (0 scheduled USDC across 13 account(s))"
   }
 ]
