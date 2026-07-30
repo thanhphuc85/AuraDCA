@@ -291,6 +291,64 @@ export function activeDailyBudgetTotal(ledger: Ledger): number {
 }
 
 /**
+ * Honest PAPER settlement for a token whose real Arc route is offline (cirBTC).
+ * Mirrors applyScheduledDistribution's per-user bookkeeping, but touches ONLY the
+ * separate sim* fields: it never swaps, never debits real USDC, never credits a
+ * real token balance. Each user is credited the token they WOULD have received at
+ * the live market price (`priceUsd`, USD per 1 token), and their hypothetical
+ * spend is tracked in simUsdcSpent. lastChargedAt and the daily/weekly spend
+ * windows still advance, so the UTC-bucket schedule stays idempotent (one paper
+ * fill per bucket) and per-user caps apply to the simulation exactly as they
+ * would to a real DCA. Returns the group totals for the run message.
+ */
+export function applySimulatedDistribution(
+  ledger: Ledger,
+  spends: UserSpend[],
+  executedUsdc: string,
+  priceUsd: number,
+  runTimestamp: string,
+  tokenSymbol: string = DEFAULT_DCA_TOKEN,
+  tokenDecimals: number = CIRBTC_DECIMALS,
+): { received: number; usdc: number } | null {
+  const scheduledTotal = spends.reduce((s, x) => s + x.spend, 0);
+  const executed = Number.parseFloat(executedUsdc);
+  if (scheduledTotal <= 0 || executed <= 0 || !(priceUsd > 0)) return null;
+
+  const nowMs = new Date(runTimestamp).getTime();
+  const dayKey = utcDate(nowMs);
+  const weekKey = utcWeekStart(nowMs);
+  let sumTok = 0;
+
+  for (const { address, spend } of spends) {
+    const user = ledger.users[address];
+    if (!user) continue;
+    const fraction = spend / scheduledTotal;
+    const usdcShare = Number.parseFloat((fraction * executed).toFixed(USDC_DECIMALS));
+    const tokShare = Number.parseFloat((usdcShare / priceUsd).toFixed(tokenDecimals));
+    sumTok += tokShare;
+    // Paper position only — real usdcBalance / cirBtcBalance are deliberately
+    // left untouched so the dashboard's real numbers keep matching on-chain state.
+    user.simCirBtcBalance = (Number.parseFloat(user.simCirBtcBalance ?? "0") + tokShare).toFixed(tokenDecimals);
+    user.simUsdcSpent = (Number.parseFloat(user.simUsdcSpent ?? "0") + usdcShare).toFixed(USDC_DECIMALS);
+    // Advance the schedule cursor + spend windows exactly like the real path, so
+    // the every-N-hours bucket fires a paper fill at most once per bucket and the
+    // user's daily/weekly caps bound the simulation too.
+    const daySpent = user.dcaSpentDayDate === dayKey ? parseFloat(user.dcaSpentDayUsdc ?? "0") : 0;
+    user.dcaSpentDayUsdc = (daySpent + usdcShare).toFixed(USDC_DECIMALS);
+    user.dcaSpentDayDate = dayKey;
+    const weekSpent = user.dcaSpentWeekStart === weekKey ? parseFloat(user.dcaSpentWeekUsdc ?? "0") : 0;
+    user.dcaSpentWeekUsdc = (weekSpent + usdcShare).toFixed(USDC_DECIMALS);
+    user.dcaSpentWeekStart = weekKey;
+    user.lastChargedAt = runTimestamp;
+    user.lastActivity = runTimestamp;
+  }
+
+  const received = Number.parseFloat((executed / priceUsd).toFixed(tokenDecimals));
+  logger.info(`Simulated (paper) fill: ${executedUsdc} USDC -> ${received} ${tokenSymbol} at $${priceUsd.toFixed(2)} across ${spends.length} user(s)`);
+  return { received, usdc: executed };
+}
+
+/**
  * Attribute an executed swap back to the per-user schedule for ONE token group:
  * each user gets the received token in proportion to their scheduled spend, and
  * their USDC is debited by the amount actually executed (scaled down if a

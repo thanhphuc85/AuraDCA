@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { computeScheduledSpends, applyScheduledDistribution, groupSpendsByToken, smartSizeMultiplier, smartMarketDeviation, applySmartMultiplier } from "../ledger/schedule.js";
+import { computeScheduledSpends, applyScheduledDistribution, applySimulatedDistribution, groupSpendsByToken, smartSizeMultiplier, smartMarketDeviation, applySmartMultiplier } from "../ledger/schedule.js";
 import type { Ledger, UserAccount } from "../types.js";
 
 // UserSpend factory — tokenOut defaults to cirBTC (the historical single-token case).
@@ -463,5 +463,51 @@ describe("multi-token DCA — per-user token, pooled per token", () => {
     expect(b.tokenBalances!["EURC"]).toBeDefined();
     expect(parseFloat(b.tokenBalances!["EURC"]!)).toBeCloseTo(0.5, 6);
     expect(parseFloat(b.cirBtcBalance)).toBe(0); // EURC buyer holds no cirBTC
+  });
+});
+
+describe("applySimulatedDistribution — honest paper fills (cirBTC route offline)", () => {
+  it("credits the sim position at the live price and NEVER touches real balances", () => {
+    const u = mkUser("0xa", { usdcBalance: "50.000000", cirBtcBalance: "0" });
+    const l = mkLedger([u]);
+    // 2 USDC paper-filled at $50,000/cirBTC → 0.00004 cirBTC.
+    const out = applySimulatedDistribution(l, [sp("0xa", 2)], "2.000000", 50000, NOW, "cirBTC", 8);
+
+    expect(out).not.toBeNull();
+    expect(out!.received).toBeCloseTo(0.00004, 8);
+    const a = l.users["0xa"]!;
+    // Sim position credited…
+    expect(parseFloat(a.simCirBtcBalance!)).toBeCloseTo(0.00004, 8);
+    expect(parseFloat(a.simUsdcSpent!)).toBeCloseTo(2, 6);
+    // …but real money is untouched: no real swap happened.
+    expect(parseFloat(a.usdcBalance)).toBe(50); // real USDC unchanged
+    expect(parseFloat(a.cirBtcBalance)).toBe(0); // real cirBTC unchanged
+    expect(parseFloat(a.totalSwapped ?? "0")).toBe(0); // not counted as a real swap
+  });
+
+  it("advances lastChargedAt and the spend windows, so the hourly bucket stays idempotent", () => {
+    const u = mkUser("0xa", { lastChargedAt: PAST });
+    const l = mkLedger([u]);
+    applySimulatedDistribution(l, [sp("0xa", 1)], "1.000000", 40000, NOW, "cirBTC", 8);
+    const a = l.users["0xa"]!;
+    expect(a.lastChargedAt).toBe(NOW);
+    expect(a.dcaSpentDayUsdc).toBe("1.000000");
+    expect(a.dcaSpentDayDate).toBe("2026-06-15");
+  });
+
+  it("splits a pooled paper fill pro-rata across users", () => {
+    const l = mkLedger([mkUser("0xa"), mkUser("0xb")]);
+    // 3 USDC total (2 + 1) at $30,000 → 0.0001 cirBTC total, split 2:1.
+    applySimulatedDistribution(l, [sp("0xa", 2), sp("0xb", 1)], "3.000000", 30000, NOW, "cirBTC", 8);
+    const a = l.users["0xa"]!, b = l.users["0xb"]!;
+    expect(parseFloat(a.simCirBtcBalance!)).toBeCloseTo(0.00006667, 7); // 2/30000
+    expect(parseFloat(b.simCirBtcBalance!)).toBeCloseTo(0.00003333, 7); // 1/30000
+  });
+
+  it("returns null on a non-positive price (missing feed) so the caller can fall back", () => {
+    const l = mkLedger([mkUser("0xa")]);
+    expect(applySimulatedDistribution(l, [sp("0xa", 1)], "1.000000", 0, NOW, "cirBTC", 8)).toBeNull();
+    // No mutation on the null path.
+    expect(l.users["0xa"]!.simCirBtcBalance).toBeUndefined();
   });
 });

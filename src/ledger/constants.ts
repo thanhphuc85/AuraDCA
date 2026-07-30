@@ -20,9 +20,13 @@ export interface DcaTokenInfo {
   decimals: number;
   label: string;
   note?: string;
+  // When true, this token has no live swap route on Arc Testnet (liquidity
+  // outage), so the agent records an honest PAPER fill at the live market price
+  // instead of a real on-chain swap. See applySimulatedDistribution + run.ts.
+  simulated?: boolean;
 }
 export const SUPPORTED_DCA_TOKENS: DcaTokenInfo[] = [
-  { symbol: "cirBTC", decimals: CIRBTC_DECIMALS, label: "cirBTC — tokenized BTC", note: "volatile; route in outage on Arc Testnet" },
+  { symbol: "cirBTC", decimals: CIRBTC_DECIMALS, label: "cirBTC — tokenized BTC", note: "volatile; route in outage on Arc Testnet — simulated (paper) at live price", simulated: true },
   { symbol: "EURC", decimals: EURC_DECIMALS, label: "EURC — euro stablecoin", note: "live route" },
 ];
 export const DEFAULT_DCA_TOKEN = "cirBTC";

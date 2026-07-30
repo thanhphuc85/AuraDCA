@@ -1,5 +1,8 @@
 export type RunStatus =
   | "success"
+  | "simulated" // paper fill: a token whose real Arc route is offline (cirBTC),
+                // credited at the live market price. No on-chain tx, real funds
+                // untouched — tracked in the separate sim* fields below.
   | "dry_run"
   | "skipped_insufficient_balance"
   | "skipped_llm_declined"
@@ -47,6 +50,10 @@ export interface HistoryEntry {
   txHash?: string;
   explorerUrl?: string;
   amountOut?: string;
+  // Set on a "simulated" run: this was a paper fill (real Arc route offline), not
+  // an on-chain swap. priceUsd is the live market price used to size the fill.
+  simulated?: boolean;
+  priceUsd?: number;
   walletUsdcBalance?: string;
   message?: string; // human-readable summary, especially for skip/error cases
   // Present when a smart-mode user took part in this run: the market snapshot and
@@ -111,6 +118,13 @@ export interface UserAccount {
   totalSwapped: string;
   totalWithdrawnCirBtc: string;
   totalWithdrawnUsdc: string;
+  // --- Simulated (paper) position, for tokens whose real Arc route is offline
+  //     (cirBTC). Kept strictly separate from the real balances above: the agent
+  //     never swaps or debits real USDC for these, it only records what a real
+  //     DCA WOULD have accumulated at the live market price, clearly labelled in
+  //     the UI. simUsdcSpent is the hypothetical USDC that would have been spent.
+  simCirBtcBalance?: string;
+  simUsdcSpent?: string;
   firstSeen: string;
   lastActivity: string;
   // Per-user recurring DCA (Cách B). Optional for backward compatibility with

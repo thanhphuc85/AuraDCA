@@ -4,7 +4,7 @@ import { readHistory, appendEntry, recentHistory, dayCount, alreadySpentToday, r
 import { readReflections, appendReflection } from "./history/reflectionStore.js";
 import { readLedger, writeLedger, ensureDefaultRates } from "./ledger/store.js";
 import { scanDeposits } from "./ledger/scanner.js";
-import { computeScheduledSpends, applyScheduledDistribution, groupSpendsByToken, smartSizeMultiplier, activeDailyBudgetTotal } from "./ledger/schedule.js";
+import { computeScheduledSpends, applyScheduledDistribution, applySimulatedDistribution, groupSpendsByToken, smartSizeMultiplier, activeDailyBudgetTotal } from "./ledger/schedule.js";
 import { computeAllowanceSpends, pullUsdcFromUser, sendTokenToUser } from "./ledger/allowance.js";
 import { requestWithdrawal, processPendingWithdrawals } from "./ledger/withdraw.js";
 import { ARC_TESTNET_RPC, ARC_USDC_CONTRACT, ARC_CIRBTC_CONTRACT, dcaTokenInfo } from "./ledger/constants.js";
@@ -157,20 +157,30 @@ export async function runDailyDca(config: AppConfig): Promise<RunOutcome> {
     rawMarketData.onChainVolume,
   );
 
-  // --- Phase 2: record the REAL cirBTC price and build a persisted series ---
+  // --- Phase 2: record the reference cirBTC price and build a persisted series ---
+  // Prefer Circle's on-chain cirBTC rate. When that feed is down — as it is during
+  // the Arc cirBTC liquidity outage — fall back to the real BTC spot price from
+  // CoinGecko: cirBTC is tokenized BTC, so spot is the honest reference used to
+  // size the simulated (paper) fills. Every snapshot records its `source`, so the
+  // provenance stays fully auditable.
   let cirBtcPriceSnapshots = await readPrices();
-  if (config.kitKey) {
-    const realPrice = await fetchCirBtcPriceUsd(config.kitKey);
-    if (realPrice) {
-      const snapshot = {
-        date, timestamp,
-        priceUsd: realPrice.priceUsd,
-        source: "circle_swapkit",
-      };
+  {
+    let priceUsd: number | null = null;
+    let source = "";
+    if (config.kitKey) {
+      const realPrice = await fetchCirBtcPriceUsd(config.kitKey);
+      if (realPrice) { priceUsd = realPrice.priceUsd; source = "circle_swapkit"; }
+    }
+    if (priceUsd == null && rawMarketData.market && rawMarketData.market.btcPriceUsd > 0) {
+      priceUsd = rawMarketData.market.btcPriceUsd;
+      source = "coingecko_btc_spot";
+    }
+    if (priceUsd != null) {
+      const snapshot = { date, timestamp, priceUsd, source };
       try {
         await appendPrice(snapshot);
         cirBtcPriceSnapshots = [...cirBtcPriceSnapshots, snapshot];
-        logger.info(`Recorded real cirBTC price: $${realPrice.priceUsd.toFixed(2)}`);
+        logger.info(`Recorded cirBTC reference price: $${priceUsd.toFixed(2)} (${source})`);
       } catch (err) {
         logger.error("Failed to persist cirBTC price (non-fatal)", err);
       }
@@ -468,6 +478,43 @@ export async function runDailyDca(config: AppConfig): Promise<RunOutcome> {
     const smartSizing = groupSpends.some((s) => s.sizeMultiplier != null)
       ? { fearGreed: smartFg, drawdownPct, multiplier: smartBaseMult, source: smartSource, proposedMultiplier: sizingProposal?.rawMultiplier ?? null }
       : undefined;
+
+    // --- Simulated (paper) settlement for a token with no live Arc route ---
+    // cirBTC's liquidity is out on Arc Testnet, so a real swap can only fail.
+    // Record an honest paper fill at the live market price (priceNow, already
+    // fetched + persisted this run) instead: no on-chain tx, real USDC untouched,
+    // tracked in the separate sim* ledger fields and clearly labelled everywhere.
+    // If we couldn't price it, fall through to the real swap so the outage is
+    // still recorded honestly as a no-route failure.
+    if (info.simulated && priceNow > 0) {
+      // Dry run reports the paper fill without persisting it, mirroring the real
+      // swap path (which also no-ops the ledger under dryRun).
+      if (config.dryRun) {
+        const received = Number.parseFloat((groupExec / priceNow).toFixed(info.decimals));
+        entries.push({
+          date, timestamp, status: "dry_run", simulated: true,
+          requestedAmountUsdc: groupScheduled.toFixed(6), clampedAmountUsdc: groupExecStr,
+          boundBy, tokenOut: token, reasoning, amountOut: received.toFixed(info.decimals), priceUsd: priceNow,
+          walletUsdcBalance: usdcBalance,
+          message: `[DRY RUN][SIMULATED] Would paper-fill ${received.toFixed(info.decimals)} ${token} for ${groupExecStr} USDC at $${priceNow.toFixed(2)}/${token}`,
+          ...(smartSizing ? { smartSizing } : {}),
+        });
+        continue;
+      }
+      const sim = applySimulatedDistribution(ledger, groupSpends, groupExecStr, priceNow, timestamp, token, info.decimals);
+      const received = sim ? sim.received : 0;
+      entries.push({
+        date, timestamp, status: "simulated", simulated: true,
+        requestedAmountUsdc: groupScheduled.toFixed(6), clampedAmountUsdc: groupExecStr,
+        boundBy, tokenOut: token, reasoning,
+        amountOut: received.toFixed(info.decimals), priceUsd: priceNow,
+        walletUsdcBalance: usdcBalance,
+        message: `[SIMULATED] Arc ${token} route offline — paper-filled ${received.toFixed(info.decimals)} ${token} for ${groupExecStr} USDC at $${priceNow.toFixed(2)}/${token} (no on-chain swap; real funds untouched)`,
+        ...(smartSizing ? { smartSizing } : {}),
+      });
+      continue;
+    }
+
     try {
       const swapResult = await executeSwap({
         circleApiKey: config.circleApiKey,
