@@ -17,6 +17,7 @@ import { fetchAllMarketData } from "./market/external.js";
 import { fetchCirBtcPriceUsd } from "./price/priceFeed.js";
 import { readPrices, appendPrice } from "./price/priceStore.js";
 import { executeSwap, SwapExecutionError } from "./swap/swapKit.js";
+import { payForMarketBriefBestEffort } from "./x402/agent.js";
 import type { ClampedDecision, DecisionContext, HistoryEntry, Ledger, RunStatus } from "./types.js";
 import { logger } from "./logger.js";
 import { notifyAll } from "./notify.js";
@@ -187,6 +188,12 @@ export async function runDailyDca(config: AppConfig): Promise<RunOutcome> {
     rawMarketData.fearGreed,
     rawMarketData.onChainVolume,
   );
+
+  // --- x402: the agent pays (a metered USDC micro-payment) for its brief input ---
+  // Gated + best-effort: inert unless X402_ENABLED, never throws, never touches
+  // DCA money/state. When it does pay, the receipt is annotated onto this run's
+  // entries so it lands in history.json and the Telegram alert.
+  const x402Receipt = await payForMarketBriefBestEffort();
 
   // --- Phase 2: record the reference cirBTC price and build a persisted series ---
   // Prefer Circle's on-chain cirBTC rate. When that feed is down — as it is during
@@ -639,5 +646,6 @@ export async function runDailyDca(config: AppConfig): Promise<RunOutcome> {
   }
 
   await saveLedger(ledger);
+  if (x402Receipt) for (const e of entries) e.x402 = x402Receipt;
   return emitRunEntries(entries, config.discordWebhookUrl, refCtx);
 }

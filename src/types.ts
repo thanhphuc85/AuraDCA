@@ -68,6 +68,18 @@ export interface HistoryEntry {
     source?: "llm" | "formula";
     proposedMultiplier?: number | null;
   };
+  // Present when the agent paid for its market-brief input via x402 this run
+  // (gated by X402_ENABLED). Best-effort and off the money path — a paper
+  // (verified-only) micro-payment unless settlement is turned on. See src/x402/.
+  x402?: {
+    resource: string;
+    amountUsdcAtomic: string;
+    payer: string;
+    payTo: string;
+    settled: boolean;
+    mode: string;
+    via: "http" | "in-process";
+  };
 }
 
 export interface DecisionContext {
