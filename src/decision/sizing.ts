@@ -1,7 +1,7 @@
 import Anthropic from "@anthropic-ai/sdk";
 import type { MarketBrief } from "../types.js";
 import { SMART_MIN_MULT, SMART_DEFAULT_MAX_MULT } from "../ledger/schedule.js";
-import { withRetry } from "../retry.js";
+import { withRetry, isRetryableLlmError } from "../retry.js";
 import { logger } from "../logger.js";
 
 const SIZING_MODEL = "claude-haiku-4-5-20251001";
@@ -91,7 +91,7 @@ export async function proposeSmartMultiplier(
         tools: [SIZING_TOOL] as Anthropic.Tool[],
         tool_choice: { type: "tool" as const, name: "set_size_multiplier" },
       }),
-      { maxRetries: 2, label: "Sizing agent" },
+      { maxRetries: 2, label: "Sizing agent", shouldRetry: isRetryableLlmError },
     );
 
     const block = response.content.find((b) => b.type === "tool_use");

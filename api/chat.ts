@@ -465,7 +465,17 @@ export default async function handler(req: VercelRequest, res: VercelResponse): 
     }
     res.status(200).json({ reply: "I couldn't finish that request — please try rephrasing.", proposal });
   } catch (err) {
+    // Log the full error server-side, but NEVER echo the raw provider message to
+    // the client — an Anthropic 400 carries our billing state ("credit balance is
+    // too low…"), which must not surface in the dashboard. Map to a stable,
+    // non-leaky message; the real cause stays in the server logs.
     console.error("chat handler failed:", err);
-    res.status(500).json({ error: "Assistant error: " + (err instanceof Error ? err.message : String(err)) });
+    const status = (err as { status?: unknown })?.status;
+    const providerSide = typeof status === "number"; // an Anthropic API error
+    if (providerSide) {
+      res.status(503).json({ error: "The assistant is temporarily unavailable. Please try again shortly." });
+    } else {
+      res.status(500).json({ error: "Sorry, something went wrong handling that. Please try again." });
+    }
   }
 }

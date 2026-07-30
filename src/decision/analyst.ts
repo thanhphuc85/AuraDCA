@@ -1,6 +1,6 @@
 import Anthropic from "@anthropic-ai/sdk";
 import type { MarketData, FearGreedData, OnChainVolume, MarketBrief } from "../types.js";
-import { withRetry } from "../retry.js";
+import { withRetry, isRetryableLlmError } from "../retry.js";
 import { logger } from "../logger.js";
 
 const ANALYST_MODEL = "claude-haiku-4-5-20251001";
@@ -119,7 +119,7 @@ export async function runMarketAnalyst(
           tools: [MARKET_BRIEF_TOOL] as Anthropic.Tool[],
           tool_choice: { type: "tool" as const, name: "record_market_brief" },
         }),
-      { maxRetries: 2, label: "Analyst agent" },
+      { maxRetries: 2, label: "Analyst agent", shouldRetry: isRetryableLlmError },
     );
 
     const toolBlock = response.content.find((b) => b.type === "tool_use");

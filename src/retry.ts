@@ -9,6 +9,21 @@ export interface RetryOptions {
   label?: string;
 }
 
+/**
+ * Whether an LLM/HTTP error is worth retrying. Non-retryable 4xx — a credit
+ * exhaustion (400), auth (401/403), or malformed request (404/422) — will fail
+ * again identically, so retrying only wastes calls + backoff. Rate limits (429),
+ * server/overload errors (5xx), and network errors (no status) are transient and
+ * DO get retried. Reads the `status` the Anthropic SDK sets on its API errors.
+ */
+export function isRetryableLlmError(err: unknown): boolean {
+  const status = (err as { status?: unknown })?.status;
+  if (typeof status !== "number") return true; // network / unknown → retry
+  if (status === 429) return true; // rate limited → transient
+  if (status >= 500) return true; // server / overloaded → transient
+  return false; // other 4xx (credit, auth, bad request) → do not retry
+}
+
 export async function withRetry<T>(
   fn: () => Promise<T>,
   options?: RetryOptions,
