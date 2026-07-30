@@ -265,6 +265,30 @@ export function computeScheduledSpends(ledger: Ledger, nowIso: string, market: M
 }
 
 /**
+ * Partition a run's scheduled spends by how they settle. A LIVE spend settles a
+ * real USDC→token swap and so is subject to the wallet balance / reserve /
+ * daily-cap guardrails; a SIMULATED spend is an honest paper fill that touches no
+ * real USDC and must NOT be gated or throttled by the wallet. `isSimulated`
+ * decides per token symbol (typically: the token has no live route AND a price is
+ * available this run). Returns the two USDC totals, each rounded to USDC_DECIMALS.
+ */
+export function splitScheduledBySettlement(
+  spends: UserSpend[],
+  isSimulated: (token: string) => boolean,
+): { liveTotal: number; simTotal: number } {
+  let live = 0;
+  let sim = 0;
+  for (const s of spends) {
+    if (isSimulated(s.tokenOut)) sim += s.spend;
+    else live += s.spend;
+  }
+  return {
+    liveTotal: Number.parseFloat(live.toFixed(USDC_DECIMALS)),
+    simTotal: Number.parseFloat(sim.toFixed(USDC_DECIMALS)),
+  };
+}
+
+/**
  * Sum of the daily budgets of every user who could legitimately DCA today
  * (funded, not paused, not manual). Because each user is already bounded by
  * their own daily cap, this sum is the largest total that can legitimately be

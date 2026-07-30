@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { computeScheduledSpends, applyScheduledDistribution, applySimulatedDistribution, groupSpendsByToken, smartSizeMultiplier, smartMarketDeviation, applySmartMultiplier } from "../ledger/schedule.js";
+import { computeScheduledSpends, applyScheduledDistribution, applySimulatedDistribution, groupSpendsByToken, smartSizeMultiplier, smartMarketDeviation, applySmartMultiplier, splitScheduledBySettlement } from "../ledger/schedule.js";
 import type { Ledger, UserAccount } from "../types.js";
 
 // UserSpend factory — tokenOut defaults to cirBTC (the historical single-token case).
@@ -509,5 +509,53 @@ describe("applySimulatedDistribution — honest paper fills (cirBTC route offlin
     expect(applySimulatedDistribution(l, [sp("0xa", 1)], "1.000000", 0, NOW, "cirBTC", 8)).toBeNull();
     // No mutation on the null path.
     expect(l.users["0xa"]!.simCirBtcBalance).toBeUndefined();
+  });
+});
+
+describe("splitScheduledBySettlement — live (real-swap) vs simulated (paper) totals", () => {
+  const isSim = (t: string) => t === "cirBTC"; // cirBTC route offline → paper this run
+
+  it("separates the two totals so only the live portion is wallet-clamped", () => {
+    const { liveTotal, simTotal } = splitScheduledBySettlement(
+      [sp("0xa", 1, "EURC"), sp("0xb", 3, "cirBTC"), sp("0xc", 2, "EURC")],
+      isSim,
+    );
+    expect(liveTotal).toBeCloseTo(3, 6); // 1 + 2 EURC
+    expect(simTotal).toBeCloseTo(3, 6);  // 3 cirBTC
+  });
+
+  it("all-paper run has zero live total (nothing to wallet-clamp)", () => {
+    const { liveTotal, simTotal } = splitScheduledBySettlement([sp("0xa", 2, "cirBTC")], isSim);
+    expect(liveTotal).toBe(0);
+    expect(simTotal).toBeCloseTo(2, 6);
+  });
+
+  it("all-live run has zero sim total", () => {
+    const { liveTotal, simTotal } = splitScheduledBySettlement([sp("0xa", 2, "EURC")], isSim);
+    expect(liveTotal).toBeCloseTo(2, 6);
+    expect(simTotal).toBe(0);
+  });
+
+  it("mirrors run.ts: a wallet clamp scales ONLY the live group; the paper group settles in full", () => {
+    // 0xa DCAs 3 USDC into cirBTC (paper), 0xb DCAs 1 USDC into EURC (live).
+    // The wallet only affords 0.5 USDC of LIVE spend this run.
+    const spends = [sp("0xa", 3, "cirBTC"), sp("0xb", 1, "EURC")];
+    const { liveTotal, simTotal } = splitScheduledBySettlement(spends, isSim);
+    expect(liveTotal).toBeCloseTo(1, 6); // EURC only
+    expect(simTotal).toBeCloseTo(3, 6);  // cirBTC untouched by the wallet
+
+    const liveExecutable = 0.5;                 // clampDecision capped the live portion
+    const liveScale = liveExecutable / liveTotal;
+
+    const groups = groupSpendsByToken(spends);
+    const exec: Record<string, number> = {};
+    for (const [token, g] of groups) {
+      const groupScheduled = g.reduce((s, x) => s + x.spend, 0);
+      const sim = isSim(token);
+      const groupScale = sim ? 1 : liveScale; // ← the #1/#2 fix
+      exec[token] = Number.parseFloat((groupScheduled * groupScale).toFixed(6));
+    }
+    expect(exec["cirBTC"]).toBeCloseTo(3, 6);   // paper fill is NOT throttled by the wallet
+    expect(exec["EURC"]).toBeCloseTo(0.5, 6);   // live buy carries the wallet clamp
   });
 });
