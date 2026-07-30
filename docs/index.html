@@ -1685,18 +1685,27 @@
     window.showPage(SLUG_TO_TARGET[slugFromHash()] || "top", true);
   })();
 
-  // ---------- live gas price ----------
+  // ---------- live network fee (quoted in USDC, Arc's gas token) ----------
   (function setupGas() {
     var el = document.getElementById("gasVal");
+    var chip = document.getElementById("gasChip");
     if (!el) return;
     async function refresh() {
       try {
-        var raw = await rpcCall("eth_gasPrice", []);
-        var gwei = Number(BigInt(raw || "0x0")) / 1e9;
-        el.textContent = gwei >= 1 ? gwei.toFixed(1) + " Gwei" : (gwei * 1000).toFixed(0) + " Mwei";
+        var gp = BigInt((await rpcCall("eth_gasPrice", [])) || "0x0");
+        if (gp <= 0n) throw new Error("no gas price");
+        el.textContent = "~" + fmtUsdcFee(arcWeiToUsdc(gp * ARC_TRANSFER_GAS));
+        if (chip) {
+          var gwei = Number(gp) / 1e9;
+          chip.title = "Est. network fee per transfer · " +
+            (gwei >= 1 ? gwei.toFixed(1) + " Gwei" : (gwei * 1000).toFixed(0) + " Mwei");
+        }
       } catch (e) { el.textContent = "—"; }
     }
-    refresh();
+    // Defer the first paint to a macrotask: this IIFE runs before `ARC` (and its
+    // rpc URL) is assigned further down, so calling refresh() synchronously here
+    // would throw on ARC.rpc and leave the chip blank until the 30s interval.
+    setTimeout(refresh, 0);
     setInterval(refresh, 30000);
   })();
 
@@ -2050,6 +2059,46 @@
       if (window.ethereum) return await window.ethereum.request({ method: method, params: params });
       return await rpcCall(method, params);
     } catch (e) { return "0x0"; }
+  }
+
+  // ---------- Arc gas / fee helpers ----------
+  // Arc is stablecoin-native: the gas token IS USDC, but the NATIVE unit carries
+  // 18 decimals (not the 6 of the ERC-20 USDC), so a wei fee converts to a USDC
+  // amount by dividing by 1e18. A representative ERC-20 transfer — the deposit
+  // users actually sign — lands around 65k gas; we quote the header chip off that.
+  var ARC_TRANSFER_GAS = 65000n;
+  var GWEI = 1000000000n;
+  function arcWeiToUsdc(wei) { return Number(wei) / 1e18; }
+  function fmtUsdcFee(usdc) {
+    if (!isFinite(usdc) || usdc <= 0) return "—";
+    if (usdc >= 0.01) return "$" + usdc.toFixed(3);
+    if (usdc >= 0.0001) return "$" + usdc.toFixed(4);
+    return "<$0.0001";
+  }
+  // Build EIP-1559 fee fields for an Arc transaction. Injected wallets often
+  // under-price maxFeePerGas on non-mainnet chains and strand the tx; we pin
+  // maxFeePerGas to 2x the live gas price with a 40 Gwei floor (Arc's min base
+  // fee is 20 Gwei) and add 25% gas-limit headroom. Every field is best-effort:
+  // on any RPC hiccup we drop it and let the wallet fall back to its own estimate.
+  async function arcFeeOverrides(txReq) {
+    var out = {};
+    try {
+      var gp = BigInt((await rpcCall("eth_gasPrice", [])) || "0x0");
+      if (gp > 0n) {
+        var maxFee = gp * 2n;
+        var floor = 40n * GWEI;
+        if (maxFee < floor) maxFee = floor;
+        var prio = 1n * GWEI;
+        if (prio > maxFee) prio = maxFee;
+        out.maxFeePerGas = "0x" + maxFee.toString(16);
+        out.maxPriorityFeePerGas = "0x" + prio.toString(16);
+      }
+    } catch (e) { /* fall back to wallet fee estimation */ }
+    try {
+      var est = BigInt((await rpcCall("eth_estimateGas", [txReq])) || "0x0");
+      if (est > 0n) out.gas = "0x" + (est * 125n / 100n).toString(16);
+    } catch (e) { /* fall back to wallet gas estimation */ }
+    return out;
   }
   async function tokenBalanceOf(token, holder) {
     var data = "0x70a08231" + holder.slice(2).toLowerCase().padStart(64, "0");
@@ -3130,9 +3179,10 @@
     if (btn) { btn.disabled = true; btn.innerHTML = '<span class="btn-loading"><span class="spinner"></span> ' + (t.depConfirm || "Confirm in wallet…") + '</span>'; }
     status.innerHTML = '<span style="display:inline-flex;align-items:center;gap:8px;color:var(--amber);"><span class="spinner" style="width:16px;height:16px;border-width:2px;"></span> ' + (t.depConfirm || "Confirm the transfer in your wallet…") + '</span>';
     try {
+      var txReq = { from: state.account, to: ARC.usdc, data: data };
       var txHash = await state.provider.request({
         method: "eth_sendTransaction",
-        params: [{ from: state.account, to: ARC.usdc, data: data }],
+        params: [Object.assign(txReq, await arcFeeOverrides(txReq))],
       });
       status.innerHTML = '<span style="color:var(--green);">✓ ' + (t.depSuccess || "Deposited") + ' ' + fmt(amt, 4) + ' USDC</span> · <a href="' + ARC.explorer + '/tx/' + txHash + '" target="_blank" rel="noopener">view tx ↗</a>'
         + '<div style="margin-top:6px;font-size:11.5px;color:var(--muted);opacity:.85;line-height:1.5;">⏳ ' + (t.depPending || "Confirmed on-chain. It’ll show in your balance & the dashboard after the next agent run scans it (~hourly) — not instantly.") + '</div>';
