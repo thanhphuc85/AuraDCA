@@ -4,7 +4,7 @@ import { readHistory, appendEntry, recentHistory, dayCount, alreadySpentToday, r
 import { readReflections, appendReflection } from "./history/reflectionStore.js";
 import { readLedger, writeLedger, ensureDefaultRates } from "./ledger/store.js";
 import { scanDeposits } from "./ledger/scanner.js";
-import { computeScheduledSpends, applyScheduledDistribution, applySimulatedDistribution, groupSpendsByToken, smartSizeMultiplier, activeDailyBudgetTotal } from "./ledger/schedule.js";
+import { computeScheduledSpends, applyScheduledDistribution, applySimulatedDistribution, groupSpendsByToken, smartSizeMultiplier, activeDailyBudgetTotal, splitScheduledBySettlement } from "./ledger/schedule.js";
 import { computeAllowanceSpends, pullUsdcFromUser, sendTokenToUser } from "./ledger/allowance.js";
 import { requestWithdrawal, processPendingWithdrawals } from "./ledger/withdraw.js";
 import { ARC_TESTNET_RPC, ARC_USDC_CONTRACT, ARC_CIRBTC_CONTRACT, dcaTokenInfo } from "./ledger/constants.js";
@@ -17,7 +17,7 @@ import { fetchAllMarketData } from "./market/external.js";
 import { fetchCirBtcPriceUsd } from "./price/priceFeed.js";
 import { readPrices, appendPrice } from "./price/priceStore.js";
 import { executeSwap, SwapExecutionError } from "./swap/swapKit.js";
-import type { DecisionContext, HistoryEntry, Ledger, RunStatus } from "./types.js";
+import type { ClampedDecision, DecisionContext, HistoryEntry, Ledger, RunStatus } from "./types.js";
 import { logger } from "./logger.js";
 import { notifyAll } from "./notify.js";
 
@@ -91,6 +91,37 @@ async function saveLedger(ledger: Ledger): Promise<void> {
   } catch (err) {
     logger.error("Failed to write ledger", err);
   }
+}
+
+/**
+ * Return already-pulled USDC to each user's wallet. Called on the allowance-mode
+ * failure paths that happen BEFORE the swap settles (sub-min total, swap threw),
+ * where the pulled USDC still sits in the agent wallet as USDC — so it can be
+ * sent straight back. Without this the transferFrom'd USDC would be silently
+ * stranded in the agent wallet (#5). Best-effort per user; a failed refund is
+ * logged loudly (the funds are recoverable manually) and counted.
+ */
+async function refundPulledUsdc(
+  config: AppConfig,
+  pulled: Array<{ user: string; amount: number }>,
+): Promise<{ refunded: number; failed: number }> {
+  let refunded = 0;
+  let failed = 0;
+  for (const p of pulled) {
+    if (!(p.amount > 0)) continue;
+    try {
+      await sendTokenToUser({
+        apiKey: config.circleApiKey, entitySecret: config.circleEntitySecret, walletId: config.walletId,
+        tokenContract: ARC_USDC_CONTRACT, user: p.user, amount: p.amount.toFixed(6),
+      });
+      refunded += p.amount;
+      logger.info(`Refunded ${p.amount.toFixed(6)} USDC to ${p.user} after an allowance-mode abort`);
+    } catch (err) {
+      failed += 1;
+      logger.error(`USDC REFUND FAILED for ${p.user} — ${p.amount.toFixed(6)} USDC left in the agent wallet, needs manual return`, err);
+    }
+  }
+  return { refunded, failed };
 }
 
 export async function runDailyDca(config: AppConfig): Promise<RunOutcome> {
@@ -193,6 +224,18 @@ export async function runDailyDca(config: AppConfig): Promise<RunOutcome> {
   // Instead of spending a pooled deposit, pull each user's scheduled amount from
   // their own wallet via transferFrom, swap the sum, and send cirBTC back.
   if (config.allowanceMode) {
+    // Never pull real USDC for a token whose swap route is offline: the swap
+    // could only fail and the pulled USDC would be stranded in the agent wallet
+    // (#5). Skip the run entirely instead — nothing is pulled, nothing is stuck.
+    if (dcaTokenInfo(config.tokenOut).simulated) {
+      return writeAndReturn({
+        date, timestamp, status: "skipped_guardrail_clamped",
+        requestedAmountUsdc: "0.000000", clampedAmountUsdc: "0", boundBy: "route_offline",
+        tokenOut: config.tokenOut, walletUsdcBalance: usdcBalance,
+        message: `Allowance mode paused: ${config.tokenOut} has no live swap route on Arc Testnet — not pulling real USDC (it would only get stuck).`,
+      }, false, config.discordWebhookUrl, refCtx);
+    }
+
     const { spends, totalUsdc } = await computeAllowanceSpends(ledger, ARC_TESTNET_RPC, ARC_USDC_CONTRACT, wallet.address, timestamp);
     logger.info(`Allowance mode: ${spends.length} active user(s), total pull ${totalUsdc} USDC`);
 
@@ -229,9 +272,12 @@ export async function runDailyDca(config: AppConfig): Promise<RunOutcome> {
     }
     const pulledTotal = pulled.reduce((a, x) => a + x.amount, 0);
     if (pulledTotal < minSwapUsdc) {
+      // The USDC is already in the agent wallet but there's too little to swap —
+      // return every pulled amount so nothing is stranded (#5).
+      const refund = await refundPulledUsdc(config, pulled);
       return writeAndReturn({
         date, timestamp, status: "error_swap_failed", tokenOut: config.tokenOut, walletUsdcBalance: usdcBalance,
-        message: `Allowance mode: pulled only ${pulledTotal.toFixed(6)} USDC (< min swap ${minSwapUsdc})`,
+        message: `Allowance mode: pulled only ${pulledTotal.toFixed(6)} USDC (< min swap ${minSwapUsdc}); refunded ${refund.refunded.toFixed(6)} USDC${refund.failed ? `, ${refund.failed} refund(s) FAILED — manual return needed` : ""}`,
       }, false, config.discordWebhookUrl, refCtx);
     }
 
@@ -241,6 +287,8 @@ export async function runDailyDca(config: AppConfig): Promise<RunOutcome> {
         walletAddress: wallet.address, kitKey: config.kitKey, tokenOut: config.tokenOut,
         amountUsdc: pulledTotal.toFixed(6), dryRun: false,
       });
+      let sentBack = 0;
+      const sendBackFailures: string[] = [];
       if (swapResult.amountOut) {
         const totalOut = Number.parseFloat(swapResult.amountOut);
         for (const p of pulled) {
@@ -261,43 +309,47 @@ export async function runDailyDca(config: AppConfig): Promise<RunOutcome> {
               u.lastChargedAt = timestamp;
               u.lastActivity = timestamp;
             }
+            sentBack += 1;
           } catch (err) {
-            logger.error(`cirBTC send-back failed for ${p.user} (non-fatal); ledger not credited`, err);
+            // The USDC was already swapped to cirBTC held by the agent, so we
+            // can't cleanly refund USDC here. Leave the ledger uncredited AND
+            // lastChargedAt unchanged so this user isn't double-counted, and
+            // surface the owed cirBTC loudly for manual reconciliation (#5).
+            sendBackFailures.push(`${p.user} (owed ${share} cirBTC)`);
+            logger.error(`cirBTC send-back failed for ${p.user} — ${share} cirBTC owed, held in agent wallet, needs manual send; ledger not credited`, err);
           }
         }
         await saveLedger(ledger);
       }
+      const owedNote = sendBackFailures.length
+        ? `; ${sendBackFailures.length} send-back(s) FAILED — owed cirBTC held in agent wallet: ${sendBackFailures.join(", ")}`
+        : "";
       return writeAndReturn({
         date, timestamp, status: "success",
         requestedAmountUsdc: totalUsdc.toFixed(6), clampedAmountUsdc: pulledTotal.toFixed(6),
         tokenOut: config.tokenOut, txHash: swapResult.txHash, explorerUrl: swapResult.explorerUrl, amountOut: swapResult.amountOut,
         walletUsdcBalance: usdcBalance,
-        reasoning: `Allowance mode: pulled ${pulledTotal.toFixed(6)} USDC from ${pulled.length} wallet(s), swapped, sent cirBTC back.`,
-        message: `Allowance DCA: pulled + swapped ${pulledTotal.toFixed(6)} USDC across ${pulled.length} user(s)`,
+        reasoning: `Allowance mode: pulled ${pulledTotal.toFixed(6)} USDC from ${pulled.length} wallet(s), swapped, sent cirBTC back to ${sentBack}.`,
+        message: `Allowance DCA: pulled + swapped ${pulledTotal.toFixed(6)} USDC across ${pulled.length} user(s), cirBTC delivered to ${sentBack}/${pulled.length}${owedNote}`,
       }, false, config.discordWebhookUrl, refCtx);
     } catch (err) {
       const category = err instanceof SwapExecutionError ? err.category : "unknown";
       logger.error(`Allowance swap failed [${category}]`, err);
+      // The swap never settled, so the pulled USDC is still USDC in the agent
+      // wallet — send it all back rather than stranding it (#5).
+      const refund = await refundPulledUsdc(config, pulled);
       return writeAndReturn({
         date, timestamp, status: "error_swap_failed", clampedAmountUsdc: pulledTotal.toFixed(6),
         tokenOut: config.tokenOut, walletUsdcBalance: usdcBalance,
-        message: `Allowance swap failed [${category}]: ${(err as Error).message}`,
+        message: `Allowance swap failed [${category}]: ${(err as Error).message}; refunded ${refund.refunded.toFixed(6)} USDC${refund.failed ? `, ${refund.failed} refund(s) FAILED — manual return needed` : ""}`,
       }, false, config.discordWebhookUrl, refCtx);
     }
   }
 
-  const minReserve = Number.parseFloat(config.guardrails.minUsdcReserve);
-  if (Number.parseFloat(usdcBalance) <= minReserve) {
-    logger.info(`Balance ${usdcBalance} USDC is at or below reserve ${minReserve} USDC, skipping`);
-    return writeAndReturn({
-      date,
-      timestamp,
-      status: "skipped_insufficient_balance",
-      tokenOut: config.tokenOut,
-      walletUsdcBalance: usdcBalance,
-      message: `Wallet balance ${usdcBalance} USDC is at or below the configured minimum reserve ${minReserve} USDC`,
-    }, false, config.discordWebhookUrl, refCtx);
-  }
+  // NB: the wallet reserve / balance is NOT a whole-run gate. It only bounds the
+  // LIVE (real-swap) portion of the schedule, applied via clampDecision on
+  // `liveTotal` below. Gating the whole run here would wrongly halt simulated
+  // (paper) fills, which spend no real USDC (#2).
 
   // --- Cách B: deterministic per-user schedule-driven sizing ---
   // The buy amount is the SUM of each active user's scheduled spend; the agent
@@ -325,11 +377,13 @@ export async function runDailyDca(config: AppConfig): Promise<RunOutcome> {
   });
   const scheduledTotal = schedule.totalUsdc;
   const minSwap = Number.parseFloat(config.guardrails.minSwapUsdc);
-  // clampDecision is the sole authority on the pooled number actually swapped: it
-  // re-derives the real cap from every hard guardrail — max/day, wallet reserve,
-  // remaining daily cap, campaign budget, dust floor. The user schedule is only
-  // the *request*; the code owns the number. (The per-user daily/weekly caps were
-  // already applied inside computeScheduledSpends; this is the global ceiling.)
+  // clampDecision (below) is the sole authority on the LIVE (real-swap) number
+  // actually spent: it re-derives the real cap from every hard guardrail —
+  // max/day, wallet reserve, remaining daily cap, campaign budget, dust floor. The
+  // user schedule is only the *request*; the code owns the number. (The per-user
+  // daily/weekly caps were already applied inside computeScheduledSpends; this is
+  // the global ceiling.) Simulated (paper) spend settles outside this clamp — it
+  // moves no real USDC — bounded only by the per-user caps already applied.
   // Nothing due this run is an ordinary outcome, not a decision — short-circuit
   // so the audit trail says so plainly instead of borrowing clampDecision's
   // "llm_declined" skip reason, which would be flatly untrue here.
@@ -348,6 +402,17 @@ export async function runDailyDca(config: AppConfig): Promise<RunOutcome> {
     }, false, config.discordWebhookUrl, refCtx);
   }
 
+  // Split the scheduled spend into SIMULATED (paper — no real USDC leaves the
+  // wallet) and LIVE (a real USDC→token swap). Only the live portion may be bound
+  // by the wallet balance / reserve / daily-cap guardrails; paper fills touch no
+  // real funds, so gating them on the wallet would wrongly halt (#2) or throttle
+  // (#1) them. Per-user daily/weekly caps were already applied to BOTH inside
+  // computeScheduledSpends. A token counts as simulated for this run only when it
+  // has no live route AND we have a price to fill against — otherwise it falls
+  // through to a real swap (see the group loop) and must be clamped as live.
+  const isSimNow = (token: string) => dcaTokenInfo(token).simulated === true && priceNow > 0;
+  const { liveTotal, simTotal } = splitScheduledBySettlement(schedule.spends, isSimNow);
+
   // Auto-scale the global daily ceiling with the active user base. The effective
   // cap is the smaller of the operator's absolute circuit-breaker
   // (env MAX_DAILY_USDC) and the sum of every active user's own daily cap. Since
@@ -363,36 +428,48 @@ export async function runDailyDca(config: AppConfig): Promise<RunOutcome> {
     logger.info(`Daily ceiling auto-scaled to ${effectiveMaxDaily} USDC (Σ active per-user caps) under env cap ${envMaxDaily}`);
   }
 
-  const clamp = clampDecision(
-    { proceed: true, amountUsdc: scheduledTotal.toFixed(6), reasoning: "per-user schedule sum" },
-    {
-      guardrails: { ...config.guardrails, maxDailyUsdc: effectiveMaxDaily.toFixed(6) },
-      walletUsdcBalance: usdcBalance,
-      alreadySpentTodayUsdc: alreadySpentToday(history, date),
-      remainingCampaignBudgetUsdc: remainingCampaignBudget(history, config.guardrails.campaignTotalBudgetUsdc),
-    },
-  );
-  const executable = clamp.proceed ? Number.parseFloat(clamp.amountUsdc) : 0;
-  const executableStr = executable.toFixed(6);
+  // clampDecision owns the real number swapped — but only for the LIVE portion.
+  // When there is no live spend this run (all paper), it is not consulted.
+  const clamp: ClampedDecision = liveTotal > 0
+    ? clampDecision(
+        { proceed: true, amountUsdc: liveTotal.toFixed(6), reasoning: "per-user live schedule sum" },
+        {
+          guardrails: { ...config.guardrails, maxDailyUsdc: effectiveMaxDaily.toFixed(6) },
+          walletUsdcBalance: usdcBalance,
+          alreadySpentTodayUsdc: alreadySpentToday(history, date),
+          remainingCampaignBudgetUsdc: remainingCampaignBudget(history, config.guardrails.campaignTotalBudgetUsdc),
+        },
+      )
+    : { proceed: false, amountUsdc: "0", boundBy: "no_live_spend" };
+  const liveExecutable = clamp.proceed ? Number.parseFloat(clamp.amountUsdc) : 0;
+  // Per-group scale for LIVE groups only; simulated groups always settle at 1.0.
+  const liveScale = liveTotal > 0 && liveExecutable > 0 ? liveExecutable / liveTotal : 0;
 
-  if (!clamp.proceed || executable < minSwap) {
-    logger.info(`Scheduled spend ${scheduledTotal} USDC clamped to ${executable} by ${clamp.boundBy}; skipping`);
+  // Skip the whole run only when the live portion is dust/blocked AND there is no
+  // paper work either. When paper fills are due, fall through: they settle
+  // regardless of the wallet, and any dust/blocked live group emits its own
+  // per-group skip in the loop below.
+  if (liveExecutable < minSwap && simTotal <= 0) {
+    const insufficient = clamp.boundBy === "wallet_available_after_reserve";
+    logger.info(`Live spend ${liveTotal} USDC clamped to ${liveExecutable} by ${clamp.boundBy}; skipping`);
     return writeAndReturn({
       date,
       timestamp,
-      status: "skipped_guardrail_clamped",
-      requestedAmountUsdc: scheduledTotal.toFixed(6),
+      status: insufficient ? "skipped_insufficient_balance" : "skipped_guardrail_clamped",
+      requestedAmountUsdc: liveTotal.toFixed(6),
       clampedAmountUsdc: "0",
       boundBy: clamp.boundBy,
       tokenOut: config.tokenOut,
       walletUsdcBalance: usdcBalance,
-      message: `No buy this run: ${schedule.spends.length} active user(s), scheduled ${scheduledTotal.toFixed(6)} USDC, clamped to ${executable.toFixed(6)} by ${clamp.boundBy} (min swap ${minSwap})`,
+      message: insufficient
+        ? `No buy this run: wallet ${usdcBalance} USDC at/below reserve — live spend ${liveTotal.toFixed(6)} USDC not affordable`
+        : `No buy this run: ${schedule.spends.length} active user(s), live scheduled ${liveTotal.toFixed(6)} USDC, clamped to ${liveExecutable.toFixed(6)} by ${clamp.boundBy} (min swap ${minSwap})`,
     }, false, config.discordWebhookUrl, refCtx);
   }
 
   // Advisory market commentary (non-fatal). Sizing is deterministic; the agent's
   // reasoning is kept only to enrich the dashboard's AI insights + reflections.
-  let reasoning = `Rate-based DCA: ${schedule.spends.length} active user(s), executing ${executableStr} USDC this run.`;
+  let reasoning = `Rate-based DCA: ${schedule.spends.length} active user(s), executing ~${(liveExecutable + simTotal).toFixed(6)} USDC this run (${liveExecutable.toFixed(6)} live + ${simTotal.toFixed(6)} paper).`;
   try {
     const outage = outageStreak(history);
     const context: DecisionContext = {
@@ -429,11 +506,12 @@ export async function runDailyDca(config: AppConfig): Promise<RunOutcome> {
 
   // --- Multi-token settlement: one pooled swap per token group ---
   // Each user DCAs into their chosen token (default config.tokenOut). Group the
-  // run by token, size each group by its share of the wallet-clamped executable
-  // total, and settle ONE USDC -> token swap per group. A failed or sub-minimum
-  // group never blocks the others. Guardrails stay global: `scale` carries the
-  // wallet-reserve clamp across every group uniformly.
-  const scale = scheduledTotal > 0 ? executable / scheduledTotal : 0;
+  // run by token, size each group by its share of the executable total, and
+  // settle ONE USDC -> token swap per group. A failed or sub-minimum group never
+  // blocks the others. LIVE groups carry the wallet clamp via `liveScale`;
+  // SIMULATED groups touch no real USDC so they always settle at their full
+  // per-user-capped schedule (scale 1) — the wallet can neither halt nor throttle
+  // a paper fill (#1/#2). Per-group scale/boundBy are computed in the loop.
   const groups = groupSpendsByToken(schedule.spends);
   const tokens = [...groups.keys()].sort(); // deterministic settlement order
   const entries: HistoryEntry[] = [];
@@ -455,13 +533,18 @@ export async function runDailyDca(config: AppConfig): Promise<RunOutcome> {
     const groupSpends = groups.get(token)!;
     const users = groupSpends.length;
     const groupScheduled = groupSpends.reduce((s, x) => s + x.spend, 0);
-    const groupExec = Number.parseFloat((groupScheduled * scale).toFixed(6));
-    // When the pooled total was clamped (scale < 1), report the guardrail that
+    // Simulated groups settle in full (paper, no real USDC); live groups carry
+    // the wallet clamp via liveScale.
+    const sim = info.simulated === true && priceNow > 0;
+    const groupScale = sim ? 1 : liveScale;
+    const groupExec = Number.parseFloat((groupScheduled * groupScale).toFixed(6));
+    // When a LIVE group was clamped (groupScale < 1), report the guardrail that
     // ACTUALLY bound it — clampDecision already picked the real binding (daily
     // cap, wallet reserve, campaign budget, …). Hard-coding "wallet_available_
     // after_reserve" here mislabels e.g. a daily-cap clamp, which is dishonest in
-    // an audit trail whose whole point is that the number is trustworthy.
-    const boundBy = scale < 1 ? clamp.boundBy : "user_schedule";
+    // an audit trail whose whole point is that the number is trustworthy. Paper
+    // groups are never wallet-clamped, so they always report "user_schedule".
+    const boundBy = !sim && groupScale < 1 ? clamp.boundBy : "user_schedule";
 
     if (groupExec < minSwap) {
       entries.push({
@@ -486,7 +569,7 @@ export async function runDailyDca(config: AppConfig): Promise<RunOutcome> {
     // tracked in the separate sim* ledger fields and clearly labelled everywhere.
     // If we couldn't price it, fall through to the real swap so the outage is
     // still recorded honestly as a no-route failure.
-    if (info.simulated && priceNow > 0) {
+    if (sim) {
       // Dry run reports the paper fill without persisting it, mirroring the real
       // swap path (which also no-ops the ledger under dryRun).
       if (config.dryRun) {

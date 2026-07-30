@@ -105,5 +105,27 @@ jobs:
           git config user.name "auradca-bot"
           git config user.email "auradca-bot@users.noreply.github.com"
           git add data/history.json data/reflections.json data/ledger.json data/prices.json
-          git diff --cached --quiet || git commit -m "chore: record DCA run $(date -u +%Y-%m-%d)"
-          git push
+          if git diff --cached --quiet; then
+            echo "No data changes to commit."
+            exit 0
+          fi
+          git commit -m "chore: record DCA run $(date -u +%Y-%m-%d)"
+          # Push with rebase-retry. `main` can advance between checkout and push —
+          # a human commit / PR merge, or the sparse schedule safety-net run — and
+          # a plain `git push` is then rejected. If we let that failure slide, THIS
+          # run's ledger update (balances debited, lastChargedAt advanced) is lost,
+          # and the NEXT run re-reads a stale ledger and re-charges the same bucket.
+          # Only auradca-bot writes data/*.json, so rebasing onto the latest main
+          # never conflicts on those files. Fail the job if every attempt is
+          # exhausted, so the loss is visible rather than silent.
+          for attempt in 1 2 3 4 5; do
+            if git push origin HEAD:main; then
+              echo "Pushed on attempt $attempt."
+              exit 0
+            fi
+            echo "Push rejected (attempt $attempt) — rebasing onto latest main and retrying."
+            git pull --rebase --autostash origin main || { echo "ERROR: rebase failed — not force-pushing."; exit 1; }
+            sleep $((attempt * 3))
+          done
+          echo "ERROR: could not push the DCA ledger after 5 attempts; failing so the run is retried and the update is not silently lost."
+          exit 1
