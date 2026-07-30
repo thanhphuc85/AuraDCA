@@ -2,11 +2,19 @@ name: Daily DCA Bot
 
 on:
   schedule:
-    # Wake every hour. Each user's own schedule (frequency: daily / every N
-    # hours / every N days / weekly, plus smart-mode conditions) decides whether
-    # this particular hour is one of their execution times — the code skips
-    # anyone who isn't due, so an hourly cron is cheap but supports any cadence.
-    - cron: "0 * * * *"
+    # Wake several times an hour. Each user's own schedule (frequency: daily /
+    # every N hours / every N days / weekly, plus smart-mode conditions) decides
+    # whether this tick is one of their execution times — the code skips anyone
+    # who isn't due, so extra ticks are cheap but support any cadence.
+    #
+    # Why not a single "0 * * * *"? GitHub's `schedule` trigger is best-effort:
+    # at the top of the hour (its busiest window) it delays runs by tens of
+    # minutes and silently drops ~half of them, so an on-the-hour cron misses
+    # most hours. isDueNow() anchors every cadence to a UTC bucket and fires each
+    # user at most once per bucket, so running more often — at off-peak minutes —
+    # just gives each hourly bucket several chances to land without ever
+    # double-charging. 6 ticks/hour recover the hours GitHub would otherwise skip.
+    - cron: "3,13,23,33,43,53 * * * *"
   workflow_dispatch:
     inputs:
       dry_run:
