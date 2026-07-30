@@ -41,6 +41,8 @@ In **Smart mode** the agent doesn't just gate the buy — it **sizes** it, and t
 
 The swap itself goes through Circle's official **Swap Kit** SDK — the only officially documented, reliably-available swap path on Arc Testnet (USDC / EURC / cirBTC). The wallet is a Circle **Developer-Controlled Wallet**, so there's no raw private key to leak.
 
+**6. Onboard with Google — a real Circle wallet, no MetaMask, no seed phrase.** We use *both* halves of Circle's wallet stack: the agent runs on a **Developer-Controlled Wallet**, and end users can **"Sign in with Google" to get their own non-custodial [Circle User-Controlled Wallet](SETUP-CIRCLE-WALLET.md) on Arc** (MPC key custody, PIN recovery — no extension, no seed phrase). Because a User-Controlled Wallet has no EIP-1193 provider to `personal_sign` with, deposits and schedule changes are authorized through **Circle's own challenge/session flow** (`@circle-fin/w3s-pw-web-sdk` on the client, `@circle-fin/user-controlled-wallets` on the server), and the backend verifies the Circle session owns the wallet before touching the ledger. Proven live end-to-end: Google login → wallet created on Arc → 19 USDC deposited to the treasury via a Circle challenge → hourly DCA schedule saved — all without MetaMask.
+
 It runs entirely on a **GitHub Actions cron** — no server to host. Each run commits its result back to `data/history.json` in the repo, producing a public, tamper-evident audit trail that grows over time.
 
 ### The dashboard — from bot to product
@@ -49,7 +51,7 @@ On top of the autonomous cron, we shipped a full **dashboard** (live at **[aura-
 
 ![The Aura DCA dashboard](docs/dashboard.png)
 
-- **Per-user, non-custodial DCA.** Anyone connects a wallet (EIP-6963 multi-wallet) or signs in with email, sets their **own** daily DCA rate, and the agent pools everyone's schedule into each run. Every state change (`set rate`, `run DCA now`, `withdraw`) is authorized by an **EIP-191 wallet signature** and verified in a Vercel serverless function — the user stays in control of their keys.
+- **Per-user, non-custodial DCA — connect a wallet _or_ sign in with Google.** Anyone connects an injected wallet (EIP-6963 multi-wallet) **or signs in with Google to mint a real Circle User-Controlled Wallet on Arc** — no extension, no seed phrase — then sets their **own** daily DCA rate, and the agent pools everyone's schedule into each run. Injected wallets authorize every state change (`set rate`, `run DCA now`, `withdraw`) with an **EIP-191 signature**; Circle wallets authorize via the **Circle session** (verified server-side that the session owns the wallet) — the user stays in control of their keys either way.
 - **A conversational agent.** A Claude assistant (tool calling) answers "how much is in the treasury?", "explain the last trade", etc. from live on-chain data, and for sensitive actions it only **proposes** — the user confirms and signs in the UI before anything executes.
 - **Vector memory + reflection.** After each run Claude writes a reflection to `data/reflections.json`; the dashboard surfaces this "agent memory" plus an **Agent intelligence** panel (risk / market regime / confidence / pattern alerts) derived from the run history.
 - **Smart, dynamic sizing.** Opt into Smart mode and each scheduled buy is sized by live market conditions (drawdown + Fear & Greed), within a sensitivity and ceiling you set — with a live preview of this run's multiplier before you sign, and a `🧠 ×M` badge on every executed run.
@@ -129,7 +131,7 @@ GitHub Actions cron (hourly — each user's own cadence decides if this hour is 
 
 - **TypeScript / Node.js**, run directly with `tsx` (no build step)
 - **Anthropic Claude** (`@anthropic-ai/sdk`) — the decision engine, via forced tool-use + zod validation
-- **Circle Swap Kit** (`@circle-fin/swap-kit`) + **Developer-Controlled Wallets** (`@circle-fin/developer-controlled-wallets`) + Circle Wallets adapter
+- **Circle Swap Kit** (`@circle-fin/swap-kit`) + **Developer-Controlled Wallets** (`@circle-fin/developer-controlled-wallets`) for the agent + **User-Controlled Wallets** (`@circle-fin/user-controlled-wallets` server, `@circle-fin/w3s-pw-web-sdk` client) for Google/email onboarding + Circle Wallets adapter
 - **Arc Testnet** (Circle's stablecoin-native EVM L1; gas paid in USDC)
 - **Solidity** — [`AuraAttestation.sol`](contracts/AuraAttestation.sol), a fund-less on-chain audit anchor deployed on Arc Testnet; the agent records `keccak256(data/ledger.json)` each run and anyone can reproduce it read-only with `npm run verify-attest`
 - **GitHub Actions** for scheduling, secrets, and the commit-back audit trail — the same run also writes the on-chain attestation and pushes the Telegram alert
@@ -197,6 +199,7 @@ wrong.
 - **Safety architecture** — the LLM-recommends / code-decides split is the whole point, and it's enforced by a tested pure function plus a two-switch live-trading gate (`DRY_RUN` + `LIVE_TRADING_ENABLED`). The agent's own market read moves the buy size, but only inside bounds code owns.
 - **It audits itself on-chain** — 14+ attestations written by the cron with no human involved; anyone can recompute the hash from the public repo.
 - **Genuinely autonomous** — self-hosted on free CI, self-documenting via committed history, reasoning over its own past runs, and reporting to Telegram on every run.
+- **Deep Circle integration — both wallet types** — the agent runs on a Developer-Controlled Wallet, and users onboard with **Google → a real User-Controlled Wallet on Arc** (no MetaMask, no seed phrase); proven live end-to-end (login → deposit → schedule).
 
 ## Challenges we ran into
 

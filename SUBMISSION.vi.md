@@ -43,6 +43,8 @@ Một agent giải quyết cả hai nửa của bài toán đó, với **DCA là
 
 Bản thân giao dịch swap đi qua SDK **Swap Kit** chính thức của Circle — con đường swap duy nhất được document chính thức và khả dụng ổn định trên Arc Testnet (USDC / EURC / cirBTC). Ví là **Developer-Controlled Wallet** của Circle, nên không có private key thô nào để rò rỉ.
 
+**6. Onboard bằng Google — ví Circle thật, không MetaMask, không seed phrase.** Chúng tôi dùng *cả hai* nửa của Circle Wallets: agent chạy trên **Developer-Controlled Wallet**, còn người dùng có thể **"Sign in with Google" để nhận ví [Circle User-Controlled Wallet](SETUP-CIRCLE-WALLET.md) non-custodial của riêng họ trên Arc** (MPC giữ khóa, khôi phục bằng PIN — không extension, không seed phrase). Vì ví User-Controlled không có provider EIP-1193 để `personal_sign`, thao tác nạp tiền và đặt lịch được ủy quyền qua **luồng challenge/session của chính Circle** (`@circle-fin/w3s-pw-web-sdk` ở client, `@circle-fin/user-controlled-wallets` ở server), và backend xác minh session Circle sở hữu ví trước khi chạm vào ledger. Đã proven live trọn vẹn: đăng nhập Google → tạo ví trên Arc → nạp 19 USDC vào treasury qua Circle challenge → lưu lịch DCA mỗi giờ — tất cả không cần MetaMask.
+
 Toàn bộ chạy trên **GitHub Actions cron** — không cần server. Mỗi lần chạy commit kết quả ngược lại `data/history.json` trong repo, tạo ra một nhật ký kiểm toán công khai, chống chỉnh sửa, lớn dần theo thời gian.
 
 ### Dashboard — từ bot thành sản phẩm
@@ -51,7 +53,7 @@ Trên nền cron tự động, chúng tôi xây thêm một **dashboard** hoàn 
 
 ![Dashboard Aura DCA](docs/dashboard.png)
 
-- **DCA per-user, non-custodial.** Người dùng kết nối ví (EIP-6963 đa ví) hoặc đăng nhập bằng email, tự đặt **tỉ lệ DCA hàng ngày** của mình; agent gộp lịch của mọi người vào mỗi lần chạy. Mọi thay đổi trạng thái (`đặt rate`, `chạy DCA ngay`, `rút tiền`) đều được ủy quyền bằng **chữ ký ví EIP-191** và verify trong serverless function trên Vercel — người dùng giữ quyền kiểm soát khóa của mình.
+- **DCA per-user, non-custodial — kết nối ví _hoặc_ đăng nhập Google.** Người dùng kết nối ví injected (EIP-6963 đa ví) **hoặc đăng nhập bằng Google để tạo ví Circle User-Controlled thật trên Arc** — không extension, không seed phrase — rồi tự đặt **tỉ lệ DCA hàng ngày**; agent gộp lịch của mọi người vào mỗi lần chạy. Ví injected ủy quyền mọi thay đổi (`đặt rate`, `chạy DCA ngay`, `rút tiền`) bằng **chữ ký EIP-191**; ví Circle ủy quyền qua **session Circle** (backend xác minh session sở hữu ví) — dù cách nào người dùng vẫn giữ quyền kiểm soát khóa.
 - **Agent hội thoại.** Trợ lý Claude (tool calling) trả lời "ngân quỹ còn bao nhiêu?", "giải thích giao dịch gần nhất"… từ dữ liệu on-chain thật; với action nhạy cảm nó chỉ **đề xuất** — người dùng xác nhận và ký trong UI trước khi thực thi.
 - **Bộ nhớ vector + reflection.** Sau mỗi lần chạy Claude ghi một reflection vào `data/reflections.json`; dashboard hiển thị "bộ nhớ agent" này cùng bảng **Agent intelligence** (rủi ro / market regime / độ tự tin / pattern alerts) suy ra từ lịch sử chạy.
 - **Định cỡ động thông minh.** Bật chế độ Smart thì mỗi lệnh mua theo lịch được định cỡ theo điều kiện thị trường trực tiếp (drawdown + Fear & Greed), trong biên độ nhạy và trần do bạn đặt — có preview hệ số của lượt này trước khi ký, và badge `🧠 ×M` trên mỗi lượt đã thực thi.
@@ -123,7 +125,7 @@ GitHub Actions cron (mỗi giờ — lịch riêng của từng user quyết đ�
 
 - **TypeScript / Node.js**, chạy trực tiếp bằng `tsx` (không cần build step)
 - **Anthropic Claude** (`@anthropic-ai/sdk`) — bộ máy ra quyết định, qua forced tool-use + validate zod
-- **Circle Swap Kit** (`@circle-fin/swap-kit`) + **Developer-Controlled Wallets** (`@circle-fin/developer-controlled-wallets`) + Circle Wallets adapter
+- **Circle Swap Kit** (`@circle-fin/swap-kit`) + **Developer-Controlled Wallets** (`@circle-fin/developer-controlled-wallets`) cho agent + **User-Controlled Wallets** (`@circle-fin/user-controlled-wallets` server, `@circle-fin/w3s-pw-web-sdk` client) cho onboarding Google/email + Circle Wallets adapter
 - **Arc Testnet** (L1 EVM stablecoin-native của Circle; gas trả bằng USDC)
 - **Solidity** — [`AuraAttestation.sol`](contracts/AuraAttestation.sol), một neo audit on-chain không-giữ-tiền deploy trên Arc Testnet; agent ghi `keccak256(data/ledger.json)` mỗi run và ai cũng tái lập read-only được bằng `npm run verify-attest`
 - **GitHub Actions** cho lịch chạy, secrets và nhật ký kiểm toán commit-back — cùng lượt chạy đó cũng ghi attestation on-chain và đẩy thông báo Telegram
@@ -190,6 +192,7 @@ chính chúng tôi là sai.
 - **Kiến trúc an toàn** — sự phân tách "LLM đề xuất / code quyết định" chính là cốt lõi, được thực thi bằng một hàm thuần đã test cộng cơ chế hai công tắc cho giao dịch thật (`DRY_RUN` + `LIVE_TRADING_ENABLED`). Cách agent đọc thị trường làm nhúc nhích kích cỡ lệnh, nhưng chỉ trong biên do code sở hữu.
 - **Tự audit on-chain** — 14+ attestation do cron ghi, không cần con người; ai cũng tính lại được hash từ repo công khai.
 - **Tự chủ thật sự** — tự host trên CI miễn phí, tự lưu lịch sử qua commit, lý luận trên các lần chạy trước, và báo Telegram mỗi lượt.
+- **Tích hợp Circle sâu — cả hai loại ví** — agent chạy trên Developer-Controlled Wallet, người dùng onboard bằng **Google → ví User-Controlled thật trên Arc** (không MetaMask, không seed phrase); đã proven live trọn vẹn (đăng nhập → nạp → đặt lịch).
 
 ## Khó khăn đã gặp
 
