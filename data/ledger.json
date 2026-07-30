@@ -295,6 +295,26 @@
       "dcaEveryHours": 1,
       "dcaAmountPerRun": "1.000000",
       "dcaDailyCapUsdc": "19.000000"
+    },
+    "0x7416e15c01dbda60b4cf0ffc6b1e8ed811af3d15": {
+      "address": "0x7416e15c01dbda60b4cf0ffc6b1e8ed811af3d15",
+      "usdcBalance": "0",
+      "cirBtcBalance": "0",
+      "totalDeposited": "0",
+      "totalSwapped": "0",
+      "totalWithdrawnCirBtc": "0",
+      "totalWithdrawnUsdc": "0",
+      "firstSeen": "2026-07-30T00:43:56.767Z",
+      "lastActivity": "2026-07-30T00:43:56.767Z",
+      "dcaRatePerDay": "1.000000",
+      "dcaRateIsCustom": true,
+      "dcaPaused": false,
+      "dcaMode": "auto",
+      "dcaTokenOut": "EURC",
+      "dcaFrequency": "hours",
+      "dcaEveryHours": 1,
+      "dcaAmountPerRun": "1.000000",
+      "dcaDailyCapUsdc": "19.000000"
     }
   },
   "deposits": [
