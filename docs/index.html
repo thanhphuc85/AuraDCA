@@ -3392,7 +3392,7 @@
   // The raw values like "error_swap_failed" leak implementation detail and read
   // as an angry red string on the dashboard — even when the real cause is an
   // upstream Arc route outage, not a code bug.
-  function statusLabel(s) {
+  function statusLabel(s, boundBy) {
     var t = (typeof T !== "undefined" && T[currentLang]) ? T[currentLang] : {};
     switch (String(s)) {
       case "success": return t.statSuccess || "Success";
@@ -3404,6 +3404,14 @@
       case "skipped_no_balance": return t.statSkipBalance || "Skipped — low balance";
       case "skipped_llm_declined": return t.statSkipLlm || "Skipped — agent declined";
       case "skipped_guardrail": return t.statSkipGuard || "Skipped — guardrail";
+      case "skipped_guardrail_clamped":
+        // Same status covers two very different outcomes; disambiguate by boundBy.
+        // "no_scheduled_spend" just means nobody's cadence was due this tick (a
+        // routine idle run, now common because the cron fires every few minutes),
+        // NOT a guardrail blocking a buy — labeling it "clamped" read as a fault.
+        return boundBy === "no_scheduled_spend"
+          ? (t.statIdleNoUser || "Idle — no user due yet")
+          : (t.statSkipGuard || "Skipped — guardrail");
       default:
         // Fallback: pretty-print any other status (spaces + Sentence case).
         return String(s || "—").replace(/_/g, " ").replace(/^./, function (c) { return c.toUpperCase(); });
@@ -3907,7 +3915,7 @@
     var last = history[history.length - 1];
     if (last) {
       var stEl = $("agentLastStatus");
-      if (stEl) stEl.textContent = (typeof statusLabel === "function" ? statusLabel(last.status) : last.status) + (last.date ? " · " + last.date : "");
+      if (stEl) stEl.textContent = (typeof statusLabel === "function" ? statusLabel(last.status, last.boundBy) : last.status) + (last.date ? " · " + last.date : "");
       var ld = $("agentLastDecision");
       if (ld) ld.textContent = last.reasoning ? '“' + last.reasoning + '”' : (last.message || "No reasoning recorded.");
     }
@@ -3951,7 +3959,7 @@
     completed.forEach(function (e) { total += parseFloat(e.clampedAmountUsdc || "0") || 0; points.push({ cum: total, date: e.date }); });
 
     var last = history[history.length - 1];
-    var lastTxt = last ? statusLabel(last.status) : "—";
+    var lastTxt = last ? statusLabel(last.status, last.boundBy) : "—";
     if (last && last.clampedAmountUsdc && SUCCESS[last.status]) lastTxt = fmt(parseFloat(last.clampedAmountUsdc), 3) + " USDC";
 
     countUp($("tTotal"), total, " USDC", 3);
@@ -4001,7 +4009,7 @@
         : '';
       return '<tr class="' + rowClass(e.status) + '">' +
         "<td>" + (e.date || "") + "</td>" +
-        '<td><span class="badge ' + statusClass(e.status) + '">' + statusLabel(e.status) + "</span></td>" +
+        '<td><span class="badge ' + statusClass(e.status) + '">' + statusLabel(e.status, e.boundBy) + "</span></td>" +
         '<td class="amt2">' + (e.requestedAmountUsdc != null ? e.requestedAmountUsdc : "—") + "</td>" +
         '<td class="amt2">' + (e.clampedAmountUsdc != null ? e.clampedAmountUsdc : "—") + "</td>" +
         "<td>" + (e.boundBy ? e.boundBy.replace(/_/g, " ") : "—") + "</td>" +
@@ -5082,7 +5090,7 @@
       rateModeMax: "🚀 Max · ~1d", rateModeAggr: "⚡ Aggressive · 7d", rateModeFast: "Fast · 14d", rateModeBal: "Balanced · 30d", rateModeSlow: "🐢 Slow · 90d",
       statSuccess: "Success", statSimulated: "Simulated (paper)", statDry: "Dry run", statSwapUnavail: "Swap route unavailable",
       statConfigErr: "Config error", statApiErr: "API error",
-      statSkipBalance: "Skipped — low balance", statSkipLlm: "Skipped — agent declined", statSkipGuard: "Skipped — guardrail",
+      statSkipBalance: "Skipped — low balance", statSkipLlm: "Skipped — agent declined", statSkipGuard: "Skipped — guardrail", statIdleNoUser: "Idle — no user due yet",
       rateClickSave: "click Save rate to confirm",
       rateNoAccount: "Deposit USDC first to start a DCA schedule.", ratePaused: "Paused", rateAuto: "auto",
       rateDay: "day", rateDays: "days", rateRunway: "runway", rateBalance: "Balance",
@@ -5194,7 +5202,7 @@
       rateModeMax: "🚀 Max · ~1 ngày", rateModeAggr: "⚡ Mạnh · 7 ngày", rateModeFast: "Nhanh · 14 ngày", rateModeBal: "Cân bằng · 30 ngày", rateModeSlow: "🐢 Chậm · 90 ngày",
       statSuccess: "Thành công", statSimulated: "Mô phỏng (paper)", statDry: "Chạy thử", statSwapUnavail: "Tuyến swap tạm ngưng",
       statConfigErr: "Lỗi cấu hình", statApiErr: "Lỗi API",
-      statSkipBalance: "Bỏ qua — số dư thấp", statSkipLlm: "Bỏ qua — agent từ chối", statSkipGuard: "Bỏ qua — guardrail",
+      statSkipBalance: "Bỏ qua — số dư thấp", statSkipLlm: "Bỏ qua — agent từ chối", statSkipGuard: "Bỏ qua — guardrail", statIdleNoUser: "Chờ lượt — chưa ai đến hạn",
       rateClickSave: "bấm Lưu tốc độ để xác nhận",
       rateNoAccount: "Nạp USDC trước để bắt đầu lịch DCA.", ratePaused: "Đã tạm dừng", rateAuto: "tự động",
       rateDay: "ngày", rateDays: "ngày", rateRunway: "còn", rateBalance: "Số dư",
