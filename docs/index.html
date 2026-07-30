@@ -321,10 +321,12 @@
   .b-dry { background: rgba(47,134,230,.14); color: #8fc0ff; border-color: rgba(47,134,230,.3); }
   .b-skip { background: rgba(245,165,36,.13); color: #fbcf6b; border-color: rgba(245,165,36,.3); }
   .b-error { background: rgba(251,113,133,.14); color: #fda4af; border-color: rgba(251,113,133,.3); }
+  .b-sim { background: rgba(34,211,238,.14); color: #7fe6f5; border-color: rgba(34,211,238,.32); }
   [data-theme="light"] .b-success { background: rgba(16,185,129,.1); color: #047857; border-color: rgba(16,185,129,.3); }
   [data-theme="light"] .b-dry { background: rgba(37,99,235,.1); color: #1d4ed8; border-color: rgba(37,99,235,.3); }
   [data-theme="light"] .b-skip { background: rgba(217,119,6,.1); color: #b45309; border-color: rgba(217,119,6,.3); }
   [data-theme="light"] .b-error { background: rgba(239,68,68,.1); color: #dc2626; border-color: rgba(239,68,68,.3); }
+  [data-theme="light"] .b-sim { background: rgba(6,182,212,.1); color: #0e7490; border-color: rgba(6,182,212,.3); }
   [data-theme="light"] thead th { background: #fff; }
   .reason { color: var(--muted); max-width: 360px; }
   .amt2 { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; }
@@ -332,6 +334,22 @@
   .row-dry { border-left: 3px solid var(--blue); }
   .row-skip { border-left: 3px solid var(--amber); }
   .row-error { border-left: 3px solid var(--red); }
+  .row-sim { border-left: 3px solid var(--cyan); }
+  /* --- video polish: gentle elevation, live pulse, simulated badge --- */
+  /* Shadow/border hover (NOT transform) — a transform would turn .card into the
+     containing block for any position:fixed descendant (e.g. the chart tooltip)
+     and mis-place it on hover. Stat tiles below have no such children, so they
+     can safely lift. */
+  .card { transition: border-color .18s ease, box-shadow .18s ease; }
+  .card:hover { border-color: rgba(138,92,246,.28); box-shadow: 0 28px 64px -28px rgba(0,0,0,.78), 0 0 0 1px rgba(138,92,246,.12); }
+  [data-theme="light"] .card:hover { box-shadow: 0 28px 64px -30px rgba(0,0,0,.16), 0 0 0 1px rgba(138,92,246,.14); }
+  .port-card { transition: transform .15s ease, border-color .15s ease; }
+  .port-card:hover { transform: translateY(-2px); border-color: rgba(138,92,246,.35); }
+  .net-dot { animation: netPulse 2.4s ease-in-out infinite; }
+  @keyframes netPulse { 0%,100% { box-shadow: 0 0 6px var(--green); opacity: 1; } 50% { box-shadow: 0 0 13px var(--green); opacity: .7; } }
+  .sim-badge { display: inline-flex; align-items: center; gap: 4px; font-size: 9.5px; font-weight: 800; letter-spacing: .03em; text-transform: uppercase; padding: 2px 7px; border-radius: 999px; background: rgba(34,211,238,.14); color: #7fe6f5; border: 1px solid rgba(34,211,238,.3); vertical-align: middle; }
+  [data-theme="light"] .sim-badge { background: rgba(6,182,212,.1); color: #0e7490; border-color: rgba(6,182,212,.3); }
+  @media (prefers-reduced-motion: reduce) { .net-dot { animation: none; } .card, .port-card, .dash-card { transition: none; } }
 
   /* performance dashboard */
   .perf-grid { display: grid; gap: 14px; grid-template-columns: repeat(2,1fr); }
@@ -3365,6 +3383,7 @@
   var SUCCESS = { success: 1, dry_run: 1 };
   function statusClass(s) {
     if (s === "success") return "b-success";
+    if (s === "simulated") return "b-sim";
     if (s === "dry_run") return "b-dry";
     if (s && s.indexOf("skip") === 0) return "b-skip";
     return "b-error";
@@ -3377,6 +3396,7 @@
     var t = (typeof T !== "undefined" && T[currentLang]) ? T[currentLang] : {};
     switch (String(s)) {
       case "success": return t.statSuccess || "Success";
+      case "simulated": return t.statSimulated || "Simulated (paper)";
       case "dry_run": return t.statDry || "Dry run";
       case "error_swap_failed": return t.statSwapUnavail || "Swap route unavailable";
       case "error_config": return t.statConfigErr || "Config error";
@@ -3882,7 +3902,7 @@
     var us = $("dsUsers"); if (us && ledgerLoaded) us.textContent = String(active);
     var uss = $("dsUsersSub");
     if (uss && ledgerLoaded) uss.textContent = active === scheduled.length ? "" : "of " + scheduled.length + " with a schedule";
-    var done = history.filter(function (e) { return e.status === "success" || e.status === "dry_run"; }).length;
+    var done = history.filter(function (e) { return e.status === "success" || e.status === "dry_run" || e.status === "simulated"; }).length;
     var sr = $("dsSuccess"); if (sr) sr.textContent = history.length ? Math.round(done / history.length * 100) + "%" : "—";
     var last = history[history.length - 1];
     if (last) {
@@ -3948,6 +3968,7 @@
 
     function rowClass(s) {
       if (s === "success") return "row-success";
+      if (s === "simulated") return "row-sim";
       if (s === "dry_run") return "row-dry";
       if (s && s.indexOf("skip") === 0) return "row-skip";
       return "row-error";
@@ -3955,10 +3976,11 @@
     var limit = state.showAllRuns ? history.length : (userSettings.tableRows || 10);
     var reversed = history.slice().reverse();
     var successCount = history.filter(function(e){ return e.status === "success"; }).length;
+    var simCount = history.filter(function(e){ return e.status === "simulated"; }).length;
     var dryCount = history.filter(function(e){ return e.status === "dry_run"; }).length;
     var errCount = history.filter(function(e){ return e.status && e.status.indexOf("error") >= 0; }).length;
-    var skipCount = history.length - successCount - dryCount - errCount;
-    $("runsCount").innerHTML = history.length + ' runs · <span style="color:#6ee7b7">' + successCount + ' success</span> · <span style="color:#8fc0ff">' + dryCount + ' dry</span>' + (errCount ? ' · <span style="color:#fda4af">' + errCount + ' error</span>' : '') + (skipCount > 0 ? ' · <span style="color:#fbcf6b">' + skipCount + ' skipped</span>' : '');
+    var skipCount = history.length - successCount - simCount - dryCount - errCount;
+    $("runsCount").innerHTML = history.length + ' runs · <span style="color:#6ee7b7">' + successCount + ' success</span>' + (simCount ? ' · <span style="color:#7fe6f5">' + simCount + ' simulated</span>' : '') + ' · <span style="color:#8fc0ff">' + dryCount + ' dry</span>' + (errCount ? ' · <span style="color:#fda4af">' + errCount + ' error</span>' : '') + (skipCount > 0 ? ' · <span style="color:#fbcf6b">' + skipCount + ' skipped</span>' : '');
     var showAllBtn = $("showAllRuns");
     if (history.length > (userSettings.tableRows || 10)) {
       showAllBtn.style.display = "";
@@ -4194,12 +4216,25 @@
     // The "earned" card follows the token this user DCAs into. cirBTC is read
     // on-chain from their wallet; other tokens show the agent's ledger credit
     // (their pooled share) since we don't hold every token's contract here.
+    // Tokens with no live Arc route are tracked as an honest PAPER position at the
+    // live BTC price (see src/ledger/schedule.ts). Their "earned" value comes from
+    // the ledger's sim* fields, never an on-chain balance (which is always 0), and
+    // is clearly badged so it's never mistaken for a settled on-chain holding.
+    var SIMULATED_TOKENS = ["cirBTC"];
     var dcaToken = (user && user.dcaTokenOut) || "cirBTC";
+    var isSimToken = SIMULATED_TOKENS.indexOf(dcaToken) >= 0;
     var pcbEl = $("portCirBtc");
-    var pcbLabelEl = pcbEl && pcbEl.parentElement ? pcbEl.parentElement.querySelector(".port-label") : null;
-    if (pcbLabelEl) pcbLabelEl.textContent = dcaToken + " " + (t.portEarnedWord || "earned");
-    if (dcaToken === "cirBTC") {
-      pcbEl.textContent = "…";
+    var pcbCard = pcbEl && pcbEl.parentElement ? pcbEl.parentElement : null;
+    var pcbLabelEl = pcbCard ? pcbCard.querySelector(".port-label") : null;
+    var pcbSubEl = pcbCard ? pcbCard.querySelector(".port-sub") : null;
+    if (pcbLabelEl) {
+      pcbLabelEl.innerHTML = dcaToken + " " + (t.portEarnedWord || "earned") +
+        (isSimToken ? ' <span class="sim-badge" title="Arc has no live cirBTC route, so this is a paper position tracked at the live BTC price — no on-chain swap, your USDC is untouched.">◈ ' + (t.portSimBadge || "Simulated") + '</span>' : '');
+    }
+    if (isSimToken) {
+      var simBal = (user && user.simCirBtcBalance) || "0";
+      pcbEl.textContent = fmt(parseFloat(simBal), 8);
+      if (pcbSubEl) pcbSubEl.textContent = t.portSimSub || "Paper — Arc route offline";
     } else {
       var tbal = (user && user.tokenBalances && user.tokenBalances[dcaToken]) || "0";
       pcbEl.textContent = fmt(parseFloat(tbal), 6);
@@ -4212,7 +4247,8 @@
         var allowRaw = await safeRpcCall("eth_call", [{ to: ARC.usdc, data: data }, "latest"]);
         $("portAllowance").textContent = fmt(Number(BigInt(allowRaw || "0x0")) / 1e6, 2);
       } catch (e) { $("portAllowance").textContent = "—"; }
-      if (dcaToken === "cirBTC") {
+      // Simulated tokens never settle on-chain — the paper value set above stands.
+      if (dcaToken === "cirBTC" && !isSimToken) {
         try { $("portCirBtc").textContent = fmt(Number(await tokenBalanceOf(ARC.cirbtc, acct)) / 1e8, 8); } catch (e) { $("portCirBtc").textContent = "—"; }
       }
     })();
@@ -5031,7 +5067,7 @@
       portSub: "Your schedule, your signature — every change is authorised by your own wallet, and the agent spends only what your schedule and caps allow.",
       portUsdcLabel: "USDC in wallet", portUsdcSub: "Your own balance",
       portAllowanceLabel: "Allowance", portAllowanceSub: "Approved to agent",
-      portCirBtcLabel: "cirBTC earned", portCirBtcSub: "In your wallet",
+      portCirBtcLabel: "cirBTC earned", portCirBtcSub: "In your wallet", portEarnedWord: "earned", portSimBadge: "Simulated", portSimSub: "Paper — Arc route offline",
       portSwappedLabel: "Total DCA'd", portSwappedSub: "USDC swapped, all-time",
       portWithdrawTitle: "Withdraw your tokens", portWithdrawSub: "Sign a message to verify your identity — withdrawal completes in 10–30 seconds.",
       rateTitle: "Your DCA schedule", rateSub: "Build exactly how the agent buys for you — frequency, amount per run, caps, and mode. Sign to save (no gas).",
@@ -5044,7 +5080,7 @@
       schedSmartWarn: "⚠️ Smart only buys when your conditions hold — if the market keeps rising, the agent may not buy for a long stretch. Use a lower threshold (2–3%) if you still want to keep buying regularly.",
       rateModeLabel: "Quick DCA modes — deploy your balance over (or type any amount above):",
       rateModeMax: "🚀 Max · ~1d", rateModeAggr: "⚡ Aggressive · 7d", rateModeFast: "Fast · 14d", rateModeBal: "Balanced · 30d", rateModeSlow: "🐢 Slow · 90d",
-      statSuccess: "Success", statDry: "Dry run", statSwapUnavail: "Swap route unavailable",
+      statSuccess: "Success", statSimulated: "Simulated (paper)", statDry: "Dry run", statSwapUnavail: "Swap route unavailable",
       statConfigErr: "Config error", statApiErr: "API error",
       statSkipBalance: "Skipped — low balance", statSkipLlm: "Skipped — agent declined", statSkipGuard: "Skipped — guardrail",
       rateClickSave: "click Save rate to confirm",
@@ -5143,7 +5179,7 @@
       portSub: "Lịch của bạn, chữ ký của bạn — mọi thay đổi đều do ví bạn ủy quyền, và agent chỉ chi trong đúng lịch cùng các cap bạn đặt.",
       portUsdcLabel: "USDC trong ví", portUsdcSub: "Số dư của bạn",
       portAllowanceLabel: "Allowance", portAllowanceSub: "Đã cấp cho agent",
-      portCirBtcLabel: "cirBTC đã nhận", portCirBtcSub: "Trong ví của bạn",
+      portCirBtcLabel: "cirBTC đã nhận", portCirBtcSub: "Trong ví của bạn", portEarnedWord: "đã nhận", portSimBadge: "Mô phỏng", portSimSub: "Paper — tuyến Arc tạm ngưng",
       portSwappedLabel: "Tổng đã DCA", portSwappedSub: "USDC đã swap, tổng cộng",
       portWithdrawTitle: "Rút token", portWithdrawSub: "Ký xác nhận danh tính — rút tiền hoàn tất trong 10–30 giây.",
       rateTitle: "Lịch DCA của bạn", rateSub: "Tự thiết lập cách agent mua cho bạn — tần suất, số tiền mỗi lần, giới hạn, và chế độ. Ký để lưu (không tốn gas).",
@@ -5156,7 +5192,7 @@
       schedSmartWarn: "⚠️ Smart chỉ mua khi điều kiện của bạn thoả — nếu thị trường tăng liên tục, agent có thể không mua trong thời gian dài. Đặt ngưỡng thấp (2–3%) nếu bạn vẫn muốn mua đều.",
       rateModeLabel: "Chế độ DCA nhanh — giải ngân số dư trong (hoặc nhập số bất kỳ ở trên):",
       rateModeMax: "🚀 Max · ~1 ngày", rateModeAggr: "⚡ Mạnh · 7 ngày", rateModeFast: "Nhanh · 14 ngày", rateModeBal: "Cân bằng · 30 ngày", rateModeSlow: "🐢 Chậm · 90 ngày",
-      statSuccess: "Thành công", statDry: "Chạy thử", statSwapUnavail: "Tuyến swap tạm ngưng",
+      statSuccess: "Thành công", statSimulated: "Mô phỏng (paper)", statDry: "Chạy thử", statSwapUnavail: "Tuyến swap tạm ngưng",
       statConfigErr: "Lỗi cấu hình", statApiErr: "Lỗi API",
       statSkipBalance: "Bỏ qua — số dư thấp", statSkipLlm: "Bỏ qua — agent từ chối", statSkipGuard: "Bỏ qua — guardrail",
       rateClickSave: "bấm Lưu tốc độ để xác nhận",
@@ -5223,6 +5259,9 @@
     // Footer
     var footerDiv = document.querySelector("footer > div:first-child");
     if (footerDiv) footerDiv.textContent = t.footerDisclaimer;
+    // Re-render the portfolio so dynamic bits the [data-t] loop overwrote — the
+    // simulated (paper) badge + sub on the cirBTC card — are reapplied last.
+    if (typeof renderPortfolio === "function" && typeof _ledgerData !== "undefined" && _ledgerData) renderPortfolio(_ledgerData);
   }
   $("langToggle").addEventListener("click", function () {
     applyLang(currentLang === "en" ? "vi" : "en");
