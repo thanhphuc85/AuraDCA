@@ -2,7 +2,7 @@ import Anthropic from "@anthropic-ai/sdk";
 import { z } from "zod";
 import type { DecisionContext, ClaudeDecision, HistoryEntry, Reflection, DcaStrategy, MarketBrief, PriceSnapshot } from "../types.js";
 import { SYSTEM_PROMPT, buildUserPrompt } from "./prompt.js";
-import { withRetry } from "../retry.js";
+import { withRetry, isRetryableLlmError } from "../retry.js";
 import { logger } from "../logger.js";
 import {
   ANALYSIS_TOOLS,
@@ -192,7 +192,9 @@ export async function getClaudeDecision(
       {
         maxRetries: 3,
         label: "Claude API",
-        shouldRetry: (err) => !(err instanceof DecisionError && err.kind === "invalid_output"),
+        // Skip non-transient failures: a bad LLM output (our own parse error) and
+        // any non-retryable 4xx (credit exhausted, auth) will just fail again.
+        shouldRetry: (err) => isRetryableLlmError(err) && !(err instanceof DecisionError && err.kind === "invalid_output"),
       },
     );
 

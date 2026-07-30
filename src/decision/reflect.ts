@@ -1,7 +1,7 @@
 import Anthropic from "@anthropic-ai/sdk";
 import { z } from "zod";
 import type { HistoryEntry, Reflection } from "../types.js";
-import { withRetry } from "../retry.js";
+import { withRetry, isRetryableLlmError } from "../retry.js";
 import { logger } from "../logger.js";
 import { totalSpent, dayCount } from "../history/store.js";
 
@@ -97,7 +97,7 @@ export async function generateReflection(
           tools: [REFLECTION_TOOL] as Anthropic.Tool[],
           tool_choice: { type: "tool" as const, name: "record_reflection" },
         }),
-      { maxRetries: 2, label: "Reflection API" },
+      { maxRetries: 2, label: "Reflection API", shouldRetry: isRetryableLlmError },
     );
 
     const toolBlock = response.content.find((b) => b.type === "tool_use");
