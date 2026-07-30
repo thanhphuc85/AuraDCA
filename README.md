@@ -101,6 +101,44 @@ Here's the shape of a `success` entry the agent records for a swap like the one 
 
 The agent also demonstrably **respects its own budget**: on a second same-day run it declined to trade — *"Already spent … today, which exceeds the maxDailyUsdc guardrail … Daily budget is exhausted"* — reading its own history and reasoning about it, not blindly firing.
 
+### x402 — the agent pays for its own inputs (pay-per-call)
+
+Beyond *spending* USDC to accumulate, the agent can **pay per call** for a metered
+input over **x402** (HTTP 402 "Payment Required") — a different money primitive
+from the DCA swap, and closer to what "programmable money" means. A request with
+no payment gets a `402` + payment requirements; a retry carrying a signed USDC
+authorization (**EIP-3009 `transferWithAuthorization`**, the x402 `exact` scheme)
+is cryptographically **verified** and the resource is released.
+
+**Reproduce it — one command, no setup, no keys:**
+
+```bash
+npm run x402-demo
+```
+
+It creates a throwaway payer, signs a USDC payment authorization for a "premium
+market brief", and verifies it end-to-end — printing the recovered payer and the
+authorized amount:
+
+```
+✅ VERIFIED — payer 0x38776F… authorized 1000 atomic USDC to 0x55Cc23…
+Settlement: SKIPPED (honest verify-only mode — no on-chain broadcast).
+```
+
+**Honest scope:** the payment is signed and verified, but **settlement is gated
+off** — no on-chain broadcast — the same paper-fill honesty applied to the cirBTC
+outage. The signed struct is exactly what a facilitator would settle, so turning
+settlement on later needs no change to what is signed. The live endpoint is
+[`api/x402-brief.ts`](api/x402-brief.ts); point the demo at a deployed URL to run
+the full `402 → pay → 200` loop over HTTP:
+
+```bash
+X402_BRIEF_URL=https://aura-dca.xyz/api/x402-brief npm run x402-demo
+```
+
+The core (sign / verify / reject) is pure and unit-tested (`src/x402/`, 12 tests);
+it's an **additive module that never touches the DCA pipeline**.
+
 ## Why this is "agentic" (and safe)
 
 The core design tension in an autonomous money bot: you want the flexibility of an LLM, but you cannot let an LLM be the final authority on how much to spend. This project resolves it with a strict split:
