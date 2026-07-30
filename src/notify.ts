@@ -37,6 +37,10 @@ function buildMarkdown(entry: HistoryEntry): string {
     lines.push(`| Tx | ${link} |`);
   }
 
+  if (entry.x402) {
+    lines.push(`| x402 input | paid ${entry.x402.amountUsdcAtomic} atomic USDC → ${entry.x402.payTo.slice(0, 10)}… (${entry.x402.settled ? "settled" : "verified-only"}) |`);
+  }
+
   lines.push("");
   if (entry.reasoning) lines.push(`> **Reasoning:** ${entry.reasoning}`, "");
   if (entry.message) lines.push(`> ${entry.message}`, "");
@@ -146,6 +150,10 @@ function buildTelegramHtml(entry: HistoryEntry): string {
 
   if (entry.boundBy) lines.push(`🔒 bound by <code>${escHtml(entry.boundBy)}</code>`);
   if (entry.walletUsdcBalance) lines.push(`💰 balance ${escHtml(fmtAmt(entry.walletUsdcBalance))} USDC`);
+  if (entry.x402) {
+    const x = entry.x402;
+    lines.push(`🧾 x402: paid ${escHtml(x.amountUsdcAtomic)} atomic USDC for its brief → <code>${escHtml(x.payTo.slice(0, 10))}…</code> (${escHtml(x.settled ? "settled" : "verified-only")})`);
+  }
   if (entry.txHash) {
     const url = entry.explorerUrl || `${ARC_EXPLORER}/tx/${entry.txHash}`;
     lines.push(`🔗 <a href="${escHtml(url)}">tx ${escHtml(entry.txHash.slice(0, 10))}…</a>`);
