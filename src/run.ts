@@ -93,6 +93,37 @@ async function saveLedger(ledger: Ledger): Promise<void> {
   }
 }
 
+/**
+ * Return already-pulled USDC to each user's wallet. Called on the allowance-mode
+ * failure paths that happen BEFORE the swap settles (sub-min total, swap threw),
+ * where the pulled USDC still sits in the agent wallet as USDC — so it can be
+ * sent straight back. Without this the transferFrom'd USDC would be silently
+ * stranded in the agent wallet (#5). Best-effort per user; a failed refund is
+ * logged loudly (the funds are recoverable manually) and counted.
+ */
+async function refundPulledUsdc(
+  config: AppConfig,
+  pulled: Array<{ user: string; amount: number }>,
+): Promise<{ refunded: number; failed: number }> {
+  let refunded = 0;
+  let failed = 0;
+  for (const p of pulled) {
+    if (!(p.amount > 0)) continue;
+    try {
+      await sendTokenToUser({
+        apiKey: config.circleApiKey, entitySecret: config.circleEntitySecret, walletId: config.walletId,
+        tokenContract: ARC_USDC_CONTRACT, user: p.user, amount: p.amount.toFixed(6),
+      });
+      refunded += p.amount;
+      logger.info(`Refunded ${p.amount.toFixed(6)} USDC to ${p.user} after an allowance-mode abort`);
+    } catch (err) {
+      failed += 1;
+      logger.error(`USDC REFUND FAILED for ${p.user} — ${p.amount.toFixed(6)} USDC left in the agent wallet, needs manual return`, err);
+    }
+  }
+  return { refunded, failed };
+}
+
 export async function runDailyDca(config: AppConfig): Promise<RunOutcome> {
   const date = today();
   const timestamp = nowIso();
@@ -193,6 +224,18 @@ export async function runDailyDca(config: AppConfig): Promise<RunOutcome> {
   // Instead of spending a pooled deposit, pull each user's scheduled amount from
   // their own wallet via transferFrom, swap the sum, and send cirBTC back.
   if (config.allowanceMode) {
+    // Never pull real USDC for a token whose swap route is offline: the swap
+    // could only fail and the pulled USDC would be stranded in the agent wallet
+    // (#5). Skip the run entirely instead — nothing is pulled, nothing is stuck.
+    if (dcaTokenInfo(config.tokenOut).simulated) {
+      return writeAndReturn({
+        date, timestamp, status: "skipped_guardrail_clamped",
+        requestedAmountUsdc: "0.000000", clampedAmountUsdc: "0", boundBy: "route_offline",
+        tokenOut: config.tokenOut, walletUsdcBalance: usdcBalance,
+        message: `Allowance mode paused: ${config.tokenOut} has no live swap route on Arc Testnet — not pulling real USDC (it would only get stuck).`,
+      }, false, config.discordWebhookUrl, refCtx);
+    }
+
     const { spends, totalUsdc } = await computeAllowanceSpends(ledger, ARC_TESTNET_RPC, ARC_USDC_CONTRACT, wallet.address, timestamp);
     logger.info(`Allowance mode: ${spends.length} active user(s), total pull ${totalUsdc} USDC`);
 
@@ -229,9 +272,12 @@ export async function runDailyDca(config: AppConfig): Promise<RunOutcome> {
     }
     const pulledTotal = pulled.reduce((a, x) => a + x.amount, 0);
     if (pulledTotal < minSwapUsdc) {
+      // The USDC is already in the agent wallet but there's too little to swap —
+      // return every pulled amount so nothing is stranded (#5).
+      const refund = await refundPulledUsdc(config, pulled);
       return writeAndReturn({
         date, timestamp, status: "error_swap_failed", tokenOut: config.tokenOut, walletUsdcBalance: usdcBalance,
-        message: `Allowance mode: pulled only ${pulledTotal.toFixed(6)} USDC (< min swap ${minSwapUsdc})`,
+        message: `Allowance mode: pulled only ${pulledTotal.toFixed(6)} USDC (< min swap ${minSwapUsdc}); refunded ${refund.refunded.toFixed(6)} USDC${refund.failed ? `, ${refund.failed} refund(s) FAILED — manual return needed` : ""}`,
       }, false, config.discordWebhookUrl, refCtx);
     }
 
@@ -241,6 +287,8 @@ export async function runDailyDca(config: AppConfig): Promise<RunOutcome> {
         walletAddress: wallet.address, kitKey: config.kitKey, tokenOut: config.tokenOut,
         amountUsdc: pulledTotal.toFixed(6), dryRun: false,
       });
+      let sentBack = 0;
+      const sendBackFailures: string[] = [];
       if (swapResult.amountOut) {
         const totalOut = Number.parseFloat(swapResult.amountOut);
         for (const p of pulled) {
@@ -261,27 +309,39 @@ export async function runDailyDca(config: AppConfig): Promise<RunOutcome> {
               u.lastChargedAt = timestamp;
               u.lastActivity = timestamp;
             }
+            sentBack += 1;
           } catch (err) {
-            logger.error(`cirBTC send-back failed for ${p.user} (non-fatal); ledger not credited`, err);
+            // The USDC was already swapped to cirBTC held by the agent, so we
+            // can't cleanly refund USDC here. Leave the ledger uncredited AND
+            // lastChargedAt unchanged so this user isn't double-counted, and
+            // surface the owed cirBTC loudly for manual reconciliation (#5).
+            sendBackFailures.push(`${p.user} (owed ${share} cirBTC)`);
+            logger.error(`cirBTC send-back failed for ${p.user} — ${share} cirBTC owed, held in agent wallet, needs manual send; ledger not credited`, err);
           }
         }
         await saveLedger(ledger);
       }
+      const owedNote = sendBackFailures.length
+        ? `; ${sendBackFailures.length} send-back(s) FAILED — owed cirBTC held in agent wallet: ${sendBackFailures.join(", ")}`
+        : "";
       return writeAndReturn({
         date, timestamp, status: "success",
         requestedAmountUsdc: totalUsdc.toFixed(6), clampedAmountUsdc: pulledTotal.toFixed(6),
         tokenOut: config.tokenOut, txHash: swapResult.txHash, explorerUrl: swapResult.explorerUrl, amountOut: swapResult.amountOut,
         walletUsdcBalance: usdcBalance,
-        reasoning: `Allowance mode: pulled ${pulledTotal.toFixed(6)} USDC from ${pulled.length} wallet(s), swapped, sent cirBTC back.`,
-        message: `Allowance DCA: pulled + swapped ${pulledTotal.toFixed(6)} USDC across ${pulled.length} user(s)`,
+        reasoning: `Allowance mode: pulled ${pulledTotal.toFixed(6)} USDC from ${pulled.length} wallet(s), swapped, sent cirBTC back to ${sentBack}.`,
+        message: `Allowance DCA: pulled + swapped ${pulledTotal.toFixed(6)} USDC across ${pulled.length} user(s), cirBTC delivered to ${sentBack}/${pulled.length}${owedNote}`,
       }, false, config.discordWebhookUrl, refCtx);
     } catch (err) {
       const category = err instanceof SwapExecutionError ? err.category : "unknown";
       logger.error(`Allowance swap failed [${category}]`, err);
+      // The swap never settled, so the pulled USDC is still USDC in the agent
+      // wallet — send it all back rather than stranding it (#5).
+      const refund = await refundPulledUsdc(config, pulled);
       return writeAndReturn({
         date, timestamp, status: "error_swap_failed", clampedAmountUsdc: pulledTotal.toFixed(6),
         tokenOut: config.tokenOut, walletUsdcBalance: usdcBalance,
-        message: `Allowance swap failed [${category}]: ${(err as Error).message}`,
+        message: `Allowance swap failed [${category}]: ${(err as Error).message}; refunded ${refund.refunded.toFixed(6)} USDC${refund.failed ? `, ${refund.failed} refund(s) FAILED — manual return needed` : ""}`,
       }, false, config.discordWebhookUrl, refCtx);
     }
   }
