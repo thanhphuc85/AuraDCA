@@ -1,20 +1,19 @@
 name: Daily DCA Bot
 
 on:
+  # PRIMARY trigger: an always-on external cron (Vercel Cron / cron-job.org) hits
+  # /api/trigger-dca every few minutes, which fires a workflow_dispatch here. That
+  # replaces GitHub's own `schedule:` trigger, which is best-effort — it delays
+  # runs by tens of minutes and silently drops ~half of them, worst at the top of
+  # the hour — so an every-N-hours user schedule effectively ran every 2–3h.
+  #
+  # The `schedule:` below is kept ONLY as a sparse safety net so DCA still limps
+  # along if the external cron (or GH_PAT) is down. isDueNow() buckets every
+  # cadence to UTC and fires each user at most once per bucket, and
+  # `concurrency: daily-dca` serializes overlapping runs, so the fallback firing
+  # alongside a dispatched run can never double-charge.
   schedule:
-    # Wake several times an hour. Each user's own schedule (frequency: daily /
-    # every N hours / every N days / weekly, plus smart-mode conditions) decides
-    # whether this tick is one of their execution times — the code skips anyone
-    # who isn't due, so extra ticks are cheap but support any cadence.
-    #
-    # Why not a single "0 * * * *"? GitHub's `schedule` trigger is best-effort:
-    # at the top of the hour (its busiest window) it delays runs by tens of
-    # minutes and silently drops ~half of them, so an on-the-hour cron misses
-    # most hours. isDueNow() anchors every cadence to a UTC bucket and fires each
-    # user at most once per bucket, so running more often — at off-peak minutes —
-    # just gives each hourly bucket several chances to land without ever
-    # double-charging. 6 ticks/hour recover the hours GitHub would otherwise skip.
-    - cron: "3,13,23,33,43,53 * * * *"
+    - cron: "17,47 * * * *"
   workflow_dispatch:
     inputs:
       dry_run:
