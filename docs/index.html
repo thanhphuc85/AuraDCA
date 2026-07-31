@@ -2317,8 +2317,15 @@
     try {
       var usdc = Number(await tokenBalanceOf(ARC.usdc, account)) / 1e6;
       var cirbtc = Number(await tokenBalanceOf(ARC.cirbtc, account)) / 1e8;
+      // EURC on-chain too (was omitted here, so a refresh wiped its value/USD from
+      // the total). Fall back to the ledger figure only if the RPC read fails.
+      var _lu = _ledgerData && _ledgerData.users ? _ledgerData.users[account.toLowerCase()] : null;
+      var eurc;
+      try { eurc = Number(await tokenBalanceOf(ARC.eurc, account)) / 1e6; }
+      catch (eErr) { eurc = parseFloat((_lu && _lu.tokenBalances && _lu.tokenBalances.EURC) || "0"); }
+      if (!isFinite(eurc)) eurc = 0;
       var price = getImpliedPrice();
-      var totalUsd = usdc + (cirbtc * price);
+      var totalUsd = usdc + (cirbtc * price) + (eurc * _eurUsd);
       var balEl = document.querySelector(".wp-balance");
       if (balEl) balEl.textContent = fmt(totalUsd, 2) + " US$";
       var usdcAmtEl = document.querySelector(".wp-token-icon.usdc");
@@ -2333,6 +2340,12 @@
         var amtEl2 = row2.querySelector(".wp-token-amt");
         if (amtEl2) amtEl2.textContent = fmt(cirbtc, 8);
       }
+      var eurcAmtEl = document.querySelector(".wp-token-icon.eurc");
+      if (eurcAmtEl) {
+        var row3 = eurcAmtEl.parentElement;
+        var amtEl3 = row3.querySelector(".wp-token-amt");
+        if (amtEl3) amtEl3.textContent = fmt(eurc, 6);
+      }
       var yourBal = document.querySelector("#wpYourBalVal");
       if (yourBal) yourBal.textContent = fmt(usdc, 2) + " USDC";
       var hdBal = $("hdBadgeBal");
@@ -2340,7 +2353,7 @@
     } catch (e) {}
   }
 
-  function showWalletProfile(account, nativeBal, usdc, cirbtc, loginType, txs) {
+  function showWalletProfile(account, nativeBal, usdc, cirbtc, loginType, txs, eurcOnchain) {
     var status = $("walletStatus");
     var t = T[currentLang] || T.en;
     var price = getImpliedPrice();
@@ -2349,7 +2362,10 @@
     // toward the portfolio total at the live EUR/USD rate.
     var _wu = _ledgerData && _ledgerData.users ? _ledgerData.users[account.toLowerCase()] : null;
     var _tb = (_wu && _wu.tokenBalances) || {};
-    var eurcBal = parseFloat(_tb.EURC || "0");
+    // EURC now reads the wallet's real on-chain balance (passed in like usdc/cirbtc);
+    // fall back to the ledger figure only when the on-chain read was unavailable, so
+    // self-funded/faucet EURC shows up instead of the old ledger-only 0.
+    var eurcBal = (typeof eurcOnchain === "number" && isFinite(eurcOnchain)) ? eurcOnchain : parseFloat(_tb.EURC || "0");
     var eurcUsd = eurcBal * _eurUsd;
     var totalUsd = usdc + (cirbtc * price) + eurcUsd;
     var eurcLine = eurcBal > 0
@@ -2367,7 +2383,7 @@
       var _syms = SHOW_TOKENS.slice();
       Object.keys(_tb).forEach(function (s) { if (s !== "cirBTC" && _syms.indexOf(s) < 0) _syms.push(s); });
       extraCards = _syms.map(function (sym) {
-        var b = parseFloat(_tb[sym] || "0");
+        var b = (sym === "EURC") ? eurcBal : parseFloat(_tb[sym] || "0");
         return '<div class="wp-token">' +
           '<div class="wp-token-icon ' + (TOKEN_ICON[sym] || "generic") + '">' + sym.slice(0, 1) + '</div>' +
           '<div><div class="wp-token-amt">' + fmt(b, 6) + '</div><div class="wp-token-name">' + sym + '</div></div>' +
@@ -2567,12 +2583,13 @@
 
       closeWalletModal();
       status.innerHTML = '<span style="display:inline-flex;align-items:center;gap:8px;"><span class="spinner" style="width:16px;height:16px;border-width:2px;"></span> Reading wallet data…</span>';
-      var nativeBal = 0, usdc = 0, cirbtc = 0;
+      var nativeBal = 0, usdc = 0, cirbtc = 0, eurc;
       try {
         var nativeRaw = await safeRpcCall("eth_getBalance", [account, "latest"]);
         nativeBal = Number(BigInt(nativeRaw || "0x0")) / 1e18;
         usdc = Number(await tokenBalanceOf(ARC.usdc, account)) / 1e6;
         cirbtc = Number(await tokenBalanceOf(ARC.cirbtc, account)) / 1e8;
+        eurc = Number(await tokenBalanceOf(ARC.eurc, account)) / 1e6;
       } catch (balErr) {
         status.textContent = "Connected but balance read failed — you may need to switch to Arc Testnet in your wallet.";
       }
@@ -2583,7 +2600,7 @@
       // The wallet is already connected — a rendering hiccup (undefined field,
       // missing element) must never revert to "Connection failed".
       try {
-        showWalletProfile(account, nativeBal, usdc, cirbtc, walletId, txs);
+        showWalletProfile(account, nativeBal, usdc, cirbtc, walletId, txs, eurc);
         if (typeof renderPortfolio === "function") renderPortfolio(_ledgerData);
       } catch (renderErr) {
         closeWalletModal();
@@ -2788,14 +2805,15 @@
       state.account = real.address; state.loginType = "gmail"; state.provider = null;
       saveWalletAddr(real.address);
       try { localStorage.setItem("aura-gmail-wallet", JSON.stringify({ address: real.address, circle: true })); } catch (e) {}
-      var nb = 0, u2 = 0, cb2 = 0;
+      var nb = 0, u2 = 0, cb2 = 0, eu2;
       try {
         nb = Number(BigInt((await rpcCall("eth_getBalance", [real.address, "latest"])) || "0x0")) / 1e18;
         u2 = Number(await tokenBalanceOf(ARC.usdc, real.address)) / 1e6;
         cb2 = Number(await tokenBalanceOf(ARC.cirbtc, real.address)) / 1e8;
+        eu2 = Number(await tokenBalanceOf(ARC.eurc, real.address)) / 1e6;
       } catch (e) {}
       var txs0 = []; try { txs0 = await fetchRecentTxs(real.address); } catch (e) {}
-      try { showWalletProfile(real.address, nb, u2, cb2, "gmail", txs0); if (typeof renderPortfolio === "function") renderPortfolio(_ledgerData); }
+      try { showWalletProfile(real.address, nb, u2, cb2, "gmail", txs0, eu2); if (typeof renderPortfolio === "function") renderPortfolio(_ledgerData); }
       catch (re) { if (typeof updateHeaderWallet === "function") updateHeaderWallet(real.address, "gmail"); }
     } catch (err) {
       try { sessionStorage.removeItem(CIRCLE_PENDING_KEY); } catch (e) {}
@@ -2847,17 +2865,18 @@
       if (!r.ok) console.warn("send-welcome failed:", r.status);
     }).catch(function (e6) { console.warn("send-welcome error:", e6); });
 
-    var nativeBal = 0, usdc = 0, cirbtc = 0;
+    var nativeBal = 0, usdc = 0, cirbtc = 0, eurc;
     try {
       var nativeRaw = await rpcCall("eth_getBalance", [account, "latest"]);
       nativeBal = Number(BigInt(nativeRaw || "0x0")) / 1e18;
       usdc = Number(await tokenBalanceOf(ARC.usdc, account)) / 1e6;
       cirbtc = Number(await tokenBalanceOf(ARC.cirbtc, account)) / 1e8;
+      eurc = Number(await tokenBalanceOf(ARC.eurc, account)) / 1e6;
     } catch (e3) {}
     var txs = [];
     try { txs = await fetchRecentTxs(account); } catch (e4) { txs = []; }
     try {
-      showWalletProfile(account, nativeBal, usdc, cirbtc, "gmail", txs);
+      showWalletProfile(account, nativeBal, usdc, cirbtc, "gmail", txs, eurc);
       if (typeof renderPortfolio === "function") renderPortfolio(_ledgerData);
     } catch (renderErr) {
       closeWalletModal();
