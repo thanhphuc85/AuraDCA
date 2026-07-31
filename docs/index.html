@@ -4006,8 +4006,18 @@
     if (s) s.addEventListener("click", function () { if (!state.account) { openWalletModal(); return; } go("portfolioSection"); });
   })();
 
+  // A routine idle tick: the hourly cron fired but nobody's schedule was due, so
+  // the agent logged a 0-spend no-op (status skipped_guardrail_clamped, boundBy
+  // no_scheduled_spend). These are heartbeats, not decisions — they used to bury the
+  // real runs in the table and dilute the success rate (~48% "skipped"). Still
+  // recorded server-side for the audit trail; we just hide them from every view.
+  function isIdleNoOpRun(e) {
+    return e && e.status === "skipped_guardrail_clamped" && e.boundBy === "no_scheduled_spend";
+  }
+
   function render(history) {
     if (!Array.isArray(history)) history = [];
+    history = history.filter(function (e) { return !isIdleNoOpRun(e); });
     var completed = history.filter(function (e) { return SUCCESS[e.status]; });
     var total = 0, points = [];
     completed.forEach(function (e) { total += parseFloat(e.clampedAmountUsdc || "0") || 0; points.push({ cum: total, date: e.date }); });
