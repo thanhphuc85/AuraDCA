@@ -73,15 +73,15 @@
       "totalWithdrawnCirBtc": "0",
       "totalWithdrawnUsdc": "0",
       "firstSeen": "2026-07-23T20:43:41.414Z",
-      "lastActivity": "2026-07-31T18:00:46.071Z",
-      "dcaRatePerDay": "1.000000",
+      "lastActivity": "2026-07-31T23:49:08.716Z",
+      "dcaRatePerDay": "0.500000",
       "dcaRateIsCustom": true,
       "dcaPaused": false,
       "dcaMode": "auto",
       "dcaTokenOut": "EURC",
       "dcaFrequency": "hours",
       "dcaEveryHours": 1,
-      "dcaAmountPerRun": "1.000000",
+      "dcaAmountPerRun": "0.500000",
       "dcaDailyCapUsdc": "20.000000",
       "tokenBalances": {
         "EURC": "59.357286"
