@@ -395,18 +395,25 @@ export async function runDailyDca(config: AppConfig): Promise<RunOutcome> {
   // so the audit trail says so plainly instead of borrowing clampDecision's
   // "llm_declined" skip reason, which would be flatly untrue here.
   if (scheduledTotal <= 0) {
-    logger.info("No user was due this run; skipping");
-    return writeAndReturn({
-      date,
-      timestamp,
-      status: "skipped_guardrail_clamped",
-      requestedAmountUsdc: "0.000000",
-      clampedAmountUsdc: "0",
-      boundBy: "no_scheduled_spend",
-      tokenOut: config.tokenOut,
-      walletUsdcBalance: usdcBalance,
-      message: `No buy this run: no user was due (0 scheduled USDC across ${Object.keys(ledger.users).length} account(s))`,
-    }, false, config.discordWebhookUrl, refCtx);
+    // The hourly cron fires even when nobody's schedule is due. Recording a no-op
+    // heartbeat every such tick bloated history.json and buried the real runs, so we
+    // return the outcome WITHOUT persisting, notifying, or reflecting — no idle entry
+    // is written. (Real runs — success/error/guardrail — are still recorded below.)
+    logger.info("No user was due this run; skipping (not recording a no-op heartbeat)");
+    return {
+      entry: {
+        date,
+        timestamp,
+        status: "skipped_guardrail_clamped",
+        requestedAmountUsdc: "0.000000",
+        clampedAmountUsdc: "0",
+        boundBy: "no_scheduled_spend",
+        tokenOut: config.tokenOut,
+        walletUsdcBalance: usdcBalance,
+        message: `No buy this run: no user was due (0 scheduled USDC across ${Object.keys(ledger.users).length} account(s))`,
+      },
+      isFatal: false,
+    };
   }
 
   // Split the scheduled spend into SIMULATED (paper — no real USDC leaves the
