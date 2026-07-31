@@ -2195,5 +2195,16 @@
       "mode": "verified-only",
       "via": "http"
     }
+  },
+  {
+    "date": "2026-07-31",
+    "timestamp": "2026-07-31T01:14:55.443Z",
+    "status": "skipped_guardrail_clamped",
+    "requestedAmountUsdc": "0.000000",
+    "clampedAmountUsdc": "0",
+    "boundBy": "no_scheduled_spend",
+    "tokenOut": "cirBTC",
+    "walletUsdcBalance": "344.899943334383568114",
+    "message": "No buy this run: no user was due (0 scheduled USDC across 13 account(s))"
   }
 ]
