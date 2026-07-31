@@ -1077,7 +1077,7 @@
   <div class="hero" id="heroSection">
     <h1>An agent that <span class="grad">dollar-cost-averages</span> for you.</h1>
     <p><b>Claude</b> decides the strategy — <b>code owns every number that touches money.</b> Pick any token the network supports; each run pools everyone's buys by token and settles a real swap through Circle's Swap Kit on Arc Testnet, authorized by your own wallet. No server, no human in the loop.</p>
-    <div class="agent-upgrade live" title="Live now: every agent run signs and verifies a real x402 USDC micro-payment (EIP-3009) for its market-brief input on Arc Testnet. On-chain settlement via Circle is the next step — kept verified-only on testnet.">✅ x402 live on Arc — the agent pays <b>USDC per run</b> for its market brief; on-chain settlement next</div>
+    <div class="agent-upgrade live" title="Live now: every agent run pays a real x402 USDC micro-payment for its market-brief input on Arc Testnet. On-chain settlement runs through Circle Gateway (Nanopayments) — when enabled, each brief settles on-chain with a real tx hash shown in the run history.">✅ x402 live on Arc — the agent pays <b>USDC per run</b> for its market brief; on-chain settlement via <b>Circle Gateway</b></div>
     <div class="cta">
       <button class="btn" id="connectHero">Connect Wallet</button>
       <a class="btn ghost" href="https://github.com/thanhphuc85/AuraDCA" target="_blank" rel="noopener">View source ↗</a>
@@ -4071,13 +4071,28 @@
       var smartBadge = (ss && ss.multiplier != null)
         ? '<span style="display:inline-block;font-family:ui-monospace,monospace;font-size:10.5px;padding:1px 6px;border-radius:6px;background:rgba(138,92,246,.14);color:var(--violet);margin-right:6px;white-space:nowrap;" title="' + ssTip.replace(/&/g, "&amp;").replace(/"/g, "&quot;") + '">' + (ssAgent ? "⚡" : "") + '🧠 ×' + ss.multiplier.toFixed(2) + '</span>'
         : '';
+      // x402: "the agent paid X USDC for its market brief" — with a settlement tx
+      // link when it settled on-chain via Circle Gateway, else a verified-only tag.
+      var x4 = e.x402, x4Badge = '';
+      if (x4 && x4.amountUsdcAtomic != null) {
+        var x4Amt = Number(x4.amountUsdcAtomic) / 1e6;
+        var x4Str = x4Amt.toFixed(x4Amt < 0.01 ? 4 : 2).replace(/\.?0+$/, '');
+        var x4Settled = !!x4.settled;
+        var x4Link = x4.txHash ? (x4.explorerUrl || (ARC.explorer + '/tx/' + x4.txHash)) : '';
+        var x4Inner = '🧾 ' + x4Str + ' USDC brief' + (x4Settled ? ' · settled' : ' · verified') + (x4Link ? ' ↗' : '');
+        var x4Tip = 'x402: the agent paid ' + x4Str + ' USDC for its market-brief input'
+          + (x4Settled ? ' — settled on-chain via Circle Gateway' + (x4.txHash ? ' (tx ' + x4.txHash + ')' : '') : ' — authorization verified, not settled');
+        var x4Bg = x4Settled ? 'rgba(52,211,153,.14);color:var(--green)' : 'rgba(138,92,246,.12);color:var(--violet)';
+        var x4Span = '<span style="display:inline-block;font-family:ui-monospace,monospace;font-size:10.5px;padding:1px 6px;border-radius:6px;background:' + x4Bg + ';margin-right:6px;white-space:nowrap;" title="' + x4Tip.replace(/&/g, "&amp;").replace(/"/g, "&quot;") + '">' + x4Inner + '</span>';
+        x4Badge = x4Link ? '<a href="' + x4Link + '" target="_blank" rel="noopener" style="text-decoration:none;">' + x4Span + '</a>' : x4Span;
+      }
       return '<tr class="' + rowClass(e.status) + '">' +
         "<td>" + (e.date || "") + "</td>" +
         '<td><span class="badge ' + statusClass(e.status) + '">' + statusLabel(e.status, e.boundBy) + "</span></td>" +
         '<td class="amt2">' + (e.requestedAmountUsdc != null ? e.requestedAmountUsdc : "—") + "</td>" +
         '<td class="amt2">' + (e.clampedAmountUsdc != null ? e.clampedAmountUsdc : "—") + "</td>" +
         "<td>" + (e.boundBy ? e.boundBy.replace(/_/g, " ") : "—") + "</td>" +
-        '<td class="reason">' + smartBadge + reason + "</td>" +
+        '<td class="reason">' + smartBadge + x4Badge + reason + "</td>" +
         "<td>" + tx + "</td></tr>";
     }).join("");
     $("runsBody").innerHTML = rows || '<tr><td colspan="7"><div class="empty-state fade-in"><div class="empty-icon">🤖</div><p class="empty-title">No runs recorded yet</p><p class="empty-desc">The agent will record its first decision after the next daily cron run.</p></div></td></tr>';

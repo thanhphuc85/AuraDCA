@@ -38,7 +38,11 @@ function buildMarkdown(entry: HistoryEntry): string {
   }
 
   if (entry.x402) {
-    lines.push(`| x402 input | paid ${entry.x402.amountUsdcAtomic} atomic USDC → ${entry.x402.payTo.slice(0, 10)}… (${entry.x402.settled ? "settled" : "verified-only"}) |`);
+    const x = entry.x402;
+    const tail = x.settled && x.txHash
+      ? `settled — [${x.txHash.slice(0, 10)}…](${x.explorerUrl || `${ARC_EXPLORER}/tx/${x.txHash}`})`
+      : "verified-only";
+    lines.push(`| x402 input | paid ${x.amountUsdcAtomic} atomic USDC → ${x.payTo.slice(0, 10)}… (${tail}) |`);
   }
 
   lines.push("");
@@ -152,7 +156,10 @@ function buildTelegramHtml(entry: HistoryEntry): string {
   if (entry.walletUsdcBalance) lines.push(`💰 balance ${escHtml(fmtAmt(entry.walletUsdcBalance))} USDC`);
   if (entry.x402) {
     const x = entry.x402;
-    lines.push(`🧾 x402: paid ${escHtml(x.amountUsdcAtomic)} atomic USDC for its brief → <code>${escHtml(x.payTo.slice(0, 10))}…</code> (${escHtml(x.settled ? "settled" : "verified-only")})`);
+    const tail = x.settled && x.txHash
+      ? `<a href="${escHtml(x.explorerUrl || `${ARC_EXPLORER}/tx/${x.txHash}`)}">settled ↗</a>`
+      : "verified-only";
+    lines.push(`🧾 x402: paid ${escHtml(x.amountUsdcAtomic)} atomic USDC for its brief → <code>${escHtml(x.payTo.slice(0, 10))}…</code> (${tail})`);
   }
   if (entry.txHash) {
     const url = entry.explorerUrl || `${ARC_EXPLORER}/tx/${entry.txHash}`;

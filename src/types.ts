@@ -79,6 +79,9 @@ export interface HistoryEntry {
     settled: boolean;
     mode: string;
     via: "http" | "in-process";
+    // Present only when the brief payment settled on-chain (Circle Gateway).
+    txHash?: string;
+    explorerUrl?: string;
   };
 }
 

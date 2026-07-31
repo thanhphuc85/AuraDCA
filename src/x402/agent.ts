@@ -2,6 +2,7 @@ import { ethers } from "ethers";
 import { buildRequirements } from "./config.js";
 import { signPayment, verifyPayment } from "./payment.js";
 import { fetchWithX402 } from "./client.js";
+import { isSettlementEnabled, settleBriefViaGateway, type GatewayClientFactory } from "./settle.js";
 import { ARC_AGENT_ADDRESS } from "../ledger/constants.js";
 import { logger } from "../logger.js";
 
@@ -15,6 +16,9 @@ export interface X402RunReceipt {
   settled: boolean;
   mode: string;
   via: "http" | "in-process";
+  // Present only when settled on-chain (Circle Gateway): the settlement tx.
+  txHash?: string;
+  explorerUrl?: string;
 }
 
 /**
@@ -29,7 +33,9 @@ export interface X402RunReceipt {
  * X402_BRIEF_URL set it does a real HTTP pay-per-call; otherwise it runs the
  * sign→verify handshake in-process. Settlement stays gated off (verified-only).
  */
-export async function payForMarketBriefBestEffort(): Promise<X402RunReceipt | null> {
+export async function payForMarketBriefBestEffort(
+  opts: { settleClientFactory?: GatewayClientFactory } = {},
+): Promise<X402RunReceipt | null> {
   try {
     if ((process.env.X402_ENABLED ?? "").trim().toLowerCase() !== "true") return null;
 
@@ -54,7 +60,40 @@ export async function payForMarketBriefBestEffort(): Promise<X402RunReceipt | nu
     });
 
     const url = process.env.X402_BRIEF_URL?.trim();
-    if (url) {
+
+    // Full on-chain settlement (Circle Gateway "Nanopayments"), gated. Needs a
+    // deployed Gateway-x402 endpoint and a payer holding a Gateway deposit. The
+    // pay is gasless and returns a real settlement tx hash. A settle failure is
+    // non-fatal: we fall through to the verified-only path below.
+    if (url && isSettlementEnabled()) {
+      try {
+        const settled = await settleBriefViaGateway({
+          privateKey: pk,
+          url,
+          depositUsdc: process.env.X402_DEPOSIT_USDC?.trim(),
+          clientFactory: opts.settleClientFactory,
+        });
+        logger.info(`x402: SETTLED ${settled.amountUsdcAtomic} atomic USDC for the market brief on-chain → ${settled.txHash}`);
+        return {
+          resource: RESOURCE,
+          amountUsdcAtomic: settled.amountUsdcAtomic,
+          payer: settled.payer,
+          payTo,
+          settled: true,
+          mode: "settled",
+          via: "http",
+          txHash: settled.txHash,
+          explorerUrl: settled.explorerUrl,
+        };
+      } catch (err) {
+        logger.warn(`x402: on-chain settlement failed (${(err as Error).message}) — falling back to verified-only`);
+      }
+    }
+
+    // Custom-scheme HTTP pay-per-call — only when settlement is OFF. With
+    // settlement on, the endpoint speaks the Gateway protocol (handled above), so
+    // a settle failure falls through to the self-contained in-process handshake.
+    if (url && !isSettlementEnabled()) {
       // Real network pay-per-call against a deployed endpoint.
       const res = await fetchWithX402(url, signer);
       if (!res.paid || !res.requirements) {

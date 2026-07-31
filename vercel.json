@@ -1,6 +1,9 @@
 {
   "version": 2,
   "functions": {
+    "api/x402-brief.ts": {
+      "maxDuration": 30
+    },
     "api/withdraw.ts": {
       "maxDuration": 30
     },
