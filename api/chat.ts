@@ -256,6 +256,38 @@ function getOnchainAudit(): string {
   }, null, 2);
 }
 
+async function getX402Activity(limit: number): Promise<string> {
+  const history = await fetchJson<HistoryEntry[]>(HISTORY_SOURCES);
+  if (!Array.isArray(history) || !history.length) {
+    return JSON.stringify({ x402PaymentsRecorded: 0, recentPayments: [], note: "No runs recorded yet." });
+  }
+  const paid = history
+    .filter((e) => e && (e as Record<string, unknown>).x402 && typeof (e as Record<string, unknown>).x402 === "object")
+    .map((e) => {
+      const x = (e as Record<string, unknown>).x402 as Record<string, unknown>;
+      return {
+        date: e.date ?? null,
+        resource: x.resource ?? null,
+        amountUsdc: (num(x.amountUsdcAtomic) / 1e6).toFixed(6),
+        payer: x.payer ?? null,
+        payTo: x.payTo ?? null,
+        settled: !!x.settled,
+        mode: x.mode ?? null,
+        via: x.via ?? null,
+      };
+    });
+  const n = Math.min(Math.max(1, limit || 5), 20);
+  const totalUsdc = paid.reduce((s, p) => s + num(p.amountUsdc), 0);
+  return JSON.stringify({
+    x402PaymentsRecorded: paid.length,
+    totalMicropaidUsdc: totalUsdc.toFixed(6),
+    recentPayments: paid.slice(-n).reverse(),
+    note: paid.length
+      ? "Each listed run the agent paid a metered USDC micro-payment over x402 (HTTP-402) for its 'premium market brief' input — a signed EIP-3009 transferWithAuthorization the endpoint cryptographically VERIFIES before serving. mode 'verified-only' means settlement is gated off on Arc Testnet (the authorization is proven, not broadcast on-chain); via 'http' is a real pay-per-call over the network, 'in-process' is the self-contained handshake. This is a DIFFERENT money primitive from the DCA swap: pay-per-call for a service, not accumulate a token. On-chain settle via Circle is the documented next step; the signed struct is already settlement-ready."
+      : "No x402 micro-payments are recorded in history yet. When enabled, each agent run signs and verifies a USDC pay-per-call (EIP-3009) for its market-brief input over HTTP-402 — the agent paying for its own inputs, separate from the DCA swap.",
+  }, null, 2);
+}
+
 // ---------- tool schemas ----------
 const TOOLS: Anthropic.Tool[] = [
   {
@@ -287,6 +319,11 @@ const TOOLS: Anthropic.Tool[] = [
     name: "get_onchain_audit",
     description: "Get the on-chain audit anchor: the AuraAttestation contract address, explorer link, and how to verify that the committed ledger matches the hash recorded on-chain. Use for 'is this verifiable on-chain' or 'where is the audit'.",
     input_schema: { type: "object", properties: {} },
+  },
+  {
+    name: "get_x402_activity",
+    description: "Get the agent's x402 pay-per-call activity: how many runs paid a metered USDC micro-payment for their market-brief input over HTTP-402, the total micro-paid, and recent receipts (amount in USDC, payer, payTo, settlement mode, http vs in-process). Use for ANY question about x402, 'does the agent pay for its own data/inputs', agentic payments, nanopayments, EIP-3009 / programmable money beyond the DCA swap, or the 'x402 live' banner.",
+    input_schema: { type: "object", properties: { limit: { type: "number", description: "How many recent x402 payments to return (1-20, default 5)." } } },
   },
   {
     name: "propose_set_dca_rate",
@@ -321,6 +358,8 @@ const TOOLS: Anthropic.Tool[] = [
 const SYSTEM_PROMPT = `You are the assistant for "Aura DCA Agent", a dashboard for an autonomous agent that dollar-cost-averages USDC into a token the user chooses on Arc Testnet (a testnet — assets have no real value). Users can DCA into cirBTC (tokenized BTC; its route is currently in a liquidity outage on Arc Testnet) or EURC (euro stablecoin; live). Each run pools everyone's buys per token and settles one swap per token group through Circle's Swap Kit.
 
 Modes: auto (runs on the user's schedule), manual (agent skips them; they buy on demand), smart (auto + the buy is gated on market conditions AND sized by them — the agent proposes a multiplier from the dip + Fear & Greed, and code clamps it within the user's sensitivity and max-multiplier). The final swap amount is always owned by code (clampDecision + caps), never by the model. After each run the agent hashes the committed ledger into an on-chain AuraAttestation contract, so the audit trail is verifiable on Arc.
+
+Agentic x402 (the agent pays for its OWN inputs): beyond spending USDC to accumulate a token via DCA, each run the agent can pay a metered USDC micro-payment for a "premium market brief" behind an HTTP-402 paywall — a signed EIP-3009 transferWithAuthorization that the endpoint cryptographically VERIFIES before serving. This is a genuinely different money primitive from the DCA swap: pay-per-call for a service, not accumulate a token. Be honest about scope: on Arc Testnet settlement is verified-only (the authorization is proven but NOT broadcast on-chain); on-chain settle via Circle is the documented next step, and the signed struct is already settlement-ready. This is what the site's "x402 live" state refers to. Use get_x402_activity for any x402 / agent-pays-for-inputs / nanopayments / programmable-money question, and don't overclaim settlement.
 
 Guidelines:
 - Reply in the SAME language the user writes in (Vietnamese or English).
@@ -437,6 +476,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse): 
           case "get_market_read": content = await getMarketRead(); break;
           case "get_agent_memory": content = await getAgentMemory(num(input.limit) || 3); break;
           case "get_onchain_audit": content = getOnchainAudit(); break;
+          case "get_x402_activity": content = await getX402Activity(num(input.limit) || 5); break;
           case "propose_set_dca_rate": {
             const rate = num(input.rate);
             if (rate < 0) { content = JSON.stringify({ error: "Rate must be >= 0." }); break; }

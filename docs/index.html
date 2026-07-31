@@ -5557,9 +5557,9 @@
 
     var CT = {
       en: {
-        greeting: "Hi! I'm your Aura DCA assistant. Ask about your balance, the treasury, past trades, or tell me to adjust your DCA rate.",
+        greeting: "Hi! I'm your Aura DCA assistant. Ask about your balance, the treasury, past trades, how the agent pays for its own data over x402, or tell me to adjust your DCA rate.",
         placeholder: "Type a message…",
-        suggestions: ["How much is in the treasury?", "What's my current DCA rate?", "Explain the last trade", "Adjust my DCA rate"],
+        suggestions: ["What's my current DCA rate?", "Explain the last trade", "Does the agent pay for its own data? (x402)", "Adjust my DCA rate"],
         confirmRate: "Set DCA rate", confirmRun: "Run DCA now",
         rateDetail: function (r, m) {
           if (r <= 0) return "Pause your DCA (rate → 0).";
@@ -5576,9 +5576,9 @@
         runOk: function (out) { return out ? "✅ Swapped! Received " + out + " cirBTC." : "✅ DCA run submitted."; }
       },
       vi: {
-        greeting: "Chào bạn! Tôi là trợ lý DCA của Aura. Hỏi về số dư, ngân quỹ, giao dịch trước, hoặc yêu cầu điều chỉnh tỉ lệ DCA của bạn.",
+        greeting: "Chào bạn! Tôi là trợ lý DCA của Aura. Hỏi về số dư, ngân quỹ, giao dịch trước, cách agent tự trả tiền cho dữ liệu qua x402, hoặc yêu cầu điều chỉnh tỉ lệ DCA của bạn.",
         placeholder: "Nhập tin nhắn…",
-        suggestions: ["Ngân quỹ còn bao nhiêu?", "Tỉ lệ DCA hiện tại của tôi?", "Giải thích giao dịch gần nhất", "Điều chỉnh tỉ lệ DCA của tôi"],
+        suggestions: ["Tỉ lệ DCA hiện tại của tôi?", "Giải thích giao dịch gần nhất", "Agent có tự trả tiền cho dữ liệu không? (x402)", "Điều chỉnh tỉ lệ DCA của tôi"],
         confirmRate: "Đặt tỉ lệ DCA", confirmRun: "Chạy DCA ngay",
         rateDetail: function (r, m) {
           if (r <= 0) return "Tạm dừng DCA (tỉ lệ → 0).";
