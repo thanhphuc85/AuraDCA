@@ -609,7 +609,7 @@
     .brand img { width: 32px; height: 32px; }
     .brand b { font-size: 15px; }
     .brand span { display: none; }
-    .hd-right { gap: 6px; }
+    .hd-right { gap: 6px; margin-left: auto; }
     .hd-right .btn { font-size: 12px; padding: 8px 14px; }
     .hd-wallet-badge { font-size: 12px; padding: 6px 12px; }
     .hd-wallet-drop { width: 280px; right: -8px; }
@@ -678,7 +678,13 @@
   .wp-popover.open { display: block; animation: popIn .18s ease; }
   @keyframes popIn { from { opacity: 0; transform: translateY(-8px) scale(.97); } to { opacity: 1; transform: none; } }
   [data-theme="light"] .wp-popover { background: #fff; box-shadow: 0 24px 80px -16px rgba(0,0,0,.18), 0 0 0 1px rgba(0,0,0,.06); }
-  @media (max-width: 600px) { .wp-popover { width: calc(100vw - 24px); right: -12px; } }
+  /* On phones the wallet chip sits mid-header, so anchoring the wide popover to it
+     pushes its left edge off-screen. Pin the popover to the viewport instead; --wp-top
+     is set from the live header height in openWalletPopover() so it tracks any wrap/lang. */
+  @media (max-width: 600px) {
+    .wp-popover { position: fixed; top: var(--wp-top, 76px); left: 12px; right: 12px;
+      width: auto; max-height: calc(100vh - var(--wp-top, 76px) - 16px); }
+  }
 
   /* ---------- approval center ---------- */
   .approval-pending { border: 1px solid rgba(245,165,36,.25); background: rgba(245,165,36,.04); border-radius: 20px; padding: 20px; margin-bottom: 16px; }
@@ -3045,7 +3051,14 @@
     if (wrap && !wrap.contains(e.target)) closeWalletPopover();
   }
   function openWalletPopover() {
-    $("wpPopover").classList.add("open");
+    var pop = $("wpPopover");
+    // On phones the popover is viewport-pinned (position:fixed); drop it just below the
+    // real header so it clears any wrapped rows regardless of language/content.
+    if (window.matchMedia && window.matchMedia("(max-width: 600px)").matches) {
+      var hdr = document.querySelector("header");
+      if (hdr) pop.style.setProperty("--wp-top", Math.round(hdr.getBoundingClientRect().bottom + 8) + "px");
+    }
+    pop.classList.add("open");
     $("hdWalletWrap").classList.add("pop-open");
     setTimeout(function () { document.addEventListener("click", _onDocClickPopover); }, 0);
   }
