@@ -2302,6 +2302,25 @@
   fetchBtc();
   setInterval(fetchBtc, 10 * 60 * 1000);
 
+  // EURC balance read that survives Arc's aggressive RPC rate-limiting. Uses the
+  // resilient readTokenBalance (provider first, then public RPC with backoff, THROWS
+  // on failure) instead of tokenBalanceOf (which coerces a throttled call to a false
+  // "0x0" → 0). On a failed read it keeps the last good on-chain value, so EURC never
+  // flickers to 0 when the user navigates; only a genuine reading updates it. Falls
+  // back to the ledger figure only if the wallet was never read successfully.
+  var _lastEurc = {};
+  async function readEurcBalance(account) {
+    var key = account.toLowerCase();
+    try {
+      var v = Number(await readTokenBalance(ARC.eurc, account)) / 1e6;
+      if (isFinite(v)) { _lastEurc[key] = v; return v; }
+    } catch (e) {}
+    if (_lastEurc[key] != null) return _lastEurc[key];
+    var lu = _ledgerData && _ledgerData.users ? _ledgerData.users[key] : null;
+    var led = parseFloat((lu && lu.tokenBalances && lu.tokenBalances.EURC) || "0");
+    return isFinite(led) ? led : 0;
+  }
+
   var _walletRefreshTimer = null;
   function startWalletAutoRefresh() {
     if (_walletRefreshTimer) clearInterval(_walletRefreshTimer);
@@ -2317,13 +2336,9 @@
     try {
       var usdc = Number(await tokenBalanceOf(ARC.usdc, account)) / 1e6;
       var cirbtc = Number(await tokenBalanceOf(ARC.cirbtc, account)) / 1e8;
-      // EURC on-chain too (was omitted here, so a refresh wiped its value/USD from
-      // the total). Fall back to the ledger figure only if the RPC read fails.
-      var _lu = _ledgerData && _ledgerData.users ? _ledgerData.users[account.toLowerCase()] : null;
-      var eurc;
-      try { eurc = Number(await tokenBalanceOf(ARC.eurc, account)) / 1e6; }
-      catch (eErr) { eurc = parseFloat((_lu && _lu.tokenBalances && _lu.tokenBalances.EURC) || "0"); }
-      if (!isFinite(eurc)) eurc = 0;
+      // EURC read resiliently (keeps last good value on a throttled read) so the 30s
+      // refresh never blanks it to 0. Also re-include it in the total (was omitted).
+      var eurc = await readEurcBalance(account);
       var price = getImpliedPrice();
       var totalUsd = usdc + (cirbtc * price) + (eurc * _eurUsd);
       var balEl = document.querySelector(".wp-balance");
@@ -2589,10 +2604,10 @@
         nativeBal = Number(BigInt(nativeRaw || "0x0")) / 1e18;
         usdc = Number(await tokenBalanceOf(ARC.usdc, account)) / 1e6;
         cirbtc = Number(await tokenBalanceOf(ARC.cirbtc, account)) / 1e8;
-        eurc = Number(await tokenBalanceOf(ARC.eurc, account)) / 1e6;
       } catch (balErr) {
         status.textContent = "Connected but balance read failed — you may need to switch to Arc Testnet in your wallet.";
       }
+      eurc = await readEurcBalance(account); // resilient; never throws
       // Non-fatal: a network hiccup fetching recent txs must NOT abort a
       // successful connection (this was making MetaMask look like it failed).
       var txs = [];
@@ -2810,8 +2825,8 @@
         nb = Number(BigInt((await rpcCall("eth_getBalance", [real.address, "latest"])) || "0x0")) / 1e18;
         u2 = Number(await tokenBalanceOf(ARC.usdc, real.address)) / 1e6;
         cb2 = Number(await tokenBalanceOf(ARC.cirbtc, real.address)) / 1e8;
-        eu2 = Number(await tokenBalanceOf(ARC.eurc, real.address)) / 1e6;
       } catch (e) {}
+      eu2 = await readEurcBalance(real.address); // resilient; never throws
       var txs0 = []; try { txs0 = await fetchRecentTxs(real.address); } catch (e) {}
       try { showWalletProfile(real.address, nb, u2, cb2, "gmail", txs0, eu2); if (typeof renderPortfolio === "function") renderPortfolio(_ledgerData); }
       catch (re) { if (typeof updateHeaderWallet === "function") updateHeaderWallet(real.address, "gmail"); }
@@ -2871,8 +2886,8 @@
       nativeBal = Number(BigInt(nativeRaw || "0x0")) / 1e18;
       usdc = Number(await tokenBalanceOf(ARC.usdc, account)) / 1e6;
       cirbtc = Number(await tokenBalanceOf(ARC.cirbtc, account)) / 1e8;
-      eurc = Number(await tokenBalanceOf(ARC.eurc, account)) / 1e6;
     } catch (e3) {}
+    eurc = await readEurcBalance(account); // resilient; never throws
     var txs = [];
     try { txs = await fetchRecentTxs(account); } catch (e4) { txs = []; }
     try {
