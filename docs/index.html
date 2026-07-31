@@ -901,8 +901,11 @@
   /* ---------- AI assistant chat ---------- */
   .chat-fab { position: fixed; right: 22px; bottom: 22px; z-index: 900; width: 58px; height: 58px; border-radius: 50%; border: none; cursor: pointer; background: linear-gradient(135deg, #8a5cf6, #2f86e6); color: #fff; font-size: 24px; box-shadow: 0 10px 30px rgba(138,92,246,.45); display: flex; align-items: center; justify-content: center; transition: transform .18s, box-shadow .18s; }
   .chat-fab:hover { transform: translateY(-2px) scale(1.04); box-shadow: 0 14px 36px rgba(138,92,246,.55); }
-  .chat-fab.open { transform: scale(.9); opacity: .85; }
-  .chat-panel { position: fixed; right: 22px; bottom: 92px; z-index: 900; width: 380px; max-width: calc(100vw - 32px); height: 560px; max-height: calc(100vh - 130px); background: var(--glass); border: 1px solid var(--glass-brd); border-radius: 20px; backdrop-filter: blur(16px); box-shadow: 0 24px 60px rgba(0,0,0,.45); display: none; flex-direction: column; overflow: hidden; }
+  .chat-fab.open { transform: scale(.6); opacity: 0; pointer-events: none; }
+  .chat-backdrop { position: fixed; inset: 0; z-index: 899; background: rgba(6,4,16,.42); backdrop-filter: blur(3px); opacity: 0; pointer-events: none; transition: opacity .22s ease; }
+  .chat-backdrop.open { opacity: 1; pointer-events: auto; }
+  [data-theme="light"] .chat-backdrop { background: rgba(20,16,40,.28); }
+  .chat-panel { position: fixed; right: 22px; bottom: 22px; z-index: 900; width: 380px; max-width: calc(100vw - 32px); height: min(560px, calc(100vh - 96px)); max-height: calc(100vh - 96px); background: var(--glass); border: 1px solid var(--glass-brd); border-radius: 20px; backdrop-filter: blur(16px); box-shadow: 0 24px 60px rgba(0,0,0,.45); display: none; flex-direction: column; overflow: hidden; }
   .chat-panel.open { display: flex; animation: chatIn .22s ease; }
   @keyframes chatIn { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
   .chat-head { display: flex; align-items: center; gap: 10px; padding: 14px 16px; border-bottom: 1px solid var(--glass-brd); flex-shrink: 0; }
@@ -941,7 +944,7 @@
   .chat-inputbar textarea:focus { outline: none; border-color: #8a5cf6; }
   .chat-send { flex-shrink: 0; width: 40px; height: 40px; border-radius: 12px; border: none; background: linear-gradient(135deg, #8a5cf6, #2f86e6); color: #fff; font-size: 17px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
   .chat-send:disabled { opacity: .5; cursor: default; }
-  @media (max-width: 480px) { .chat-panel { right: 8px; left: 8px; width: auto; bottom: 84px; } .chat-fab { right: 16px; bottom: 16px; } }
+  @media (max-width: 480px) { .chat-panel { right: 8px; left: 8px; width: auto; bottom: 8px; height: calc(100vh - 16px); max-height: calc(100vh - 16px); } .chat-fab { right: 16px; bottom: 16px; } }
 </style>
 </head>
 <body>
@@ -5549,7 +5552,7 @@
   function setupChat() {
     var fab = $("chatFab"), panel = $("chatPanel"), body = $("chatBody"),
         input = $("chatInput"), sendBtn = $("chatSend"), closeBtn = $("chatClose"),
-        suggestWrap = $("chatSuggest");
+        suggestWrap = $("chatSuggest"), backdrop = $("chatBackdrop");
     if (!fab || !panel) return;
 
     var CT = {
@@ -5622,14 +5625,22 @@
 
     function openPanel() {
       panel.classList.add("open"); fab.classList.add("open");
+      if (backdrop) backdrop.classList.add("open");
       if (!greeted) { addBubble("bot", ct().greeting); greeted = true; }
       localize();
       setTimeout(function () { input.focus(); }, 120);
     }
-    function closePanel() { panel.classList.remove("open"); fab.classList.remove("open"); }
+    function closePanel() {
+      panel.classList.remove("open"); fab.classList.remove("open");
+      if (backdrop) backdrop.classList.remove("open");
+    }
 
     fab.addEventListener("click", function () { panel.classList.contains("open") ? closePanel() : openPanel(); });
     closeBtn.addEventListener("click", closePanel);
+    if (backdrop) backdrop.addEventListener("click", closePanel);
+    document.addEventListener("keydown", function (e) {
+      if (e.key === "Escape" && panel.classList.contains("open")) closePanel();
+    });
     input.addEventListener("input", function () { input.style.height = "auto"; input.style.height = Math.min(96, input.scrollHeight) + "px"; });
     input.addEventListener("keydown", function (e) { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); send(input.value); } });
     sendBtn.addEventListener("click", function () { send(input.value); });
@@ -5795,7 +5806,8 @@
 
 <!-- ---------- AI assistant chat widget ---------- -->
 <button class="chat-fab" id="chatFab" aria-label="Open AI assistant">💬</button>
-<div class="chat-panel" id="chatPanel" role="dialog" aria-label="AI assistant">
+<div class="chat-backdrop" id="chatBackdrop"></div>
+<div class="chat-panel" id="chatPanel" role="dialog" aria-modal="true" aria-label="AI assistant">
   <div class="chat-head">
     <div class="ch-avatar">🤖</div>
     <div>
