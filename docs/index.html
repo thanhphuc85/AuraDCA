@@ -4538,6 +4538,26 @@
       }
       var dc = num("schedDailyCap"); if (dc && dc > 0) sched.dailyCap = dc.toFixed(6);
       var wc = num("schedWeeklyCap"); if (wc && wc > 0) sched.weeklyCap = wc.toFixed(6);
+      // Hard-block internally-contradictory caps: the runtime silently clamps a buy to
+      // min(amountPerRun, dailyCap, weeklyCap), so saving these as-is would look "successful"
+      // while quietly capping spend far below what the user typed. Make the user fix it first.
+      function capErr(msg) { st.innerHTML = '<span style="color:var(--red);">⛔ ' + msg + '</span>'; }
+      function capNum(n) { return (Math.round(n * 1e6) / 1e6).toString(); }
+      if (dc && dc > 0 && amount > dc) {
+        capErr((t.schedErrPerRunOverDaily || "Amount per run ({run}) is above the daily cap ({cap}). Raise the daily cap or lower the amount.")
+          .replace("{run}", capNum(amount)).replace("{cap}", capNum(dc)));
+        return;
+      }
+      if (wc && wc > 0 && amount > wc) {
+        capErr((t.schedErrPerRunOverWeekly || "Amount per run ({run}) is above the weekly cap ({cap}). Raise the weekly cap or lower the amount.")
+          .replace("{run}", capNum(amount)).replace("{cap}", capNum(wc)));
+        return;
+      }
+      if (dc && dc > 0 && wc && wc > 0 && dc > wc) {
+        capErr((t.schedErrDailyOverWeekly || "Daily cap ({day}) is above the weekly cap ({week}). A weekly cap can't be smaller than a daily one.")
+          .replace("{day}", capNum(dc)).replace("{week}", capNum(wc)));
+        return;
+      }
       if (mode === "smart") {
         var dip = num("schedSmartDip"); if (dip && dip > 0) sched.smartDip = dip;
         var fear = num("schedSmartFear"); if (fear && fear > 0) sched.smartFear = fear;
@@ -5100,6 +5120,9 @@
       portWithdrawTitle: "Withdraw your tokens", portWithdrawSub: "Sign a message to verify your identity — withdrawal completes in 10–30 seconds.",
       rateTitle: "Your DCA schedule", rateSub: "Build exactly how the agent buys for you — frequency, amount per run, caps, and mode. Sign to save (no gas).",
       rateBtn: "Save schedule",
+      schedErrPerRunOverDaily: "Amount per run ({run}) is above the daily cap ({cap}). Raise the daily cap or lower the amount.",
+      schedErrPerRunOverWeekly: "Amount per run ({run}) is above the weekly cap ({cap}). Raise the weekly cap or lower the amount.",
+      schedErrDailyOverWeekly: "Daily cap ({day}) is above the weekly cap ({week}). A weekly cap can't be smaller than a daily one.",
       schedModeLabel: "Mode", rateModeAutoLbl: "🤖 Auto", rateModeManualLbl: "✋ Manual", rateModeSmartLbl: "🧠 Smart",
       schedFreqLabel: "Frequency", schedFreqDaily: "Daily", schedFreqHours: "Every X hours", schedFreqDays: "Every X days", schedFreqWeekly: "Weekly (pick days)",
       schedAmountLabel: "Amount per run (USDC)", schedEveryHours: "Every", schedHoursUnit: "hours", schedEveryDays: "Every", schedDaysUnit: "days",
@@ -5212,6 +5235,9 @@
       portWithdrawTitle: "Rút token", portWithdrawSub: "Ký xác nhận danh tính — rút tiền hoàn tất trong 10–30 giây.",
       rateTitle: "Lịch DCA của bạn", rateSub: "Tự thiết lập cách agent mua cho bạn — tần suất, số tiền mỗi lần, giới hạn, và chế độ. Ký để lưu (không tốn gas).",
       rateBtn: "Lưu lịch",
+      schedErrPerRunOverDaily: "Mỗi lần chạy ({run}) vượt giới hạn ngày ({cap}). Hãy tăng giới hạn ngày hoặc giảm số tiền mỗi lần.",
+      schedErrPerRunOverWeekly: "Mỗi lần chạy ({run}) vượt giới hạn tuần ({cap}). Hãy tăng giới hạn tuần hoặc giảm số tiền mỗi lần.",
+      schedErrDailyOverWeekly: "Giới hạn ngày ({day}) vượt giới hạn tuần ({week}). Giới hạn tuần không thể nhỏ hơn giới hạn ngày.",
       schedModeLabel: "Chế độ", rateModeAutoLbl: "🤖 Tự động", rateModeManualLbl: "✋ Thủ công", rateModeSmartLbl: "🧠 Thông minh",
       schedFreqLabel: "Tần suất", schedFreqDaily: "Hàng ngày", schedFreqHours: "Mỗi X giờ", schedFreqDays: "Mỗi X ngày", schedFreqWeekly: "Hàng tuần (chọn ngày)",
       schedAmountLabel: "Số tiền mỗi lần (USDC)", schedEveryHours: "Mỗi", schedHoursUnit: "giờ", schedEveryDays: "Mỗi", schedDaysUnit: "ngày",
