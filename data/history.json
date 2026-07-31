@@ -2592,5 +2592,29 @@
     "tokenOut": "cirBTC",
     "walletUsdcBalance": "324.742833459208488099",
     "message": "No buy this run: no user was due (0 scheduled USDC across 13 account(s))"
+  },
+  {
+    "date": "2026-07-31",
+    "timestamp": "2026-07-31T08:00:43.864Z",
+    "status": "success",
+    "requestedAmountUsdc": "6.000000",
+    "clampedAmountUsdc": "6.000000",
+    "boundBy": "user_schedule",
+    "tokenOut": "EURC",
+    "reasoning": "Rate-based DCA: 6 active user(s), executing ~6.000000 USDC this run (6.000000 live + 0.000000 paper).",
+    "txHash": "0xb8958ad86f7795fadf014e3499c551fe1f2cec3fd9ca00ffb8f23c1023443dd4",
+    "explorerUrl": "https://testnet.arcscan.app/tx/0xb8958ad86f7795fadf014e3499c551fe1f2cec3fd9ca00ffb8f23c1023443dd4",
+    "amountOut": "4.619384",
+    "walletUsdcBalance": "324.741753646856529351",
+    "message": "Swapped 6.000000 USDC -> EURC across 6 user(s)",
+    "x402": {
+      "resource": "/api/x402-brief",
+      "amountUsdcAtomic": "1000",
+      "payer": "0x57330Ff1AFA8a0996379402F536eC0df3227b163",
+      "payTo": "0xcAf34080F47f576F923962AD04dD7ddd86d8d85f",
+      "settled": false,
+      "mode": "verified-only",
+      "via": "http"
+    }
   }
 ]
