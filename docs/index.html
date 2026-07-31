@@ -164,6 +164,10 @@
   .agent-upgrade b { color: #ffd98a; font-weight: 700; }
   [data-theme="light"] .agent-upgrade { color: #92600a; background: rgba(245,158,11,.08); border-color: rgba(245,158,11,.28); }
   [data-theme="light"] .agent-upgrade b { color: #7a4e05; }
+  .agent-upgrade.live { color: #b8f0d6; background: rgba(52,211,153,.10); border-color: rgba(52,211,153,.34); }
+  .agent-upgrade.live b { color: #6ee7b7; }
+  [data-theme="light"] .agent-upgrade.live { color: #0f7a52; background: rgba(52,211,153,.10); border-color: rgba(52,211,153,.30); }
+  [data-theme="light"] .agent-upgrade.live b { color: #0b6b47; }
   .cta { display: flex; gap: 12px; margin: 28px 0 6px; flex-wrap: wrap; justify-content: center; }
 
   /* live stat band */
@@ -1064,7 +1068,7 @@
   <div class="hero" id="heroSection">
     <h1>An agent that <span class="grad">dollar-cost-averages</span> for you.</h1>
     <p><b>Claude</b> decides the strategy — <b>code owns every number that touches money.</b> Pick any token the network supports; each run pools everyone's buys by token and settles a real swap through Circle's Swap Kit on Arc Testnet, authorized by your own wallet. No server, no human in the loop.</p>
-    <div class="agent-upgrade" title="A direction we're building — not yet shipped: the agent pays for its own data & inference over x402 + Circle Gateway on Arc.">🚧 Agent-stack upgrade in progress — <b>x402 / Circle Nanopayments</b> on Arc</div>
+    <div class="agent-upgrade live" title="Live now: every agent run signs and verifies a real x402 USDC micro-payment (EIP-3009) for its market-brief input on Arc Testnet. On-chain settlement via Circle is the next step — kept verified-only on testnet.">✅ x402 live on Arc — the agent pays <b>USDC per run</b> for its market brief; on-chain settlement next</div>
     <div class="cta">
       <button class="btn" id="connectHero">Connect Wallet</button>
       <a class="btn ghost" href="https://github.com/thanhphuc85/AuraDCA" target="_blank" rel="noopener">View source ↗</a>
