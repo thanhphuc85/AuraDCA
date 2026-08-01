@@ -4373,8 +4373,18 @@
         $("portAllowance").textContent = fmt(Number(BigInt(allowRaw || "0x0")) / 1e6, 2);
       } catch (e) { $("portAllowance").textContent = "—"; }
       // Simulated tokens never settle on-chain — the paper value set above stands.
+      // Real DCA targets (cirBTC, EURC) read the wallet's live on-chain balance so
+      // the "In your wallet" card matches the wallet panel — both read on-chain,
+      // never the agent's ledger credit. The ledger figure rendered synchronously
+      // above stays as a fallback if the on-chain read fails.
       if (dcaToken === "cirBTC" && !isSimToken) {
         try { $("portCirBtc").textContent = fmt(Number(await tokenBalanceOf(ARC.cirbtc, acct)) / 1e8, 8); } catch (e) { $("portCirBtc").textContent = "—"; }
+      } else if (!isSimToken) {
+        var ONCHAIN = { EURC: { addr: ARC.eurc, dec: 1e6, dp: 6 } };
+        var oc = ONCHAIN[dcaToken];
+        if (oc && oc.addr) {
+          try { $("portCirBtc").textContent = fmt(Number(await tokenBalanceOf(oc.addr, acct)) / oc.dec, oc.dp); } catch (e) { /* keep ledger fallback */ }
+        }
       }
     })();
 
