@@ -30,11 +30,53 @@ export function facilitatorUrl(): string {
 }
 
 export interface GatewaySettleResult {
-  txHash: string;
-  explorerUrl: string;
+  transferId: string; // Circle Gateway transfer id (returned immediately by pay)
+  status: string; // Gateway transfer status: received | batched | confirmed | completed
+  txHash?: string; // on-chain settlement hash — set once the batch lands on-chain
+  explorerUrl?: string; // only when txHash is known
   amountUsdcAtomic: string; // atomic units actually settled (USDC, 6dp)
   payer: string;
   network: string; // CAIP-2
+}
+
+export interface GatewayTransferStatus {
+  status: string;
+  txHash: string | null;
+}
+
+/**
+ * Resolve a Gateway transfer id to its on-chain settlement hash.
+ *
+ * Gateway batches x402 payments, so `pay()` returns a transfer id immediately
+ * while the on-chain tx (and hash) lands a little later. This polls
+ * `GET /v1/x402/transfers/{id}` a bounded number of times until `txHash` is
+ * populated, returning the latest status either way (null txHash = still
+ * batching). `fetchImpl` is injectable for tests.
+ */
+export async function resolveGatewayTransfer(
+  transferId: string,
+  opts: { fetchImpl?: typeof fetch; tries?: number; delayMs?: number; baseUrl?: string } = {},
+): Promise<GatewayTransferStatus | null> {
+  const doFetch = opts.fetchImpl ?? fetch;
+  const base = opts.baseUrl ?? facilitatorUrl();
+  const tries = opts.tries ?? 5;
+  const delayMs = opts.delayMs ?? 3000;
+  const url = `${base}/v1/x402/transfers/${transferId}`;
+  for (let i = 0; i < tries; i++) {
+    try {
+      const r = await doFetch(url, { headers: { "content-type": "application/json" } });
+      if (r.ok) {
+        const j = (await r.json()) as { status?: string; txHash?: string | null };
+        const status = j.status ?? "unknown";
+        if (j.txHash) return { status, txHash: j.txHash };
+        if (i === tries - 1) return { status, txHash: null };
+      }
+    } catch {
+      /* transient — retry */
+    }
+    if (i < tries - 1) await new Promise((res) => setTimeout(res, delayMs));
+  }
+  return null;
 }
 
 // Structural subset of @circle-fin/x402-batching GatewayClient we depend on —
@@ -74,6 +116,10 @@ export async function settleBriefViaGateway(opts: {
   method?: "GET" | "POST";
   depositUsdc?: string;
   clientFactory?: GatewayClientFactory;
+  // On-chain hash resolution (Gateway batches, so the hash lands slightly later).
+  resolveFetch?: typeof fetch;
+  resolveTries?: number;
+  resolveDelayMs?: number;
 }): Promise<GatewaySettleResult> {
   const factory = opts.clientFactory ?? defaultFactory;
   const gateway = await factory(opts.privateKey);
@@ -93,10 +139,28 @@ export async function settleBriefViaGateway(opts: {
   }
 
   const res = await gateway.pay(opts.url, { method: opts.method ?? "GET" });
-  const txHash = res.transaction;
+  const transferId = res.transaction;
+
+  // Gateway returns a transfer id immediately; the on-chain hash lands once the
+  // batch settles. Best-effort resolve it (bounded) — if it isn't ready yet, the
+  // receipt still carries the transfer id so the dashboard can resolve it later.
+  let status = "received";
+  let txHash: string | undefined;
+  const resolved = await resolveGatewayTransfer(transferId, {
+    fetchImpl: opts.resolveFetch,
+    tries: opts.resolveTries,
+    delayMs: opts.resolveDelayMs,
+  });
+  if (resolved) {
+    status = resolved.status;
+    if (resolved.txHash) txHash = resolved.txHash;
+  }
+
   return {
+    transferId,
+    status,
     txHash,
-    explorerUrl: `${ARC_TESTNET_EXPLORER}/tx/${txHash}`,
+    explorerUrl: txHash ? `${ARC_TESTNET_EXPLORER}/tx/${txHash}` : undefined,
     amountUsdcAtomic: res.amount.toString(),
     payer: gateway.address,
     network: ARC_TESTNET_CAIP2,

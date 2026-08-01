@@ -33,11 +33,18 @@ async function main(): Promise<void> {
   if (deposit) logger.info(`Will top up the Gateway balance to ≥ ${deposit} USDC before paying if needed.`);
 
   const res = await settleBriefViaGateway({ privateKey: pk, url, depositUsdc: deposit });
-  logger.info(`✅ SETTLED ${res.amountUsdcAtomic} atomic USDC on-chain`);
-  logger.info(`   payer:   ${res.payer}`);
-  logger.info(`   network: ${res.network}`);
-  logger.info(`   tx:      ${res.txHash}`);
-  logger.info(`   explorer:${res.explorerUrl}`);
+  logger.info(`✅ SETTLED ${res.amountUsdcAtomic} atomic USDC via Circle Gateway`);
+  logger.info(`   payer:      ${res.payer}`);
+  logger.info(`   network:    ${res.network}`);
+  logger.info(`   transferId: ${res.transferId} (status: ${res.status})`);
+  if (res.txHash) {
+    logger.info(`   tx:         ${res.txHash}`);
+    logger.info(`   explorer:   ${res.explorerUrl}`);
+  } else {
+    logger.info(`   tx:         pending — Gateway is still batching this payment on-chain.`);
+    logger.info(`   Re-check:   https://gateway-api-testnet.circle.com/v1/x402/transfers/${res.transferId}`);
+    logger.info(`               (the dashboard auto-resolves the on-chain tx once the batch settles)`);
+  }
 }
 
 main().catch((err) => {

@@ -274,6 +274,8 @@ async function getX402Activity(limit: number): Promise<string> {
         settled: !!x.settled,
         mode: x.mode ?? null,
         via: x.via ?? null,
+        transferId: x.transferId ?? null,
+        settleStatus: x.settleStatus ?? null,
         txHash: x.txHash ?? null,
         explorerUrl: x.explorerUrl ?? null,
       };

@@ -4078,12 +4078,21 @@
         var x4Amt = Number(x4.amountUsdcAtomic) / 1e6;
         var x4Str = x4Amt.toFixed(x4Amt < 0.01 ? 4 : 2).replace(/\.?0+$/, '');
         var x4Settled = !!x4.settled;
-        var x4Link = x4.txHash ? (x4.explorerUrl || (ARC.explorer + '/tx/' + x4.txHash)) : '';
-        var x4Inner = '🧾 ' + x4Str + ' USDC brief' + (x4Settled ? ' · settled' : ' · verified') + (x4Link ? ' ↗' : '');
+        // Only a real on-chain 0x hash gets an arcscan link. Circle Gateway batches
+        // settlement, so a settled payment may only have a transfer id at first —
+        // shown as "settling" and upgraded to a tx link by resolveX402Badges().
+        var x4Hash = /^0x[0-9a-fA-F]{6,}$/.test(x4.txHash || '') ? x4.txHash : '';
+        var x4Pending = x4Settled && !x4Hash && x4.transferId;
+        var x4Link = x4Hash ? (x4.explorerUrl || (ARC.explorer + '/tx/' + x4Hash)) : '';
+        var x4State = x4Hash ? ' · settled' : (x4Pending ? ' · settling' : (x4Settled ? ' · settled' : ' · verified'));
+        var x4Inner = '🧾 ' + x4Str + ' USDC brief' + x4State + (x4Link ? ' ↗' : '');
         var x4Tip = 'x402: the agent paid ' + x4Str + ' USDC for its market-brief input'
-          + (x4Settled ? ' — settled on-chain via Circle Gateway' + (x4.txHash ? ' (tx ' + x4.txHash + ')' : '') : ' — authorization verified, not settled');
-        var x4Bg = x4Settled ? 'rgba(52,211,153,.14);color:var(--green)' : 'rgba(138,92,246,.12);color:var(--violet)';
-        var x4Span = '<span style="display:inline-block;font-family:ui-monospace,monospace;font-size:10.5px;padding:1px 6px;border-radius:6px;background:' + x4Bg + ';margin-right:6px;white-space:nowrap;" title="' + x4Tip.replace(/&/g, "&amp;").replace(/"/g, "&quot;") + '">' + x4Inner + '</span>';
+          + (x4Hash ? ' — settled on-chain via Circle Gateway (tx ' + x4Hash + ')'
+             : (x4Pending ? ' — settled via Circle Gateway; on-chain batch tx pending (transfer ' + x4.transferId + ')'
+                : (x4Settled ? ' — settled via Circle Gateway' : ' — authorization verified, not settled')));
+        var x4Bg = (x4Hash || x4Settled) ? 'rgba(52,211,153,.14);color:var(--green)' : 'rgba(138,92,246,.12);color:var(--violet)';
+        var x4Attr = x4Pending ? ' data-x402-transfer="' + x4.transferId + '"' : '';
+        var x4Span = '<span' + x4Attr + ' style="display:inline-block;font-family:ui-monospace,monospace;font-size:10.5px;padding:1px 6px;border-radius:6px;background:' + x4Bg + ';margin-right:6px;white-space:nowrap;" title="' + x4Tip.replace(/&/g, "&amp;").replace(/"/g, "&quot;") + '">' + x4Inner + '</span>';
         x4Badge = x4Link ? '<a href="' + x4Link + '" target="_blank" rel="noopener" style="text-decoration:none;">' + x4Span + '</a>' : x4Span;
       }
       return '<tr class="' + rowClass(e.status) + '">' +
@@ -4096,11 +4105,40 @@
         "<td>" + tx + "</td></tr>";
     }).join("");
     $("runsBody").innerHTML = rows || '<tr><td colspan="7"><div class="empty-state fade-in"><div class="empty-icon">🤖</div><p class="empty-title">No runs recorded yet</p><p class="empty-desc">The agent will record its first decision after the next daily cron run.</p></div></td></tr>';
+    resolveX402Badges();
 
     renderDailyChart(history);
     renderDonut(history);
     renderStrategy(history);
     renderPerformance(history);
+  }
+
+  // Circle Gateway batches x402 settlement, so a settled brief may only carry a
+  // transfer id at first. Resolve each pending transfer to its on-chain hash
+  // (Gateway API is CORS-open) and upgrade the badge to a real arcscan tx link.
+  function resolveX402Badges() {
+    var GW = "https://gateway-api-testnet.circle.com";
+    var pend = document.querySelectorAll('#runsBody span[data-x402-transfer]');
+    for (var i = 0; i < pend.length; i++) {
+      (function (span) {
+        var id = span.getAttribute('data-x402-transfer');
+        if (!id || span.getAttribute('data-x402-done')) return;
+        span.setAttribute('data-x402-done', '1');
+        fetch(GW + '/v1/x402/transfers/' + id, { headers: { 'content-type': 'application/json' } })
+          .then(function (r) { return r.ok ? r.json() : null; })
+          .then(function (j) {
+            if (!j || !j.txHash || !/^0x[0-9a-fA-F]{6,}$/.test(j.txHash)) return;
+            span.textContent = span.textContent.replace('· settling', '· settled') + ' ↗';
+            span.setAttribute('title', span.getAttribute('title').replace(/ — settled via Circle Gateway;.*/, ' — settled on-chain via Circle Gateway (tx ' + j.txHash + ')'));
+            if (span.parentNode && span.parentNode.tagName !== 'A') {
+              var a = document.createElement('a');
+              a.href = ARC.explorer + '/tx/' + j.txHash; a.target = '_blank'; a.rel = 'noopener'; a.style.textDecoration = 'none';
+              span.parentNode.insertBefore(a, span); a.appendChild(span);
+            }
+          })
+          .catch(function () { /* transient — badge stays "settling" */ });
+      })(pend[i]);
+    }
   }
   $("showAllRuns").addEventListener("click", function () {
     state.showAllRuns = !state.showAllRuns;

@@ -80,7 +80,9 @@ export interface HistoryEntry {
     mode: string;
     via: "http" | "in-process";
     // Present only when the brief payment settled on-chain (Circle Gateway).
-    txHash?: string;
+    transferId?: string; // Gateway transfer id — dashboard resolves the hash from it
+    settleStatus?: string; // Gateway transfer status (received | batched | confirmed…)
+    txHash?: string; // on-chain settlement hash, once the batch lands
     explorerUrl?: string;
   };
 }

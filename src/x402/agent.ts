@@ -16,8 +16,10 @@ export interface X402RunReceipt {
   settled: boolean;
   mode: string;
   via: "http" | "in-process";
-  // Present only when settled on-chain (Circle Gateway): the settlement tx.
-  txHash?: string;
+  // Present only when settled on-chain (Circle Gateway).
+  transferId?: string; // Gateway transfer id — lets the dashboard resolve the hash
+  settleStatus?: string; // Gateway transfer status (received | batched | confirmed…)
+  txHash?: string; // on-chain settlement hash, once the batch lands
   explorerUrl?: string;
 }
 
@@ -34,7 +36,7 @@ export interface X402RunReceipt {
  * sign→verify handshake in-process. Settlement stays gated off (verified-only).
  */
 export async function payForMarketBriefBestEffort(
-  opts: { settleClientFactory?: GatewayClientFactory } = {},
+  opts: { settleClientFactory?: GatewayClientFactory; settleResolveFetch?: typeof fetch } = {},
 ): Promise<X402RunReceipt | null> {
   try {
     if ((process.env.X402_ENABLED ?? "").trim().toLowerCase() !== "true") return null;
@@ -72,8 +74,10 @@ export async function payForMarketBriefBestEffort(
           url,
           depositUsdc: process.env.X402_DEPOSIT_USDC?.trim(),
           clientFactory: opts.settleClientFactory,
+          resolveFetch: opts.settleResolveFetch,
         });
-        logger.info(`x402: SETTLED ${settled.amountUsdcAtomic} atomic USDC for the market brief on-chain → ${settled.txHash}`);
+        const txNote = settled.txHash ? `tx ${settled.txHash}` : `transfer ${settled.transferId} (tx pending, status ${settled.status})`;
+        logger.info(`x402: SETTLED ${settled.amountUsdcAtomic} atomic USDC for the market brief on-chain → ${txNote}`);
         return {
           resource: RESOURCE,
           amountUsdcAtomic: settled.amountUsdcAtomic,
@@ -82,6 +86,8 @@ export async function payForMarketBriefBestEffort(
           settled: true,
           mode: "settled",
           via: "http",
+          transferId: settled.transferId,
+          settleStatus: settled.status,
           txHash: settled.txHash,
           explorerUrl: settled.explorerUrl,
         };

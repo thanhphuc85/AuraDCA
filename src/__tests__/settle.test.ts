@@ -1,8 +1,9 @@
-import { describe, it, expect, beforeEach, afterEach, vi } from "vitest";
+import { describe, it, expect, beforeEach, afterEach } from "vitest";
 import {
   isSettlementEnabled,
   facilitatorUrl,
   settleBriefViaGateway,
+  resolveGatewayTransfer,
   ARC_TESTNET_CAIP2,
   type GatewayPayClient,
 } from "../x402/settle.js";
@@ -13,7 +14,7 @@ function resetEnv() {
   delete process.env.X402_FACILITATOR_URL;
 }
 
-// A fake Circle Gateway client — records calls, returns a canned settlement.
+// A fake Circle Gateway client — records calls, returns a canned transfer id.
 function fakeClient(over: Partial<GatewayPayClient> = {}): GatewayPayClient & {
   deposits: string[];
   payCalls: string[];
@@ -33,10 +34,16 @@ function fakeClient(over: Partial<GatewayPayClient> = {}): GatewayPayClient & {
     },
     async pay(url: string) {
       payCalls.push(url);
-      return { amount: 1000n, formattedAmount: "0.001", transaction: "0xabc123def456", status: 200 };
+      // Gateway returns a transfer id (UUID-like), NOT an on-chain hash.
+      return { amount: 1000n, formattedAmount: "0.001", transaction: "transfer-uuid-1", status: 200 };
     },
     ...over,
   };
+}
+
+// A fake fetch that returns a canned Gateway transfer record.
+function fetchReturning(rec: { status?: string; txHash?: string | null }): typeof fetch {
+  return (async () => ({ ok: true, json: async () => rec })) as unknown as typeof fetch;
 }
 
 describe("x402 settlement — Circle Gateway rail", () => {
@@ -62,13 +69,16 @@ describe("x402 settlement — Circle Gateway rail", () => {
     expect(facilitatorUrl()).toBe("https://example.test");
   });
 
-  it("settles a brief and returns the tx hash + explorer link", async () => {
+  it("settles a brief and resolves the on-chain tx hash + explorer link", async () => {
     const client = fakeClient();
     const res = await settleBriefViaGateway({
       privateKey: "0xpk",
       url: "https://brief.example/api/x402-brief",
       clientFactory: async () => client,
+      resolveFetch: fetchReturning({ status: "confirmed", txHash: "0xabc123def456" }),
     });
+    expect(res.transferId).toBe("transfer-uuid-1");
+    expect(res.status).toBe("confirmed");
     expect(res.txHash).toBe("0xabc123def456");
     expect(res.explorerUrl).toBe("https://testnet.arcscan.app/tx/0xabc123def456");
     expect(res.amountUsdcAtomic).toBe("1000");
@@ -78,20 +88,33 @@ describe("x402 settlement — Circle Gateway rail", () => {
     expect(client.deposits).toEqual([]); // no deposit floor set → no top-up
   });
 
-  it("tops up the Gateway balance when below the deposit floor, then pays", async () => {
-    const client = fakeClient({
-      async getBalances() {
-        return { gateway: { available: 0n, formattedAvailable: "0" } };
-      },
-    });
+  it("returns the transfer id with tx pending when the batch has not settled yet", async () => {
     const res = await settleBriefViaGateway({
+      privateKey: "0xpk",
+      url: "https://brief.example",
+      clientFactory: async () => fakeClient(),
+      resolveFetch: fetchReturning({ status: "received", txHash: null }),
+      resolveTries: 1,
+      resolveDelayMs: 0,
+    });
+    expect(res.transferId).toBe("transfer-uuid-1");
+    expect(res.status).toBe("received");
+    expect(res.txHash).toBeUndefined();
+    expect(res.explorerUrl).toBeUndefined();
+  });
+
+  it("tops up the Gateway balance when below the deposit floor, then pays", async () => {
+    const client = fakeClient();
+    await settleBriefViaGateway({
       privateKey: "0xpk",
       url: "https://brief.example",
       depositUsdc: "1",
       clientFactory: async () => client,
+      resolveFetch: fetchReturning({ status: "received", txHash: null }),
+      resolveTries: 1,
+      resolveDelayMs: 0,
     });
     expect(client.deposits).toEqual(["1"]); // topped up before paying
-    expect(res.txHash).toBe("0xabc123def456");
   });
 
   it("does NOT top up when the Gateway balance already covers the floor", async () => {
@@ -105,6 +128,9 @@ describe("x402 settlement — Circle Gateway rail", () => {
       url: "https://brief.example",
       depositUsdc: "1",
       clientFactory: async () => client,
+      resolveFetch: fetchReturning({ status: "received", txHash: null }),
+      resolveTries: 1,
+      resolveDelayMs: 0,
     });
     expect(client.deposits).toEqual([]);
   });
@@ -120,8 +146,11 @@ describe("x402 settlement — Circle Gateway rail", () => {
       url: "https://brief.example",
       depositUsdc: "1",
       clientFactory: async () => client,
+      resolveFetch: fetchReturning({ status: "received", txHash: null }),
+      resolveTries: 1,
+      resolveDelayMs: 0,
     });
-    expect(res.txHash).toBe("0xabc123def456");
+    expect(res.transferId).toBe("transfer-uuid-1");
     expect(client.payCalls.length).toBe(1);
   });
 
@@ -134,5 +163,23 @@ describe("x402 settlement — Circle Gateway rail", () => {
     await expect(
       settleBriefViaGateway({ privateKey: "0xpk", url: "https://brief.example", clientFactory: async () => client }),
     ).rejects.toThrow("settlement rejected");
+  });
+
+  it("resolveGatewayTransfer returns the on-chain hash once present", async () => {
+    const r = await resolveGatewayTransfer("transfer-uuid-1", {
+      fetchImpl: fetchReturning({ status: "completed", txHash: "0xfeed" }),
+      tries: 3,
+      delayMs: 0,
+    });
+    expect(r).toEqual({ status: "completed", txHash: "0xfeed" });
+  });
+
+  it("resolveGatewayTransfer reports last status with null hash when still batching", async () => {
+    const r = await resolveGatewayTransfer("transfer-uuid-1", {
+      fetchImpl: fetchReturning({ status: "batched", txHash: null }),
+      tries: 2,
+      delayMs: 0,
+    });
+    expect(r).toEqual({ status: "batched", txHash: null });
   });
 });

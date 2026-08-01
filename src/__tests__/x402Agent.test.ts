@@ -71,15 +71,18 @@ describe("payForMarketBriefBestEffort — gated, best-effort run-loop hook", () 
         address: ADDR,
         async getBalances() { return { gateway: { available: 0n, formattedAvailable: "0" } }; },
         async deposit() { return { depositTxHash: "0xdep" }; },
-        async pay() { return { amount: 1000n, formattedAmount: "0.001", transaction: "0xSETTLED", status: 200 }; },
+        async pay() { return { amount: 1000n, formattedAmount: "0.001", transaction: "transfer-xyz", status: 200 }; },
       }),
+      settleResolveFetch: (async () => ({ ok: true, json: async () => ({ status: "confirmed", txHash: "0xONCHAINHASH" }) })) as unknown as typeof fetch,
     });
     expect(receipt).not.toBeNull();
     expect(receipt!.settled).toBe(true);
     expect(receipt!.mode).toBe("settled");
     expect(receipt!.via).toBe("http");
-    expect(receipt!.txHash).toBe("0xSETTLED");
-    expect(receipt!.explorerUrl).toBe("https://testnet.arcscan.app/tx/0xSETTLED");
+    expect(receipt!.transferId).toBe("transfer-xyz");
+    expect(receipt!.settleStatus).toBe("confirmed");
+    expect(receipt!.txHash).toBe("0xONCHAINHASH");
+    expect(receipt!.explorerUrl).toBe("https://testnet.arcscan.app/tx/0xONCHAINHASH");
     expect(receipt!.amountUsdcAtomic).toBe("1000");
   });
 
