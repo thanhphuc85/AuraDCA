@@ -1455,6 +1455,7 @@
           </div>
           <p class="cs" style="margin:8px 2px 0;" data-t="schedSmartHint">Dip/fear = when to buy. Sensitivity = how hard to lean in; Max = the ceiling. Blank = defaults (1× / 3×).</p>
           <p style="margin:8px 2px 0;font-size:11.5px;line-height:1.5;color:var(--amber);" data-t="schedSmartWarn">⚠️ Smart only buys when your conditions hold — if the market keeps rising, the agent may not buy for a long stretch. Use a lower threshold (2–3%) if you still want to keep buying regularly.</p>
+          <p style="margin:8px 2px 0;font-size:11.5px;line-height:1.5;color:var(--muted);" data-t="schedSmartFee">⚡ <b>Smart execution fee</b> — a flat <b>0.01 USDC</b> is charged each time Smart actually buys, deducted from your deposited balance and metered via x402. Charged only on a real (live) fill, never on paper fills. <span style="color:var(--violet);">Testnet demo.</span></p>
         </div>
       </div>
 
@@ -4095,13 +4096,23 @@
         var x4Span = '<span' + x4Attr + ' style="display:inline-block;font-family:ui-monospace,monospace;font-size:10.5px;padding:1px 6px;border-radius:6px;background:' + x4Bg + ';margin-right:6px;white-space:nowrap;" title="' + x4Tip.replace(/&/g, "&amp;").replace(/"/g, "&quot;") + '">' + x4Inner + '</span>';
         x4Badge = x4Link ? '<a href="' + x4Link + '" target="_blank" rel="noopener" style="text-decoration:none;">' + x4Span + '</a>' : x4Span;
       }
+      // Smart execution fee: "smart users paid X USDC to run their smart buy this
+      // run" — a testnet x402 pay-per-execution, accounted in the ledger.
+      var sf = e.smartFee, sfBadge = '';
+      if (sf && sf.totalUsdc != null) {
+        var sfTip = 'x402 smart execution fee: ' + sf.payerCount + ' smart user(s) charged '
+          + sf.feeUsdcEach + ' USDC each (' + sf.totalUsdc + ' USDC total) → treasury '
+          + sf.payTo + ' — testnet demo, deducted from deposited balance, not a real on-chain payment';
+        sfBadge = '<span style="display:inline-block;font-family:ui-monospace,monospace;font-size:10.5px;padding:1px 6px;border-radius:6px;background:rgba(138,92,246,.12);color:var(--violet);margin-right:6px;white-space:nowrap;" title="'
+          + sfTip.replace(/&/g, "&amp;").replace(/"/g, "&quot;") + '">⚡ ' + sf.totalUsdc + ' USDC smart fee · ' + sf.payerCount + ' payer' + (sf.payerCount === 1 ? '' : 's') + ' · testnet</span>';
+      }
       return '<tr class="' + rowClass(e.status) + '">' +
         "<td>" + (e.date || "") + "</td>" +
         '<td><span class="badge ' + statusClass(e.status) + '">' + statusLabel(e.status, e.boundBy) + "</span></td>" +
         '<td class="amt2">' + (e.requestedAmountUsdc != null ? e.requestedAmountUsdc : "—") + "</td>" +
         '<td class="amt2">' + (e.clampedAmountUsdc != null ? e.clampedAmountUsdc : "—") + "</td>" +
         "<td>" + (e.boundBy ? e.boundBy.replace(/_/g, " ") : "—") + "</td>" +
-        '<td class="reason">' + smartBadge + x4Badge + reason + "</td>" +
+        '<td class="reason">' + smartBadge + x4Badge + sfBadge + reason + "</td>" +
         "<td>" + tx + "</td></tr>";
     }).join("");
     $("runsBody").innerHTML = rows || '<tr><td colspan="7"><div class="empty-state fade-in"><div class="empty-icon">🤖</div><p class="empty-title">No runs recorded yet</p><p class="empty-desc">The agent will record its first decision after the next daily cron run.</p></div></td></tr>';
@@ -5236,6 +5247,7 @@
       schedWeekdaysLabel: "Run on (UTC)", schedDailyCap: "Daily cap (optional)", schedWeeklyCap: "Weekly cap (optional)",
       schedSmartLabel: "🧠 Smart conditions — only buy when…", schedDipLabel: "Dip from high ≥ (%)", schedFearLabel: "Fear & Greed <", schedSmartHint: "Leave a field blank to ignore it. Both set = both must hold.",
       schedSmartWarn: "⚠️ Smart only buys when your conditions hold — if the market keeps rising, the agent may not buy for a long stretch. Use a lower threshold (2–3%) if you still want to keep buying regularly.",
+      schedSmartFee: "⚡ <b>Smart execution fee</b> — a flat <b>0.01 USDC</b> is charged each time Smart actually buys, deducted from your deposited balance and metered via x402. Charged only on a real (live) fill, never on paper fills. <span style=\"color:var(--violet);\">Testnet demo.</span>",
       rateModeLabel: "Quick DCA modes — deploy your balance over (or type any amount above):",
       rateModeMax: "🚀 Max · ~1d", rateModeAggr: "⚡ Aggressive · 7d", rateModeFast: "Fast · 14d", rateModeBal: "Balanced · 30d", rateModeSlow: "🐢 Slow · 90d",
       statSuccess: "Success", statSimulated: "Simulated (paper)", statDry: "Dry run", statSwapUnavail: "Swap route unavailable",
@@ -5351,6 +5363,7 @@
       schedWeekdaysLabel: "Chạy vào (UTC)", schedDailyCap: "Giới hạn/ngày (tuỳ chọn)", schedWeeklyCap: "Giới hạn/tuần (tuỳ chọn)",
       schedSmartLabel: "🧠 Điều kiện Smart — chỉ mua khi…", schedDipLabel: "Giảm từ đỉnh ≥ (%)", schedFearLabel: "Fear & Greed <", schedSmartHint: "Để trống một ô để bỏ qua. Đặt cả hai = phải thoả cả hai.",
       schedSmartWarn: "⚠️ Smart chỉ mua khi điều kiện của bạn thoả — nếu thị trường tăng liên tục, agent có thể không mua trong thời gian dài. Đặt ngưỡng thấp (2–3%) nếu bạn vẫn muốn mua đều.",
+      schedSmartFee: "⚡ <b>Phí thực thi Smart</b> — mỗi lần Smart thực sự mua sẽ thu <b>0.01 USDC</b>, trừ từ số dư đã nạp của bạn và đo qua x402. Chỉ thu khi có lệnh mua thật (live), không thu với paper fill. <span style=\"color:var(--violet);\">Demo testnet.</span>",
       rateModeLabel: "Chế độ DCA nhanh — giải ngân số dư trong (hoặc nhập số bất kỳ ở trên):",
       rateModeMax: "🚀 Max · ~1 ngày", rateModeAggr: "⚡ Mạnh · 7 ngày", rateModeFast: "Nhanh · 14 ngày", rateModeBal: "Cân bằng · 30 ngày", rateModeSlow: "🐢 Chậm · 90 ngày",
       statSuccess: "Thành công", statSimulated: "Mô phỏng (paper)", statDry: "Chạy thử", statSwapUnavail: "Tuyến swap tạm ngưng",

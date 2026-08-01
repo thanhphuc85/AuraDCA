@@ -85,6 +85,18 @@ export interface HistoryEntry {
     txHash?: string; // on-chain settlement hash, once the batch lands
     explorerUrl?: string;
   };
+  // Present when smart-mode users were charged the metered execution fee this run
+  // (gated by X402_SMART_FEE_ENABLED). Testnet demo: a flat USDC fee per smart user
+  // whose LIVE buy actually executed, deducted from their deposited balance and
+  // framed as an x402 pay-per-execution. Off the swap path — a paper fill is never
+  // charged. See src/x402/smartFee.ts.
+  smartFee?: {
+    feeUsdcEach: string; // flat fee charged per smart user this run
+    totalUsdc: string; // sum charged across all smart payers this run
+    payerCount: number; // how many smart users were charged
+    payTo: string; // treasury address the fee accrues to
+    testnet: true; // this is a demo fee, never a real on-chain user payment
+  };
 }
 
 export interface DecisionContext {
@@ -188,6 +200,10 @@ export interface UserAccount {
   dcaRunsPerDay?: 1 | 2 | 3;
 
   lastChargedAt?: string; // ISO timestamp of the last run that spent for this user
+
+  // Cumulative smart-mode execution fees paid (testnet demo), in USDC. Incremented
+  // by chargeSmartExecutionFee each run a smart LIVE buy executes for this user.
+  totalSmartFeesPaidUsdc?: string;
 }
 
 // Default deploy horizon (days) used to derive a user's auto rate = deposit / horizon.

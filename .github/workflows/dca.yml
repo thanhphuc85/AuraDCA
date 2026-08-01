@@ -99,6 +99,10 @@ jobs:
           X402_BRIEF_URL: ${{ vars.X402_BRIEF_URL }}
           X402_SETTLE_ENABLED: ${{ vars.X402_SETTLE_ENABLED }}
           X402_DEPOSIT_USDC: ${{ vars.X402_DEPOSIT_USDC }}
+          # Smart execution fee (testnet demo). Off unless X402_SMART_FEE_ENABLED=true;
+          # X402_SMART_FEE_USDC overrides the 0.01 default. Charged only on live fills.
+          X402_SMART_FEE_ENABLED: ${{ vars.X402_SMART_FEE_ENABLED }}
+          X402_SMART_FEE_USDC: ${{ vars.X402_SMART_FEE_USDC }}
           DCA_BASE_AMOUNT: ${{ vars.DCA_BASE_AMOUNT }}
           DCA_DIP_MILD_THRESHOLD: ${{ vars.DCA_DIP_MILD_THRESHOLD }}
           DCA_DIP_MODERATE_THRESHOLD: ${{ vars.DCA_DIP_MODERATE_THRESHOLD }}

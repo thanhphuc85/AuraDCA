@@ -5,6 +5,7 @@ import { readReflections, appendReflection } from "./history/reflectionStore.js"
 import { readLedger, writeLedger, ensureDefaultRates } from "./ledger/store.js";
 import { scanDeposits } from "./ledger/scanner.js";
 import { computeScheduledSpends, applyScheduledDistribution, applySimulatedDistribution, groupSpendsByToken, smartSizeMultiplier, activeDailyBudgetTotal, splitScheduledBySettlement } from "./ledger/schedule.js";
+import type { UserSpend } from "./ledger/schedule.js";
 import { computeAllowanceSpends, pullUsdcFromUser, sendTokenToUser } from "./ledger/allowance.js";
 import { requestWithdrawal, processPendingWithdrawals } from "./ledger/withdraw.js";
 import { ARC_TESTNET_RPC, ARC_USDC_CONTRACT, ARC_CIRBTC_CONTRACT, dcaTokenInfo } from "./ledger/constants.js";
@@ -18,6 +19,7 @@ import { fetchCirBtcPriceUsd } from "./price/priceFeed.js";
 import { readPrices, appendPrice } from "./price/priceStore.js";
 import { executeSwap, SwapExecutionError } from "./swap/swapKit.js";
 import { payForMarketBriefBestEffort } from "./x402/agent.js";
+import { chargeSmartExecutionFee } from "./x402/smartFee.js";
 import type { ClampedDecision, DecisionContext, HistoryEntry, Ledger, RunStatus } from "./types.js";
 import { logger } from "./logger.js";
 import { notifyAll } from "./notify.js";
@@ -531,6 +533,10 @@ export async function runDailyDca(config: AppConfig): Promise<RunOutcome> {
   const groups = groupSpendsByToken(schedule.spends);
   const tokens = [...groups.keys()].sort(); // deterministic settlement order
   const entries: HistoryEntry[] = [];
+  // Spends whose LIVE (real-swap) fill actually executed this run — the sole basis
+  // for the smart execution fee. Paper fills and dry runs are never added, so they
+  // are never charged. Filled in the real-swap success branch below.
+  const liveExecutedSpends: UserSpend[] = [];
 
   // The market snapshot that drove smart-mode sizing this run, and the base
   // (sensitivity 1) multiplier it produced — recorded on any group that had a
@@ -627,6 +633,9 @@ export async function runDailyDca(config: AppConfig): Promise<RunOutcome> {
       logger.info(swapResult.dryRun ? `Dry run: ${token} swap skipped` : `Swap executed [${token}]: ${swapResult.txHash}`);
       if (!swapResult.dryRun && swapResult.amountOut) {
         applyScheduledDistribution(ledger, groupSpends, groupExecStr, swapResult.amountOut, timestamp, token, info.decimals);
+        // This live group settled — its smart participants are now eligible for the
+        // execution fee (charged once, after the loop, before the ledger is saved).
+        liveExecutedSpends.push(...groupSpends);
       }
       entries.push({
         date, timestamp,
@@ -654,7 +663,13 @@ export async function runDailyDca(config: AppConfig): Promise<RunOutcome> {
     }
   }
 
+  // x402 smart execution fee (testnet demo, gated): debit each smart user whose
+  // LIVE buy executed this run, before the ledger is persisted below. Best-effort
+  // and off the swap path — returns null (no-op) when disabled or nobody qualifies.
+  const smartFeeReceipt = chargeSmartExecutionFee(ledger, liveExecutedSpends, timestamp);
+
   await saveLedger(ledger);
   if (x402Receipt) for (const e of entries) e.x402 = x402Receipt;
+  if (smartFeeReceipt) for (const e of entries) e.smartFee = smartFeeReceipt;
   return emitRunEntries(entries, config.discordWebhookUrl, refCtx);
 }
