@@ -4097,14 +4097,25 @@
         x4Badge = x4Link ? '<a href="' + x4Link + '" target="_blank" rel="noopener" style="text-decoration:none;">' + x4Span + '</a>' : x4Span;
       }
       // Smart execution fee: "smart users paid X USDC to run their smart buy this
-      // run" — a testnet x402 pay-per-execution, accounted in the ledger.
+      // run" — a testnet x402 pay-per-execution. Ledger-accounted by default; when
+      // settled on-chain via Circle Gateway (Nanopayments) it gains a real tx hash,
+      // resolved from the transfer id by resolveX402Badges() just like the brief.
       var sf = e.smartFee, sfBadge = '';
       if (sf && sf.totalUsdc != null) {
-        var sfTip = 'x402 smart execution fee: ' + sf.payerCount + ' smart user(s) charged '
-          + sf.feeUsdcEach + ' USDC each (' + sf.totalUsdc + ' USDC total) → treasury '
-          + sf.payTo + ' — testnet demo, deducted from deposited balance, not a real on-chain payment';
-        sfBadge = '<span style="display:inline-block;font-family:ui-monospace,monospace;font-size:10.5px;padding:1px 6px;border-radius:6px;background:rgba(138,92,246,.12);color:var(--violet);margin-right:6px;white-space:nowrap;" title="'
-          + sfTip.replace(/&/g, "&amp;").replace(/"/g, "&quot;") + '">⚡ ' + sf.totalUsdc + ' USDC smart fee · ' + sf.payerCount + ' payer' + (sf.payerCount === 1 ? '' : 's') + ' · testnet</span>';
+        var sfHash = /^0x[0-9a-fA-F]{6,}$/.test(sf.txHash || '') ? sf.txHash : '';
+        var sfPending = !!sf.settled && !sfHash && sf.transferId;
+        var sfLink = sfHash ? (sf.explorerUrl || (ARC.explorer + '/tx/' + sfHash)) : '';
+        var sfState = sfHash ? ' · settled' : (sfPending ? ' · settling' : ' · testnet');
+        var sfInner = '⚡ ' + sf.totalUsdc + ' USDC smart fee · ' + sf.payerCount + ' payer' + (sf.payerCount === 1 ? '' : 's') + sfState + (sfLink ? ' ↗' : '');
+        var sfTip = 'x402 smart execution fee: ' + sf.payerCount + ' smart user(s) charged ' + sf.feeUsdcEach + ' USDC each (' + sf.totalUsdc + ' USDC total) → ' + sf.payTo
+          + (sfHash ? ' — settled on-chain via Circle Gateway (tx ' + sfHash + ')'
+             : (sfPending ? ' — settled via Circle Gateway; on-chain batch tx pending (transfer ' + sf.transferId + ')'
+                : ' — testnet demo, deducted from deposited balance, ledger-accounted (not settled on-chain)'));
+        var sfBg = sfHash ? 'rgba(52,211,153,.14);color:var(--green)' : 'rgba(138,92,246,.12);color:var(--violet)';
+        var sfAttr = sfPending ? ' data-x402-transfer="' + sf.transferId + '"' : '';
+        var sfSpan = '<span' + sfAttr + ' style="display:inline-block;font-family:ui-monospace,monospace;font-size:10.5px;padding:1px 6px;border-radius:6px;background:' + sfBg + ';margin-right:6px;white-space:nowrap;" title="'
+          + sfTip.replace(/&/g, "&amp;").replace(/"/g, "&quot;") + '">' + sfInner + '</span>';
+        sfBadge = sfLink ? '<a href="' + sfLink + '" target="_blank" rel="noopener" style="text-decoration:none;">' + sfSpan + '</a>' : sfSpan;
       }
       return '<tr class="' + rowClass(e.status) + '">' +
         "<td>" + (e.date || "") + "</td>" +

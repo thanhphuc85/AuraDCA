@@ -30,6 +30,13 @@ export interface SmartFeeReceipt {
   payerCount: number; // how many smart users were charged (fee > 0)
   payTo: string; // treasury address the fee accrues to
   testnet: true; // demo fee — never a real on-chain user payment
+  // Filled by run.ts when the collected fee is settled on-chain via Circle Gateway
+  // (X402_SETTLE_ENABLED + X402_SMART_FEE_URL). Absent = ledger-accounted only.
+  settled?: boolean;
+  transferId?: string;
+  settleStatus?: string;
+  txHash?: string;
+  explorerUrl?: string;
 }
 
 export function isSmartFeeEnabled(): boolean {

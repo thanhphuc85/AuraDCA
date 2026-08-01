@@ -3,6 +3,7 @@ import {
   isSettlementEnabled,
   facilitatorUrl,
   settleBriefViaGateway,
+  settleSmartFeeViaGateway,
   resolveGatewayTransfer,
   ARC_TESTNET_CAIP2,
   type GatewayPayClient,
@@ -181,5 +182,58 @@ describe("x402 settlement — Circle Gateway rail", () => {
       delayMs: 0,
     });
     expect(r).toEqual({ status: "batched", txHash: null });
+  });
+});
+
+describe("settleSmartFeeViaGateway — the fee's Nanopayment settler", () => {
+  beforeEach(resetEnv);
+  afterEach(() => {
+    resetEnv();
+    Object.assign(process.env, SAVED);
+  });
+
+  it("appends the fee amount as ?amount= and settles on-chain", async () => {
+    const client = fakeClient();
+    const res = await settleSmartFeeViaGateway({
+      privateKey: "0xpk",
+      url: "https://aura-dca.xyz/api/x402-smart-fee",
+      amountUsdc: "0.020000",
+      clientFactory: async () => client,
+      resolveFetch: fetchReturning({ status: "confirmed", txHash: "0xfee123" }),
+    });
+    expect(client.payCalls).toEqual(["https://aura-dca.xyz/api/x402-smart-fee?amount=0.020000"]);
+    expect(res.txHash).toBe("0xfee123");
+    expect(res.transferId).toBe("transfer-uuid-1");
+    expect(res.network).toBe(ARC_TESTNET_CAIP2);
+  });
+
+  it("uses & as the separator when the URL already has a query string", async () => {
+    const client = fakeClient();
+    await settleSmartFeeViaGateway({
+      privateKey: "0xpk",
+      url: "https://fee.example/x402-smart-fee?v=1",
+      amountUsdc: "0.010000",
+      clientFactory: async () => client,
+      resolveFetch: fetchReturning({ status: "received", txHash: null }),
+      resolveTries: 1,
+      resolveDelayMs: 0,
+    });
+    expect(client.payCalls).toEqual(["https://fee.example/x402-smart-fee?v=1&amount=0.010000"]);
+  });
+
+  it("propagates a settlement failure so the run keeps the ledger-only fee", async () => {
+    const client = fakeClient({
+      async pay() {
+        throw new Error("gateway rejected");
+      },
+    });
+    await expect(
+      settleSmartFeeViaGateway({
+        privateKey: "0xpk",
+        url: "https://fee.example",
+        amountUsdc: "0.01",
+        clientFactory: async () => client,
+      }),
+    ).rejects.toThrow("gateway rejected");
   });
 });

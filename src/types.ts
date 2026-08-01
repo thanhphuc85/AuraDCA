@@ -96,6 +96,14 @@ export interface HistoryEntry {
     payerCount: number; // how many smart users were charged
     payTo: string; // treasury address the fee accrues to
     testnet: true; // this is a demo fee, never a real on-chain user payment
+    // Present when the run's collected fee was SETTLED on-chain as a single Circle
+    // Gateway Nanopayment (agent → fee-collector), gated by X402_SETTLE_ENABLED +
+    // X402_SMART_FEE_URL. Absent = ledger-accounted only (the default).
+    settled?: boolean;
+    transferId?: string; // Gateway transfer id — dashboard resolves the hash from it
+    settleStatus?: string; // Gateway transfer status (received | batched | confirmed…)
+    txHash?: string; // on-chain settlement hash, once the batch lands
+    explorerUrl?: string;
   };
 }
 

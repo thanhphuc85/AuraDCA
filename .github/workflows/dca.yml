@@ -103,6 +103,10 @@ jobs:
           # X402_SMART_FEE_USDC overrides the 0.01 default. Charged only on live fills.
           X402_SMART_FEE_ENABLED: ${{ vars.X402_SMART_FEE_ENABLED }}
           X402_SMART_FEE_USDC: ${{ vars.X402_SMART_FEE_USDC }}
+          # On-chain settlement of the collected fee (Circle Gateway Nanopayments).
+          # Needs X402_SETTLE_ENABLED=true + this URL; unset => fee stays ledger-only.
+          X402_SMART_FEE_URL: ${{ vars.X402_SMART_FEE_URL }}
+          X402_SMART_FEE_MAX_USDC: ${{ vars.X402_SMART_FEE_MAX_USDC }}
           DCA_BASE_AMOUNT: ${{ vars.DCA_BASE_AMOUNT }}
           DCA_DIP_MILD_THRESHOLD: ${{ vars.DCA_DIP_MILD_THRESHOLD }}
           DCA_DIP_MODERATE_THRESHOLD: ${{ vars.DCA_DIP_MODERATE_THRESHOLD }}

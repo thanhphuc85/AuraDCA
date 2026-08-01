@@ -102,15 +102,7 @@ async function defaultFactory(privateKey: string): Promise<GatewayPayClient> {
   }) as unknown as GatewayPayClient;
 }
 
-/**
- * Pay for a Gateway-metered x402 resource and SETTLE it on-chain. Returns the
- * settlement tx hash, or throws — the caller decides whether to fall back.
- *
- * If `depositUsdc` is set and the Gateway available balance is below it, tops the
- * balance up first (needs USDC + native gas in the wallet); a failed top-up is
- * non-fatal — we still attempt the (gasless) pay against whatever balance exists.
- */
-export async function settleBriefViaGateway(opts: {
+export interface SettleResourceOpts {
   privateKey: string;
   url: string;
   method?: "GET" | "POST";
@@ -120,7 +112,21 @@ export async function settleBriefViaGateway(opts: {
   resolveFetch?: typeof fetch;
   resolveTries?: number;
   resolveDelayMs?: number;
-}): Promise<GatewaySettleResult> {
+}
+
+/**
+ * Pay for a Gateway-metered x402 resource and SETTLE it on-chain. Returns the
+ * settlement tx hash, or throws — the caller decides whether to fall back.
+ *
+ * If `depositUsdc` is set and the Gateway available balance is below it, tops the
+ * balance up first (needs USDC + native gas in the wallet); a failed top-up is
+ * non-fatal — we still attempt the (gasless) pay against whatever balance exists.
+ *
+ * The amount settled is whatever the resource's 402 requires, not a caller input —
+ * so a metered endpoint (fixed or query-driven price) is the sole authority on the
+ * figure. This is the shared core behind both the brief and the smart-fee settlers.
+ */
+export async function settleResourceViaGateway(opts: SettleResourceOpts): Promise<GatewaySettleResult> {
   const factory = opts.clientFactory ?? defaultFactory;
   const gateway = await factory(opts.privateKey);
 
@@ -165,4 +171,27 @@ export async function settleBriefViaGateway(opts: {
     payer: gateway.address,
     network: ARC_TESTNET_CAIP2,
   };
+}
+
+/** Settle a paid market brief on-chain. Thin wrapper over settleResourceViaGateway. */
+export async function settleBriefViaGateway(opts: SettleResourceOpts): Promise<GatewaySettleResult> {
+  return settleResourceViaGateway(opts);
+}
+
+/**
+ * Settle a run's collected smart execution fee on-chain as a single Circle Gateway
+ * Nanopayment (agent → fee-collector). The fee endpoint is query-driven: we pass
+ * the run's total fee as `?amount=` (decimal USDC), and the endpoint declares that
+ * as the 402 price — so the endpoint remains the authority on the settled figure,
+ * clamped there to a hard ceiling. `amountUsdc` is the ledger total already
+ * debited from users; a mismatch (endpoint clamp) is fine — the receipt reports
+ * what actually settled. Throws on failure; the caller keeps the ledger-only fee.
+ */
+export async function settleSmartFeeViaGateway(
+  opts: Omit<SettleResourceOpts, "url" | "method"> & { url: string; amountUsdc: string },
+): Promise<GatewaySettleResult> {
+  const { url, amountUsdc, ...rest } = opts;
+  const sep = url.includes("?") ? "&" : "?";
+  const feeUrl = `${url}${sep}amount=${encodeURIComponent(amountUsdc)}`;
+  return settleResourceViaGateway({ ...rest, url: feeUrl, method: "GET" });
 }

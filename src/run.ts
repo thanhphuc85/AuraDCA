@@ -20,6 +20,7 @@ import { readPrices, appendPrice } from "./price/priceStore.js";
 import { executeSwap, SwapExecutionError } from "./swap/swapKit.js";
 import { payForMarketBriefBestEffort } from "./x402/agent.js";
 import { chargeSmartExecutionFee } from "./x402/smartFee.js";
+import { isSettlementEnabled, settleSmartFeeViaGateway } from "./x402/settle.js";
 import type { ClampedDecision, DecisionContext, HistoryEntry, Ledger, RunStatus } from "./types.js";
 import { logger } from "./logger.js";
 import { notifyAll } from "./notify.js";
@@ -669,6 +670,35 @@ export async function runDailyDca(config: AppConfig): Promise<RunOutcome> {
   const smartFeeReceipt = chargeSmartExecutionFee(ledger, liveExecutedSpends, timestamp);
 
   await saveLedger(ledger);
+
+  // Best-effort: settle the run's collected smart fee on-chain as ONE Circle
+  // Gateway Nanopayment (agent → fee-collector). Gated by X402_SETTLE_ENABLED +
+  // X402_SMART_FEE_URL; inert otherwise, leaving the fee ledger-accounted only.
+  // Never throws and never touches the ledger — a settle failure just means the
+  // badge stays "ledger" instead of gaining a tx hash.
+  if (smartFeeReceipt && isSettlementEnabled()) {
+    const feeUrl = process.env.X402_SMART_FEE_URL?.trim();
+    const pk = process.env.X402_PAYER_PRIVATE_KEY?.trim();
+    if (feeUrl && pk) {
+      try {
+        const settled = await settleSmartFeeViaGateway({
+          privateKey: pk,
+          url: feeUrl,
+          amountUsdc: smartFeeReceipt.totalUsdc,
+          depositUsdc: process.env.X402_DEPOSIT_USDC?.trim(),
+        });
+        smartFeeReceipt.settled = true;
+        smartFeeReceipt.transferId = settled.transferId;
+        smartFeeReceipt.settleStatus = settled.status;
+        smartFeeReceipt.txHash = settled.txHash;
+        smartFeeReceipt.explorerUrl = settled.explorerUrl;
+        logger.info(`x402 smart fee: settled ${smartFeeReceipt.totalUsdc} USDC on-chain → ${settled.txHash ?? `transfer ${settled.transferId} (tx pending, status ${settled.status})`}`);
+      } catch (err) {
+        logger.warn(`x402 smart fee: on-chain settlement failed (${(err as Error).message}) — fee stays ledger-only`);
+      }
+    }
+  }
+
   if (x402Receipt) for (const e of entries) e.x402 = x402Receipt;
   if (smartFeeReceipt) for (const e of entries) e.smartFee = smartFeeReceipt;
   return emitRunEntries(entries, config.discordWebhookUrl, refCtx);
