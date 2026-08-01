@@ -45,6 +45,14 @@ function buildMarkdown(entry: HistoryEntry): string {
     lines.push(`| x402 input | paid ${x.amountUsdcAtomic} atomic USDC → ${x.payTo.slice(0, 10)}… (${tail}) |`);
   }
 
+  if (entry.smartFee) {
+    const f = entry.smartFee;
+    const tail = f.settled
+      ? (f.txHash ? `settled — [${f.txHash.slice(0, 10)}…](${f.explorerUrl || `${ARC_EXPLORER}/tx/${f.txHash}`})` : "settled (tx pending)")
+      : "ledger-only";
+    lines.push(`| smart fee | ${fmtAmt(f.totalUsdc)} USDC × ${f.payerCount} payer(s) → ${f.payTo.slice(0, 10)}… (${tail}) |`);
+  }
+
   lines.push("");
   if (entry.reasoning) lines.push(`> **Reasoning:** ${entry.reasoning}`, "");
   if (entry.message) lines.push(`> ${entry.message}`, "");
@@ -160,6 +168,13 @@ function buildTelegramHtml(entry: HistoryEntry): string {
       ? (x.txHash ? `<a href="${escHtml(x.explorerUrl || `${ARC_EXPLORER}/tx/${x.txHash}`)}">settled ↗</a>` : "settled (tx pending)")
       : "verified-only";
     lines.push(`🧾 x402: paid ${escHtml(x.amountUsdcAtomic)} atomic USDC for its brief → <code>${escHtml(x.payTo.slice(0, 10))}…</code> (${tail})`);
+  }
+  if (entry.smartFee) {
+    const f = entry.smartFee;
+    const tail = f.settled
+      ? (f.txHash ? `<a href="${escHtml(f.explorerUrl || `${ARC_EXPLORER}/tx/${f.txHash}`)}">settled ↗</a>` : "settled (tx pending)")
+      : "ledger-only";
+    lines.push(`⚡ smart fee: ${escHtml(fmtAmt(f.totalUsdc))} USDC × ${f.payerCount} payer${f.payerCount === 1 ? "" : "s"} → <code>${escHtml(f.payTo.slice(0, 10))}…</code> (${tail})`);
   }
   if (entry.txHash) {
     const url = entry.explorerUrl || `${ARC_EXPLORER}/tx/${entry.txHash}`;
