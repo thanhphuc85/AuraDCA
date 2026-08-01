@@ -52,3 +52,22 @@ token with write access to this repo.
    site's own `/api/withdraw`.
 
 Use the Vercel URL in place of the old GitHub Pages link once it works.
+
+## 5. Skip deploys for the hourly cron (Ignored Build Step)
+
+The DCA cron commits `data/*.json` every run ("chore: record DCA run …"). Nothing in
+the deployment reads those files — the frontend fetches the ledger/history from
+`raw.githubusercontent.com` at runtime and the API reads it via the GitHub API — so
+deploying a data-only commit changes no served asset and just burns the Hobby deploy
+quota (~96/day). Skip them:
+
+**Vercel → Project → Settings → Build and Deployment → Ignored Build Step**, set the
+command to:
+
+```
+bash scripts/vercel-ignore-build.sh
+```
+
+The script builds for any commit touching code/site/config and skips commits that
+only change `data/` (see `scripts/vercel-ignore-build.sh`). Fail-safe: if it can't
+diff, it builds.
