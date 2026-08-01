@@ -189,12 +189,6 @@ export async function runDailyDca(config: AppConfig): Promise<RunOutcome> {
     rawMarketData.onChainVolume,
   );
 
-  // --- x402: the agent pays (a metered USDC micro-payment) for its brief input ---
-  // Gated + best-effort: inert unless X402_ENABLED, never throws, never touches
-  // DCA money/state. When it does pay, the receipt is annotated onto this run's
-  // entries so it lands in history.json and the Telegram alert.
-  const x402Receipt = await payForMarketBriefBestEffort();
-
   // --- Phase 2: record the reference cirBTC price and build a persisted series ---
   // Prefer Circle's on-chain cirBTC rate. When that feed is down — as it is during
   // the Arc cirBTC liquidity outage — fall back to the real BTC spot price from
@@ -415,6 +409,14 @@ export async function runDailyDca(config: AppConfig): Promise<RunOutcome> {
       isFatal: false,
     };
   }
+
+  // --- x402: the agent pays (a metered USDC micro-payment) for its brief input ---
+  // Placed AFTER the "nobody due" short-circuit so the agent only pays for a brief
+  // on runs where it actually makes a DCA decision — the receipt then rides this
+  // run's recorded entries into history.json (and the Telegram alert), and no USDC
+  // is spent (nor history bloated) on idle heartbeat ticks. Gated + best-effort:
+  // inert unless X402_ENABLED, never throws, never touches DCA money/state.
+  const x402Receipt = await payForMarketBriefBestEffort();
 
   // Split the scheduled spend into SIMULATED (paper — no real USDC leaves the
   // wallet) and LIVE (a real USDC→token swap). Only the live portion may be bound
