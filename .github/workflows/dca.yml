@@ -90,11 +90,15 @@ jobs:
           # x402 pay-per-call (src/x402/agent.ts). Gated + best-effort — inert
           # unless X402_ENABLED=true AND the payer key is set. Payer key is a
           # SECRET (a dedicated testnet key); the rest are non-sensitive variables.
-          # Settlement stays gated off regardless (verified-only).
+          # Full on-chain settlement (Circle Gateway) turns on with
+          # X402_SETTLE_ENABLED=true; the payer must hold a Gateway deposit
+          # (X402_DEPOSIT_USDC auto-tops it up). Off => verified-only.
           X402_ENABLED: ${{ vars.X402_ENABLED }}
           X402_PAYER_PRIVATE_KEY: ${{ secrets.X402_PAYER_PRIVATE_KEY }}
           X402_PAY_TO: ${{ vars.X402_PAY_TO }}
           X402_BRIEF_URL: ${{ vars.X402_BRIEF_URL }}
+          X402_SETTLE_ENABLED: ${{ vars.X402_SETTLE_ENABLED }}
+          X402_DEPOSIT_USDC: ${{ vars.X402_DEPOSIT_USDC }}
           DCA_BASE_AMOUNT: ${{ vars.DCA_BASE_AMOUNT }}
           DCA_DIP_MILD_THRESHOLD: ${{ vars.DCA_DIP_MILD_THRESHOLD }}
           DCA_DIP_MODERATE_THRESHOLD: ${{ vars.DCA_DIP_MODERATE_THRESHOLD }}
