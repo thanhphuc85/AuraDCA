@@ -3527,5 +3527,20 @@
     "tokenOut": "cirBTC",
     "walletUsdcBalance": "318.429358920255799068",
     "message": "No buy this run: 6 active user(s), live scheduled 4.500000 USDC, clamped to 0.000000 by remaining_daily_cap (min swap 0.1)"
+  },
+  {
+    "date": "2026-08-01",
+    "timestamp": "2026-08-01T00:00:46.644Z",
+    "status": "success",
+    "requestedAmountUsdc": "3.500000",
+    "clampedAmountUsdc": "3.500000",
+    "boundBy": "user_schedule",
+    "tokenOut": "EURC",
+    "reasoning": "Rate-based DCA: 6 active user(s), executing ~3.500000 USDC this run (3.500000 live + 0.000000 paper).",
+    "txHash": "0xef18069db3916bf12b0f27baca09387f8d0ad21c676acd25058946a55084058e",
+    "explorerUrl": "https://testnet.arcscan.app/tx/0xef18069db3916bf12b0f27baca09387f8d0ad21c676acd25058946a55084058e",
+    "amountOut": "3.008841",
+    "walletUsdcBalance": "358.427914680255799068",
+    "message": "Swapped 3.500000 USDC -> EURC across 6 user(s)"
   }
 ]
