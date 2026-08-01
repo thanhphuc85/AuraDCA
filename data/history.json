@@ -3934,5 +3934,31 @@
       "transferId": "ba2b39bd-eae3-4837-a51d-6cb0d124893e",
       "settleStatus": "received"
     }
+  },
+  {
+    "date": "2026-08-01",
+    "timestamp": "2026-08-01T16:00:53.973Z",
+    "status": "success",
+    "requestedAmountUsdc": "2.500000",
+    "clampedAmountUsdc": "2.500000",
+    "boundBy": "user_schedule",
+    "tokenOut": "EURC",
+    "reasoning": "Rate-based DCA: 5 active user(s), executing ~2.500000 USDC this run (2.500000 live + 0.000000 paper).",
+    "txHash": "0x29358fcddaab7a3e68021446f17e3e58a5afef0bee5d5ca280ec547f8eadd2fb",
+    "explorerUrl": "https://testnet.arcscan.app/tx/0x29358fcddaab7a3e68021446f17e3e58a5afef0bee5d5ca280ec547f8eadd2fb",
+    "amountOut": "1.897892",
+    "walletUsdcBalance": "314.512402908464983349",
+    "message": "Swapped 2.500000 USDC -> EURC across 5 user(s)",
+    "x402": {
+      "resource": "/api/x402-brief",
+      "amountUsdcAtomic": "1000",
+      "payer": "0x61e7Ae336F7Eb7F8517dE4F19963D88dFD9161eC",
+      "payTo": "0xcAf34080F47f576F923962AD04dD7ddd86d8d85f",
+      "settled": true,
+      "mode": "settled",
+      "via": "http",
+      "transferId": "732628f4-1e33-4a38-84a2-b8e349e82a53",
+      "settleStatus": "received"
+    }
   }
 ]
