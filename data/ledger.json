@@ -341,16 +341,17 @@
       "totalWithdrawnCirBtc": "0",
       "totalWithdrawnUsdc": "0",
       "firstSeen": "2026-07-31T09:24:37.391Z",
-      "lastActivity": "2026-08-01T09:35:41.418Z",
-      "dcaRatePerDay": "1.000000",
+      "lastActivity": "2026-08-01T09:37:00.654Z",
+      "dcaRatePerDay": "10.000000",
       "dcaRateIsCustom": true,
       "dcaPaused": false,
       "dcaMode": "auto",
       "dcaTokenOut": "cirBTC",
-      "dcaFrequency": "daily",
-      "dcaAmountPerRun": "1.000000",
-      "dcaDailyCapUsdc": "1.000000",
-      "dcaWeeklyCapUsdc": "1.000000"
+      "dcaFrequency": "hours",
+      "dcaAmountPerRun": "10.000000",
+      "dcaDailyCapUsdc": "20.000000",
+      "dcaWeeklyCapUsdc": "20.000000",
+      "dcaEveryHours": 6
     },
     "0xc45c6c36063e8b34bb5e0d441d892d5b9cde637e": {
       "address": "0xc45c6c36063e8b34bb5e0d441d892d5b9cde637e",
