@@ -376,7 +376,11 @@ export async function runDailyDca(config: AppConfig): Promise<RunOutcome> {
 
   const schedule = computeScheduledSpends(ledger, timestamp, {
     drawdownPct,
-    fearGreedIndex: marketBrief?.fearGreedIndex ?? null,
+    // Smart-mode gating reads F&G from the RAW feed (alternative.me), not the LLM
+    // analyst's brief — the market gate is deterministic and must not go dark when
+    // the analyst LLM is down/out-of-credits (which nulls marketBrief and would
+    // silently skip every smart+F&G user). Brief value is only a last-resort fallback.
+    fearGreedIndex: rawMarketData.fearGreed?.value ?? marketBrief?.fearGreedIndex ?? null,
     sizeDeviation: sizingProposal?.deviation,
   });
   const scheduledTotal = schedule.totalUsdc;
@@ -542,7 +546,7 @@ export async function runDailyDca(config: AppConfig): Promise<RunOutcome> {
   // The market snapshot that drove smart-mode sizing this run, and the base
   // (sensitivity 1) multiplier it produced — recorded on any group that had a
   // smart participant, as the on-chain audit of the agent's dynamic sizing.
-  const smartFg = marketBrief?.fearGreedIndex ?? null;
+  const smartFg = rawMarketData.fearGreed?.value ?? marketBrief?.fearGreedIndex ?? null;
   // The base (sensitivity-1) multiplier this run: the agent's clamped choice when
   // it made one, else the deterministic formula. Recorded per smart group for the
   // on-chain audit + the 🧠 badge.
