@@ -1562,8 +1562,8 @@
           <button class="wm-back" id="wmGmailBack">← <span data-t="wmBack">Back</span></button>
           <div style="margin-top:12px;">
             <input type="email" id="wmGmailEmail" placeholder="your.email@gmail.com" />
-            <button class="wm-create-btn" id="wmGmailSubmit" data-t="wmCreateSubmit">Sign in with Email</button>
-            <p style="font-size:11px;color:var(--muted);margin:10px 2px 0;line-height:1.5;" data-t="wmGmailNote">We'll email a confirmation to your inbox. This creates a wallet derived from your email (no seed phrase) — sign back in with the same email to restore it.</p>
+            <button class="wm-create-btn" id="wmGmailSubmit" data-t="wmCreateSubmit">Create account</button>
+            <p id="wmGmailNoteEl" style="font-size:11px;color:var(--muted);margin:10px 2px 0;line-height:1.5;" data-t="wmGmailNote">We'll email a confirmation to your inbox. This creates a wallet derived from your email (no seed phrase) — sign back in later with the same email to restore it.</p>
           </div>
         </div>
         <div class="wm-status" id="wmStatus"></div>
@@ -3028,10 +3028,25 @@
   document.addEventListener("keydown", function (e) {
     if (e.key === "Escape" && $("wmOverlay").classList.contains("open")) closeWalletModal();
   });
+  // The email form is shared by "Create account" and "Sign in". Re-label its
+  // submit button + helper note per entry point so the create flow reads "Create
+  // account" and the sign-in flow reads "Sign in with Email". Swapping data-t (not
+  // just text) keeps the label correct across a later language switch, since
+  // applyLang re-reads data-t.
+  function setGmailFormMode(mode) {
+    var tt = (typeof T !== "undefined" && T[currentLang]) ? T[currentLang] : {};
+    var submit = $("wmGmailSubmit"), note = $("wmGmailNoteEl");
+    var submitKey = mode === "signin" ? "wmSigninSubmit" : "wmCreateSubmit";
+    var noteKey = mode === "signin" ? "wmSigninNote" : "wmGmailNote";
+    submit.setAttribute("data-t", submitKey);
+    if (tt[submitKey] != null) submit.textContent = tt[submitKey];
+    if (note) { note.setAttribute("data-t", noteKey); if (tt[noteKey] != null) note.textContent = tt[noteKey]; }
+  }
   $("wmCreateBtn").addEventListener("click", function () {
+    setGmailFormMode("create");
     $("wmWalletList").style.display = "none";
     $("wmGmailForm").classList.add("open");
-    $("wmGmailName").focus();
+    $("wmGmailEmail").focus();
   });
   $("wmSignin").addEventListener("click", function () {
     var gmailData = null;
@@ -3040,6 +3055,7 @@
       closeWalletModal();
       connectGmail(gmailData.name, gmailData.email);
     } else {
+      setGmailFormMode("signin");
       $("wmWalletList").style.display = "none";
       $("wmGmailForm").classList.add("open");
       $("wmGmailEmail").focus();
@@ -3051,7 +3067,9 @@
     $("wmStatus").textContent = "";
   });
   $("wmGmailSubmit").addEventListener("click", function () {
-    var n = $("wmGmailName").value;
+    // The modal has no name field (email-only); connectGmail derives a name from
+    // the address. Guard the legacy lookup so submit never throws on null.
+    var n = $("wmGmailName") ? $("wmGmailName").value : "";
     var e = $("wmGmailEmail").value;
     if (!e || !e.includes("@")) {
       $("wmStatus").textContent = currentLang === "vi" ? "Vui lòng nhập email hợp lệ." : "Please enter a valid email address.";
@@ -5200,8 +5218,9 @@
       dataSub: "Download run history and reflections for offline analysis.",
       footerDisclaimer: "Aura DCA · Testnet only · not financial advice.",
       wmTitle: "Connect Wallet", wmOr: "or", wmCreate: "Create account", wmSignin: "Sign in",
-      wmBack: "Back", wmCreateSubmit: "Sign in with Email",
-      wmGmailNote: "We'll email a confirmation to your inbox. This creates a wallet derived from your email (no seed phrase) — sign back in with the same email to restore it.",
+      wmBack: "Back", wmCreateSubmit: "Create account", wmSigninSubmit: "Sign in with Email",
+      wmGmailNote: "We'll email a confirmation to your inbox. This creates a wallet derived from your email (no seed phrase) — sign back in later with the same email to restore it.",
+      wmSigninNote: "Enter the email you signed up with — we'll restore the wallet derived from it (no seed phrase). No password needed.",
       chatTitle: "Aura Assistant", chatSub: "Ask about your DCA, treasury & trades",
       wmFooter: 'By connecting a wallet, you agree this is a <b>testnet demo</b> with no real value. <a href="https://github.com/thanhphuc85/AuraDCA" target="_blank" rel="noopener">View source</a>.',
       wpBalanceSub: "Portfolio value on Arc Testnet",
@@ -5316,8 +5335,9 @@
       dataSub: "Tải lịch sử chạy và phản chiếu để phân tích offline.",
       footerDisclaimer: "Aura DCA · Chỉ dùng trên Testnet · không phải tư vấn tài chính.",
       wmTitle: "Kết nối ví", wmOr: "hoặc", wmCreate: "Tạo tài khoản", wmSignin: "Đăng nhập",
-      wmBack: "Quay lại", wmCreateSubmit: "Đăng nhập bằng Email",
-      wmGmailNote: "Chúng tôi sẽ gửi email xác nhận về hộp thư của bạn. Thao tác này tạo ví suy ra từ email của bạn (không cần seed phrase) — đăng nhập lại bằng cùng email để khôi phục.",
+      wmBack: "Quay lại", wmCreateSubmit: "Tạo tài khoản", wmSigninSubmit: "Đăng nhập bằng Email",
+      wmGmailNote: "Chúng tôi sẽ gửi email xác nhận về hộp thư của bạn. Thao tác này tạo ví suy ra từ email của bạn (không cần seed phrase) — đăng nhập lại sau bằng cùng email để khôi phục.",
+      wmSigninNote: "Nhập email bạn đã đăng ký — chúng tôi sẽ khôi phục ví suy ra từ email đó (không cần seed phrase). Không cần mật khẩu.",
       chatTitle: "Trợ lý Aura", chatSub: "Hỏi về DCA, ngân quỹ & giao dịch của bạn",
       wmFooter: 'Bằng việc kết nối ví, bạn đồng ý đây là <b>demo testnet</b> không có giá trị thực. <a href="https://github.com/thanhphuc85/AuraDCA" target="_blank" rel="noopener">Xem mã nguồn</a>.',
       wpBalanceSub: "Giá trị danh mục trên Arc Testnet",
