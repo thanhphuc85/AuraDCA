@@ -859,5 +859,33 @@
       "fear-zone-accumulation",
       "reasoning-execution-gap"
     ]
+  },
+  {
+    "id": "ref-1785787342327",
+    "date": "2026-08-03",
+    "timestamp": "2026-08-03T20:02:22.327Z",
+    "runStatus": "success",
+    "insight": "All 8 recent runs show systematic user_schedule override executing 3.05-4.55 USDC despite agent requesting 1.00 USDC base allocation. The strategy is failing because requested amounts are being ignored—actual execution is driven by a fixed schedule, not smart sizing logic.",
+    "patterns": [
+      "100% user_schedule clamping across all 8 runs with 3.05-4.55 USDC range",
+      "Agent consistently requests 1.00 USDC base but executes 3-4.5x higher",
+      "No dip tiers active (all runs show 2-4% drawdown, below 5% mild threshold)",
+      "Ranging market regime with ultra-low volatility (0.05-0.90% CV) across all runs",
+      "Fear zone persistent (F&G=28) but analyst bias oscillates wildly (bearish to bullish to neutral)",
+      "Daily cap utilization inefficient—recommending base amounts leaves 122-147 USDC unused"
+    ],
+    "strategyAdjustment": "Stop requesting 1.00 USDC base amounts that get overridden. Instead, work within the 3.05-4.55 USDC execution band that user_schedule enforces. Use position within that range (low=3.05, mid=3.5-4.0, high=4.55) to encode sizing preference: request 3.05 when bearish/no-dip, 4.0-4.55 when bullish/accumulation setup, and mid-range for neutral conditions. This preserves smart-sizing intent while accepting the schedule constraint as reality.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "644.749919",
+    "dayNumber": 28,
+    "walletBalance": "343.734997112781042955",
+    "tags": [
+      "user-schedule-override",
+      "clamping",
+      "pacing",
+      "strategy-failure",
+      "execution-mismatch",
+      "ranging-market"
+    ]
   }
 ]
