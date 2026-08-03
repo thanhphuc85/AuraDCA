@@ -887,5 +887,32 @@
       "execution-mismatch",
       "ranging-market"
     ]
+  },
+  {
+    "id": "ref-1785790924219",
+    "date": "2026-08-03",
+    "timestamp": "2026-08-03T21:02:04.219Z",
+    "runStatus": "success",
+    "insight": "Chronic user_schedule override persists: all 8 recent runs executed 3.05-4.55 USDC despite agent requesting 1.00 USDC base due to no dip signal (only 2.27% drawdown vs 5% threshold). Agent reasoning is correct but execution layer ignores recommendations entirely.",
+    "patterns": [
+      "100% user_schedule binding across all recent runs - no other constraint ever active",
+      "Agent consistently requests 1.00 USDC base (no dip tier triggered), but execution delivers 3.05-4.55 USDC",
+      "Daily cap utilization at 41% (82/200 USDC) after this run, trending toward full utilization by end of day",
+      "Market regime stuck in ranging mode with ultra-low volatility (0.07-0.90% CV) for entire observation window",
+      "Drawdown consistently 2.1-3.1% - never triggering 5% mild dip threshold",
+      "Fear zone stable at F&G=28 with oscillating analyst bias (bearish/neutral/bullish) providing no consistent signal"
+    ],
+    "strategyAdjustment": "Stop requesting 1.00 USDC base when user_schedule will override anyway. Instead, work within the 3.0-4.5 USDC execution band that actually occurs: request 3.0 USDC for bearish conditions, 3.5 USDC for neutral, 4.5 USDC for bullish with low risk scores. This accepts the execution reality while still modulating within the available range to express market-responsive sizing.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "647.799919",
+    "dayNumber": 28,
+    "walletBalance": "339.615641235624823263",
+    "tags": [
+      "clamping",
+      "user-schedule-override",
+      "pacing",
+      "strategy-ineffective",
+      "execution-mismatch"
+    ]
   }
 ]
