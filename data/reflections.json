@@ -631,5 +631,34 @@
       "reasoning-execution-alignment",
       "market-timing"
     ]
+  },
+  {
+    "id": "ref-1785754945427",
+    "date": "2026-08-03",
+    "timestamp": "2026-08-03T11:02:25.427Z",
+    "runStatus": "success",
+    "insight": "Allocation sizing remains inconsistent despite analyst sentiment flip from \"decrease\" to \"increase\"—executed 3.80 USDC when reasoning claimed 4.20 USDC target, continuing the chronic reasoning-execution gap that has persisted across all 8 recent runs.",
+    "patterns": [
+      "Chronic reasoning-execution gap: claimed targets (2.90-5.50 USDC) consistently differ from executed amounts (2.90-4.55 USDC) across all 8 runs",
+      "Persistent Fear zone (F&G=28) for entire observation window with ranging regime and low volatility (0.04-0.64% CV)",
+      "No dip tiers triggered in any run: drawdowns range 3.63-4.23% vs 5%+ threshold needed",
+      "Daily cap never binding: 154-183 USDC remaining across runs, suggesting room for larger allocations",
+      "Analyst sentiment whiplash: switched from '10-15% decrease' (distribution pressure) to '10-15% increase' within same day",
+      "All 8 runs bound by user_schedule, never by daily_cap or per_transaction_cap",
+      "100% success rate maintained with stable wallet balance (379 USDC)"
+    ],
+    "strategyAdjustment": "On next run, if analyst still recommends increase and Fear persists: (1) Apply the FULL calculated multiplier without conservative discounting—if reasoning calculates 4.20 USDC, request exactly 4.20 USDC, not 3.80 USDC. (2) Track whether analyst bias stabilizes or continues oscillating—if oscillating, weight F&G index and drawdown data more heavily than analyst recommendation. (3) With 154+ USDC daily cap remaining and ranging regime, there is zero risk of hitting caps—lean into Fear-zone accumulation more aggressively (target 4.5-5.0 USDC range when increase recommended).",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "612.109919",
+    "dayNumber": 28,
+    "walletBalance": "379.357672239838840302",
+    "tags": [
+      "reasoning-execution-gap",
+      "pacing",
+      "analyst-sentiment-shift",
+      "fear-zone-buying",
+      "daily-cap-underutilization",
+      "user-schedule-bound"
+    ]
   }
 ]
