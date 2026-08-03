@@ -5442,5 +5442,48 @@
       "transferId": "d58d3b9c-7907-4d7e-b159-6debe9058244",
       "settleStatus": "received"
     }
+  },
+  {
+    "date": "2026-08-03",
+    "timestamp": "2026-08-03T03:00:42.771Z",
+    "status": "success",
+    "requestedAmountUsdc": "4.040000",
+    "clampedAmountUsdc": "4.040000",
+    "boundBy": "user_schedule",
+    "tokenOut": "EURC",
+    "reasoning": "Market brief shows Fear zone (F&G=28) with bearish sentiment (-0.48% 24h) but high on-chain activity—a prime buying opportunity. Real cirBTC price is only 3.30% off high with no dip tier triggered; market regime is ranging with ultra-low volatility (0.03% CV). Risk score is low (15/100) recommending up to 20% increase. Past reflections flagged consistent under-application of smart sizing during Fear conditions: recent runs executed 3.95 USDC vs 4.7 USDC baseline. Applying the risk-on 1.15x multiplier to baseline (4.7 * 1.15 = 5.41 USDC) captures Fear-zone value while maintaining 100% success rate and staying well within guardrails (187 USDC daily cap remaining).",
+    "txHash": "0x424d4225f6207eae1db20b011de17cc1076d15ed3a7a6c7c807d03c241345a83",
+    "explorerUrl": "https://testnet.arcscan.app/tx/0x424d4225f6207eae1db20b011de17cc1076d15ed3a7a6c7c807d03c241345a83",
+    "amountOut": "3.272041",
+    "walletUsdcBalance": "384.259953732711125432",
+    "message": "Swapped 4.040000 USDC -> EURC across 7 user(s)",
+    "smartSizing": {
+      "fearGreed": 28,
+      "drawdownPct": 0.009469964664310954,
+      "multiplier": 1.18,
+      "source": "llm",
+      "proposedMultiplier": 1.18
+    },
+    "x402": {
+      "resource": "/api/x402-brief",
+      "amountUsdcAtomic": "1000",
+      "payer": "0x61e7Ae336F7Eb7F8517dE4F19963D88dFD9161eC",
+      "payTo": "0xcAf34080F47f576F923962AD04dD7ddd86d8d85f",
+      "settled": true,
+      "mode": "settled",
+      "via": "http",
+      "transferId": "272805eb-49ff-414b-bd52-8c6344a103e4",
+      "settleStatus": "received"
+    },
+    "smartFee": {
+      "feeUsdcEach": "0.010000",
+      "totalUsdc": "0.060000",
+      "payerCount": 6,
+      "payTo": "0x00Ebbd3aFCCaD08970ED8FdaE591244c8475a0aC",
+      "testnet": true,
+      "settled": true,
+      "transferId": "e8015828-9597-47ed-b777-8a7686d835cf",
+      "settleStatus": "received"
+    }
   }
 ]

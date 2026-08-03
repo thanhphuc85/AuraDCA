@@ -415,5 +415,32 @@
       "execution-gap",
       "opportunity-cost"
     ]
+  },
+  {
+    "id": "ref-1785726128358",
+    "date": "2026-08-03",
+    "timestamp": "2026-08-03T03:02:08.358Z",
+    "runStatus": "success",
+    "insight": "Smart sizing multipliers are being proposed (1.18x this run, 1.15x prior) but actual execution remains conservative at 4.04 USDC vs the calculated 5.41 USDC target, indicating a disconnect between reasoning and implementation during persistent Fear conditions (F&G=28).",
+    "patterns": [
+      "Consistent Fear zone conditions (F&G=28) across last 4 runs on 2026-08-03",
+      "Ranging market regime with ultra-low volatility (0.03-0.05% CV) throughout recent runs",
+      "Smart sizing multipliers proposed but not fully applied: reasoning shows 1.15x → 5.41 USDC target, but executed only 4.04 USDC",
+      "All recent runs bound by user_schedule, no guardrail clamping",
+      "100% success rate maintained across all 8 recent runs",
+      "Incremental sizing increases attempted (3.95 → 3.95 → 4.04 USDC) but still below rate-based baseline of ~4.7 USDC"
+    ],
+    "strategyAdjustment": "Implementation must honor calculated smart sizing targets: if risk analysis recommends 1.18x multiplier → 5.54 USDC (4.7 * 1.18), execute that amount rather than conservative fallback. With 384 USDC wallet balance, low risk score (15/100), and 187 USDC daily cap remaining, there is ample room to apply full multipliers. Next run in Fear conditions should execute the full calculated amount unless a specific guardrail triggers.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "579.609919",
+    "dayNumber": 28,
+    "walletBalance": "384.259953732711125432",
+    "tags": [
+      "smart-sizing",
+      "fear-zone",
+      "implementation-gap",
+      "pacing",
+      "risk-management"
+    ]
   }
 ]
