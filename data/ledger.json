@@ -64,7 +64,7 @@
       "lastChargedAt": "2026-08-03T00:00:46.195Z",
       "dcaWeeklyCapUsdc": "1000.000000",
       "totalWithdrawn": {
-        "EURC": "1.281252"
+        "EURC": "88.281252"
       },
       "dcaSmartFearBelow": 40,
       "dcaSmartSensitivity": 1,
@@ -6157,8 +6157,11 @@
       "address": "0xdd6045a634ef2c61d6070552b556aae40099e84b",
       "token": "EURC",
       "amount": "87.000000",
-      "status": "processing",
-      "requestedAt": "2026-08-03T00:52:50.196Z"
+      "status": "completed",
+      "requestedAt": "2026-08-03T00:52:50.196Z",
+      "txHash": "0x76901d34ac7c5b5adf9dc095c751e271e28ee5ff77e3b2989b9e0cd13879bbb6",
+      "processedAt": "2026-08-03T00:52:52.339Z",
+      "circleTxId": "271b2052-2780-590a-a962-2875c0befd82"
     }
   ]
 }
