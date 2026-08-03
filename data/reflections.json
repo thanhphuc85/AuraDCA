@@ -496,5 +496,32 @@
       "pacing",
       "multiplier-bug"
     ]
+  },
+  {
+    "id": "ref-1785736922754",
+    "date": "2026-08-03",
+    "timestamp": "2026-08-03T06:02:02.754Z",
+    "runStatus": "success",
+    "insight": "Chronic reasoning-execution gap persists: reasoning calculated 5.50 USDC target but executed only 3.95 USDC (72% of target). This is the 6th consecutive run with this disconnect, suggesting a systemic issue in the execution layer ignoring the multiplier logic.",
+    "patterns": [
+      "Reasoning-execution gap: Last 6 runs claim 4.75-5.50 USDC targets but execute 3.95-4.25 USDC (83-90% of baseline, not the 115-117% intended)",
+      "Fear zone buying window: F&G=28 for 6+ consecutive runs with low risk scores (15-17/100) and ranging market—ideal conditions for scaled buying",
+      "Daily cap not binding: 174.64 USDC remaining budget means undersizing is NOT due to guardrails",
+      "100% success rate maintained: No execution failures or errors in recent history",
+      "Multiplier application failure: SmartSizing shows 1.15x multiplier but execution layer appears to default to ~4.0 USDC regardless"
+    ],
+    "strategyAdjustment": "Diagnose why execution ignores calculated amounts: verify if there's a hardcoded floor, a separate rate-based override, or a parameter mapping issue between reasoning and swap execution. If the 4.7 USDC baseline is being replaced by ~4.0 USDC default, identify where this substitution occurs. Once identified, either fix the execution path to honor the multiplier, or adjust baseline assumption from 4.7 to actual ~4.0 USDC so multipliers apply correctly (e.g., 4.0 * 1.15 = 4.6 USDC).",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "592.059919",
+    "dayNumber": 28,
+    "walletBalance": "371.65816963074779817",
+    "tags": [
+      "execution-bug",
+      "reasoning-execution-gap",
+      "smart-sizing",
+      "fear-zone-buying",
+      "multiplier-failure",
+      "pacing"
+    ]
   }
 ]
