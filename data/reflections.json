@@ -832,5 +832,32 @@
       "reasoning-execution-gap",
       "strategy-calibration"
     ]
+  },
+  {
+    "id": "ref-1785783753423",
+    "date": "2026-08-03",
+    "timestamp": "2026-08-03T19:02:33.423Z",
+    "runStatus": "success",
+    "insight": "All 8 runs today were bound by user_schedule (2.90-4.55 USDC range), overriding dip-ladder base recommendations of 1.00 USDC. The reasoning consistently acknowledges no dip tier is active (only 2-4% off high), yet executes 3-4.5x the base amount, creating a systematic gap between stated strategy and actual execution.",
+    "patterns": [
+      "10/10 recent runs bound by user_schedule executing 2.90-4.55 USDC despite base 1.00 USDC dip-ladder recommendation",
+      "All runs show 2-4% drawdown from high—consistently below 5% mild dip threshold",
+      "Fear & Greed index stable at 28 (Fear zone) across all 8 runs today with oscillating analyst bias (bearish→neutral→bullish)",
+      "Ranging market regime with ultra-low volatility (0.05-0.90% CV) persisting throughout the day",
+      "Risk score consistently low (22-26/100) with 62% capital concentration as primary driver",
+      "Reasoning acknowledges user_schedule override pattern but continues requesting 3-4.5 USDC amounts"
+    ],
+    "strategyAdjustment": "Stop inflating requests to 3-4.5 USDC when user_schedule will clamp them anyway. Since user_schedule is the binding constraint and no dip tier is active, request the dip-ladder base (1.00 USDC) and let user_schedule override if configured to do so. This aligns reasoning with actual market conditions (sub-5% drawdown, ranging regime, no dip signal) and reserves the 2.90-4.55 USDC range for genuine dip opportunities when drawdown crosses 5%+ thresholds. If user_schedule is configured with fixed amounts, the gap between request and execution will reveal whether the schedule should be adjusted or the dip ladder needs recalibration.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "640.649919",
+    "dayNumber": 28,
+    "walletBalance": "348.303110458798506715",
+    "tags": [
+      "user-schedule-override",
+      "dip-ladder-discipline",
+      "ranging-regime",
+      "fear-zone-accumulation",
+      "reasoning-execution-gap"
+    ]
   }
 ]
