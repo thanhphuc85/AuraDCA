@@ -389,5 +389,31 @@
       "fear-zone-opportunity",
       "strategy-disconnect"
     ]
+  },
+  {
+    "id": "ref-1785722536026",
+    "date": "2026-08-03",
+    "timestamp": "2026-08-03T02:02:16.026Z",
+    "runStatus": "success",
+    "insight": "Smart sizing multiplier applied (1.15x proposed, 1.01x executed = 3.95 USDC) significantly undershot the opportunity: in Fear zone (F&G=28) with low risk (15/100) and recommendation for up to 20% increase, executed only 16% below baseline rate instead of capitalizing on favorable conditions.",
+    "patterns": [
+      "Conservative execution bias: last 3 runs at 3.95 USDC vs recent baseline of 4.7-5.0 USDC despite Fear zone conditions",
+      "Consistent user_schedule binding with no clamping issues - guardrails not constraining",
+      "Stable market regime: ranging with ultra-low volatility (0.03-0.05% CV) across recent runs",
+      "Perfect execution success rate (100%) with low risk scores (15/100) indicating room for aggression",
+      "Disconnected multiplier logic: LLM proposes 1.15x but execution applies only 1.01x, losing 14% of intended sizing"
+    ],
+    "strategyAdjustment": "Implement full smart sizing multipliers as calculated by LLM: when Fear zone (F&G<35) + low risk + ranging market align, apply the proposed 1.15-1.20x multiplier to baseline rate (4.7 USDC → 5.4-5.6 USDC) instead of conservative 1.01x. Bridge the gap between analysis (which correctly identifies opportunity) and execution (which ignores it). Test by targeting 5.4+ USDC on next Fear-zone run.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "575.569919",
+    "dayNumber": 28,
+    "walletBalance": "388.228661353546184088",
+    "tags": [
+      "pacing",
+      "smart-sizing",
+      "fear-greed",
+      "execution-gap",
+      "opportunity-cost"
+    ]
   }
 ]
