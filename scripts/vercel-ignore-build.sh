@@ -28,6 +28,8 @@ echo "vercel-ignore: files changed in HEAD:"
 echo "${CHANGED:-<none>}"
 
 if [ -z "$CHANGED" ]; then
+  # An empty commit (`git commit --allow-empty`) also lands here and is skipped,
+  # so it can't be used to force a redeploy — push a real non-data change instead.
   echo "vercel-ignore: no file changes — skipping deploy."
   exit 0
 fi
