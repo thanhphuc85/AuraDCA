@@ -660,5 +660,36 @@
       "daily-cap-underutilization",
       "user-schedule-bound"
     ]
+  },
+  {
+    "id": "ref-1785762138178",
+    "date": "2026-08-03",
+    "timestamp": "2026-08-03T13:02:18.178Z",
+    "runStatus": "success",
+    "insight": "User_schedule is consistently overriding smart-sizing logic with fixed 2.90-4.55 USDC amounts while reasoning claims 1.00 USDC base execution. The disconnect between \"executing 1.00 USDC\" in reasoning and actual 3.05 USDC execution reveals the agent isn't controlling trade size—user_schedule dictates all amounts.",
+    "patterns": [
+      "All 8 recent runs bound by user_schedule, no daily_cap or dip_multiplier binding",
+      "Reasoning consistently claims 1.00 USDC base but executes 2.90-4.55 USDC per user_schedule",
+      "Market showing persistent Fear zone (F&G=28) with sub-5% drawdowns—no dip tiers triggering",
+      "Ranging regime with low volatility (0.04-0.88% CV) across all recent runs",
+      "One error_swap_failed in last 8 runs but otherwise 100% success rate",
+      "Daily pacing healthy: 52.4 USDC used today (26% of 200 cap) with 147.59 remaining",
+      "Analyst bias shifted from +10-15% to -5-15% (distribution/caution signals)",
+      "Past reflections incorrectly diagnosed reasoning-execution gap—real issue is user_schedule override"
+    ],
+    "strategyAdjustment": "Stop claiming to execute calculated base amounts (1.00 USDC) when user_schedule will override with its own values. Instead, reasoning should acknowledge user_schedule control and focus on validating whether the scheduled amount is appropriate given market conditions. Recommend reducing user_schedule amounts to 2.00-2.50 USDC range during this cautious accumulation phase with sub-5% drawdowns and analyst decrease bias, allowing headroom to scale up when dip tiers actually trigger (5%+ drawdown).",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "618.209919",
+    "dayNumber": 28,
+    "walletBalance": "369.396739807038184526",
+    "tags": [
+      "user-schedule-override",
+      "pacing",
+      "reasoning-execution-gap",
+      "ranging-market",
+      "fear-zone",
+      "no-dip-tiers",
+      "allocation-sizing"
+    ]
   }
 ]
