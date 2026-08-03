@@ -914,5 +914,32 @@
       "strategy-ineffective",
       "execution-mismatch"
     ]
+  },
+  {
+    "id": "ref-1785794531286",
+    "date": "2026-08-03",
+    "timestamp": "2026-08-03T22:02:11.286Z",
+    "runStatus": "success",
+    "insight": "Agent continues requesting 1.00 USDC base amounts per dip-ladder logic (no dip tier at 2.59% drawdown), but user_schedule systematically overrides to 2.90-4.55 USDC range—100% of last 8 runs bound by user_schedule regardless of recommendation.",
+    "patterns": [
+      "All 8 recent runs bound by user_schedule executing 2.975-4.550 USDC despite agent requesting 1.00 USDC base in 7 of 8 runs",
+      "No dip tier triggered across entire sequence—drawdowns consistently 2.10-2.59% (need 5%+ for mild dip)",
+      "Market regime stable: Fear zone F&G=28, ranging with ultra-low volatility (0.05-1.09% CV), bearish analyst bias in 6 of 8 runs",
+      "Daily cap utilization tracking: 41-43% spent by late afternoon runs, preserving 115-141 USDC for 'genuine opportunities' that never materialize",
+      "Risk scores consistently low (22-25/100) supporting up to 20% increases, but agent prioritizes bearish sentiment over risk-based upside"
+    ],
+    "strategyAdjustment": "Stop requesting 1.00 USDC base when user_schedule will override it anyway. Acknowledge the 2.90-4.55 USDC execution band as the actual constraint and calibrate recommendations within that range. Use risk score (22-25/100 = up to +20%), analyst bias, and Fear zone contrarian opportunity to justify sizing within the band rather than preserving daily cap for hypothetical 5%+ dips that haven't occurred in 8 runs. Shift from \"preserve for genuine dip\" to \"optimize within actual execution constraints.\"",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "650.774919",
+    "dayNumber": 28,
+    "walletBalance": "460.539388928903938219",
+    "tags": [
+      "user-schedule-override",
+      "clamping",
+      "dip-ladder-mismatch",
+      "daily-cap-preservation",
+      "fear-zone-opportunity",
+      "ranging-regime"
+    ]
   }
 ]
