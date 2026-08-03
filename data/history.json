@@ -5831,5 +5831,35 @@
       "transferId": "e435cb50-22f9-48f6-94a4-c50f9d582a62",
       "settleStatus": "received"
     }
+  },
+  {
+    "date": "2026-08-03",
+    "timestamp": "2026-08-03T12:00:43.198Z",
+    "status": "error_swap_failed",
+    "requestedAmountUsdc": "3.050000",
+    "clampedAmountUsdc": "3.050000",
+    "boundBy": "user_schedule",
+    "tokenOut": "EURC",
+    "reasoning": "Real cirBTC feed shows only 4.17% drawdown with no dip tier triggered, so the dip ladder anchors sizing at the 1.00 USDC base rather than the stale swap-history \"moderate dip\" signal (which is contradicted by the ground-truth price series). Market regime is ranging with low volatility, which argues for sticking close to base rather than chasing momentum. Risk score is low (20/100, room to scale up) but the market brief's bearish sentiment (F&G=28) and \"decrease 10-15%\" allocation bias offset that upside room, so the two roughly cancel out at the base amount. Past reflections flag a chronic reasoning-execution gap from inflating requested amounts beyond what dip/regime signals actually justify — sticking to the disciplined base of 1.00 USDC avoids repeating that pattern while pacing remains healthy (only 25% of daily cap used, 100% success rate).",
+    "walletUsdcBalance": "375.537127696385112414",
+    "message": "Swap failed [EURC/network_error]: Swap failed [network_error]: Network connection failed for Arc Testnet",
+    "smartSizing": {
+      "fearGreed": 28,
+      "drawdownPct": 0.004427809190093175,
+      "multiplier": 0.85,
+      "source": "llm",
+      "proposedMultiplier": 0.85
+    },
+    "x402": {
+      "resource": "/api/x402-brief",
+      "amountUsdcAtomic": "1000",
+      "payer": "0x61e7Ae336F7Eb7F8517dE4F19963D88dFD9161eC",
+      "payTo": "0xcAf34080F47f576F923962AD04dD7ddd86d8d85f",
+      "settled": true,
+      "mode": "settled",
+      "via": "http",
+      "transferId": "11ffc188-2fd2-4985-9411-f43ac97e3aea",
+      "settleStatus": "received"
+    }
   }
 ]
