@@ -550,5 +550,32 @@
       "fear-zone",
       "pacing"
     ]
+  },
+  {
+    "id": "ref-1785744149326",
+    "date": "2026-08-03",
+    "timestamp": "2026-08-03T08:02:29.326Z",
+    "runStatus": "success",
+    "insight": "Agent finally recognized the chronic reasoning-execution gap and pivoted strategy: instead of requesting inflated amounts that get overridden, requested only 4.40 USDC (near baseline) during distribution pressure phase, successfully executing the intended conservative approach.",
+    "patterns": [
+      "All 8 recent runs bound by user_schedule with 100% success rate - no clamping by daily cap or balance",
+      "Persistent Fear zone (F&G=28) across all recent runs with ranging/low volatility market regime",
+      "Chronic reasoning-execution gap resolved: previous runs claimed 4.75-5.50 USDC targets but executed 3.95-4.55 USDC",
+      "Market regime shifted from accumulation opportunity to distribution pressure per analyst recommendation (10-15% decrease)",
+      "Daily cap utilization remains low: 166 USDC remaining out of ~170 USDC total daily budget"
+    ],
+    "strategyAdjustment": "Continue the corrected approach: request amounts that match intended strategy rather than inflated targets. Monitor for regime change signals—if distribution pressure eases or drawdown increases beyond 5% (mild dip threshold), gradually scale back up to 4.5-5.0 USDC range. Current 4.40 USDC per run (~30.8 USDC/day) leaves significant daily cap headroom for opportunistic sizing if true dip materializes.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "601.009919",
+    "dayNumber": 28,
+    "walletBalance": "391.120835610573808414",
+    "tags": [
+      "reasoning-execution-gap",
+      "strategy-correction",
+      "distribution-regime",
+      "pacing",
+      "user-schedule-bound",
+      "fear-zone-persistent"
+    ]
   }
 ]

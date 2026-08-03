@@ -5659,5 +5659,48 @@
       "transferId": "eae28a9a-ea19-4f49-a268-ccf99dad38a2",
       "settleStatus": "received"
     }
+  },
+  {
+    "date": "2026-08-03",
+    "timestamp": "2026-08-03T08:00:54.904Z",
+    "status": "success",
+    "requestedAmountUsdc": "4.400000",
+    "clampedAmountUsdc": "4.400000",
+    "boundBy": "user_schedule",
+    "tokenOut": "EURC",
+    "reasoning": "Market brief shows Fear zone (F&G=28) but analyst recommends 10-15% decrease due to distribution pressure despite bearish sentiment. cirBTC drawdown is only 4.14% (below 5% mild dip threshold), ranging regime with ultra-low volatility (0.04% CV), and risk score of 17/100. Past reflections reveal chronic reasoning-execution gap where user_schedule overrides multipliers—requesting base 1.00 USDC maintains steady accumulation without over-allocating during distribution phase, with 166 USDC daily cap remaining.",
+    "txHash": "0xfb7c018dc9262514b7d9a9bb6f71deb05af7f5e04923c862d4b9f07795febe17",
+    "explorerUrl": "https://testnet.arcscan.app/tx/0xfb7c018dc9262514b7d9a9bb6f71deb05af7f5e04923c862d4b9f07795febe17",
+    "amountOut": "3.554449",
+    "walletUsdcBalance": "391.120835610573808414",
+    "message": "Swapped 4.400000 USDC -> EURC across 7 user(s)",
+    "smartSizing": {
+      "fearGreed": 28,
+      "drawdownPct": 0.01102394584506374,
+      "multiplier": 1.3,
+      "source": "llm",
+      "proposedMultiplier": 1.3
+    },
+    "x402": {
+      "resource": "/api/x402-brief",
+      "amountUsdcAtomic": "1000",
+      "payer": "0x61e7Ae336F7Eb7F8517dE4F19963D88dFD9161eC",
+      "payTo": "0xcAf34080F47f576F923962AD04dD7ddd86d8d85f",
+      "settled": true,
+      "mode": "settled",
+      "via": "http",
+      "transferId": "073b697c-c7bc-469c-af36-cde0e4a0c908",
+      "settleStatus": "received"
+    },
+    "smartFee": {
+      "feeUsdcEach": "0.010000",
+      "totalUsdc": "0.060000",
+      "payerCount": 6,
+      "payTo": "0x00Ebbd3aFCCaD08970ED8FdaE591244c8475a0aC",
+      "testnet": true,
+      "settled": true,
+      "transferId": "969836b0-2b11-4567-a8d1-32b3cc024ce8",
+      "settleStatus": "received"
+    }
   }
 ]
