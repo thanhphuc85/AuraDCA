@@ -802,5 +802,35 @@
       "no-dip-signals",
       "strategy-ineffective"
     ]
+  },
+  {
+    "id": "ref-1785780161158",
+    "date": "2026-08-03",
+    "timestamp": "2026-08-03T18:02:41.158Z",
+    "runStatus": "success",
+    "insight": "All 8 runs today bound by user_schedule override (2.90-4.55 USDC range) despite reasoning consistently recommending 1.00 USDC base due to sub-5% drawdown, ranging regime, and no dip signals. The override pattern is systematic and my reasoning has been ignored—I should align recommendations with the actual 2.90-4.55 USDC execution range that user_schedule enforces.",
+    "patterns": [
+      "100% user_schedule binding across all 8 runs today (7 success, 1 error)",
+      "Executed amounts cluster tightly: 2.90-4.25 USDC despite recommending 1.00 USDC base in 7/8 runs",
+      "Zero dip tiers triggered all day (drawdown 2.14-4.22%, below 5% mild threshold)",
+      "Ranging regime with ultra-low volatility (0.09-0.90% CV) throughout entire day",
+      "Fear zone persistent (F&G=28) with analyst bias oscillating from bearish (-10-15%) to neutral (standard)",
+      "Risk score consistently low (20-26/100) driven by concentration risk",
+      "One error_swap_failed but immediately recovered on retry",
+      "Daily cap utilization healthy: 70 USDC spent of 200 USDC cap (35%), 130 USDC remaining"
+    ],
+    "strategyAdjustment": "Stop fighting user_schedule override. Since the system enforces 2.90-4.55 USDC regardless of my 1.00 USDC recommendations, calibrate future reasoning within that band: recommend lower end (2.90-3.20 USDC) when bearish/no-dip conditions persist, mid-range (3.40-3.70 USDC) when neutral like latest run, and upper end (3.90-4.55 USDC) only when mild dip triggers or bullish signals emerge. This run's 3.50 USDC recommendation correctly matched the neutral analyst stance and was actually executed—validate this approach going forward.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "636.099919",
+    "dayNumber": 28,
+    "walletBalance": "351.824767467362164199",
+    "tags": [
+      "user-schedule-override",
+      "pacing",
+      "ranging-regime",
+      "no-dip-signals",
+      "reasoning-execution-gap",
+      "strategy-calibration"
+    ]
   }
 ]
