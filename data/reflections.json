@@ -364,5 +364,30 @@
       "budget",
       "error-recovery"
     ]
+  },
+  {
+    "id": "ref-1785718932404",
+    "date": "2026-08-03",
+    "timestamp": "2026-08-03T01:02:12.404Z",
+    "runStatus": "success",
+    "insight": "Despite Fear & Greed at 28 and smart sizing recommending 1.15x multiplier (up to 20% increase), the executed amount was 3.95 USDC—16% below the recent 7-run average of ~4.7 USDC. The agent is not effectively applying its own risk-on signals during favorable market conditions.",
+    "patterns": [
+      "consistently bound by user_schedule with no clamping—guardrails not limiting execution",
+      "100% success rate maintained across all recent runs with no errors or skips",
+      "rate-based system executing steady 4.6-5.0 USDC range across 7 users",
+      "Fear zone conditions (F&G=28) present but sizing not meaningfully increased despite smart sizing recommendation"
+    ],
+    "strategyAdjustment": "When smart sizing recommends multipliers above 1.0 during Fear conditions (F&G <30) with low risk scores (<20), actually apply the multiplier to the base rate instead of defaulting to conservative amounts. The latest run should have executed ~5.4 USDC (4.7 * 1.15) rather than 3.95 USDC. Implement the sizing logic to calculate: base_rate_per_user * smart_multiplier * user_count.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "571.619919",
+    "dayNumber": 28,
+    "walletBalance": "392.199784537079535608",
+    "tags": [
+      "pacing",
+      "smart-sizing",
+      "market-timing",
+      "fear-zone-opportunity",
+      "strategy-disconnect"
+    ]
   }
 ]
