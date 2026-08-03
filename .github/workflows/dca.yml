@@ -66,6 +66,10 @@ jobs:
           WALLET_ID: ${{ secrets.WALLET_ID }}
           KIT_KEY: ${{ secrets.KIT_KEY }}
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          # Optional: override the Anthropic API host (e.g. a compatible proxy).
+          # Unset => the SDK default https://api.anthropic.com. The official SDK
+          # reads ANTHROPIC_BASE_URL from the environment; no code change needed.
+          ANTHROPIC_BASE_URL: ${{ vars.ANTHROPIC_BASE_URL }}
           MAX_DAILY_USDC: ${{ vars.MAX_DAILY_USDC }}
           MIN_USDC_RESERVE: ${{ vars.MIN_USDC_RESERVE }}
           MIN_SWAP_USDC: ${{ vars.MIN_SWAP_USDC }}
