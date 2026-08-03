@@ -941,5 +941,34 @@
       "fear-zone-opportunity",
       "ranging-regime"
     ]
+  },
+  {
+    "id": "ref-1785798146423",
+    "date": "2026-08-03",
+    "timestamp": "2026-08-03T23:02:26.423Z",
+    "runStatus": "success",
+    "insight": "All 8 runs today bound by user_schedule override (2.90-4.55 USDC range), completely bypassing dip-ladder logic despite no dip tiers triggered (only 2.10-2.59% drawdowns). The system is executing a fixed-range DCA regardless of market signals, making the sophisticated dip-detection and risk-scoring framework irrelevant.",
+    "patterns": [
+      "100% user_schedule clamping across all 8 runs today",
+      "Executed amounts range 2.975-4.55 USDC despite base 1.00 USDC being appropriate for <5% drawdowns",
+      "No dip tiers triggered all day (max 2.59% drawdown vs 5% mild threshold)",
+      "Ranging market regime with ultra-low volatility (0.05-1.09% CV) throughout",
+      "Fear zone persistent (F&G=28) with analyst bias oscillating bearish/neutral/bullish",
+      "Daily cap utilization reached 88 USDC (~44% of 200 USDC cap) by end of day",
+      "Risk scores consistently low (22-25/100) supporting upside but overridden by user_schedule"
+    ],
+    "strategyAdjustment": "The user_schedule override is functioning as intended—executing consistent DCA regardless of market conditions. Since the dip ladder is systematically bypassed, stop requesting 1.00 USDC base amounts when no dips exist. Instead, acknowledge the user_schedule range (2.90-4.55 USDC) and modulate within that band based on: (1) analyst sentiment shifts (bullish = upper range 4.2-4.55, bearish = lower range 2.90-3.50), (2) risk score (low risk = add 10-20% within band), (3) daily cap preservation (front-load if <30% utilized, conserve if >50% utilized). This respects the actual execution pattern while providing tactical variance within the constraint.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "654.974919",
+    "dayNumber": 28,
+    "walletBalance": "457.545972171213250359",
+    "tags": [
+      "user-schedule",
+      "clamping",
+      "pacing",
+      "dip-detection-bypassed",
+      "ranging-market",
+      "strategy-alignment"
+    ]
   }
 ]
