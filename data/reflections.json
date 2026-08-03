@@ -523,5 +523,32 @@
       "multiplier-failure",
       "pacing"
     ]
+  },
+  {
+    "id": "ref-1785740521549",
+    "date": "2026-08-03",
+    "timestamp": "2026-08-03T07:02:01.549Z",
+    "runStatus": "success",
+    "insight": "Reasoning-execution gap persists: claimed to execute 5.50 USDC but actually executed 4.55 USDC. The chronic pattern continues—8 straight Fear-zone runs (F&G=28) with claimed multipliers not translating to actual execution.",
+    "patterns": [
+      "Chronic reasoning-execution gap: last 8 runs claim 4.75-5.50 USDC targets but execute 3.95-4.92 USDC",
+      "100% bound by user_schedule across all recent runs—smart sizing multipliers are not being applied to actual execution",
+      "Persistent Fear zone (F&G=28) for 8+ consecutive runs with ranging market (0.03-0.25% CV)",
+      "Risk score consistently low (15-17/100) with 100% success rate—ample room to scale up",
+      "Drawdown minimal (1.1-4% off high)—no dip tiers triggered, suggesting conservative baseline"
+    ],
+    "strategyAdjustment": "Root cause diagnosis needed: the user_schedule bound is overriding smart sizing multipliers. Either (1) the baseline rate-based calculation needs to incorporate the multiplier BEFORE submission, or (2) the execution layer is ignoring the requested amount. Next run: verify the actual requestedAmountUsdc value is calculated as baseline * multiplier (e.g., 4.7 * 1.17 = 5.50) and submitted as such. If it's still clamped to ~4.55, investigate whether user_schedule has a hidden cap below the daily limit.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "596.609919",
+    "dayNumber": 28,
+    "walletBalance": "367.689192086692478234",
+    "tags": [
+      "reasoning-execution-gap",
+      "clamping",
+      "user_schedule",
+      "smart-sizing-failure",
+      "fear-zone",
+      "pacing"
+    ]
   }
 ]
