@@ -30,6 +30,7 @@ token with write access to this repo.
 | `CIRCLE_ENTITY_SECRET` | withdraw, run-dca | same as GitHub secret `CIRCLE_ENTITY_SECRET` |
 | `CIRCLE_WALLET_ID` | withdraw, run-dca | same value as GitHub secret **`WALLET_ID`** |
 | `ANTHROPIC_API_KEY` | chat assistant (`/api/chat`) | same as GitHub secret `ANTHROPIC_API_KEY` |
+| `ANTHROPIC_BASE_URL` | chat assistant (`/api/chat`) | **only if** the DCA cron uses a proxy — same value as GitHub **variable** `ANTHROPIC_BASE_URL` |
 | `KIT_KEY` | on-demand swap (`/api/run-dca`) | same as GitHub secret `KIT_KEY` |
 | `RESEND_API_KEY` | welcome email (`/api/send-welcome`) | key from [resend.com](https://resend.com/api-keys) |
 
@@ -40,6 +41,12 @@ token with write access to this repo.
 > The first four are enough for withdrawals; add `ANTHROPIC_API_KEY`, `KIT_KEY`,
 > and `RESEND_API_KEY` to enable the chat assistant, on-demand DCA, and the
 > welcome email respectively. Each feature degrades gracefully if its key is absent.
+>
+> If the DCA cron routes Claude through a proxy via `ANTHROPIC_BASE_URL` (a GitHub
+> Actions **variable**, not a secret), set the **same** value on Vercel too —
+> otherwise `/api/chat` keeps hitting `api.anthropic.com` with a key scoped to the
+> proxy and every message fails with a 503 *"The assistant is temporarily
+> unavailable."* The chat and the cron must point at the same Anthropic host.
 
 ## 4. Deploy & test
 

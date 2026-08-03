@@ -442,13 +442,19 @@ export default async function handler(req: VercelRequest, res: VercelResponse): 
 
   const apiKey = process.env.ANTHROPIC_API_KEY?.trim();
   if (!apiKey) { res.status(500).json({ error: "Server misconfigured: missing ANTHROPIC_API_KEY" }); return; }
+  // Optional Anthropic host override (a compatible proxy). Parity with the DCA
+  // cron (.github/workflows/dca.yml), which routes Claude through
+  // ANTHROPIC_BASE_URL. The SDK already reads this env var on its own; we thread
+  // it explicitly so the dependency is visible and the two paths can't drift —
+  // set the SAME value in Vercel env or chat keeps hitting api.anthropic.com.
 
   const body = (req.body ?? {}) as { messages?: unknown; address?: string };
   const messages = sanitizeMessages(body.messages);
   if (!messages) { res.status(400).json({ error: "Invalid messages: need a non-empty list ending in a user turn" }); return; }
   const address = typeof body.address === "string" && /^0x[0-9a-fA-F]{40}$/.test(body.address) ? body.address : undefined;
 
-  const client = new Anthropic({ apiKey });
+  const baseURL = process.env.ANTHROPIC_BASE_URL?.trim() || undefined;
+  const client = new Anthropic(baseURL ? { apiKey, baseURL } : { apiKey });
   let proposal: Proposal | null = null;
 
   try {
