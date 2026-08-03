@@ -775,5 +775,32 @@
       "fear-zone",
       "strategy-pivot"
     ]
+  },
+  {
+    "id": "ref-1785776540245",
+    "date": "2026-08-03",
+    "timestamp": "2026-08-03T17:02:20.245Z",
+    "runStatus": "success",
+    "insight": "All 8 recent runs show user_schedule consistently overriding requested amounts (2.90-4.55 USDC executed vs 1.00 USDC disciplined base recommendation), revealing systematic disconnect between reasoning and execution. Pacing is healthy at ~22.6 USDC/day average but strategy adjustments have zero impact on actual execution.",
+    "patterns": [
+      "100% user_schedule binding across all recent runs with 2.90-4.55 USDC range",
+      "Reasoning consistently recommends 1.00 USDC base (no dip tiers active, sub-5% drawdown, ranging regime) but execution ignores it",
+      "Market regime stable: Fear zone F&G=28, ultra-low volatility 0.09-0.90% CV, ranging conditions with no dip signals",
+      "One error_swap_failed on 2026-08-03 but otherwise 87.5% success rate in recent window",
+      "Daily cap utilization moderate: 25-67 USDC used of 200 USDC cap, leaving room for opportunistic dip buying"
+    ],
+    "strategyAdjustment": "Stop fighting the user_schedule override—accept that execution is rate-based automation outside agent control. Shift reasoning focus to validating whether the 2.90-4.55 USDC user_schedule amounts are appropriate given market conditions rather than recommending base amounts that will be ignored. Use dip ladder and regime analysis to flag when user_schedule amounts are misaligned with opportunity (e.g., buying aggressively when no dip exists vs being too conservative during 5%+ drawdowns), and recommend user_schedule parameter adjustments rather than per-run sizing changes.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "632.599919",
+    "dayNumber": 28,
+    "walletBalance": "354.898442808651003479",
+    "tags": [
+      "user-schedule-override",
+      "reasoning-execution-gap",
+      "pacing",
+      "ranging-regime",
+      "no-dip-signals",
+      "strategy-ineffective"
+    ]
   }
 ]
