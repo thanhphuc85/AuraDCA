@@ -47,6 +47,15 @@ token with write access to this repo.
 > otherwise `/api/chat` keeps hitting `api.anthropic.com` with a key scoped to the
 > proxy and every message fails with a 503 *"The assistant is temporarily
 > unavailable."* The chat and the cron must point at the same Anthropic host.
+>
+> **Applying an env-var change:** env vars are baked into a deployment at deploy
+> time, so an existing deployment won't see a new/changed value — you need a fresh
+> deployment created *after* the change. Note the Ignored Build Step
+> ([`scripts/vercel-ignore-build.sh`](scripts/vercel-ignore-build.sh)) **cancels**
+> a redeploy whose commit only touched `data/` (every `chore: record DCA run …`
+> cron commit is data-only), so "Redeploy" on one of those is skipped and the env
+> change never lands. Force a real build by pushing a commit that changes a
+> non-`data/` file (any code/config/docs edit), or run `vercel --prod --force`.
 
 ## 4. Deploy & test
 
