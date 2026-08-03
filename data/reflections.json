@@ -577,5 +577,33 @@
       "user-schedule-bound",
       "fear-zone-persistent"
     ]
+  },
+  {
+    "id": "ref-1785747736918",
+    "date": "2026-08-03",
+    "timestamp": "2026-08-03T09:02:16.918Z",
+    "runStatus": "success",
+    "insight": "Agent has stabilized at 4.40 USDC base execution after resolving reasoning-execution gap. Despite Fear zone (F&G=28), distribution pressure signals from analyst correctly override contrarian buying, preventing over-allocation at 4.23% drawdown (below 5% dip threshold).",
+    "patterns": [
+      "Consistent 4.40 USDC execution across last 3 runs shows stable pacing after volatile 3.95-5.50 USDC range in prior 5 runs",
+      "All 8 runs bound by user_schedule with 100% success rate - no clamping by daily cap despite 161-187 USDC remaining",
+      "Fear zone (F&G=28) persisted across all 8 runs but drawdown stayed below 5% mild dip threshold (3.19-4.23% range)",
+      "Ranging market regime with ultra-low to low volatility (0.03-0.25% CV) maintained throughout",
+      "Risk scores consistently low (15-18/100) recommending increases, but distribution pressure from analyst properly tempered allocation",
+      "Smart sizing multipliers (1.01-1.17x) were applied in runs 1-6 then abandoned in runs 7-8 in favor of base amount - correct adaptation to distribution signals"
+    ],
+    "strategyAdjustment": "Continue executing 4.40 USDC base amount while Fear zone and distribution pressure persist. Only increase allocation if: (1) drawdown crosses 5% mild dip threshold AND (2) analyst shifts from decrease to increase recommendation. Monitor for regime change from ranging to trending - if volatility increases significantly (CV > 1.0%) or Fear breaks above 35, reassess multiplier strategy. Current pacing of 21.6 USDC/day (605.4/28 days) is sustainable with daily cap headroom.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "605.409919",
+    "dayNumber": 28,
+    "walletBalance": "386.703038727842482614",
+    "tags": [
+      "pacing",
+      "distribution-pressure",
+      "fear-zone",
+      "ranging-market",
+      "smart-sizing-override",
+      "analyst-alignment"
+    ]
   }
 ]
