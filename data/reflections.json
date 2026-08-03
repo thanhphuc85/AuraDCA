@@ -744,5 +744,36 @@
       "pacing",
       "ranging-market"
     ]
+  },
+  {
+    "id": "ref-1785772950409",
+    "date": "2026-08-03",
+    "timestamp": "2026-08-03T16:02:30.409Z",
+    "runStatus": "success",
+    "insight": "All 8 recent runs show 100% user_schedule override executing 2.90-4.55 USDC despite agent consistently reasoning that 1.00 USDC base is appropriate given sub-5% drawdowns, no dip tiers active, ranging regime, and bearish analyst bias. The agent's reasoning is correct but completely ineffective—execution is rate-driven, not signal-driven.",
+    "patterns": [
+      "100% user_schedule binding across all recent runs with 2.90-4.55 USDC executed amounts",
+      "Agent reasoning consistently recommends 1.00 USDC base but is systematically overridden",
+      "No dip tiers triggered (all drawdowns sub-5%, mostly 2-4% range)",
+      "Persistent Fear zone (F&G=28) with ranging/low-volatility regime (0.16-0.90% CV)",
+      "Analyst bias consistently bearish (5-15% decrease recommendations)",
+      "One error_swap_failed on 2026-08-03 with 3.05 USDC attempt",
+      "Daily cap utilization healthy: 62.85 USDC of 200 USDC used (31% utilization)",
+      "Cumulative spend 629.55 USDC suggests ~22.5 USDC/day average over 28 days"
+    ],
+    "strategyAdjustment": "Stop fighting user_schedule override—it's a fixed constraint, not a bug. Instead, refocus reasoning to optimize WITHIN the 2.90-4.55 USDC execution band: recommend amounts at the lower end (2.90-3.20 USDC) during sub-5% drawdowns with bearish signals, and upper end (4.00-4.55 USDC) when Fear deepens below F&G=25 or drawdown approaches 5% threshold. This preserves daily cap for genuine dip opportunities (5%+ drawdown) while accepting that base 1.00 USDC recommendations are unrealistic given the rate-based execution layer.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "629.549919",
+    "dayNumber": 28,
+    "walletBalance": "358.870181121494114055",
+    "tags": [
+      "pacing",
+      "user-schedule-override",
+      "reasoning-execution-gap",
+      "ranging-market",
+      "no-dip-triggered",
+      "fear-zone",
+      "strategy-pivot"
+    ]
   }
 ]
