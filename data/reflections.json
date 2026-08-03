@@ -442,5 +442,32 @@
       "pacing",
       "risk-management"
     ]
+  },
+  {
+    "id": "ref-1785729724290",
+    "date": "2026-08-03",
+    "timestamp": "2026-08-03T04:02:04.290Z",
+    "runStatus": "success",
+    "insight": "Despite reasoning claiming to apply smart sizing multipliers (1.01x, 1.15x on ~4.7 USDC baseline), actual execution continues to undershoot: latest run executed 4.25 USDC vs stated target of 4.75 USDC. The gap between reasoning and action persists across 4 consecutive runs (3.95, 3.95, 4.04, 4.25 USDC).",
+    "patterns": [
+      "Persistent Fear zone (F&G=28) across last 5 runs - extended buying opportunity",
+      "Consistent reasoning-execution gap: claims 4.75-5.41 USDC targets but executes 3.95-4.25 USDC range",
+      "All runs bound by user_schedule not daily_cap - significant headroom remains (183 USDC cap unused)",
+      "100% success rate maintained with low risk scores (15-16/100)",
+      "Market regime: ranging with ultra-low volatility (0.03-0.15% CV) - stable conditions",
+      "Early Aug-03 runs reverted from rate-based (4.66-5.02 USDC) to conservative manual sizing"
+    ],
+    "strategyAdjustment": "Stop disconnecting reasoning from execution. If risk score recommends 20% increase and F&G=28 warrants aggressive positioning, actually execute the calculated amount (4.75+ USDC). Next run: execute minimum 4.75 USDC in Fear conditions with 180+ USDC daily cap headroom. If system constraints prevent this, identify and document the blocker rather than pretending multipliers are being applied.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "583.859919",
+    "dayNumber": 28,
+    "walletBalance": "380.197163090504845688",
+    "tags": [
+      "pacing",
+      "sizing-gap",
+      "fear-zone",
+      "execution-integrity",
+      "underutilization"
+    ]
   }
 ]
