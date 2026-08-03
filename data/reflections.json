@@ -718,5 +718,31 @@
       "no-dip-active",
       "fear-zone"
     ]
+  },
+  {
+    "id": "ref-1785769353048",
+    "date": "2026-08-03",
+    "timestamp": "2026-08-03T15:02:33.048Z",
+    "runStatus": "success",
+    "insight": "All 8 runs today executed 2.90-4.55 USDC amounts despite reasoning consistently recommending 1.00 USDC base due to no dip tiers active, bearish analyst bias, and ranging regime—revealing a persistent reasoning-execution disconnect where user_schedule overrides smart-sizing logic entirely.",
+    "patterns": [
+      "Chronic reasoning-execution gap: reasoning anchors to 1.00 USDC base but user_schedule executes 2.90-4.55 USDC (190-355% higher)",
+      "100% clamped by user_schedule across all 8 runs—smart-sizing proposals are completely bypassed",
+      "Market conditions stable: ranging regime, low volatility (0.23-0.90% CV), Fear zone (F&G=28), sub-5% drawdowns (2.15-4.23% off high)",
+      "One error_swap_failed mid-day but recovered immediately—no persistent error streak",
+      "Daily cap utilization healthy: 625.60 USDC cumulative on day 28 suggests ~22.3 USDC/day average, well under any reasonable daily limit"
+    ],
+    "strategyAdjustment": "Stop proposing 1.00 USDC base amounts in reasoning when user_schedule will override to 2.90-4.55 USDC range. Instead, align reasoning with actual execution: acknowledge that user_schedule is the binding constraint, validate whether the scheduled amount is appropriate given market conditions (dip tier, regime, analyst bias), and flag only if the scheduled amount conflicts with critical risk signals (e.g., executing 4+ USDC during extreme Greed or when daily cap is nearly exhausted). This eliminates the reasoning-execution gap and provides honest post-hoc validation rather than pre-hoc proposals that are ignored.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "625.599919",
+    "dayNumber": 28,
+    "walletBalance": "363.146359438756301124",
+    "tags": [
+      "reasoning-execution-gap",
+      "clamping",
+      "user-schedule-override",
+      "pacing",
+      "ranging-market"
+    ]
   }
 ]
