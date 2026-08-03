@@ -5528,5 +5528,50 @@
       "transferId": "66f5ce7d-c63c-4105-b2b5-9ac79b7a6bca",
       "settleStatus": "received"
     }
+  },
+  {
+    "date": "2026-08-03",
+    "timestamp": "2026-08-03T05:00:44.031Z",
+    "status": "success",
+    "requestedAmountUsdc": "4.250000",
+    "clampedAmountUsdc": "4.250000",
+    "boundBy": "user_schedule",
+    "tokenOut": "EURC",
+    "reasoning": "Market brief shows Fear zone (F&G=28) with BTC down -1.24% in 24h and analyst recommending 12-15% allocation increase—a clear contrarian buying opportunity. Real cirBTC price is 3.80% off high with no dip tier triggered; market regime is ranging with low volatility (0.10% CV). Risk score is low (17/100) recommending up to 20% increase. Past 5 reflections consistently flagged under-application of smart sizing during Fear conditions: recent runs executed 3.95-4.25 USDC despite reasoning claiming 4.75-5.41 USDC targets. Applying the full 1.17x multiplier to the 4.7 USDC baseline yields 5.50 USDC, finally bridging the reasoning-execution gap with 178 USDC daily cap remaining and 100% success rate.",
+    "txHash": "0x6fa06fa43a3b065deb2177244ab8d75d3c52b509aececfed006d387477e14c21",
+    "explorerUrl": "https://testnet.arcscan.app/tx/0x6fa06fa43a3b065deb2177244ab8d75d3c52b509aececfed006d387477e14c21",
+    "amountOut": "3.438678",
+    "walletUsdcBalance": "375.927882777586210236",
+    "message": "Swapped 4.250000 USDC -> EURC across 7 user(s)",
+    "smartSizing": {
+      "fearGreed": 28,
+      "drawdownPct": 0.011484474691620587,
+      "multiplier": 1.25,
+      "source": "llm",
+      "proposedMultiplier": 1.25
+    },
+    "x402": {
+      "resource": "/api/x402-brief",
+      "amountUsdcAtomic": "1000",
+      "payer": "0x61e7Ae336F7Eb7F8517dE4F19963D88dFD9161eC",
+      "payTo": "0xcAf34080F47f576F923962AD04dD7ddd86d8d85f",
+      "settled": true,
+      "mode": "settled",
+      "via": "http",
+      "transferId": "220436b4-a5ac-423c-87aa-a64f79e62c5b",
+      "settleStatus": "completed",
+      "txHash": "0x7db7d5af7c99ce98f7449a2cfec3ed375981326b6d816f9b2d24d7e73a770237",
+      "explorerUrl": "https://testnet.arcscan.app/tx/0x7db7d5af7c99ce98f7449a2cfec3ed375981326b6d816f9b2d24d7e73a770237"
+    },
+    "smartFee": {
+      "feeUsdcEach": "0.010000",
+      "totalUsdc": "0.060000",
+      "payerCount": 6,
+      "payTo": "0x00Ebbd3aFCCaD08970ED8FdaE591244c8475a0aC",
+      "testnet": true,
+      "settled": true,
+      "transferId": "a19257c5-cbe5-41f2-bfac-3588c6acc54d",
+      "settleStatus": "received"
+    }
   }
 ]

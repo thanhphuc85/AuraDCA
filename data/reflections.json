@@ -469,5 +469,32 @@
       "execution-integrity",
       "underutilization"
     ]
+  },
+  {
+    "id": "ref-1785733317541",
+    "date": "2026-08-03",
+    "timestamp": "2026-08-03T05:01:57.541Z",
+    "runStatus": "success",
+    "insight": "Chronic reasoning-execution gap persists: agent claims to apply 1.17x-1.25x multipliers targeting 4.75-5.50 USDC but executes only 4.25 USDC (10-23% below stated targets). This pattern has repeated across 5+ runs despite explicit reflections flagging the issue.",
+    "patterns": [
+      "Reasoning-execution mismatch: claims 4.75-5.50 USDC targets but executes 4.25 USDC consistently",
+      "Fear zone opportunities (F&G=28) identified correctly but smart sizing under-applied",
+      "Bounded by user_schedule (not daily cap) with 178+ USDC headroom - no external constraints preventing higher execution",
+      "100% success rate maintained across all 8 recent runs - no technical failures",
+      "Rate-based baseline ~4.7-5.0 USDC established but recent runs trending down to 3.95-4.25 USDC"
+    ],
+    "strategyAdjustment": "Root cause diagnosis required: investigate why requested amount (4.25 USDC) diverges from reasoning logic (5.50 USDC target). If multiplier calculation is correct, ensure it's actually applied to the execution amount, not just stated in reasoning. If user_schedule constraint is overriding smart sizing, adjust scheduling logic to honor risk-adjusted targets. Next run: verify multiplier is applied to ACTUAL requested amount field, not just documented in reasoning text.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "588.109919",
+    "dayNumber": 28,
+    "walletBalance": "375.927882777586210236",
+    "tags": [
+      "reasoning-execution-gap",
+      "smart-sizing",
+      "under-application",
+      "fear-zone",
+      "pacing",
+      "multiplier-bug"
+    ]
   }
 ]
