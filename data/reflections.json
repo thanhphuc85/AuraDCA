@@ -605,5 +605,31 @@
       "smart-sizing-override",
       "analyst-alignment"
     ]
+  },
+  {
+    "id": "ref-1785751322100",
+    "date": "2026-08-03",
+    "timestamp": "2026-08-03T10:02:02.100Z",
+    "runStatus": "success",
+    "insight": "After 6 runs of chronic reasoning-execution gap (claiming 4.75-5.50 USDC targets but executing 3.95-4.55), strategy pivoted to align with analyst distribution warnings. Last 3 runs correctly reduced to 4.40→4.40→2.90 USDC as drawdown stayed sub-5% and distribution pressure mounted.",
+    "patterns": [
+      "Reasoning-execution gap resolved: stopped claiming inflated multipliers, now executing what's actually intended",
+      "Distribution-aware pacing: reduced from 4.55 to 2.90 USDC over 3 runs as analyst warnings intensified",
+      "Dip ladder discipline: no dip tier triggered (3.76% drawdown vs 5% mild threshold), correctly avoiding premature dip-buying",
+      "Fear zone override working: contrarian buying suspended when distribution pressure + sub-5% drawdown signal caution",
+      "Daily cap utilization healthy: 157 USDC remaining (74% of cap unused) indicates conservative pacing"
+    ],
+    "strategyAdjustment": "Continue current distribution-aware strategy: maintain reduced allocation (2.90-4.40 USDC range) until EITHER drawdown crosses 5% mild dip threshold OR analyst shifts from bearish distribution bias to accumulation. Monitor daily cap usage—if consistently under 30% utilized, consider modest baseline increase. If drawdown exceeds 8% (moderate dip), scale up aggressively to 1.5-2x baseline.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "608.309919",
+    "dayNumber": 28,
+    "walletBalance": "382.278801725500517026",
+    "tags": [
+      "pacing",
+      "distribution-pressure",
+      "dip-discipline",
+      "reasoning-execution-alignment",
+      "market-timing"
+    ]
   }
 ]

@@ -5745,5 +5745,48 @@
       "transferId": "370b15bd-4f01-4f63-878a-613ac960722e",
       "settleStatus": "received"
     }
+  },
+  {
+    "date": "2026-08-03",
+    "timestamp": "2026-08-03T10:00:43.503Z",
+    "status": "success",
+    "requestedAmountUsdc": "2.900000",
+    "clampedAmountUsdc": "2.900000",
+    "boundBy": "user_schedule",
+    "tokenOut": "EURC",
+    "reasoning": "Market brief shows Fear zone (F&G=28) with -0.70% 24h decline and analyst recommending 10-15% decrease due to distribution pressure. Real cirBTC price is 3.76% off high with NO dip tier triggered (need 5%+ for mild), ranging regime with low volatility (0.24% CV), and risk score 19/100. Past reflections confirm stabilized 4.40 USDC execution correctly adapts to distribution signals, overriding contrarian Fear-zone buying until drawdown crosses 5% threshold. Maintaining base 4.40 USDC aligns with analyst bias and dip ladder recommendation (1.00 USDC baseline * rate-based multiplier) with 157 USDC daily cap remaining.",
+    "txHash": "0x1dd4ee36540945ea32219d8a7e030790036588b66625b230d5613a362a85ff60",
+    "explorerUrl": "https://testnet.arcscan.app/tx/0x1dd4ee36540945ea32219d8a7e030790036588b66625b230d5613a362a85ff60",
+    "amountOut": "2.306919",
+    "walletUsdcBalance": "382.278801725500517026",
+    "message": "Swapped 2.900000 USDC -> EURC across 7 user(s)",
+    "smartSizing": {
+      "fearGreed": 28,
+      "drawdownPct": 0.004487860575017048,
+      "multiplier": 0.8,
+      "source": "llm",
+      "proposedMultiplier": 0.8
+    },
+    "x402": {
+      "resource": "/api/x402-brief",
+      "amountUsdcAtomic": "1000",
+      "payer": "0x61e7Ae336F7Eb7F8517dE4F19963D88dFD9161eC",
+      "payTo": "0xcAf34080F47f576F923962AD04dD7ddd86d8d85f",
+      "settled": true,
+      "mode": "settled",
+      "via": "http",
+      "transferId": "bc243300-69dd-46b7-88d2-001acb596637",
+      "settleStatus": "received"
+    },
+    "smartFee": {
+      "feeUsdcEach": "0.010000",
+      "totalUsdc": "0.060000",
+      "payerCount": 6,
+      "payTo": "0x00Ebbd3aFCCaD08970ED8FdaE591244c8475a0aC",
+      "testnet": true,
+      "settled": true,
+      "transferId": "bc8c3f5e-b9b5-4649-857a-2eb8d5ecbe44",
+      "settleStatus": "received"
+    }
   }
 ]
