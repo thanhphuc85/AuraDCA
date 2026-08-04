@@ -1340,5 +1340,31 @@
       "budget-preservation",
       "control-mismatch"
     ]
+  },
+  {
+    "id": "ref-1785848548710",
+    "date": "2026-08-04",
+    "timestamp": "2026-08-04T13:02:28.710Z",
+    "runStatus": "success",
+    "insight": "Agent consistently requests 2.98-6.30 USDC but reasoning strongly recommends 3.00 USDC lower band—yet executions remain 2.98-6.30 USDC. This disconnect suggests requested amounts are not being applied, or user_schedule overrides are systematic regardless of reasoning quality.",
+    "patterns": [
+      "All 8 recent runs bound by user_schedule, no daily cap clamping despite 73-87% budget remaining",
+      "Reasoning consistently recommends 3.00-3.50 USDC for sub-5% drawdown scenarios but executed amounts range 2.98-6.30 USDC",
+      "Extreme Fear (F&G=25) persists across all runs with no dip tier triggered (drawdown 2.05-2.61% vs 5% threshold)",
+      "Ranging regime with ultra-low volatility (0.12-0.77% CV) offers no directional edge across entire session",
+      "12 runs on day 29 with 53.38 USDC spent, averaging 4.45 USDC per run vs recommended 3.00 USDC"
+    ],
+    "strategyAdjustment": "Investigate whether requested amounts actually control execution under user_schedule binding. If they do, strictly cap requests at 3.00 USDC until a genuine dip tier triggers (5%+ drawdown). If user_schedule overrides requests entirely, stop wasting reasoning tokens on amount calibration and focus purely on dip detection accuracy—current 2.05-2.61% drawdowns do not meet the 5% mild dip threshold, so base 1.00x allocation is theoretically correct despite F&G=25 Extreme Fear.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "712.374919",
+    "dayNumber": 29,
+    "walletBalance": "399.668950661032758803",
+    "tags": [
+      "pacing",
+      "user-schedule-override",
+      "dip-detection",
+      "ranging-market",
+      "request-execution-disconnect"
+    ]
   }
 ]
