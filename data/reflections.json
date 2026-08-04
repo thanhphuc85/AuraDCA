@@ -1224,5 +1224,33 @@
       "low-volatility",
       "budget-conservation"
     ]
+  },
+  {
+    "id": "ref-1785834150934",
+    "date": "2026-08-04",
+    "timestamp": "2026-08-04T09:02:30.934Z",
+    "runStatus": "success",
+    "insight": "All 10 runs today show systematic clamping by user_schedule to 2.90-6.30 USDC range despite requesting 2.98-6.30 USDC. No genuine dip signal triggered (all <3% drawdown vs 5% threshold), yet 42.01 USDC deployed (21% daily cap) into ranging market with ultra-low volatility.",
+    "patterns": [
+      "user_schedule consistently overrides all requests to 2.90-6.30 USDC execution band regardless of input",
+      "All 10 runs show NO dip tier triggered (0.75-2.61% drawdowns vs 5% mild threshold)",
+      "Extreme Fear (F&G=25) persists across all runs with mixed analyst bias (bearish majority)",
+      "Ultra-low volatility ranging regime (0.09-0.75% CV) with no directional edge",
+      "Risk scores exceptionally low (15-19/100) supporting 20% upside allocation",
+      "Strategy requesting lower-mid range (3.20-3.80 USDC) during bearish sentiment with sub-5% drawdown",
+      "79% daily cap remaining (157.58 USDC) after 10 runs - conservative pacing"
+    ],
+    "strategyAdjustment": "Stop requesting amounts in the 2.98-4.73 USDC range since user_schedule clamps everything to its band anyway. Since no genuine dip has materialized in 10 runs despite Extreme Fear, and we're in a ranging/low-volatility regime, reduce base allocation to 2.50-2.80 USDC to preserve more capital for actual 5%+ drawdown events. The persistent F&G=25 is not producing dip entries—wait for genuine price action (5%+ drawdown) before deploying mid-to-upper range amounts.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "696.974919",
+    "dayNumber": 29,
+    "walletBalance": "414.098570106241532762",
+    "tags": [
+      "clamping",
+      "pacing",
+      "dip-signal-accuracy",
+      "ranging-market",
+      "capital-preservation"
+    ]
   }
 ]
