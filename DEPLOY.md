@@ -69,21 +69,35 @@ token with write access to this repo.
 
 Use the Vercel URL in place of the old GitHub Pages link once it works.
 
-## 5. Skip deploys for the hourly cron (Ignored Build Step)
+## 5. The hourly cron vs. the Hobby deploy limit — deploy via CLI
 
-The DCA cron commits `data/*.json` every run ("chore: record DCA run …"). Nothing in
-the deployment reads those files — the frontend fetches the ledger/history from
-`raw.githubusercontent.com` at runtime and the API reads it via the GitHub API — so
-deploying a data-only commit changes no served asset and just burns the Hobby deploy
-quota (~96/day). Skip them:
+The DCA cron commits `data/*.json` every run ("chore: record DCA run …"), ~96×/day.
+Nothing in the deployment reads those files (the frontend fetches the ledger/history
+from `raw.githubusercontent.com` at runtime; the API reads it via the GitHub API), so
+those commits never need a rebuild.
 
-**Vercel → Project → Settings → Build and Deployment → Ignored Build Step**, set the
-command to:
+An **Ignored Build Step** (`scripts/vercel-ignore-build.sh`) skips the *build* for
+data-only commits, but on Hobby the **deployment is still created and still counts**
+toward the **100-deployments/day** cap — so ~96 cron pushes/day exhaust the quota on
+their own and real deploys start failing with *"Resource is limited … more than 100,
+api-deployments-free-per-day."*
 
+**Fix — stop the cron from creating deployments at all:** `vercel.json` sets
+
+```json
+"git": { "deploymentEnabled": { "main": false } }
 ```
-bash scripts/vercel-ignore-build.sh
+
+which tells Vercel to create **no** deployment for any push to `main`. The cron then
+costs zero quota. (The Ignored Build Step is now redundant but harmless.)
+
+**Deploy the site with the Vercel CLI** (a direct deploy — not git-triggered — so it
+is unaffected by the setting above, and it can't be raced/superseded by a cron commit):
+
+```bash
+npx vercel --prod --scope dca-agent
 ```
 
-The script builds for any commit touching code/site/config and skips commits that
-only change `data/` (see `scripts/vercel-ignore-build.sh`). Fail-safe: if it can't
-diff, it builds.
+First run only: `npx vercel login`, then `npx vercel link` to the `aura-dca` project.
+CLI deploys still count toward the 100/day cap, but a handful of real deploys is far
+under it once the cron no longer contributes.
