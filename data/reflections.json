@@ -1447,5 +1447,32 @@
       "ranging-regime",
       "execution-override"
     ]
+  },
+  {
+    "id": "ref-1785862924638",
+    "date": "2026-08-04",
+    "timestamp": "2026-08-04T17:02:04.638Z",
+    "runStatus": "error_swap_failed",
+    "insight": "Error streak continues (2nd consecutive error_swap_failed, same 500 server error) with EURC swap, indicating infrastructure issue not market conditions. Agent successfully reduced allocation to 2.50 USDC floor after 15+ runs of systematic user_schedule override executing 2.98-6.30 USDC.",
+    "patterns": [
+      "Persistent swap infrastructure failure: 2 consecutive 500 errors on EURC swaps suggest service degradation",
+      "Agent learning effective: allocation compressed from 2.98-6.30 USDC range down to 2.50 USDC floor through reflection discipline",
+      "Ranging market persists: 0.12-1.66% CV volatility, no dip tiers triggered across all 8 runs despite Extreme Fear (F&G=25)",
+      "User_schedule always binds: 16 consecutive runs show systematic override pattern regardless of requested amount",
+      "Sub-5% drawdown dominance: cirBTC only 1.71-2.60% off high across entire day, dip ladder never activates"
+    ],
+    "strategyAdjustment": "Switch tokenOut from EURC to alternative stablecoin (USDC→WETH or USDC→BTC direct if available) to route around infrastructure failure. If EURC is required, escalate swap service 500 error for investigation. Continue 2.50 USDC floor discipline for sub-5% drawdown scenarios—reflection-driven compression is working. Monitor if genuine 5%+ dip materializes to validate cap preservation strategy (66% daily budget still available at 131.33 USDC).",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "723.649294",
+    "dayNumber": 29,
+    "walletBalance": "384.291732963419046647",
+    "tags": [
+      "error-recovery",
+      "infrastructure",
+      "pacing",
+      "reflection-effectiveness",
+      "token-routing",
+      "ranging-market"
+    ]
   }
 ]
