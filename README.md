@@ -154,9 +154,81 @@ Every run records *which* constraint bound the outcome (`boundBy`), so the audit
 
 ## Architecture
 
+Data flow & money flow, end to end. The one line that matters: **Claude *recommends*, [`clampDecision()`](src/decision/guardrails.ts) *decides* the number that actually gets spent.** Detailed walkthrough: [`docs/architecture.md`](docs/architecture.md) · tiếng Việt: [`docs/architecture.vi.md`](docs/architecture.vi.md).
+
+![Aura DCA architecture — User → Dashboard/cron → AI + Guardrail → x402 → Circle Swap Kit → Arc Chain](docs/architecture.svg)
+
+<details>
+<summary><b>Mermaid source</b> (editable · renders inline on GitHub)</summary>
+
+```mermaid
+flowchart TB
+    subgraph ACTORS["👤 Users &amp; Triggers"]
+      direction LR
+      U["User<br/><small>wallet / email</small>"]
+      WEB["Web Dashboard<br/><small>aura-dca.xyz</small>"]
+      CRON["GitHub Actions cron<br/><small>hourly · autonomous</small>"]
+    end
+    subgraph API["⚙️ API &amp; Orchestration"]
+      direction LR
+      VERCEL["Vercel serverless · api/*.ts<br/><small>each action signed EIP-191</small>"]
+      RUN["run.ts orchestrator<br/><small>per-user ledger · pooled / allowance</small>"]
+    end
+    subgraph AI["🧠 AI Logic — Claude (RECOMMENDS only)"]
+      direction LR
+      ANALYST["Market Analyst<br/><small>analyst.ts</small>"]
+      SIZING["Smart sizing<br/><small>sizing.ts</small>"]
+      DECIDE["Decision<br/><small>client.ts · tool-use · zod</small>"]
+      REFLECT["Reflection memory<br/><small>reflect.ts</small>"]
+    end
+    GUARD{{"🔒 GUARDRAIL — clampDecision·guardrails.ts<br/>SOLE authority over the real spend · records boundBy"}}
+    subgraph EXEC["💸 Payments &amp; Execution"]
+      direction LR
+      X402["x402 · agent.ts <small>(additive · gated)</small><br/><small>pays for brief · EIP-3009</small>"]
+      SWAP["Circle Swap Kit · swapKit.ts<br/><small>one pooled swap / token · pro-rata</small>"]
+      WALLET["Circle Dev-Controlled Wallet<br/><small>wallet.ts</small>"]
+    end
+    subgraph ARC["⛓️ Arc Chain — Arc Testnet"]
+      direction LR
+      SWAPTX["USDC → EURC / cirBTC"]
+      ATTEST["AuraAttestation.sol<br/><small>on-chain audit anchor</small>"]
+      SCAN["ArcScan explorer"]
+    end
+    subgraph AUDIT["📓 Audit &amp; Notify"]
+      direction LR
+      HIST["data/history.json<br/><small>committed back to repo</small>"]
+      NOTIFY["Telegram / Discord<br/><small>OUTBOUND-only push</small>"]
+    end
+    U --> WEB --> VERCEL
+    CRON --> RUN
+    VERCEL --> RUN
+    RUN -. "context" .-> AI
+    AI -. "recommends" .-> GUARD
+    RUN == "live spend request" ==> GUARD
+    GUARD == "clamped amount" ==> SWAP
+    RUN -. "pay-per-call" .-> X402
+    SWAP --> WALLET
+    X402 --> WALLET
+    WALLET ==> SWAPTX
+    SWAPTX --> SCAN
+    RUN --> ATTEST
+    SWAPTX --> HIST
+    HIST --> NOTIFY
+    HIST -. "track record" .-> WEB
+    classDef gate fill:#f5a524,stroke:#b45309,color:#1a1200,font-weight:bold;
+    class GUARD gate;
+```
+
+</details>
+
+> **Solid bold** = authoritative money flow (request → guardrail → swap → chain). **Dashed** = advisory/additive (AI only recommends; x402 pay-per-call; dashboard feedback). The two real entry points are the **Web Dashboard** and the **hourly cron** — Telegram/Discord are outbound push only, not an interactive bot.
+
+### Code layout
+
 ```
 src/
   config.ts          env parsing (zod) + guardrail defaults
+  wallet.ts          Circle Developer-Controlled Wallets client + USDC balance getter
   wallet.ts          Circle Developer-Controlled Wallets client + USDC balance getter
   decision/
     prompt.ts          context + system prompt sent to Claude
