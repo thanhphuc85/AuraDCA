@@ -1534,5 +1534,33 @@
       "sub-5-drawdown",
       "no-dip-signal"
     ]
+  },
+  {
+    "id": "ref-1785870138547",
+    "date": "2026-08-04",
+    "timestamp": "2026-08-04T19:02:18.547Z",
+    "runStatus": "success",
+    "insight": "Systematic override pattern confirmed: requested 2.50-3.75 USDC across last 8 runs but user_schedule consistently executed 2.55-4.03 USDC. The agent is wasting reasoning cycles requesting conservative amounts when the schedule enforces its own allocation—adjust strategy to request what the schedule will actually execute.",
+    "patterns": [
+      "user_schedule binding on 100% of runs (8/8) with systematic override of requested amounts",
+      "All runs show sub-5% drawdown (1.48-2.42% off high) with NO dip tiers triggered—genuine dip buying opportunities have not materialized",
+      "Ranging regime persists (0.12-1.66% CV) with no directional edge across all 8 runs",
+      "Daily cap utilization: 74.22 USDC spent across 19 runs (37% of 200 USDC cap) with 125.78 USDC remaining",
+      "Fear/Extreme Fear (F&G=25) locked in across all runs with persistent sentiment-price disconnect",
+      "One error_swap_failed in recent history but immediately recovered—no error streak"
+    ],
+    "strategyAdjustment": "Stop fighting the user_schedule override. Since the schedule consistently executes 2.55-4.03 USDC regardless of reasoning (average ~3.25 USDC), request 3.00-3.50 USDC as the baseline when drawdown <5% and ranging conditions persist. Reserve 2.50 USDC floor only for high-risk scenarios (not applicable in current low-risk environment). If a genuine 5%+ dip triggers, request 5.00-6.00 USDC to signal stronger conviction to the schedule. Focus reasoning on market regime identification and risk assessment rather than precise sizing that gets overridden anyway.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "732.949294",
+    "dayNumber": 29,
+    "walletBalance": "438.699557580212822671",
+    "tags": [
+      "pacing",
+      "user-schedule-override",
+      "ranging-market",
+      "sub-5-drawdown",
+      "budget",
+      "strategy-effectiveness"
+    ]
   }
 ]
