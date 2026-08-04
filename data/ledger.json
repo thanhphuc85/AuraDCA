@@ -35,14 +35,14 @@
     },
     "0xdd6045a634ef2c61d6070552b556aae40099e84b": {
       "address": "0xdd6045a634ef2c61d6070552b556aae40099e84b",
-      "usdcBalance": "128.066234",
+      "usdcBalance": "106.266234",
       "cirBtcBalance": "0",
       "totalDeposited": "273.000000",
       "totalSwapped": "140.173766",
       "totalWithdrawnCirBtc": "0",
       "totalWithdrawnUsdc": "4.000000",
       "firstSeen": "2026-07-10T16:07:29.490Z",
-      "lastActivity": "2026-08-04T23:00:46.796Z",
+      "lastActivity": "2026-08-04T23:20:24.195Z",
       "dcaRatePerDay": "0.500000",
       "dcaPaused": false,
       "dcaRateIsCustom": true,
@@ -8613,6 +8613,14 @@
       "txHash": "0x2cd9223a2dc4dc822b2d4de0ac0a8689d30ee3a04b1f32fbe2594dbcae2d8329",
       "processedAt": "2026-08-03T21:25:08.295Z",
       "circleTxId": "f61f031d-73ce-5770-b11e-13a8b5d4fdcc"
+    },
+    {
+      "id": "wd-1785885624195-99e84b",
+      "address": "0xdd6045a634ef2c61d6070552b556aae40099e84b",
+      "token": "USDC",
+      "amount": "21.800000",
+      "status": "processing",
+      "requestedAt": "2026-08-04T23:20:24.195Z"
     }
   ]
 }
