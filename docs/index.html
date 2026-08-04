@@ -1345,6 +1345,7 @@
         <input id="wdAmount" type="number" min="0" step="0.000001" placeholder="Amount" />
         <button class="btn" id="wdBtn" data-t="portWithdrawBtn">Withdraw now</button>
       </div>
+      <div class="wd-avail" id="wdAvail" style="font-size:12px;color:var(--muted);margin:8px 2px 0;"></div>
       <div class="wd-progress" id="wdProgress" style="display:none;">
         <div class="wd-steps">
           <div class="wd-step" id="wdStep1"><span class="wd-step-icon">1</span> <span data-t="wdStep1">Signing message with wallet…</span></div>
@@ -4400,8 +4401,13 @@
       pcbEl.textContent = fmt(parseFloat(simBal), 8);
       if (pcbSubEl) pcbSubEl.textContent = t.portSimSub || "Paper — Arc route offline";
     } else {
+      // Real DCA target (e.g. EURC): show the agent-held ledger credit — the same
+      // figure the Withdraw box validates against — NOT the on-chain wallet balance.
+      // Showing the wallet balance here made "earned" contradict the withdrawable
+      // amount; the on-chain wallet figure still lives in the wallet side panel.
       var tbal = (user && user.tokenBalances && user.tokenBalances[dcaToken]) || "0";
       pcbEl.textContent = fmt(parseFloat(tbal), 6);
+      if (pcbSubEl) pcbSubEl.textContent = t.portHeldSub || "Held by agent · withdrawable";
     }
     (async function () {
       var acct = state.account;
@@ -4411,20 +4417,10 @@
         var allowRaw = await safeRpcCall("eth_call", [{ to: ARC.usdc, data: data }, "latest"]);
         $("portAllowance").textContent = fmt(Number(BigInt(allowRaw || "0x0")) / 1e6, 2);
       } catch (e) { $("portAllowance").textContent = "—"; }
-      // Simulated tokens never settle on-chain — the paper value set above stands.
-      // Real DCA targets (cirBTC, EURC) read the wallet's live on-chain balance so
-      // the "In your wallet" card matches the wallet panel — both read on-chain,
-      // never the agent's ledger credit. The ledger figure rendered synchronously
-      // above stays as a fallback if the on-chain read fails.
-      if (dcaToken === "cirBTC" && !isSimToken) {
-        try { $("portCirBtc").textContent = fmt(Number(await tokenBalanceOf(ARC.cirbtc, acct)) / 1e8, 8); } catch (e) { $("portCirBtc").textContent = "—"; }
-      } else if (!isSimToken) {
-        var ONCHAIN = { EURC: { addr: ARC.eurc, dec: 1e6, dp: 6 } };
-        var oc = ONCHAIN[dcaToken];
-        if (oc && oc.addr) {
-          try { $("portCirBtc").textContent = fmt(Number(await tokenBalanceOf(oc.addr, acct)) / oc.dec, oc.dp); } catch (e) { /* keep ledger fallback */ }
-        }
-      }
+      // The "earned" card intentionally shows the agent-held ledger credit
+      // (rendered synchronously above), which matches the Withdraw box. The user's
+      // on-chain wallet token balance is shown separately in the wallet side panel,
+      // so we no longer overwrite this card with an on-chain read.
     })();
 
     if (typeof renderRateCard === "function") renderRateCard(user);
@@ -4480,6 +4476,10 @@
     } else {
       distCard.style.display = "none";
     }
+
+    // Keep the "Available to withdraw" hint in step with the connected account and
+    // any ledger refresh (same source as the card above).
+    if (typeof updateWithdrawAvailable === "function") updateWithdrawAvailable();
   }
 
   // ---------- per-user DCA schedule (Cách B) ----------
@@ -4748,10 +4748,34 @@
     }
   })();
 
+  // Show the withdrawable balance up front. This is the agent-held ledger credit
+  // (the same figure the Withdraw button validates against) — deliberately a
+  // DIFFERENT pot from the on-chain wallet balance shown in the portfolio card, so
+  // label it clearly to avoid the "20 vs 53.6" confusion between the two.
+  function updateWithdrawAvailable() {
+    var el = $("wdAvail");
+    if (!el) return;
+    var tt = (typeof T !== "undefined" && T[currentLang]) ? T[currentLang] : {};
+    var sel = $("wdToken");
+    if (!state.account || !sel) { el.textContent = ""; return; }
+    var u = _ledgerData && _ledgerData.users ? _ledgerData.users[state.account.toLowerCase()] : null;
+    if (!u) { el.textContent = ""; return; }
+    var token = sel.value;
+    var bal = token === "USDC" ? parseFloat(u.usdcBalance || "0")
+            : token === "cirBTC" ? parseFloat(u.cirBtcBalance || "0")
+            : parseFloat((u.tokenBalances && u.tokenBalances[token]) || "0");
+    var dp = token === "cirBTC" ? 8 : 6;
+    el.innerHTML = (tt.wdAvailLabel || "Available to withdraw:") +
+      ' <b style="color:var(--text);">' + fmt(bal, dp) + ' ' + token + '</b> ' +
+      '<span style="opacity:.85;">' + (tt.wdAvailHint || "— held by the agent for you, separate from your on-chain wallet balance.") + '</span>';
+  }
+
   // Real-time withdrawal: sign message → call API → get tokens back in 10-30s
   (function setupWithdraw() {
     var btn = $("wdBtn");
     if (!btn) return;
+    var tokSel = $("wdToken");
+    if (tokSel) tokSel.addEventListener("change", updateWithdrawAvailable);
 
     function setStep(n, status) {
       for (var i = 1; i <= 3; i++) {
@@ -5262,7 +5286,7 @@
       portSub: "Your schedule, your signature — every change is authorised by your own wallet, and the agent spends only what your schedule and caps allow.",
       portUsdcLabel: "USDC in wallet", portUsdcSub: "Your own balance",
       portAllowanceLabel: "Allowance", portAllowanceSub: "Approved to agent",
-      portCirBtcLabel: "cirBTC earned", portCirBtcSub: "In your wallet", portEarnedWord: "earned", portSimBadge: "Simulated", portSimSub: "Paper — Arc route offline",
+      portCirBtcLabel: "cirBTC earned", portCirBtcSub: "In your wallet", portEarnedWord: "earned", portSimBadge: "Simulated", portSimSub: "Paper — Arc route offline", portHeldSub: "Held by agent · withdrawable",
       portSwappedLabel: "Total DCA'd", portSwappedSub: "USDC swapped, all-time",
       portWithdrawTitle: "Withdraw your tokens", portWithdrawSub: "Sign a message to verify your identity — withdrawal completes in 10–30 seconds.",
       rateTitle: "Your DCA schedule", rateSub: "Build exactly how the agent buys for you — frequency, amount per run, caps, and mode. Sign to save (no gas).",
@@ -5293,6 +5317,7 @@
       wdErrConnect: "Connect your wallet first.", wdErrProvider: "MetaMask not available.",
       wdErrAmount: "Enter a valid amount.", wdErrLedger: "Ledger not loaded yet. Please try again.", wdLoadingLedger: "Loading account…",
       wdErrBalance: "Insufficient balance: ", wdErrApiUrl: "Set your Withdrawal API URL in Settings first.",
+      wdAvailLabel: "Available to withdraw:", wdAvailHint: "— held by the agent for you, separate from your on-chain wallet balance.",
       setWithdrawApiTitle: "Backend API", setWdApiLabel: "API base URL (optional)",
       setWdApiHelp: "Routes every signed action — withdraw, set schedule, run now, chat — to a backend. Leave empty to use this site's own /api/* (works on the Vercel deployment). Set a URL only when the dashboard is served from a static host with no serverless functions.",
       depErrConnect: "Connect your wallet first.", depErrAmount: "Enter an amount greater than 0.",
@@ -5379,7 +5404,7 @@
       portSub: "Lịch của bạn, chữ ký của bạn — mọi thay đổi đều do ví bạn ủy quyền, và agent chỉ chi trong đúng lịch cùng các cap bạn đặt.",
       portUsdcLabel: "USDC trong ví", portUsdcSub: "Số dư của bạn",
       portAllowanceLabel: "Allowance", portAllowanceSub: "Đã cấp cho agent",
-      portCirBtcLabel: "cirBTC đã nhận", portCirBtcSub: "Trong ví của bạn", portEarnedWord: "đã nhận", portSimBadge: "Mô phỏng", portSimSub: "Paper — tuyến Arc tạm ngưng",
+      portCirBtcLabel: "cirBTC đã nhận", portCirBtcSub: "Trong ví của bạn", portEarnedWord: "đã nhận", portSimBadge: "Mô phỏng", portSimSub: "Paper — tuyến Arc tạm ngưng", portHeldSub: "Agent giữ hộ · rút được",
       portSwappedLabel: "Tổng đã DCA", portSwappedSub: "USDC đã swap, tổng cộng",
       portWithdrawTitle: "Rút token", portWithdrawSub: "Ký xác nhận danh tính — rút tiền hoàn tất trong 10–30 giây.",
       rateTitle: "Lịch DCA của bạn", rateSub: "Tự thiết lập cách agent mua cho bạn — tần suất, số tiền mỗi lần, giới hạn, và chế độ. Ký để lưu (không tốn gas).",
@@ -5410,6 +5435,7 @@
       wdErrConnect: "Kết nối ví trước.", wdErrProvider: "MetaMask không khả dụng.",
       wdErrAmount: "Nhập số tiền hợp lệ.", wdErrLedger: "Chưa tải được sổ cái. Vui lòng thử lại.", wdLoadingLedger: "Đang tải tài khoản…",
       wdErrBalance: "Số dư không đủ: ", wdErrApiUrl: "Cấu hình URL API rút tiền trong Cài đặt trước.",
+      wdAvailLabel: "Số rút được:", wdAvailHint: "— do agent giữ hộ cho bạn, khác với số dư on-chain trong ví.",
       setWithdrawApiTitle: "API backend", setWdApiLabel: "URL cơ sở API (tùy chọn)",
       setWdApiHelp: "Định tuyến mọi hành động có ký — rút tiền, đặt lịch, chạy ngay, chat — tới một backend. Để trống để dùng /api/* của chính site này (chạy trên bản deploy Vercel). Chỉ nhập URL khi dashboard được phục vụ từ host tĩnh không có serverless function.",
       depErrConnect: "Kết nối ví trước.", depErrAmount: "Nhập số tiền lớn hơn 0.",
