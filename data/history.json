@@ -6377,5 +6377,48 @@
       "transferId": "5a5895ce-3044-46d3-a7a7-355b31491d92",
       "settleStatus": "received"
     }
+  },
+  {
+    "date": "2026-08-04",
+    "timestamp": "2026-08-04T00:00:47.011Z",
+    "status": "success",
+    "requestedAmountUsdc": "4.025000",
+    "clampedAmountUsdc": "4.025000",
+    "boundBy": "user_schedule",
+    "tokenOut": "EURC",
+    "reasoning": "Market brief shows Extreme Fear deepening to F&G=25 with bearish analyst bias (decrease 10-15%) due to capitulation risk, but real cirBTC price is only 2.71% off high with NO dip tier triggered—dip ladder correctly anchors at base 1.00 USDC. Ranging regime with ultra-low volatility (0.06% CV) offers no directional edge, though risk score is exceptionally low (16/100) supporting potential upside. Allocating base 1.00 USDC aligns with sub-5% drawdown, bearish distribution signals, and preserves 199 USDC daily cap for opportunistic sizing if genuine dip materializes (5%+ drawdown threshold).",
+    "txHash": "0x20aef3ef17e99ba12a3a5a08e7ba1683dd6bd280c73bd4d5c68ab7309b390164",
+    "explorerUrl": "https://testnet.arcscan.app/tx/0x20aef3ef17e99ba12a3a5a08e7ba1683dd6bd280c73bd4d5c68ab7309b390164",
+    "amountOut": "3.236213",
+    "walletUsdcBalance": "453.322305925290336439",
+    "message": "Swapped 4.025000 USDC -> EURC across 7 user(s)",
+    "smartSizing": {
+      "fearGreed": 25,
+      "drawdownPct": 0.0071807387243628855,
+      "multiplier": 1.15,
+      "source": "llm",
+      "proposedMultiplier": 1.15
+    },
+    "x402": {
+      "resource": "/api/x402-brief",
+      "amountUsdcAtomic": "1000",
+      "payer": "0x61e7Ae336F7Eb7F8517dE4F19963D88dFD9161eC",
+      "payTo": "0xcAf34080F47f576F923962AD04dD7ddd86d8d85f",
+      "settled": true,
+      "mode": "settled",
+      "via": "http",
+      "transferId": "7f4c9b8c-0ef0-4a59-a444-30f4ffc3659e",
+      "settleStatus": "received"
+    },
+    "smartFee": {
+      "feeUsdcEach": "0.010000",
+      "totalUsdc": "0.070000",
+      "payerCount": 7,
+      "payTo": "0x00Ebbd3aFCCaD08970ED8FdaE591244c8475a0aC",
+      "testnet": true,
+      "settled": true,
+      "transferId": "97fb01d6-0436-4b00-a78f-3dabed667b52",
+      "settleStatus": "received"
+    }
   }
 ]

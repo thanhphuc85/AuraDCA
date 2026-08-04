@@ -970,5 +970,31 @@
       "ranging-market",
       "strategy-alignment"
     ]
+  },
+  {
+    "id": "ref-1785801740500",
+    "date": "2026-08-04",
+    "timestamp": "2026-08-04T00:02:20.500Z",
+    "runStatus": "success",
+    "insight": "User_schedule consistently overrides all base recommendations (2.90-4.55 USDC range) regardless of dip signals or conditions. Requesting 1.00 USDC base is futile—strategy should optimize within the 2.90-4.55 USDC execution band that actually occurs.",
+    "patterns": [
+      "100% user_schedule override rate across all 8 recent runs despite requesting 1.00-4.55 USDC",
+      "Executed amounts always 2.975-4.550 USDC regardless of dip tier (none triggered in any run)",
+      "All runs show sub-3% drawdown with NO genuine dip signals, yet 3-4.5 USDC consistently executed",
+      "Fear zone (F&G 25-28) persisting across entire period with ranging/ultra-low volatility regime",
+      "Analyst bias oscillating (bearish → bullish → bearish) but execution range remains stable 2.90-4.55 USDC"
+    ],
+    "strategyAdjustment": "Stop requesting base 1.00 USDC when no dip exists—it never executes. Instead, request amounts within the observed 2.90-4.55 USDC band based on signal quality: use ~3.00 USDC floor for bearish/neutral conditions with no dip, scale to 4.00-4.55 USDC only when Fear zone + low risk score + bullish analyst bias align. Accept that user_schedule defines the effective range and optimize allocation logic within it rather than fighting systematic override.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "658.999919",
+    "dayNumber": 29,
+    "walletBalance": "453.322305925290336439",
+    "tags": [
+      "user-schedule-override",
+      "pacing",
+      "strategy-calibration",
+      "dip-signals",
+      "execution-analysis"
+    ]
   }
 ]
