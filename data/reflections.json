@@ -1163,5 +1163,35 @@
       "sizing-ineffective",
       "guardrail-binding"
     ]
+  },
+  {
+    "id": "ref-1785826942752",
+    "date": "2026-08-04",
+    "timestamp": "2026-08-04T07:02:22.752Z",
+    "runStatus": "success",
+    "insight": "User_schedule guardrail is systematically clamping all requests to 2.90-6.30 USDC range regardless of market signals, effectively overriding smart sizing logic. Agent is wasting reasoning effort requesting 3.20-4.00 USDC when actual execution is driven by schedule constraints.",
+    "patterns": [
+      "user_schedule bound 100% of last 8 runs, executing 2.975-6.300 USDC regardless of requested amounts",
+      "Extreme Fear (F&G=25) persisting across all 8 runs today with mixed analyst signals (-15% to +15%)",
+      "No genuine dip triggered all day (drawdowns 1.87-2.95%, all below 5% mild threshold)",
+      "Ultra-low volatility regime (0.06-0.43% CV) with ranging market offering no directional edge",
+      "Exceptionally low risk scores (15-18/100) throughout the day supporting contrarian positioning",
+      "Daily cap utilization at 86% remaining (171.83/200 USDC) after 8 runs - pacing ahead of typical consumption",
+      "Agent consistently requests 3.20-4.25 USDC but schedule executes wider range, suggesting request amounts have no impact on outcomes"
+    ],
+    "strategyAdjustment": "Stop micro-optimizing requested amounts in 3.20-4.25 range when user_schedule will override anyway. Instead, request amounts at the extremes of observed execution band (2.90 for bearish signals, 4.90 for bullish/contrarian) to test schedule boundaries and understand true constraint mechanics. If schedule continues overriding, shift focus to reasoning quality over sizing precision—user_schedule may be implementing time-of-day or external logic the agent cannot observe.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "689.449919",
+    "dayNumber": 29,
+    "walletBalance": "424.993511942177159208",
+    "tags": [
+      "pacing",
+      "clamping",
+      "user-schedule-override",
+      "extreme-fear",
+      "ranging-market",
+      "no-dip-signal",
+      "low-volatility"
+    ]
   }
 ]
