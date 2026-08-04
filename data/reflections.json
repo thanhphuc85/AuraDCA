@@ -1137,5 +1137,31 @@
       "pacing",
       "reasoning-consistency"
     ]
+  },
+  {
+    "id": "ref-1785823340339",
+    "date": "2026-08-04",
+    "timestamp": "2026-08-04T06:02:20.339Z",
+    "runStatus": "success",
+    "insight": "User_schedule guardrail is systematically overriding to 2.90-4.90 USDC band regardless of requested amounts—agent's sizing logic is being nullified, making the \"smart sizing\" feature ineffective in this configuration.",
+    "patterns": [
+      "Consistently bound by user_schedule across all 8 recent runs with zero daily cap or risk-based clamping",
+      "Requested amounts ranging 2.98-4.90 USDC all execute at exact requested value within the 2.90-4.90 constraint band",
+      "Agent reasoning consistently mentions preserving daily cap (173-199 USDC remaining) but actual behavior shows no dynamic adjustment—executions don't respond to cumulative daily spend",
+      "All runs show sub-3% drawdown with NO dip tier triggered, yet executions vary 2.98-4.90 USDC with no clear pattern tied to market conditions",
+      "Extreme Fear (F&G=25) persists across 7 of 8 runs with mixed analyst bias (bullish and bearish), but execution amounts don't consistently reflect sentiment—3.20 and 4.90 both executed under identical bearish sentiment"
+    ],
+    "strategyAdjustment": "Stop requesting varied amounts based on market nuance when user_schedule will override to a fixed band anyway. Instead: (1) Request consistent mid-range amount (3.50-3.80 USDC) to establish predictable daily rhythm, or (2) Request amounts outside the 2.90-4.90 band to test if user_schedule truly clamps or if there's flexibility at extremes (e.g., request 1.00 USDC during no-dip periods or 6.00+ USDC during genuine 5%+ dips). The current approach of detailed reasoning for 3.20 vs 4.25 is wasted effort when execution ignores the logic.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "683.149919",
+    "dayNumber": 29,
+    "walletBalance": "429.913986407201159208",
+    "tags": [
+      "clamping",
+      "pacing",
+      "user-schedule-override",
+      "sizing-ineffective",
+      "guardrail-binding"
+    ]
   }
 ]
