@@ -996,5 +996,32 @@
       "dip-signals",
       "execution-analysis"
     ]
+  },
+  {
+    "id": "ref-1785805335977",
+    "date": "2026-08-04",
+    "timestamp": "2026-08-04T01:02:15.977Z",
+    "runStatus": "success",
+    "insight": "User_schedule override is 100% consistent across all runs—agent requests vary widely (1.00-4.725 USDC) but execution lands in 2.90-4.55 USDC band regardless. Agent reasoning has become misaligned with actual execution behavior.",
+    "patterns": [
+      "user_schedule consistently clamps ALL requests to 2.90-4.55 USDC range regardless of requested amount",
+      "No dip tiers have triggered in 8 runs despite Fear/Extreme Fear sentiment (drawdowns only 2.10-2.95%, threshold is 5%+)",
+      "Agent alternates between requesting base 1.00 USDC (disciplined dip-ladder) and 3.00-4.725 USDC (acknowledging user_schedule pattern) but execution is identical",
+      "Risk scores consistently low (16-25/100) with ranging regime and ultra-low volatility (0.05-1.09% CV)",
+      "Analyst sentiment oscillates between bearish (-10-15%) and bullish (+10-15%) but execution remains stable",
+      "Daily cap utilization is conservative: 43-85 USDC spent on Aug 3, fresh start Aug 4 with 196 USDC remaining after latest run"
+    ],
+    "strategyAdjustment": "Stop requesting 1.00 USDC base amounts—user_schedule will override them anyway. Instead, request amounts in the 3.50-4.50 USDC range that reflect actual risk appetite and market conditions (sentiment, risk score, volatility). Use lower end (3.00-3.50) for bearish signals or ranging conditions, upper end (4.00-4.50) for Extreme Fear with bullish accumulation signals and low risk scores. Accept that dip-ladder theory doesn't apply until drawdowns exceed 5%, and user_schedule defines the true execution band.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "663.724919",
+    "dayNumber": 29,
+    "walletBalance": "449.277745600983987591",
+    "tags": [
+      "pacing",
+      "clamping",
+      "user-schedule-override",
+      "dip-threshold",
+      "execution-alignment"
+    ]
   }
 ]
