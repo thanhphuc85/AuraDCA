@@ -1111,5 +1111,31 @@
       "budget",
       "guardrails"
     ]
+  },
+  {
+    "id": "ref-1785819777082",
+    "date": "2026-08-04",
+    "timestamp": "2026-08-04T05:02:57.082Z",
+    "runStatus": "success",
+    "insight": "The stated reasoning (\\\"requesting 3.20 USDC\\\") did not match the actual requestedAmountUsdc/executed amount (2.975000), and the reasoning text is nearly verbatim identical to the immediately preceding run's reasoning — suggesting the LLM's decision output is decoupled from what's actually being submitted, and/or the reasoning is being stale-copied. Also flagged: the swap output ratio (2.975 USDC -> 2.405426 EURC, ~0.809 EURC/USDC) looks well below a plausible EUR/USD rate (~0.92-0.93), implying meaningful slippage or spread loss beyond the visible 0.07 USDC smart-fee — this is a bigger drag than sizing decisions and hasn't been checked in past reflections.",
+    "patterns": [
+      "8+ consecutive runs (spanning 2026-08-03 to 08-04) report near-identical reasoning: Extreme Fear F&G~25-28, drawdown 1.87-2.95% (never crossing the 5% dip threshold), ranging regime with CV<0.5%, risk score 15-22/100 — the 'wait for a genuine dip' narrative has repeated 8x without the dip ever materializing",
+      "requested == clamped == executed in every single logged run; 'boundBy: user_schedule' never actually clamps anything, it just labels the mechanism — prior reflections calling this a 'clamping override' were mischaracterizing self-chosen sizing as guardrail intervention",
+      "amounts oscillate arbitrarily between 2.975 and 4.725 USDC run-to-run with no clear rule tying the number to F&G score or drawdown magnitude, despite reasoning citing those same inputs each time",
+      "multiple runs per day (7 on 2026-08-04 alone) but cumulative daily spend (~20-25 USDC) stays far below the 200 USDC daily cap, so 'preserving the cap' framing is not actually a binding constraint"
+    ],
+    "strategyAdjustment": "1) Verify that the requestedAmountUsdc field in the actual output matches the number stated in the reasoning text before finalizing — if they diverge (as happened this run: reasoning said 3.20, output shows 2.975), treat that as a logging/execution bug to investigate rather than restating the same narrative. 2) Since the 5% drawdown dip threshold has not triggered in 8+ consecutive runs while F&G sat in Extreme Fear (25-28) the whole time, reconsider whether 5% is calibrated correctly for this asset's realized volatility (CV consistently 0.06-0.42%) — either lower the mild-tier threshold or stop repeating 'preserving cap for a genuine dip' as if it's imminent. 3) Cross-check swap execution quality: compare amountOut/amountIn ratio against a reference EUR/USD rate each run; if the implied rate is consistently ~10%+ worse than spot (as this run's 0.809 EURC/USDC suggests vs ~0.92-0.93 expected), flag slippage/liquidity as a bigger cost driver than position sizing and consider reducing swap size or checking pool depth. 4) Stop using near-verbatim reasoning across runs — each run's text should reflect that day's actual F&G/drawdown numbers distinctly, not copy prior justification.",
+    "confidenceLevel": "medium",
+    "cumulativeSpentUsdc": "678.249919",
+    "dayNumber": 29,
+    "walletBalance": "432.909984741048585864",
+    "tags": [
+      "clamping",
+      "data-integrity",
+      "market-timing",
+      "slippage",
+      "pacing",
+      "reasoning-consistency"
+    ]
   }
 ]
