@@ -1393,5 +1393,32 @@
       "daily-cap-preservation",
       "dip-discipline"
     ]
+  },
+  {
+    "id": "ref-1785855735133",
+    "date": "2026-08-04",
+    "timestamp": "2026-08-04T15:02:15.133Z",
+    "runStatus": "success",
+    "insight": "Agent is systematically ignoring its own reflection guidance: reasoning claims \"2.50 USDC maximum\" but executed 3.90 USDC for 14th consecutive run with zero dip trigger, burning daily cap 56% faster than intended in a ranging market with <3% drawdown.",
+    "patterns": [
+      "All 8 recent runs bound by user_schedule executing 2.98-4.55 USDC despite reasoning claiming 2.50-3.00 USDC targets",
+      "Zero genuine dip triggers across 14 runs today (all <3% off high) yet 65.22 USDC spent (33% of daily cap)",
+      "Extreme Fear F&G=25 persisting across all runs with bullish analyst bias in 5/8 recent runs creating pressure to over-allocate",
+      "Reasoning correctly identifies ranging regime + ultra-low volatility (0.12-1.66% CV) but executions don't reflect preservation strategy",
+      "user_schedule clamp appears to override agent sizing decisions—agent proposes lower, clamp forces higher"
+    ],
+    "strategyAdjustment": "Investigate user_schedule clamp mechanism: if it's forcing 2.90-6.30 USDC range regardless of agent reasoning, then reflection strategy is futile and agent should stop claiming lower targets it cannot execute. If agent controls final request, implement hard 2.50 USDC ceiling when drawdown <5% and ranging regime confirmed across 3+ consecutive runs, ignoring analyst bias until genuine 5%+ dip materializes.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "720.199294",
+    "dayNumber": 29,
+    "walletBalance": "391.682900387549204047",
+    "tags": [
+      "clamping",
+      "user-schedule-override",
+      "reflection-disconnect",
+      "ranging-market",
+      "capital-preservation",
+      "false-dip-signals"
+    ]
   }
 ]
