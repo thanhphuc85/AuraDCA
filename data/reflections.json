@@ -1420,5 +1420,32 @@
       "capital-preservation",
       "false-dip-signals"
     ]
+  },
+  {
+    "id": "ref-1785859347933",
+    "date": "2026-08-04",
+    "timestamp": "2026-08-04T16:02:27.933Z",
+    "runStatus": "success",
+    "insight": "System is consistently ignoring its own reflection discipline: reasoning logs cite \"2.50 USDC maximum\" yet actual executed amounts are 2.98-4.38 USDC across all 8 recent runs, revealing a systematic disconnect between stated strategy and execution.",
+    "patterns": [
+      "Systematic clamping override: reasoning proposes 2.50-3.40 USDC but user_schedule bound executes 2.98-4.38 USDC across all runs",
+      "No genuine dip triggers: cirBTC drawdown remains sub-5% (1.71-2.61% range) across all 8 runs with dip ladder correctly anchored at 1.00 USDC base",
+      "Persistent ranging regime: ultra-low volatility (0.12-1.66% CV) with no directional edge for 15 consecutive runs on day 29",
+      "Daily cap erosion: 65.22 USDC spent across 15 runs today (33% of 200 USDC cap) with 134.78 USDC remaining but at 3.45 USDC per run only ~39 more buys available",
+      "Extreme Fear persistence: F&G=25 locked across all runs with analyst bias oscillating between bearish/bullish but price action flat"
+    ],
+    "strategyAdjustment": "CRITICAL: Investigate why user_schedule boundary systematically overrides reasoning-layer proposals by 16-75% (2.50 proposed → 3.45 executed is 38% override). If user_schedule band is hardcoded at 2.90-6.30 USDC, reflection discipline is meaningless—either negotiate lower user_schedule floor (2.00-2.50 USDC) for sub-5% drawdown conditions, or stop citing \"2.50 maximum\" in reasoning if execution will ignore it. For next run: if drawdown still <5% and ranging persists, request absolute minimum within user_schedule constraints and document the override pattern explicitly.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "723.649294",
+    "dayNumber": 29,
+    "walletBalance": "387.760414393490884586",
+    "tags": [
+      "clamping",
+      "pacing",
+      "strategy-disconnect",
+      "budget",
+      "ranging-regime",
+      "execution-override"
+    ]
   }
 ]
