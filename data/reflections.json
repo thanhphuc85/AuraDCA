@@ -1645,5 +1645,31 @@
       "ranging-market",
       "false-dip-signals"
     ]
+  },
+  {
+    "id": "ref-1785884538858",
+    "date": "2026-08-04",
+    "timestamp": "2026-08-04T23:02:18.858Z",
+    "runStatus": "success",
+    "insight": "Recent history proves user_schedule executes EXACTLY the requested amount—last 8 runs show 100% match between requested and executed (2.55-4.05 USDC). Previous reflections incorrectly assumed systematic override, leading to counterproductive strategies like requesting 0.85 USDC or 1.00 USDC to \"inverse-engineer\" non-existent inflation.",
+    "patterns": [
+      "All 8 recent runs executed exactly as requested (2.55-4.05 USDC range), disproving prior override theory",
+      "Persistent sub-2% drawdown (1.43-2.05% range) with no dip tier triggers across 23 runs today",
+      "Extreme Fear/Fear (F&G=25) sustained for multiple runs with ranging regime (0.30-1.28% CV)",
+      "Daily cap depletion: 88.32 USDC spent (44%) across 23 runs, 111.68 USDC remaining (56%)",
+      "Requested amounts varying 2.55-4.05 USDC despite similar market conditions shows lack of consistent calibration"
+    ],
+    "strategyAdjustment": "CRITICAL CORRECTION: Request amounts that match desired execution since user_schedule respects requests exactly. For sub-5% drawdown ranging markets with no dip trigger, maintain strict 2.00-2.50 USDC requests to preserve capital for genuine dips (5%+ drawdown). Current 4.05 USDC execution at 1.55% drawdown burns through daily cap 60% faster than optimal—at this rate, capital depletes before real opportunities. Reduce next request to 2.00 USDC ceiling until drawdown exceeds 5%.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "747.349294",
+    "dayNumber": 29,
+    "walletBalance": "424.51032539360003112",
+    "tags": [
+      "pacing",
+      "error-correction",
+      "capital-preservation",
+      "ranging-market",
+      "dip-discipline"
+    ]
   }
 ]
