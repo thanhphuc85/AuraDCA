@@ -1193,5 +1193,36 @@
       "no-dip-signal",
       "low-volatility"
     ]
+  },
+  {
+    "id": "ref-1785830535116",
+    "date": "2026-08-04",
+    "timestamp": "2026-08-04T08:02:15.116Z",
+    "runStatus": "success",
+    "insight": "Systematic user_schedule clamping continues with 8 consecutive runs today (34.48 USDC spent, 17% daily cap usage). Market shows persistent Extreme Fear (F&G=25) with only 2.41% drawdown—well below 5% dip threshold—yet execution remains steady in 2.90-6.30 USDC band despite bearish analyst bias.",
+    "patterns": [
+      "user_schedule consistently binds across all 8 runs today, confirming it overrides all other sizing logic",
+      "Requested amounts vary widely (2.98-6.30 USDC) but executed amounts cluster in systematic band, showing guardrail is working as designed",
+      "Persistent Extreme Fear (F&G=25) across all runs with bearish analyst recommendations (-10-15%) yet no genuine dip signal (only 2.21-2.95% drawdown, need 5%+ for mild tier)",
+      "Ultra-low volatility regime (0.09-0.43% CV) with ranging market—no directional edge for 8+ consecutive runs",
+      "Daily cap utilization remains conservative at 17% (34.48/200 USDC) despite 8 execution opportunities",
+      "Risk scores consistently exceptional (15-18/100) supporting larger position sizing but user_schedule prevents exploitation",
+      "Reasoning accurately reflects no dip tier triggered and appropriately anchors at base 1.00 USDC ladder"
+    ],
+    "strategyAdjustment": "Continue respecting user_schedule band but optimize requested amounts: during persistent sub-5% drawdown with bearish sentiment, request lower-mid range (3.20-3.50 USDC) to preserve capital for genuine dip opportunities; when Extreme Fear persists with bullish analyst bias or drawdown crosses 3%, request upper range (4.50-5.00 USDC) to capture contrarian value while still respecting guardrail. Monitor for drawdown crossing 5% threshold which would trigger mild dip tier and justify requesting upper bound of schedule range.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "693.999919",
+    "dayNumber": 29,
+    "walletBalance": "418.671379063495099738",
+    "tags": [
+      "user_schedule",
+      "clamping",
+      "pacing",
+      "extreme-fear",
+      "no-dip-signal",
+      "ranging-market",
+      "low-volatility",
+      "budget-conservation"
+    ]
   }
 ]
