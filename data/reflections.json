@@ -1366,5 +1366,32 @@
       "ranging-market",
       "request-execution-disconnect"
     ]
+  },
+  {
+    "id": "ref-1785852142932",
+    "date": "2026-08-04",
+    "timestamp": "2026-08-04T14:02:22.932Z",
+    "runStatus": "success",
+    "insight": "Agent continues systematically over-allocating despite explicit past guidance: requested 3.92 USDC when reflection recommended 2.50-3.00 USDC band for sub-5% drawdown scenarios. 13 consecutive runs with 2.09-2.61% drawdowns show no genuine dip opportunities materializing.",
+    "patterns": [
+      "Persistent over-allocation: 8 recent runs average 3.77 USDC requested vs recommended 2.50-3.00 USDC lower band",
+      "Drawdown consistently sub-3%: all 8 runs show 2.05-2.61% off high with NO dip tier triggered",
+      "Ranging regime dominance: ultra-low volatility (0.12-0.77% CV) across entire session with no breakout",
+      "Daily cap erosion: 57.40 USDC spent across 13 runs (29% of cap) without capturing genuine dip opportunities",
+      "Reflection non-compliance: agent acknowledges guidance but systematically requests 30-50% above recommended amounts"
+    ],
+    "strategyAdjustment": "Implement hard constraint: when drawdown < 5% AND ranging regime (CV < 1.0%) AND consecutive run count > 10 on same day, CAP requested amount at 2.50 USDC maximum regardless of sentiment signals or analyst bias. Reserve 70%+ of daily cap for genuine 5%+ dip events. If Extreme Fear (F&G ≤ 25) persists with sub-5% drawdown for 15+ runs, reduce further to 2.00 USDC to prevent capital depletion on non-events.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "716.299294",
+    "dayNumber": 29,
+    "walletBalance": "395.626611950906241519",
+    "tags": [
+      "pacing",
+      "over-allocation",
+      "ranging-market",
+      "reflection-compliance",
+      "daily-cap-preservation",
+      "dip-discipline"
+    ]
   }
 ]
