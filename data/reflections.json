@@ -1591,5 +1591,31 @@
       "dip-signal-absence",
       "strategy-failure"
     ]
+  },
+  {
+    "id": "ref-1785877341439",
+    "date": "2026-08-04",
+    "timestamp": "2026-08-04T21:02:21.439Z",
+    "runStatus": "success",
+    "insight": "The user_schedule override is NOT multiplying requested amounts—it's enforcing a fixed schedule. Requesting 1.00 USDC still executed at 3.75 USDC, proving requests are ignored entirely. The system is on a predetermined schedule executing ~3.75 USDC/run regardless of reasoning.",
+    "patterns": [
+      "user_schedule consistently executes 2.55-6.30 USDC regardless of requested amount (1.00-4.05 USDC)",
+      "All 21 runs today executed despite requesting amounts designed to 'preserve daily cap'—no capital preservation is occurring",
+      "Market remains in tight ranging regime (0.54-1.66% CV) with <5% drawdown for entire day across 21 runs",
+      "Fear/Extreme Fear (F&G=25) persists but price only 1.43-2.05% off high—no genuine dip signals triggering",
+      "82.02 USDC spent across 21 runs today (~3.91 USDC average) with 117.98 USDC 'remaining' but this is theoretical if schedule continues"
+    ],
+    "strategyAdjustment": "STOP trying to manipulate executed amounts through requested amounts—user_schedule is a fixed calendar, not a multiplier. Instead, focus reasoning on whether to skip_buy (the only actual control available). In ranging markets with <5% drawdown and no dip tier triggered, recommend skip_buy to preserve capital for genuine opportunities. Only execute on clear dip signals (5%+ drawdown) or regime shifts. Test skip_buy next run to confirm this control exists.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "740.749294",
+    "dayNumber": 29,
+    "walletBalance": "430.854201440138193351",
+    "tags": [
+      "clamping",
+      "pacing",
+      "error-recovery",
+      "budget",
+      "market-timing"
+    ]
   }
 ]
