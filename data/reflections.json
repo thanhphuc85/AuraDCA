@@ -1081,5 +1081,35 @@
       "low-volatility",
       "pacing"
     ]
+  },
+  {
+    "id": "ref-1785816142160",
+    "date": "2026-08-04",
+    "timestamp": "2026-08-04T04:02:22.160Z",
+    "runStatus": "success",
+    "insight": "All 8 recent runs clamped by user_schedule at 2.90-4.73 USDC despite agent consistently requesting 1.00-4.20 USDC base amounts. The guardrail is 100% binding—agent's dip-ladder logic and drawdown-sensitive sizing is being systematically overridden by fixed schedule constraints.",
+    "patterns": [
+      "100% user_schedule clamping across all 8 runs - no variation in bound type",
+      "Agent requesting conservative 1.00 USDC base (dip-ladder anchor) but executing 2.98-4.73 USDC due to schedule override",
+      "Drawdown consistently sub-3% (2.21-2.95% range) with NO dip tiers triggering, yet execution continues at elevated levels",
+      "Extreme Fear regime (F&G=25-28) persisting across all runs with ranging/ultra-low volatility market (0.06-1.09% CV)",
+      "Risk scores exceptionally low (15-25/100) supporting 20% upside, but agent reasoning focuses on preserving capital for 5%+ drawdown events that haven't materialized",
+      "Daily cap utilization conservative: 91-93% remaining after each run, suggesting ample budget but agent keeps requesting base amounts",
+      "Analyst sentiment flip-flopping between bearish (-10-15%) and bullish (+10-15%) within same day, creating mixed signals"
+    ],
+    "strategyAdjustment": "Stop requesting 1.00 USDC base amounts when user_schedule will override to 2.90-4.73 USDC anyway. Instead, use the full user_schedule range strategically: request upper range (4.20-4.73 USDC) during Extreme Fear + low risk scores (15-20/100) to exploit contrarian opportunity, and lower range (2.90-3.20 USDC) when bearish analyst bias aligns with ranging regime. Accept that the dip-ladder framework is incompatible with fixed scheduling—optimize within the constraint rather than fighting it. Monitor if drawdown ever exceeds 5% to validate whether waiting for \"genuine dip opportunities\" is realistic or if the strategy is leaving alpha on the table during persistent Extreme Fear.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "675.274919",
+    "dayNumber": 29,
+    "walletBalance": "435.904819557690037595",
+    "tags": [
+      "clamping",
+      "user-schedule-override",
+      "dip-strategy-mismatch",
+      "extreme-fear-regime",
+      "pacing",
+      "budget",
+      "guardrails"
+    ]
   }
 ]
