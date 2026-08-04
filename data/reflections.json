@@ -1474,5 +1474,35 @@
       "token-routing",
       "ranging-market"
     ]
+  },
+  {
+    "id": "ref-1785863161938",
+    "date": "2026-08-04",
+    "timestamp": "2026-08-04T17:06:01.938Z",
+    "runStatus": "success",
+    "insight": "Agent consistently requests 2.50-3.00 USDC citing reflection discipline for sub-5% drawdowns, but user_schedule override executes 2.98-4.38 USDC. The 2.50 USDC ceiling strategy is being undermined by the schedule layer—actual capital preservation is not occurring.",
+    "patterns": [
+      "All 8 recent runs bound by user_schedule, not dip tiers or daily cap",
+      "Drawdown consistently <2.5% (1.71-2.42% range) with NO dip tier triggers across entire day",
+      "Agent reasoning requests 2.50-3.00 USDC but executions are 2.98-4.38 USDC due to schedule override",
+      "Ranging regime (0.12-1.66% CV) with no directional edge persists across all runs",
+      "Fear/Extreme Fear (F&G=25) and bullish analyst bias present in 7/8 runs, creating sentiment-price disconnect",
+      "One error_swap_failed at 2.55 USDC execution despite success status claim",
+      "Daily cap utilization: 68.67 USDC spent across 16+ runs, 131.33 remaining (66%)",
+      "Composite risk consistently low (20-29/100) supporting modest allocation increases"
+    ],
+    "strategyAdjustment": "Stop requesting 2.50 USDC ceiling—it's being overridden anyway. Instead, align requests with observed user_schedule behavior (3.00-3.50 USDC range) to maintain honest reasoning. If genuine capital preservation is needed, must either: (1) negotiate schedule adjustment with user, or (2) explicitly request amounts that will result in desired execution after schedule multiplier. Current approach creates reasoning-execution mismatch without achieving preservation goal.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "726.649294",
+    "dayNumber": 29,
+    "walletBalance": "384.290356250503590727",
+    "tags": [
+      "pacing",
+      "user-schedule-override",
+      "capital-preservation",
+      "reasoning-execution-mismatch",
+      "ranging-market",
+      "sentiment-disconnect"
+    ]
   }
 ]
