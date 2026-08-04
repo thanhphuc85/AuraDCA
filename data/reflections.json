@@ -1023,5 +1023,33 @@
       "dip-threshold",
       "execution-alignment"
     ]
+  },
+  {
+    "id": "ref-1785808940094",
+    "date": "2026-08-04",
+    "timestamp": "2026-08-04T02:02:20.094Z",
+    "runStatus": "success",
+    "insight": "User_schedule guardrail is consistently clamping all purchases to 2.90-4.55 USDC range regardless of requested amounts, creating a rigid execution pattern that ignores dip-ladder strategy and market regime signals—the agent is effectively requesting amounts that get overridden 100% of the time.",
+    "patterns": [
+      "Chronic user_schedule override: all 8 recent runs clamped to 2.90-4.55 USDC range despite varying requests (1.00-4.725 USDC)",
+      "No dip tiers triggered across entire history: all drawdowns remain sub-5% (ranging 2.10-2.95% off highs), yet agent continues requesting mid-to-upper range amounts",
+      "Extreme Fear regime (F&G=25-28) persisting with oscillating analyst sentiment (bearish to bullish shifts within same session)",
+      "Daily cap utilization remains low (4-43% range) with substantial remaining capacity (112-199 USDC)",
+      "Ultra-low volatility environment (0.05-1.09% CV) consistently signaling ranging regime with no directional edge"
+    ],
+    "strategyAdjustment": "Stop requesting amounts outside the 2.90-4.55 USDC execution band since user_schedule will clamp them anyway. Instead, use the full available range strategically: request 2.90-3.20 USDC during bearish sentiment or no clear edge, 3.50-4.00 USDC when Fear/low-risk align with neutral-to-bullish signals, and 4.25-4.55 USDC only when Extreme Fear + bullish analyst bias + exceptionally low risk (sub-20) converge. This preserves capital for genuine dip opportunities (5%+ drawdown) while working within actual execution constraints rather than fighting them.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "668.449919",
+    "dayNumber": 29,
+    "walletBalance": "444.528210327749283431",
+    "tags": [
+      "clamping",
+      "user-schedule-override",
+      "pacing",
+      "strategy-adjustment",
+      "ranging-regime",
+      "extreme-fear",
+      "dip-ladder-ignored"
+    ]
   }
 ]
