@@ -1311,5 +1311,34 @@
       "dip-ladder-calibration",
       "no-clamping"
     ]
+  },
+  {
+    "id": "ref-1785844930640",
+    "date": "2026-08-04",
+    "timestamp": "2026-08-04T12:02:10.640Z",
+    "runStatus": "success",
+    "insight": "Despite 8 consecutive reasoning entries recommending 3.00-3.50 USDC allocations to preserve daily cap for genuine 5%+ dips, actual executed amounts ranged 2.975-6.30 USDC, revealing the user_schedule guardrail overrides requested amounts and the agent lacks direct control over execution size.",
+    "patterns": [
+      "All 8 recent runs bound by user_schedule, consistently executing in 2.90-6.30 USDC range regardless of requested amount",
+      "Market has been in persistent ranging regime with ultra-low volatility (0.22-0.77% CV) and F&G pinned at 25 (Extreme Fear) across all runs",
+      "Real cirBTC drawdown stable at 1.87-2.61% off high—no genuine dip tier triggered (all below 5% mild threshold)",
+      "Daily cap utilization accelerating: 49 USDC spent across 12 runs (24% consumed) with 151 USDC remaining but pattern suggests more runs coming",
+      "Composite risk consistently exceptional (17-20/100) supporting larger allocations, but agent reasoning advocates conservation",
+      "Reasoning consistently identifies 'sentiment noise' vs 'genuine dip' distinction but execution doesn't reflect this prioritization"
+    ],
+    "strategyAdjustment": "Stop requesting conservative amounts (3.00-3.50 USDC) when the user_schedule guardrail clearly overrides them. Instead, explicitly state in reasoning that user_schedule will determine execution size, and focus reasoning on whether current market conditions justify ANY purchase vs skipping the run entirely. If sub-5% drawdown + ranging regime = no genuine opportunity, recommend requesting 0.00 USDC or explicitly question whether the run should execute at all. Test whether the guardrail respects skip signals vs amount modulation.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "708.349919",
+    "dayNumber": 29,
+    "walletBalance": "404.062703142874903971",
+    "tags": [
+      "pacing",
+      "clamping",
+      "user-schedule-override",
+      "ranging-market",
+      "dip-threshold",
+      "budget-preservation",
+      "control-mismatch"
+    ]
   }
 ]
