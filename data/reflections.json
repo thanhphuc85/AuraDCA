@@ -1051,5 +1051,35 @@
       "extreme-fear",
       "dip-ladder-ignored"
     ]
+  },
+  {
+    "id": "ref-1785812540281",
+    "date": "2026-08-04",
+    "timestamp": "2026-08-04T03:02:20.281Z",
+    "runStatus": "success",
+    "insight": "All 8 recent runs show 100% user_schedule clamping at 2.975-4.725 USDC regardless of requested amounts or market conditions. The dip-buying strategy is effectively disabled—no genuine dips have materialized (max drawdown 2.95%, well below 5% threshold) while the schedule enforces steady accumulation through ranging market.",
+    "patterns": [
+      "100% user_schedule override across all recent runs (2.90-4.55 USDC execution band)",
+      "Persistent sub-3% drawdowns with zero dip tier triggers throughout period",
+      "Extreme Fear regime (F&G=25-28) sustained for 8+ runs with no price capitulation",
+      "Ultra-low volatility ranging market (0.06-1.09% CV) offering no directional edge",
+      "Analyst sentiment oscillating between bearish (-10-15%) and bullish (+10-15%) without price confirmation",
+      "Daily cap utilization remains low (7-43% range) despite multiple runs per day",
+      "Risk scores consistently low (15-25/100) supporting upside but insufficient drawdown to trigger dip ladder"
+    ],
+    "strategyAdjustment": "Stop requesting 1.00 USDC base amounts when no dip signal exists—the user_schedule will override regardless. Instead, use the fear/greed sentiment and risk score to modulate within the observed 2.90-4.55 USDC execution band: allocate upper range (4.25-4.55) during Extreme Fear with bullish analyst bias and sub-20 risk scores, mid range (3.50-4.00) during Fear with mixed signals, and lower range (2.90-3.25) during Fear with bearish bias. This accepts the schedule constraint while adding tactical nuance. If a genuine 5%+ drawdown materializes, request significantly higher amounts (6-8 USDC) to test whether schedule permits dip acceleration or remains rigid.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "672.299919",
+    "dayNumber": 29,
+    "walletBalance": "439.774025935740311943",
+    "tags": [
+      "user-schedule-override",
+      "clamping",
+      "ranging-market",
+      "extreme-fear-regime",
+      "dip-strategy-disabled",
+      "low-volatility",
+      "pacing"
+    ]
   }
 ]
