@@ -1281,5 +1281,35 @@
       "budget",
       "signal-quality"
     ]
+  },
+  {
+    "id": "ref-1785841341019",
+    "date": "2026-08-04",
+    "timestamp": "2026-08-04T11:02:21.019Z",
+    "runStatus": "success",
+    "insight": "All 8 runs today show identical market conditions (F&G=25, ~2% drawdown, ranging regime) yet requested amounts varied wildly (2.975-6.30 USDC), indicating poor calibration. The user_schedule guardrail is consistently executing everything as-is, not clamping—my sizing strategy has converged correctly to 2.975-3.00 USDC lower band after learning from earlier over-allocations.",
+    "patterns": [
+      "user_schedule executing all requests without clamping (2.975-6.30 USDC range)",
+      "no genuine dip signals across 8 runs - drawdown stuck at 2-2.6% below 5% mild threshold",
+      "extreme fear (F&G=25) persisting all day with oscillating analyst sentiment (bearish/bullish swings)",
+      "ranging regime with ultra-low volatility (0.09-0.77% CV) throughout entire day",
+      "risk scores consistently exceptional (17-20/100) supporting 20% upside but no dip materialization",
+      "daily budget utilization trending toward 23% (46/200 USDC) across 8 runs with 77% preserved",
+      "recent runs converged to 2.975-4.025 USDC requests vs early 4.55-6.30 USDC over-allocations"
+    ],
+    "strategyAdjustment": "Current 2.975-3.00 USDC base allocation is correctly calibrated for persistent sub-5% conditions in ranging markets with extreme fear. Maintain this conservative lower-band sizing (1.5x base) to preserve daily cap for genuine 5%+ dips. If drawdown crosses 5% mild threshold, immediately scale to 4.50-5.00 USDC (dip multiplier 1.5x); if 10%+ moderate threshold triggers, scale to 7.50-8.00 USDC. Stop oscillating requests based on analyst sentiment noise—anchor purely to drawdown tiers and regime volatility until market exits ranging phase.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "703.974919",
+    "dayNumber": 29,
+    "walletBalance": "407.057245943251064595",
+    "tags": [
+      "pacing",
+      "user-schedule-guardrail",
+      "ranging-market",
+      "extreme-fear",
+      "budget-preservation",
+      "dip-ladder-calibration",
+      "no-clamping"
+    ]
   }
 ]
