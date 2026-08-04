@@ -1252,5 +1252,34 @@
       "ranging-market",
       "capital-preservation"
     ]
+  },
+  {
+    "id": "ref-1785837742166",
+    "date": "2026-08-04",
+    "timestamp": "2026-08-04T10:02:22.166Z",
+    "runStatus": "success",
+    "insight": "Day 29 shows systematic user_schedule clamping across all 11 runs today (2.90-6.30 USDC band) despite requesting 2.98-6.30 USDC. Market shows persistent Extreme Fear (F&G=25) with only 2.6% drawdown—well below 5% dip threshold—yet agent consumed 46.03 USDC (23% of 200 USDC daily cap) on non-dip conditions with conflicting analyst signals.",
+    "patterns": [
+      "user_schedule consistently clamps to 2.90-6.30 USDC regardless of request (11/11 runs today)",
+      "No genuine dip signal triggered all day (max 2.6% drawdown vs 5% mild threshold)",
+      "Extreme Fear (F&G=25) persistent across all runs with ranging/ultra-low volatility regime",
+      "Analyst bias flip-flopped bearish to bullish mid-day with no price confirmation",
+      "Agent reasoning shows awareness of clamping pattern but continues requesting varied amounts (2.98-6.30 USDC)",
+      "Daily cap utilization accelerating: 23% spent by run 11 despite no dip signals"
+    ],
+    "strategyAdjustment": "Stop requesting amounts based on sentiment/multipliers when no dip tier is triggered. When drawdown <5% and user_schedule is active, anchor requests at 3.00 USDC (lower band) regardless of Fear&Greed or analyst bias—these signals are unreliable in ranging markets (0.09-0.77% CV observed). Reserve mid-to-upper band (4.00-6.30 USDC) exclusively for genuine dip tiers (5%+ drawdown confirmed by real cirBTC feed). This preserves daily cap for actual opportunities and stops wasting reasoning cycles on sentiment analysis that gets overridden anyway.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "700.999919",
+    "dayNumber": 29,
+    "walletBalance": "411.105926021773974026",
+    "tags": [
+      "clamping",
+      "pacing",
+      "dip-detection",
+      "user_schedule",
+      "ranging-market",
+      "budget",
+      "signal-quality"
+    ]
   }
 ]
