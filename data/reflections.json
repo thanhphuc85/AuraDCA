@@ -1504,5 +1504,35 @@
       "ranging-market",
       "sentiment-disconnect"
     ]
+  },
+  {
+    "id": "ref-1785866549260",
+    "date": "2026-08-04",
+    "timestamp": "2026-08-04T18:02:29.260Z",
+    "runStatus": "success",
+    "insight": "Agent consistently requests 2.50-3.90 USDC but user_schedule systematically clamps execution to narrow band (2.55-4.38 USDC today), creating a reasoning-execution disconnect. No dip tiers triggered across 18 runs despite persistent Extreme Fear—market is only 1.71-2.42% off highs in ranging regime.",
+    "patterns": [
+      "All 8 recent runs bound by user_schedule despite varying reasoning (2.50-3.90 USDC requested)",
+      "Zero dip tier activations across entire day—drawdown consistently sub-5% (1.71-2.42% range)",
+      "Ranging regime with ultra-low volatility (0.12-1.66% CV) persists across all runs",
+      "F&G stuck at 25 (Extreme Fear/Fear) with mixed analyst sentiment (-15% to +20%)",
+      "Daily cap utilization steady at 64-76% remaining after 17-18 runs",
+      "One error_swap_failed in recent history but execution continued normally",
+      "Reflections repeatedly mandate 2.50 USDC ceiling for sub-5% scenarios but requests drift to 2.55-3.90 USDC"
+    ],
+    "strategyAdjustment": "Stop requesting amounts above 2.50 USDC when drawdown is sub-5% in ranging markets—user_schedule will clamp anyway and reasoning drift wastes analysis effort. Anchor firmly at 2.50 USDC base (or lower if bearish analyst bias present) until genuine dip tier (5%+ drawdown) triggers. Monitor for regime shift: if volatility increases above 2% CV or drawdown exceeds 3%, prepare for potential dip tier activation. Current 64% daily cap reserve (128.33 USDC) is appropriate—no adjustment needed.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "729.199294",
+    "dayNumber": 29,
+    "walletBalance": "441.269166577813147183",
+    "tags": [
+      "pacing",
+      "clamping",
+      "ranging-market",
+      "user-schedule",
+      "discipline",
+      "sub-5-drawdown",
+      "no-dip-signal"
+    ]
   }
 ]
