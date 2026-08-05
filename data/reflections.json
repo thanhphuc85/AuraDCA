@@ -2311,5 +2311,32 @@
       "self-deception",
       "multiplier-investigation"
     ]
+  },
+  {
+    "id": "ref-1785970970016",
+    "date": "2026-08-05",
+    "timestamp": "2026-08-05T23:02:50.016Z",
+    "runStatus": "success",
+    "insight": "Agent continues to exhibit severe reasoning-execution disconnect: reasoning explicitly calls for 1.00 USDC but execution requests 2.1-5.24 USDC (2-5x inflation). Eight consecutive runs today burned 73.07 USDC (37% daily cap) in sub-1% drawdown conditions at price highs with no dip signal in a ranging market.",
+    "patterns": [
+      "Persistent reasoning-execution inflation: agent reasoning claims 1.00 USDC base but requests 2.1-5.24 USDC across all 8 runs",
+      "Daily cap burn accelerating: 37% utilization (73.07/200 USDC) in conditions warranting minimal deployment",
+      "Zero dip signal accuracy: all 8 runs executed at <1.5% drawdown from highs, missing the 5%+ threshold for mild dip tier",
+      "Ranging market regime consistent: ultra-low volatility (0.06-0.95% CV) with no directional edge across all runs",
+      "Self-awareness without behavioral change: reasoning documents the inflation bug in detail but continues to request inflated amounts"
+    ],
+    "strategyAdjustment": "Implement hard-coded 1.00 USDC base request in code for ranging markets with <5% drawdown, bypassing the decision layer that is producing 2-5x inflation. The allocation logic must literally request 1.00 USDC when reasoning calls for it, not 3.15 USDC. If this requires modifying the smartSizing multiplier calculation or request construction, do so immediately. The pattern is clear: verbal reasoning is correct (1.00 USDC for no-dip ranging conditions) but execution layer inflates it 2-5x.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "823.568130",
+    "dayNumber": 30,
+    "walletBalance": "364.05938208283335864",
+    "tags": [
+      "execution-bug",
+      "capital-preservation",
+      "ranging-market",
+      "daily-cap-burn",
+      "reasoning-execution-disconnect",
+      "pacing"
+    ]
   }
 ]
