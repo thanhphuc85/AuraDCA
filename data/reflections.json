@@ -2196,5 +2196,34 @@
       "pacing",
       "system-bug"
     ]
+  },
+  {
+    "id": "ref-1785956551784",
+    "date": "2026-08-05",
+    "timestamp": "2026-08-05T19:02:31.784Z",
+    "runStatus": "success",
+    "insight": "Critical systemic failure: Agent reasoning explicitly calls for 1.00 USDC but execution layer consistently delivers 2.275-3.50 USDC (2-3x inflation). Today burned 59.955 USDC (30% daily cap) in 8 runs at price highs with no dip signal in ultra-low volatility ranging market.",
+    "patterns": [
+      "Reasoning-to-execution disconnect: 11 consecutive runs where reasoning says '1.00 USDC' but requestedAmount is 2.275-4.05 USDC",
+      "All 8 runs today bound by user_schedule with zero dip signals (0.00-1.84% off high, need 5%+ for mild tier)",
+      "Ranging regime confirmed: 0.14-0.31% CV ultra-low volatility across all runs",
+      "30% daily cap consumed in conditions explicitly calling for 1.00 USDC base (should be 4% cap usage)",
+      "Fear sentiment (F&G=27) with bearish bias but buying at/near price highs",
+      "smartSizing multiplier 0.65 applied but inflated base amount negates the reduction"
+    ],
+    "strategyAdjustment": "EMERGENCY: Investigate the allocation pipeline between reasoning output and requestedAmountUsdc input. The compute_allocation function or parameter mapping is ignoring the explicit 1.00 USDC directive and injecting 2-3x inflated values. Verify that proposed_amount from reasoning is being passed correctly to the execution layer without intermediate scaling. Until fixed, capital preservation is impossible—agent cannot execute its own strategy. If this is a smartSizing multiplier being applied to wrong base, disable it or fix the base reference point.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "809.579294",
+    "dayNumber": 30,
+    "walletBalance": "377.241068791286775436",
+    "tags": [
+      "critical-bug",
+      "execution-error",
+      "reasoning-disconnect",
+      "capital-waste",
+      "ranging-market",
+      "no-dip-signal",
+      "daily-cap-burn"
+    ]
   }
 ]
