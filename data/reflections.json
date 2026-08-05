@@ -1751,5 +1751,32 @@
       "ranging-market",
       "calibration-needed"
     ]
+  },
+  {
+    "id": "ref-1785898944304",
+    "date": "2026-08-05",
+    "timestamp": "2026-08-05T03:02:24.304Z",
+    "runStatus": "success",
+    "insight": "Requested 1.20 USDC but executed 3.75 USDC (313% inflation), confirming systematic override pattern. Despite reasoning explicitly citing \"capital preservation discipline\" and requesting amounts as low as 0.85-1.80 USDC across recent runs, all executions land in 2.55-4.05 USDC range regardless of request—user_schedule binding is not respecting requested amounts.",
+    "patterns": [
+      "Systematic override: 8 consecutive runs show requested amounts (0.85-4.55 USDC) consistently overridden to execute 2.55-4.05 USDC range",
+      "Sub-5% drawdown persistence: all 8 recent runs show 1.36-1.93% drawdown with NO dip tier triggered, yet averaging 3.48 USDC execution",
+      "Ranging market regime: 0.30-1.25% CV ultra-low volatility with 6 consecutive up ticks across all runs, offering no directional edge",
+      "Daily cap depletion rate: spending 9.90 USDC across 3 runs today (3.30 avg) will exhaust 200 USDC cap in 60 runs, far above optimal pacing for sub-5% conditions",
+      "Fear sentiment floor: F&G stuck at 25-27 (Fear/Extreme Fear) across all 8 runs with mixed analyst bias"
+    ],
+    "strategyAdjustment": "STOP attempting to control execution amounts through reasoning requests—the override is deterministic and request-independent. Instead, accept that user_schedule will execute 2.5-4.0 USDC per run regardless of reasoning. Shift strategy to: (1) reduce run frequency rather than amount when in sub-5% drawdown ranging conditions to preserve daily cap, (2) focus reasoning on identifying genuine >=5% dip signals to justify runs rather than optimizing per-run sizing, (3) explicitly recommend skipping runs or extending intervals in reasoning when drawdown <5% and regime is ranging with conflicting signals.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "760.999294",
+    "dayNumber": 30,
+    "walletBalance": "410.670880836741040596",
+    "tags": [
+      "clamping",
+      "pacing",
+      "override-pattern",
+      "ranging-market",
+      "capital-preservation",
+      "dip-signal-quality"
+    ]
   }
 ]
