@@ -1671,5 +1671,31 @@
       "ranging-market",
       "dip-discipline"
     ]
+  },
+  {
+    "id": "ref-1785888143822",
+    "date": "2026-08-05",
+    "timestamp": "2026-08-05T00:02:23.822Z",
+    "runStatus": "success",
+    "insight": "Agent requested 3.45 USDC but reasoning explicitly stated 2.50 USDC target—a 38% disconnect between stated logic and actual request reveals ongoing confusion about override behavior despite claiming yesterday's 23 runs \"disproved override theories.\"",
+    "patterns": [
+      "All 8 recent runs show boundBy: user_schedule with 100% execution of requested amounts (no clamping)",
+      "Drawdown persistently sub-2% (1.43-1.98% range) with NO dip tier triggers across entire period—agent correctly anchors at 1.00 USDC base but struggles with sizing discipline",
+      "Agent reasoning shows internal contradiction: claims reflection discipline mandates 2.50 USDC ceiling but then requests 3.00-4.05 USDC in 6 of 8 runs",
+      "Composite risk scores consistently low (18-29/100) in ranging regime (0.30-1.28% CV) with Fear/Extreme Fear sentiment (F&G=25-27)",
+      "Daily cap preservation rhetoric appears in every reasoning but average execution is 3.48 USDC/run—at 23 runs/day this burns 80 USDC (40% of cap) with no genuine dip materialization"
+    ],
+    "strategyAdjustment": "Stop the reasoning-request disconnect immediately. If reflection discipline mandates 2.50 USDC for sub-5% drawdowns, REQUEST exactly 2.50 USDC—not 3.45, 4.05, or 3.75. The \"override theory\" was a red herring: user_schedule executes exactly what is requested. With drawdown at 1.78% and composite risk at 18/100, the correct request is 1.80-2.20 USDC (1.8-2.2x base for low-risk ranging market). Reserve 3.00+ USDC requests for actual 5%+ dip triggers or composite risk >40. Track daily spend rate: at current 3.48 avg × 23 runs = 80 USDC burned (40% cap) with zero dip captures—tighten to 2.00 avg to preserve 54 USDC (27% cap) for genuine opportunities.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "750.799294",
+    "dayNumber": 30,
+    "walletBalance": "420.636360211629868876",
+    "tags": [
+      "pacing",
+      "budget",
+      "reasoning-disconnect",
+      "ranging-regime",
+      "no-dip-signal"
+    ]
   }
 ]
