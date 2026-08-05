@@ -1889,5 +1889,32 @@
       "capital-preservation",
       "ranging-regime"
     ]
+  },
+  {
+    "id": "ref-1785916947605",
+    "date": "2026-08-05",
+    "timestamp": "2026-08-05T08:02:27.605Z",
+    "runStatus": "success",
+    "insight": "Agent is experiencing severe cognitive dissonance: reasoning consistently calls for 1.00-1.20 USDC base allocations in sub-2% drawdown ranging markets, but actual requests are 2.25-4.05 USDC (2-4x inflation). The reasoning-to-request pipeline is fundamentally broken.",
+    "patterns": [
+      "All 8 runs today show 100% request-to-execution fidelity (no external clamping)",
+      "Reasoning documents call for 1.00-1.20 USDC but requests are 2.25-4.05 USDC (average 3.23 USDC, 3.2x base)",
+      "Market conditions identical across all runs: F&G=27, sub-2% drawdown, 0.08-1.25% CV ranging regime, no dip tier triggered",
+      "Daily cap utilization accelerating: 26.35 USDC spent across 8 runs (13.2% of 200 USDC cap) with 87% remaining",
+      "Agent's reasoning explicitly recognizes the inflation problem but continues to request inflated amounts",
+      "Zero genuine dip opportunities (5%+ drawdown) have occurred - all capital deployed in sub-2% noise"
+    ],
+    "strategyAdjustment": "Implement hard override: in ranging markets (CV < 2%) with sub-5% drawdowns and no dip tier triggered, force request amount to EXACTLY match the reasoned base allocation (1.00-1.20 USDC). Add explicit validation step: if reasoning says \"1.00 USDC\" but request differs by >10%, abort and re-calculate. The current pattern wastes 2-3x capital on non-opportunities while waiting for genuine 5%+ dips that justify larger allocations.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "776.749294",
+    "dayNumber": 30,
+    "walletBalance": "395.095928012998040356",
+    "tags": [
+      "pacing",
+      "error-recovery",
+      "budget",
+      "cognitive-dissonance",
+      "ranging-market"
+    ]
   }
 ]
