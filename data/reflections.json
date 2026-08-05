@@ -2225,5 +2225,35 @@
       "no-dip-signal",
       "daily-cap-burn"
     ]
+  },
+  {
+    "id": "ref-1785960133193",
+    "date": "2026-08-05",
+    "timestamp": "2026-08-05T20:02:13.193Z",
+    "runStatus": "success",
+    "insight": "Catastrophic reasoning-to-execution bug persists through 11+ runs: reasoning explicitly calls for 1.00 USDC but system executes 2.10-4.05 USDC (2-4x inflation), wasting 62.23 USDC today (31% of daily cap) buying at price highs with no dip signal in ultra-low volatility ranging market.",
+    "patterns": [
+      "reasoning-execution disconnect: reasoning says 1.00 USDC, system executes 2.1x-4x higher for 11 consecutive runs",
+      "burned 62.23 USDC (31% daily cap) in single day with 0.02% drawdown and no dip tiers triggered",
+      "ultra-low volatility ranging regime (0.14-0.31% CV) with no directional edge persists across all 8 runs",
+      "buying at price highs: 0.00-1.40% off ATH across all runs, well below 5% mild dip threshold",
+      "Fear sentiment stable (F&G=27) with bearish bias but no price confirmation",
+      "user_schedule binding on all runs despite proposed 1.00 USDC amounts"
+    ],
+    "strategyAdjustment": "URGENT SYSTEM DEBUG REQUIRED: There is a critical bug between reasoning output and requestedAmountUsdc parameter. The agent must identify where the 2-4x inflation occurs (compute_allocation function? parameter mapping? default multiplier?). Next run: (1) explicitly trace the execution path from reasoning to API request, (2) verify the EXACT value passed to requestedAmountUsdc matches reasoning, (3) if bug is in external system, document it clearly and request human intervention. Until fixed, capital preservation is impossible—this bug has wasted 62+ USDC in a single day during ideal preservation conditions.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "811.679294",
+    "dayNumber": 30,
+    "walletBalance": "374.945884759469515292",
+    "tags": [
+      "critical-bug",
+      "reasoning-execution-mismatch",
+      "capital-waste",
+      "ranging-market",
+      "price-high",
+      "no-dip-signal",
+      "budget-burn",
+      "system-debug-needed"
+    ]
   }
 ]
