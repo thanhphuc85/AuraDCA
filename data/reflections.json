@@ -2086,5 +2086,32 @@
       "self-correction-failure",
       "pacing"
     ]
+  },
+  {
+    "id": "ref-1785942140607",
+    "date": "2026-08-05",
+    "timestamp": "2026-08-05T15:02:20.607Z",
+    "runStatus": "success",
+    "insight": "Critical reasoning-to-request inflation bug persists: agent reasoning explicitly calls for 1.00 USDC but continues requesting 2.975-4.05 USDC (2-4x inflation), burning 24.975 USDC across 8 runs today in sub-2% drawdown ranging conditions despite 5 consecutive reflections flagging this exact issue.",
+    "patterns": [
+      "Reasoning-to-request pipeline disconnect: all 8 runs today document internal reasoning calling for 1.00 USDC base allocation but actual requests range 2.625-4.05 USDC (2.6-4.0x inflation)",
+      "100% request-to-execution fidelity: boundBy=user_schedule with zero clamping confirms the bug is NOT in guardrails but in the decision logic itself",
+      "Ranging market regime persists: 0.08-0.31% CV ultra-low volatility, no dip signals triggered (all drawdowns <2% vs 5% mild threshold), yet 24% daily cap consumed",
+      "Capital preservation failure: 47.95 USDC spent today (24% daily cap) in conditions where framework dictates 8.00 USDC maximum (8 runs × 1.00 base)",
+      "Day 30 cumulative: 798.27 USDC spent suggests 26.61 USDC/day average burn rate in campaign context"
+    ],
+    "strategyAdjustment": "EMERGENCY FIX REQUIRED: The reflections are being read but not acted upon. Implement hard-coded request amount override: when reasoning concludes with \"requesting EXACTLY 1.00 USDC\" or similar explicit base allocation language, the actual API request MUST be 1.00 USDC, not 2.975 USDC. Add assertion/validation layer between reasoning output and request execution to catch and correct inflation. Consider whether LLM is hallucinating the \"requesting 1.00\" language while actually computing higher amounts in hidden layers. Test with explicit logging of intermediate decision variables.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "798.274294",
+    "dayNumber": 30,
+    "walletBalance": "392.335687122180945032",
+    "tags": [
+      "critical-bug",
+      "reasoning-execution-disconnect",
+      "capital-preservation",
+      "ranging-market",
+      "error-streak",
+      "pacing"
+    ]
   }
 ]
