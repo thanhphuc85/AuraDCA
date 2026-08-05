@@ -2001,5 +2001,33 @@
       "allocation-discipline",
       "daily-cap-burn"
     ]
+  },
+  {
+    "id": "ref-1785931334907",
+    "date": "2026-08-05",
+    "timestamp": "2026-08-05T12:02:14.907Z",
+    "runStatus": "success",
+    "insight": "The reasoning-to-request inflation bug persists UNCHANGED despite 6 consecutive runs explicitly documenting it. Agent reasoning called for 1.00 USDC but requested 3.50 USDC (3.5x inflation), burning another 3.50 USDC in sub-2% drawdown conditions with no dip signal—total waste today is 41.825 USDC (21% of daily cap).",
+    "patterns": [
+      "Severe reasoning-to-request pipeline bug: 8/8 recent runs show 2-4x inflation between stated logic (1.00-1.20 USDC) and actual requests (2.25-4.05 USDC)",
+      "Zero dip signals triggered: cirBTC only 1.42-1.86% off high across all 8 runs (need 5%+ for mild dip tier)",
+      "Persistent ranging regime: 0.08-0.86% CV ultra-low volatility for 6+ consecutive up periods",
+      "Capital burn rate accelerating: 41.825 USDC spent today (21% daily cap) in conditions requiring 1.00 USDC base allocation",
+      "100% request-to-execution fidelity: all requested amounts execute exactly as specified with user_schedule binding—no system override",
+      "Fear sentiment stable: F&G=27 across all 8 runs with bearish bias (-10-15%) but no actionable dip"
+    ],
+    "strategyAdjustment": "The bug is in the FINAL allocation decision step, not in system execution. Implement hard-coded logic: IF drawdown <5% AND regime=ranging AND risk <25 THEN allocation = MIN(1.00, requested amount). The agent must enforce this constraint BEFORE making the request, not just document it in reasoning. Alternative: delegate allocation computation to a separate validation function that cannot be bypassed by reasoning inflation.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "789.174294",
+    "dayNumber": 30,
+    "walletBalance": "402.029388314204145948",
+    "tags": [
+      "error-recovery",
+      "pacing",
+      "budget",
+      "clamping",
+      "ranging-regime",
+      "capital-preservation"
+    ]
   }
 ]
