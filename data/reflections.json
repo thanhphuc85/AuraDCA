@@ -1778,5 +1778,31 @@
       "capital-preservation",
       "dip-signal-quality"
     ]
+  },
+  {
+    "id": "ref-1785902539793",
+    "date": "2026-08-05",
+    "timestamp": "2026-08-05T04:02:19.793Z",
+    "runStatus": "success",
+    "insight": "Severe disconnect between reasoning and execution: agent requested 1.20 USDC but system executed 3.750 USDC (312% inflation). The agent's belief that \"ALL requested amounts execute exactly as specified\" is demonstrably false—every recent run shows requested amounts of 1.00-4.05 USDC being overridden to execute exactly 2.55-3.90 USDC, with latest 5 runs all executing 3.75 USDC regardless of 1.20-1.80 USDC requests.",
+    "patterns": [
+      "100% clamping by user_schedule across all 8 recent runs—no daily cap binding despite agent reasoning about cap preservation",
+      "Systematic execution override: last 5 runs all executed exactly 3.75 USDC despite agent requesting 1.20-3.90 USDC (average 212% inflation over requests)",
+      "Agent reasoning shows persistent confusion about execution behavior, cycling through theories (override exists → override disproven → override exists again)",
+      "Market conditions unchanged: 8 consecutive runs in ranging regime (0.30-1.25% CV), sub-2% drawdowns (1.36-1.93% off high), Fear sentiment (F&G 25-27), no dip tiers triggered",
+      "Capital depletion rate: 13.65 USDC spent across 4 runs today (3.41 USDC average per run) vs agent's target of 1.20-1.80 USDC—burning through daily budget 189-284% faster than intended"
+    ],
+    "strategyAdjustment": "STOP trying to control execution amounts through reasoning—the system executes a fixed schedule (likely 3.75 USDC per run) that ignores requested amounts entirely. Instead: (1) Accept the 3.75 USDC per-run reality and adjust strategy accordingly, (2) Focus reasoning on WHEN to skip runs entirely rather than amount sizing (if sub-5% drawdowns don't warrant 3.75 USDC, recommend skipping the run), (3) Use actual execution data (3.75 USDC × runs per day) to calculate real daily budget consumption rather than fictional requested amounts, (4) Eliminate all amount-sizing logic from reasoning since it has zero impact on outcomes.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "764.749294",
+    "dayNumber": 30,
+    "walletBalance": "406.89937118109545239",
+    "tags": [
+      "execution-override",
+      "pacing",
+      "budget",
+      "strategy-confusion",
+      "clamping"
+    ]
   }
 ]
