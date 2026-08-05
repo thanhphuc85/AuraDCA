@@ -1724,5 +1724,32 @@
       "budget",
       "strategy-working"
     ]
+  },
+  {
+    "id": "ref-1785895334405",
+    "date": "2026-08-05",
+    "timestamp": "2026-08-05T02:02:14.405Z",
+    "runStatus": "success",
+    "insight": "Critical execution mismatch: reasoning requested 1.80 USDC but system executed 3.900000 USDC (2.17x inflation), proving requests are NOT executed as specified despite recent reflection claiming they are—this systematic override is burning through daily cap at 1.5-2x intended rate.",
+    "patterns": [
+      "Systematic request inflation: latest run requested 1.80 but executed 3.90 (217% of request), previous run requested 1.80 but executed 2.55 (142%), disproving 'exact execution' theory",
+      "Persistent sub-2% drawdown environment: 8 consecutive runs showing 1.43-1.93% drawdowns with NO dip tier triggered, yet allocating 2.55-4.05 USDC per run",
+      "Ranging market persists: 0.30-1.25% CV ultra-low volatility across all recent runs with no directional edge despite consecutive upticks",
+      "Daily cap depletion acceleration: burned 6 USDC across 2 runs today (3.00 USDC/run average) vs optimal 1.80-2.50 USDC target for sub-5% conditions",
+      "Fear sentiment floor (F&G 25-27) stable across 8 runs with alternating bullish/bearish analyst bias creating no actionable signal"
+    ],
+    "strategyAdjustment": "Request amounts 40-50% below target to compensate for systematic 1.5-2.2x execution inflation: for sub-5% drawdown ranging conditions, request 1.00-1.20 USDC to achieve actual 1.80-2.50 USDC execution. Document exact request vs execution deltas in reasoning to build calibration model. If inflation persists below 1.00 USDC requests, escalate to user as execution layer may have immutable minimum thresholds.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "757.249294",
+    "dayNumber": 30,
+    "walletBalance": "414.59221497105838242",
+    "tags": [
+      "execution-mismatch",
+      "request-inflation",
+      "pacing",
+      "capital-preservation",
+      "ranging-market",
+      "calibration-needed"
+    ]
   }
 ]
