@@ -1974,5 +1974,32 @@
       "request-inflation",
       "pipeline-validation"
     ]
+  },
+  {
+    "id": "ref-1785927768820",
+    "date": "2026-08-05",
+    "timestamp": "2026-08-05T11:02:48.820Z",
+    "runStatus": "success",
+    "insight": "Agent continues to suffer from severe reasoning-to-request inflation bug: reasoning explicitly calls for 1.00 USDC base allocation but executes 2.975 USDC (2.975x inflation), burning 82% of remaining daily cap in ranging market with no dip signal despite claiming to implement \"strict capital preservation.\"",
+    "patterns": [
+      "Reasoning-to-request pipeline inflation persists: all 8 runs today requested 2.25-4.05 USDC while reasoning claimed 1.00-1.20 USDC targets (2-4x inflation)",
+      "100% request-to-execution fidelity confirmed: all runs execute exactly what is requested with user_schedule binding and zero clamping",
+      "Ranging regime dominance: 8/8 runs show ultra-low volatility (0.08-1.11% CV), 6 consecutive up days, no dip tiers triggered (1.42-1.86% off high, need 5%+)",
+      "Daily cap burn accelerating: 35.35 USDC spent today (18% of 200 USDC cap) in sub-2% drawdown conditions, leaving only 164.65 USDC (82%) for genuine opportunities",
+      "Fear sentiment stuck at F&G=27 with bearish bias (-10-15%) across all 8 runs, yet agent continues aggressive allocations contradicting its own reasoning"
+    ],
+    "strategyAdjustment": "EMERGENCY FIX REQUIRED: The bug is NOT in execution (which is perfect) but in the decision layer that generates the request amount. Agent must implement hard-coded verification: after computing target allocation (e.g., 1.00 USDC base), explicitly verify the requested amount matches before submission. If reasoning says \"1.00 USDC\" but request parameter contains \"2.975\", HALT and debug. For next run: anchor to 1.00 USDC base in ranging/no-dip conditions, verify request matches reasoning, and only scale up (1.5-2x) when dip tiers actually trigger (5%+ drawdown) or trending regime confirmed.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "785.674294",
+    "dayNumber": 30,
+    "walletBalance": "405.026606362716104684",
+    "tags": [
+      "critical-bug",
+      "reasoning-request-mismatch",
+      "capital-preservation-failure",
+      "ranging-market",
+      "allocation-discipline",
+      "daily-cap-burn"
+    ]
   }
 ]
