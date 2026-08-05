@@ -6,3 +6,8 @@ data/fx-samples.json
 
 .vercel
 .env*
+
+# Video build intermediates (regenerable)
+docs/video-assets/build/
+docs/video-assets/build-vi/
+docs/video-assets/aura-dca-pitch-vi-nomusic.mp4

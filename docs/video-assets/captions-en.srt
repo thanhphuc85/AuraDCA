@@ -1,0 +1,107 @@
+1
+00:00:00,000 --> 00:00:10,000
+Meet Aura DCA — an autonomous dollar-cost-averaging agent built on Arc Network.
+
+2
+00:00:10,000 --> 00:00:22,000
+Its whole idea fits in one line: let Claude drive the strategy, but let code own every number that touches money.
+
+3
+00:00:22,000 --> 00:00:34,000
+A language model is brilliant at judgment — but you can never let it be the final authority on how much money to move.
+
+4
+00:00:34,000 --> 00:00:45,000
+One hallucinated number drains the wallet. And when the money isn't yours, the agent must be fair as well as safe.
+
+5
+00:00:45,000 --> 00:00:55,000
+Claude recommends — it reads the balance, the budget, and its own history, and proposes an amount with reasoning.
+
+6
+00:00:55,000 --> 00:01:05,000
+But clampDecision — a pure, unit-tested function — re-derives the real limit from hard guardrails and decides the number actually spent.
+
+7
+00:01:05,000 --> 00:01:12,000
+Claude is never trusted with the final figure. Two orbits that meet only at the decision.
+
+8
+00:01:12,000 --> 00:01:22,000
+Now the hard part — serving many users at once. Each wallet sets its own cadence and caps.
+
+9
+00:01:22,000 --> 00:01:32,000
+Every run, the agent executes the sum as a single swap, then splits the proceeds pro-rata. Nobody subsidises anyone.
+
+10
+00:01:32,000 --> 00:01:44,000
+And this isn't a diagram — it ran on-chain, unsupervised.
+
+11
+00:01:44,000 --> 00:01:56,000
+Two wallets, one USDC each, pooled into a single 2-USDC swap into EURC, split to the exact total.
+
+12
+00:01:56,000 --> 00:02:05,000
+Here's that transaction on ArcScan. The swap is real, and the links are the source of truth.
+
+13
+00:02:05,000 --> 00:02:17,000
+It's non-custodial by construction, using both halves of Circle's wallet stack. The agent runs on a Developer-Controlled Wallet.
+
+14
+00:02:17,000 --> 00:02:28,000
+Users sign in with Google to mint a real Circle User-Controlled Wallet on Arc — no MetaMask, no seed phrase.
+
+15
+00:02:28,000 --> 00:02:38,000
+It even audits itself — recording a hash of its ledger in an Arc Testnet contract only its wallet can write to.
+
+16
+00:02:38,000 --> 00:02:48,000
+Fourteen-plus attestations, written by the cron with no human involved. The contract holds no funds.
+
+17
+00:02:48,000 --> 00:02:58,000
+Now the honest part. The cirBTC route went into a liquidity outage — no route available for fourteen straight days.
+
+18
+00:02:58,000 --> 00:03:06,000
+That's the market, not a bug — and we can prove it's isolated to cirBTC.
+
+19
+00:03:06,000 --> 00:03:12,000
+The agent withheld spend to preserve capital. Knowing when not to act is the harder half.
+
+20
+00:03:12,000 --> 00:03:21,000
+One layer deeper: the agent pays for its own inputs. Over x402, it unlocks a metered brief with a signed USDC authorization.
+
+21
+00:03:21,000 --> 00:03:30,000
+Cryptographically verified, settlement gated off — an additive module that never touches the DCA path.
+
+22
+00:03:30,000 --> 00:03:38,000
+Under the hood: TypeScript, Claude, Circle Swap Kit, both wallet types, a Solidity audit anchor, a GitHub Actions cron.
+
+23
+00:03:38,000 --> 00:03:45,000
+Sixty-five unit tests guard the money path, and live trading needs two switches. Tested code owns the money.
+
+24
+00:03:45,000 --> 00:03:53,000
+The hard claim is proven, not asserted — many users, one swap, split to the last unit, twice.
+
+25
+00:03:53,000 --> 00:04:00,000
+Real, verifiable execution. A safety architecture where code owns the money. An agent that audits itself on-chain.
+
+26
+00:04:00,000 --> 00:04:12,000
+Two independent paths — Claude's judgment and the code's guardrails — meeting at every decision. That's where the safety lives.
+
+27
+00:04:12,000 --> 00:04:25,000
+It's live at aura-dca.xyz, the code is open, and every claim is verifiable on-chain. Thanks for watching.

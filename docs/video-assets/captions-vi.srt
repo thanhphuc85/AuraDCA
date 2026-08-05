@@ -1,0 +1,107 @@
+1
+00:00:00,000 --> 00:00:10,000
+Đây là Aura DCA — một agent DCA tự động xây trên Arc Network.
+
+2
+00:00:10,000 --> 00:00:24,000
+Toàn bộ ý tưởng gói trong một câu: để Claude điều khiển chiến lược, nhưng để code nắm quyền trên mọi con số chạm đến tiền.
+
+3
+00:00:24,000 --> 00:00:36,000
+Mô hình ngôn ngữ rất giỏi phán đoán — nhưng không bao giờ được để nó quyết định cuối cùng số tiền cần chuyển.
+
+4
+00:00:36,000 --> 00:00:49,000
+Một con số ảo giác là cạn ví. Và khi tiền không phải của bạn, agent phải vừa công bằng vừa an toàn.
+
+5
+00:00:49,000 --> 00:01:00,000
+Claude đề xuất — đọc số dư, ngân sách, lịch sử của chính nó, rồi đưa ra số tiền kèm lý do.
+
+6
+00:01:00,000 --> 00:01:12,000
+Nhưng clampDecision — một hàm thuần, có unit test — tự tính lại giới hạn thật và quyết định con số thực sự được chi.
+
+7
+00:01:12,000 --> 00:01:20,000
+Claude không bao giờ được tin với con số cuối. Hai quỹ đạo chỉ gặp nhau tại điểm ra quyết định.
+
+8
+00:01:20,000 --> 00:01:31,000
+Giờ đến phần khó — phục vụ nhiều người cùng lúc. Mỗi ví tự đặt nhịp độ và trần riêng.
+
+9
+00:01:31,000 --> 00:01:42,000
+Mỗi lần chạy, agent thực thi tổng cộng như một swap duy nhất, rồi chia theo tỷ lệ. Không ai bù cho ai.
+
+10
+00:01:42,000 --> 00:01:53,000
+Và đây không phải sơ đồ — nó đã chạy on-chain, không người giám sát.
+
+11
+00:01:53,000 --> 00:02:05,000
+Hai ví, mỗi ví một USDC, gộp thành một swap hai USDC sang EURC, chia đúng bằng tổng.
+
+12
+00:02:05,000 --> 00:02:15,000
+Đây là giao dịch đó trên ArcScan. Swap là thật, và các đường link là nguồn sự thật.
+
+13
+00:02:15,000 --> 00:02:27,000
+Nó phi lưu ký ngay từ thiết kế, dùng cả hai loại ví Circle. Agent chạy trên Developer-Controlled Wallet.
+
+14
+00:02:27,000 --> 00:02:39,000
+Người dùng đăng nhập Google để tạo một Circle User-Controlled Wallet thật trên Arc — không MetaMask, không seed phrase.
+
+15
+00:02:39,000 --> 00:02:50,000
+Nó thậm chí tự kiểm toán — ghi hash sổ cái vào một hợp đồng Arc Testnet mà chỉ ví của nó được ghi.
+
+16
+00:02:50,000 --> 00:03:00,000
+Hơn mười bốn attestation, do cron ghi, không con người tham gia. Hợp đồng không giữ tiền.
+
+17
+00:03:00,000 --> 00:03:11,000
+Giờ đến phần trung thực. Tuyến cirBTC gặp sự cố thanh khoản — không có route suốt mười bốn ngày liền.
+
+18
+00:03:11,000 --> 00:03:19,000
+Đó là thị trường, không phải lỗi — và chúng tôi chứng minh được nó chỉ cô lập ở cirBTC.
+
+19
+00:03:19,000 --> 00:03:26,000
+Agent giữ lại tiền để bảo toàn vốn. Biết khi nào không hành động là nửa khó hơn.
+
+20
+00:03:26,000 --> 00:03:36,000
+Sâu thêm một lớp: agent tự trả tiền cho đầu vào. Qua x402, nó mở khóa một bản tin có phí bằng ủy quyền USDC đã ký.
+
+21
+00:03:36,000 --> 00:03:45,000
+Được xác minh bằng mật mã, phần settle bị khóa — một module cộng thêm không chạm vào đường DCA.
+
+22
+00:03:45,000 --> 00:03:54,000
+Bên trong: TypeScript, Claude, Circle Swap Kit, cả hai loại ví, neo kiểm toán Solidity, và cron GitHub Actions.
+
+23
+00:03:54,000 --> 00:04:02,000
+Sáu mươi lăm unit test canh đường tiền, giao dịch thật cần hai công tắc. Code đã test nắm quyền trên tiền.
+
+24
+00:04:02,000 --> 00:04:11,000
+Tuyên bố khó được chứng minh, không phải khẳng định suông — nhiều người, một swap, chia đến đơn vị cuối, hai lần.
+
+25
+00:04:11,000 --> 00:04:20,000
+Thực thi thật, kiểm chứng được. Kiến trúc an toàn nơi code nắm quyền trên tiền. Agent tự kiểm toán on-chain.
+
+26
+00:04:20,000 --> 00:04:32,000
+Hai con đường độc lập — phán đoán của Claude và guardrail của code — gặp nhau tại mỗi quyết định. Sự an toàn nằm ở đó.
+
+27
+00:04:32,000 --> 00:04:45,000
+Nó đang chạy tại aura-dca.xyz, mã nguồn mở, mọi tuyên bố đều kiểm chứng được on-chain. Cảm ơn đã theo dõi.

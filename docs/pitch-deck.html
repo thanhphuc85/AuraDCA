@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Aura DCA — Pitch Deck</title>
+<style>
+  :root{
+    --bg0:#0a0a14; --bg1:#121226; --ink:#eef0ff; --muted:#a9add6;
+    --violet:#8A2BE2; --cyan:#22d3ee; --amber:#f5a524; --green:#2ea44f;
+    --card:rgba(255,255,255,.05); --line:rgba(255,255,255,.12);
+    --grad:linear-gradient(100deg,var(--violet),var(--cyan));
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%}
+  body{
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    background:radial-gradient(1200px 800px at 20% -10%,#1b1740 0,var(--bg0) 55%),var(--bg0);
+    color:var(--ink); overflow:hidden;
+  }
+  #stage{position:fixed;inset:0;display:flex;align-items:center;justify-content:center}
+  .slide{
+    position:absolute;inset:0;display:none;flex-direction:column;justify-content:center;
+    padding:6vh 8vw;opacity:0;transition:opacity .4s ease;
+  }
+  .slide.active{display:flex;opacity:1}
+  .kicker{
+    font-size:.85rem;letter-spacing:.18em;text-transform:uppercase;color:var(--cyan);
+    font-weight:700;margin-bottom:1.2rem;display:flex;align-items:center;gap:.6rem;
+  }
+  h1{font-size:clamp(2.2rem,6vw,4.6rem);line-height:1.02;font-weight:800;letter-spacing:-.02em}
+  h2{font-size:clamp(1.8rem,4.2vw,3.1rem);line-height:1.05;font-weight:800;letter-spacing:-.02em;margin-bottom:1.6rem}
+  .grad{background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+  p.lead{font-size:clamp(1.1rem,2.2vw,1.7rem);color:var(--muted);line-height:1.5;max-width:60ch;margin-top:1.4rem}
+  ul{list-style:none;display:flex;flex-direction:column;gap:1rem;margin-top:.5rem}
+  li{font-size:clamp(1rem,1.9vw,1.45rem);line-height:1.4;display:flex;gap:.9rem;align-items:flex-start;max-width:68ch}
+  li b{color:var(--ink)}
+  li .dot{color:var(--cyan);font-weight:800;flex:0 0 auto;margin-top:.05em}
+  .muted{color:var(--muted)}
+  .big{font-size:clamp(2.6rem,8vw,6rem);font-weight:800;letter-spacing:-.03em;line-height:1}
+  .mono{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+  /* table */
+  table{border-collapse:collapse;margin-top:1.6rem;font-size:clamp(.85rem,1.6vw,1.25rem);width:100%;max-width:1000px}
+  th,td{text-align:left;padding:.75rem 1.1rem;border-bottom:1px solid var(--line)}
+  thead th{color:var(--cyan);font-size:.8em;letter-spacing:.06em;text-transform:uppercase}
+  td.k{color:var(--muted)}
+  .pill{display:inline-block;padding:.15em .6em;border-radius:999px;background:var(--card);border:1px solid var(--line);font-size:.8em}
+  .cardrow{display:flex;gap:1.4rem;flex-wrap:wrap;margin-top:1.8rem}
+  .card{flex:1 1 240px;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:1.4rem 1.5rem}
+  .card .n{font-size:2.4rem;font-weight:800;line-height:1}
+  .card .l{color:var(--muted);margin-top:.4rem;font-size:1rem}
+  .code{background:#05050c;border:1px solid var(--line);border-radius:12px;padding:1rem 1.3rem;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:clamp(.85rem,1.6vw,1.2rem);color:#c8f7ff;margin-top:1.4rem;display:inline-block}
+  .split{display:grid;grid-template-columns:1fr 1fr;gap:1.4rem;margin-top:1.6rem}
+  .split .col{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:1.5rem 1.6rem}
+  .split .col h3{font-size:1.15rem;margin-bottom:.9rem;display:flex;align-items:center;gap:.5rem}
+  .split .col.claude h3{color:var(--violet)}
+  .split .col.code h3{color:var(--cyan)}
+  .split .col p{color:var(--muted);font-size:1.02rem;line-height:1.45;margin-bottom:.55rem}
+  .amberbox{border-left:3px solid var(--amber);padding-left:1.2rem;margin-top:1.4rem;color:var(--muted);font-size:clamp(1rem,1.9vw,1.4rem);line-height:1.45;max-width:64ch}
+  a{color:var(--cyan);text-decoration:none}
+  /* orbit mark */
+  .orbit{width:1.4em;height:1.4em;display:inline-block;vertical-align:middle}
+  /* chrome */
+  #bar{position:fixed;top:0;left:0;height:3px;background:var(--grad);width:0;transition:width .3s;z-index:10}
+  #counter{position:fixed;bottom:22px;right:30px;color:var(--muted);font-size:.85rem;letter-spacing:.05em;z-index:10}
+  #brand{position:fixed;bottom:20px;left:30px;display:flex;align-items:center;gap:.55rem;color:var(--muted);font-size:.9rem;font-weight:600;z-index:10}
+  #hint{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);color:var(--muted);opacity:.5;font-size:.78rem;z-index:10}
+  .footlink{margin-top:2rem;font-size:1.05rem}
+  .tag{display:inline-flex;align-items:center;gap:.4rem;padding:.3em .8em;border-radius:999px;border:1px solid var(--line);background:var(--card);color:var(--muted);font-size:.95rem;margin:.3rem .4rem 0 0}
+  .stack{display:flex;flex-wrap:wrap;margin-top:1.2rem;max-width:70ch}
+</style>
+</head>
+<body>
+<div id="bar"></div>
+<div id="stage">
+
+  <!-- 1 TITLE -->
+  <section class="slide active" data-note="title">
+    <div class="kicker"><svg class="orbit" viewBox="0 0 64 64"><defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#8A2BE2"/><stop offset="1" stop-color="#22d3ee"/></linearGradient></defs><ellipse cx="32" cy="32" rx="26" ry="12" fill="none" stroke="url(#g)" stroke-width="3" transform="rotate(35 32 32)"/><ellipse cx="32" cy="32" rx="26" ry="12" fill="none" stroke="url(#g)" stroke-width="3" transform="rotate(-35 32 32)"/></svg> Encode Club × Circle · Programmable Money Hackathon</div>
+    <h1>Aura <span class="grad">DCA</span></h1>
+    <p class="lead">An autonomous DCA agent that lets <b style="color:var(--ink)">Claude drive strategy</b> — while <b style="color:var(--ink)">code owns every number that touches money</b>. Built on Arc Network.</p>
+    <div class="footlink"><span class="tag">🌐 aura-dca.xyz</span><span class="tag">⛓️ Arc Testnet</span><span class="tag">🧠 Decisions by Claude</span><span class="tag">🔵 Circle Swap Kit</span></div>
+  </section>
+
+  <!-- 2 PROBLEM -->
+  <section class="slide" data-note="problem">
+    <div class="kicker">01 · The problem</div>
+    <h2>You can't let an LLM<br>be the final authority on money.</h2>
+    <p class="lead">Give it the keys and one hallucinated number drains the wallet. Take away all its agency and it's just a cron script with extra steps.</p>
+    <div class="amberbox">And the moment the money isn't yours, it must be <b style="color:var(--ink)">fair</b> as well as <b style="color:var(--ink)">safe</b> — every user's schedule honoured, every user's funds ring-fenced, every allocation reconstructable — while still settling efficiently on-chain.</div>
+  </section>
+
+  <!-- 3 SOLUTION -->
+  <section class="slide" data-note="solution">
+    <div class="kicker">02 · The solution</div>
+    <h2>Claude <span class="grad">recommends</span>. Code <span class="grad">decides</span>.</h2>
+    <div class="split">
+      <div class="col claude">
+        <h3>🧠 Claude — the agent</h3>
+        <p><b>Recommends</b> an amount + reasoning.</p>
+        <p>Reads balance, day count, budget, its own history.</p>
+        <p class="mono" style="color:#c9b6ff">{ proceed, amountUsdc, reasoning }</p>
+        <p>Never trusted with the final number.</p>
+      </div>
+      <div class="col code">
+        <h3>🔒 clampDecision() — the code</h3>
+        <p><b>Decides</b> the amount actually swapped.</p>
+        <p>Re-derives the cap from hard guardrails: max/day, reserve, dust, campaign budget.</p>
+        <p><b>Sole authority.</b> Pure function. Unit-tested.</p>
+        <p>Records <span class="mono">boundBy</span> — which rule bound the result.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4 FLAGSHIP -->
+  <section class="slide" data-note="flagship">
+    <div class="kicker">03 · The flagship claim</div>
+    <h2>Many users. <span class="grad">One swap.</span> Fair settlement.</h2>
+    <ul>
+      <li><span class="dot">1</span><span>Each wallet sets its <b>own</b> cadence, amount, and caps.</span></li>
+      <li><span class="dot">2</span><span>Every run, the agent executes the <b>sum as a single swap</b> per token.</span></li>
+      <li><span class="dot">3</span><span>Proceeds distributed <b>pro-rata by contribution</b> — remainder assigned deterministically so the books always close.</span></li>
+    </ul>
+    <p class="lead" style="margin-top:1.8rem">One transaction serves everyone. <b style="color:var(--ink)">Nobody subsidises anyone.</b></p>
+  </section>
+
+  <!-- 5 PROVEN -->
+  <section class="slide" data-note="proven">
+    <div class="kicker">04 · Proven on-chain — not a mockup</div>
+    <h2>Two wallets. One swap. Split to the last unit.</h2>
+    <p class="muted mono" style="margin-top:.4rem">2.00 USDC → 1.793953 EURC &nbsp;·&nbsp; tx 0xd8a19f…1527</p>
+    <table>
+      <thead><tr><th>Wallet</th><th>Contributed</th><th>Received</th><th>Share</th></tr></thead>
+      <tbody>
+        <tr><td class="k mono">0xdd6045a6…</td><td>1.000000 USDC</td><td>0.896977 EURC</td><td>50.0%</td></tr>
+        <tr><td class="k mono">0xfc337ba1…</td><td>1.000000 USDC</td><td>0.896976 EURC</td><td>50.0%</td></tr>
+      </tbody>
+    </table>
+    <p class="lead" style="margin-top:1.2rem"><span class="mono">0.896977 + 0.896976 = 1.793953</span> — the books close exactly. Executed on the hourly cron, <b style="color:var(--ink)">unsupervised</b>.</p>
+  </section>
+
+  <!-- 6 NON-CUSTODIAL -->
+  <section class="slide" data-note="custody">
+    <div class="kicker">05 · Non-custodial by construction</div>
+    <h2>Both halves of Circle's wallet stack.</h2>
+    <div class="split">
+      <div class="col code">
+        <h3>🤖 The agent</h3>
+        <p><b>Developer-Controlled Wallet</b> — Circle custodies the signing key server-side. No raw private key to leak in a CI secret.</p>
+      </div>
+      <div class="col claude">
+        <h3>👤 The user</h3>
+        <p><b>Sign in with Google</b> → a real, non-custodial <b>User-Controlled Wallet on Arc</b>. MPC custody, PIN recovery — no MetaMask, no seed phrase.</p>
+      </div>
+    </div>
+    <p class="lead" style="margin-top:1.4rem">Every state change is authorised by the user's <b style="color:var(--ink)">own signature</b>. The agent executes the strategy — it can never invent a user's consent.</p>
+  </section>
+
+  <!-- 7 SELF-AUDIT -->
+  <section class="slide" data-note="attest">
+    <div class="kicker">06 · It audits itself</div>
+    <h2>The ledger is <span class="grad">tamper-evident on-chain</span>.</h2>
+    <p class="lead">After each run the agent records <span class="mono">keccak256(data/ledger.json)</span> in <b style="color:var(--ink)">AuraAttestation.sol</b> — a purpose-built Arc Testnet contract only its wallet may write to.</p>
+    <div class="cardrow">
+      <div class="card"><div class="n grad">14+</div><div class="l">attestations written by the cron — no human in the loop</div></div>
+      <div class="card"><div class="n grad">0</div><div class="l">funds held — a bug there can't move a token</div></div>
+      <div class="card"><div class="n mono" style="font-size:1.5rem">verify-attest</div><div class="l">anyone recomputes the hash, read-only</div></div>
+    </div>
+  </section>
+
+  <!-- 8 HONEST STATE -->
+  <section class="slide" data-note="honest">
+    <div class="kicker">07 · The honest state — and why it's a strength</div>
+    <h2>The agent knew when <span class="grad">not</span> to act.</h2>
+    <p class="lead"><span class="mono">USDC → cirBTC</span> returned <i>"No route available"</i> across 14 distinct days — a liquidity outage on Arc Testnet, <b style="color:var(--ink)">not a bug in the agent</b> (proven isolated by <span class="mono">check-routes</span>).</p>
+    <div class="amberbox">It recognised the failure as <b style="color:var(--ink)">structural, not transient</b>, wrote that to its own reflections, cut its probe frequency, and <b style="color:var(--ink)">withheld spend to preserve capital</b> — unsupervised. Pick EURC and buys settle live today; leave it on cirBTC and the agent rides out the outage. Both run side by side.</div>
+  </section>
+
+  <!-- 9 x402 -->
+  <section class="slide" data-note="x402">
+    <div class="kicker">08 · Programmable money, one layer deeper</div>
+    <h2>The agent pays for its <span class="grad">own inputs</span>.</h2>
+    <p class="lead">Beyond <i>spending</i> USDC to accumulate, it can <b style="color:var(--ink)">pay per call</b> over <b style="color:var(--ink)">x402</b> (HTTP 402): a metered "market brief" unlocked by a signed USDC authorization — <span class="mono">EIP-3009 transferWithAuthorization</span>.</p>
+    <div class="code">npm run x402-demo &nbsp;<span class="muted"># one command · no keys · no setup</span></div>
+    <p class="muted" style="margin-top:1.2rem;max-width:64ch">Honest scope: signed &amp; cryptographically <b style="color:var(--ink)">verified</b>, settlement gated off — an additive module (12 tests) that never touches the DCA pipeline.</p>
+  </section>
+
+  <!-- 10 STACK -->
+  <section class="slide" data-note="stack">
+    <div class="kicker">09 · Tech stack &amp; safety</div>
+    <h2>Tested code owns the money path.</h2>
+    <div class="stack">
+      <span class="tag">TypeScript · tsx</span><span class="tag">Anthropic Claude · tool-use + zod</span>
+      <span class="tag">Circle Swap Kit</span><span class="tag">Dev-Controlled Wallets</span><span class="tag">User-Controlled Wallets</span>
+      <span class="tag">Arc Testnet (EVM L1)</span><span class="tag">Solidity · AuraAttestation</span>
+      <span class="tag">GitHub Actions cron</span><span class="tag">Vercel serverless</span><span class="tag">Vitest</span>
+    </div>
+    <div class="cardrow">
+      <div class="card"><div class="n grad">65</div><div class="l">unit tests on the safety-critical paths</div></div>
+      <div class="card"><div class="n grad">2</div><div class="l">switches guard live trading: DRY_RUN + LIVE_TRADING_ENABLED</div></div>
+      <div class="card"><div class="n grad">0</div><div class="l">servers to host — self-hosted on free CI</div></div>
+    </div>
+  </section>
+
+  <!-- 11 STANDOUT -->
+  <section class="slide" data-note="standout">
+    <div class="kicker">10 · What makes it stand out</div>
+    <h2>Proven, not asserted.</h2>
+    <ul>
+      <li><span class="dot">◆</span><span>The <b>hard claim is proven on-chain</b> — many users, one swap, split to the last unit. Twice, unsupervised.</span></li>
+      <li><span class="dot">◆</span><span><b>Real, verifiable execution</b> — real swaps, real per-user distributions, green CI anyone can inspect. Not a demo video.</span></li>
+      <li><span class="dot">◆</span><span><b>Safety architecture</b> — LLM recommends / code decides, plus a two-switch live gate.</span></li>
+      <li><span class="dot">◆</span><span><b>It audits itself on-chain</b> and reports to Telegram every run — genuinely autonomous.</span></li>
+    </ul>
+  </section>
+
+  <!-- 12 CLOSE -->
+  <section class="slide" data-note="close">
+    <div class="kicker"><svg class="orbit" viewBox="0 0 64 64"><ellipse cx="32" cy="32" rx="26" ry="12" fill="none" stroke="url(#g)" stroke-width="3" transform="rotate(35 32 32)"/><ellipse cx="32" cy="32" rx="26" ry="12" fill="none" stroke="url(#g)" stroke-width="3" transform="rotate(-35 32 32)"/></svg> Two orbits, meeting at every decision</div>
+    <h1>Judgment, <span class="grad">on rails.</span></h1>
+    <p class="lead">Claude reasons about the market and proposes. The code re-derives the limit and owns the number that actually gets spent. That intersection is where the safety of an LLM-driven money agent lives.</p>
+    <div class="footlink">
+      <span class="tag">🌐 aura-dca.xyz</span>
+      <span class="tag">💾 github.com/thanhphuc85/AuraDCA</span>
+      <span class="tag">🔗 Verify the swap on ArcScan</span>
+    </div>
+  </section>
+
+</div>
+
+<div id="brand"><svg class="orbit" viewBox="0 0 64 64" style="width:1.1em;height:1.1em"><ellipse cx="32" cy="32" rx="26" ry="12" fill="none" stroke="url(#g)" stroke-width="4" transform="rotate(35 32 32)"/><ellipse cx="32" cy="32" rx="26" ry="12" fill="none" stroke="url(#g)" stroke-width="4" transform="rotate(-35 32 32)"/></svg> Aura DCA</div>
+<div id="hint">← → or Space to navigate · F for fullscreen</div>
+<div id="counter">01 / 12</div>
+
+<script>
+  const slides=[...document.querySelectorAll('.slide')];
+  let i=0;
+  const bar=document.getElementById('bar'), counter=document.getElementById('counter');
+  function pad(n){return String(n).padStart(2,'0')}
+  function show(n){
+    i=Math.max(0,Math.min(slides.length-1,n));
+    slides.forEach((s,k)=>s.classList.toggle('active',k===i));
+    bar.style.width=((i+1)/slides.length*100)+'%';
+    counter.textContent=pad(i+1)+' / '+pad(slides.length);
+  }
+  function next(){show(i+1)} function prev(){show(i-1)}
+  document.addEventListener('keydown',e=>{
+    if(['ArrowRight','ArrowDown',' ','PageDown'].includes(e.key)){e.preventDefault();next()}
+    else if(['ArrowLeft','ArrowUp','PageUp'].includes(e.key)){e.preventDefault();prev()}
+    else if(e.key==='Home'){show(0)} else if(e.key==='End'){show(slides.length-1)}
+    else if(e.key.toLowerCase()==='f'){document.documentElement.requestFullscreen?.()}
+  });
+  document.addEventListener('click',e=>{ if(e.clientX < window.innerWidth*0.25) prev(); else next(); });
+  // Deep-link a slide for export/screenshot: pitch-deck.html#5  and  ?export disables fade
+  const params=new URLSearchParams(location.search);
+  if(params.has('export')){document.body.style.setProperty('--nofade','1');
+    const st=document.createElement('style');st.textContent='.slide{transition:none!important}';document.head.appendChild(st);}
+  const fromHash=parseInt((location.hash||'').replace('#',''),10);
+  show(Number.isFinite(fromHash)?fromHash-1:0);
+  window.addEventListener('hashchange',()=>{const n=parseInt(location.hash.replace('#',''),10);if(Number.isFinite(n))show(n-1);});
+</script>
+</body>
+</html>

@@ -1,0 +1,48 @@
+1
+00:00:00,000 --> 00:00:12,960
+Đây là Aura DCA — một agent DCA tự động xây trên Arc Network. Toàn bộ ý tưởng gói trong một câu: để Claude điều khiển chiến lược, nhưng để code nắm quyền trên mọi con số chạm đến tiền.
+
+2
+00:00:13,660 --> 00:00:35,716
+Tài chính điều khiển bởi agent ẩn một mâu thuẫn thật sự. Một mô hình ngôn ngữ rất giỏi phán đoán — nhưng bạn không bao giờ được để nó quyết định cuối cùng số tiền cần chuyển. Một con số ảo giác là cạn ví. Và khi tiền không phải của bạn, agent phải vừa công bằng vừa an toàn: lịch của mỗi người được tôn trọng, tiền của mỗi người tách bạch.
+
+3
+00:00:36,416 --> 00:01:10,832
+Chúng tôi giải quyết như sau. Claude đề xuất — nó đọc số dư, ngân sách, và lịch sử giao dịch của chính nó, rồi đưa ra số tiền kèm lý do qua một lời gọi công cụ được ép và kiểm tra bằng schema. Nhưng hàm clamp-decision — một hàm thuần, có kiểm thử — tự tính lại giới hạn thật từ các guardrail cứng và quyết định con số thực sự được chi. Claude không bao giờ được tin với con số cuối, và mỗi lần chạy đều ghi lại ràng buộc nào đã chặn kết quả. Sự phân tách đó chính là logo của chúng tôi: hai quỹ đạo chỉ gặp nhau tại điểm ra quyết định.
+
+4
+00:01:11,532 --> 00:01:34,428
+Giờ đến phần khó — phục vụ nhiều người cùng lúc. Mỗi ví tự đặt nhịp độ và trần riêng. Mỗi lần chạy, agent cộng dồn ai đến hạn, thực thi tổng cộng như một giao dịch hoán đổi duy nhất, rồi chia phần nhận về theo tỷ lệ đóng góp — gán phần dư làm tròn một cách tất định để sổ sách luôn khớp. Một giao dịch phục vụ tất cả; không ai bù cho ai.
+
+5
+00:01:35,128 --> 00:01:59,704
+Và đây không phải sơ đồ — nó đã chạy on-chain, không người giám sát. Hai ví, mỗi ví một USDC, gộp thành một giao dịch hai USDC sang EURC, chia không phẩy tám chín sáu chín bảy bảy và không phẩy tám chín sáu chín bảy sáu — cộng lại đúng bằng tổng. Đây là giao dịch đó trên ArcScan. Hoán đổi là thật, và các đường link là nguồn sự thật.
+
+6
+00:02:00,404 --> 00:02:27,548
+Nó phi lưu ký ngay từ thiết kế, dùng cả hai nửa của bộ ví Circle. Agent chạy trên ví Developer-Controlled — không có khóa thô để rò rỉ. Còn người dùng chỉ cần đăng nhập với Google để tạo một ví Circle User-Controlled thật trên Arc — không cần MetaMask, không cần cụm từ khôi phục. Mọi hành động đều được ủy quyền bằng chữ ký của chính người dùng; agent có thể thực thi, nhưng không bao giờ tự bịa ra sự đồng ý của bạn.
+
+7
+00:02:28,248 --> 00:02:52,560
+Nó thậm chí tự kiểm toán. Sau mỗi lần chạy, agent băm sổ cái đã ghi và lưu mã băm đó vào một hợp đồng chuyên dụng trên Arc Testnet mà chỉ ví của nó được ghi. Hơn mười bốn attestation, do cron ghi, không con người tham gia. Hợp đồng không giữ tiền — một lỗi ở đó cũng không di chuyển được token — và bất kỳ ai cũng tính lại được mã băm ở chế độ chỉ đọc.
+
+8
+00:02:53,260 --> 00:03:22,444
+Giờ đến phần trung thực. Tuyến cir-B-T-C trên Arc Testnet gặp sự cố thanh khoản — không có tuyến giao dịch suốt mười bốn ngày liền. Đó là thị trường, không phải lỗi — và chúng tôi chứng minh được nó chỉ cô lập ở cir-B-T-C. Điều quan trọng là cách agent phản ứng: nó nhận ra lỗi mang tính cấu trúc, ghi vào bộ nhớ phản tư của chính nó, và giữ lại tiền để bảo toàn vốn — không người giám sát. Biết khi nào không hành động là nửa khó hơn của một agent quản tiền tự động.
+
+9
+00:03:23,144 --> 00:03:51,224
+Sâu thêm một lớp vào tiền lập trình được: agent có thể tự trả tiền cho đầu vào của chính nó. Qua x-bốn-không-hai — giao thức HTTP bốn-không-hai, Payment Required — nó mở khóa một bản tin thị trường có tính phí bằng một ủy quyền USDC đã ký. Một lệnh, không cần khóa, tái hiện toàn bộ quá trình bắt tay. Được xác minh bằng mật mã, phần thanh toán cuối bị khóa — một mô-đun cộng thêm không hề chạm vào đường DCA.
+
+10
+00:03:51,924 --> 00:04:12,252
+Bên trong: TypeScript và Claude qua công cụ đã kiểm tra, Circle Swap Kit cùng cả hai loại ví, một neo kiểm toán bằng Solidity, và một cron GitHub Actions — nên không cần máy chủ. Sáu mươi lăm bài kiểm thử canh đường tiền, và giao dịch thật cần bật hai công tắc riêng biệt. Code đã kiểm thử nắm quyền trên tiền.
+
+11
+00:04:12,952 --> 00:04:38,704
+Vậy điều gì làm nó khác biệt? Tuyên bố khó được chứng minh, không phải khẳng định suông — nhiều người, một giao dịch, chia đến đơn vị cuối, hai lần, không giám sát. Thực thi thật, kiểm chứng được, thay vì một video demo. Một kiến trúc an toàn nơi code, chứ không phải mô hình, nắm quyền trên tiền. Và một agent tự kiểm toán on-chain và báo cáo mỗi lần chạy.
+
+12
+00:04:39,404 --> 00:05:01,436
+Hai con đường độc lập — phán đoán của Claude và guardrail của code — gặp nhau tại mỗi quyết định. Chính giao điểm đó là nơi trú ngụ sự an toàn của một agent quản tiền điều khiển bởi mô hình ngôn ngữ. Nó đang chạy tại aura-dca chấm x-y-z, mã nguồn mở, và mọi tuyên bố ở đây đều kiểm chứng được on-chain. Cảm ơn đã theo dõi.
+

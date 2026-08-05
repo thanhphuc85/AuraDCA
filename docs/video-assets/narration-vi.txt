@@ -1,0 +1,39 @@
+AURA DCA — LỜI THOẠI (TIẾNG VIỆT)
+Văn bản sạch cho text-to-speech của CapCut hoặc thu giọng. Mỗi khối một slide.
+Thời lượng clip gợi ý trong [ngoặc]; chỉnh lại cho khớp giọng đọc tạo ra.
+
+=== Slide 1  [24 giây] ===
+Đây là Aura DCA — một agent DCA tự động xây trên Arc Network. Toàn bộ ý tưởng gói trong một câu: để Claude điều khiển chiến lược, nhưng để code nắm quyền trên mọi con số chạm đến tiền.
+
+=== Slide 2  [25 giây] ===
+Tài chính điều khiển bởi agent ẩn một mâu thuẫn thật sự. Một mô hình ngôn ngữ rất giỏi phán đoán — nhưng bạn không bao giờ được để nó quyết định cuối cùng số tiền cần chuyển. Một con số ảo giác là cạn ví. Và khi tiền không phải của bạn, agent phải vừa công bằng vừa an toàn: lịch của mỗi người được tôn trọng, tiền của mỗi người tách bạch.
+
+=== Slide 3  [29 giây] ===
+Chúng tôi giải quyết như sau. Claude đề xuất — nó đọc số dư, ngân sách, và lịch sử giao dịch của chính nó, rồi đưa ra số tiền kèm lý do qua một lời gọi tool được ép và kiểm tra bằng schema. Nhưng clampDecision — một hàm thuần, có unit test — tự tính lại giới hạn thật từ các guardrail cứng và quyết định con số thực sự được chi. Claude không bao giờ được tin với con số cuối, và mỗi lần chạy đều ghi lại ràng buộc nào đã chặn kết quả. Sự phân tách đó chính là logo của chúng tôi: hai quỹ đạo chỉ gặp nhau tại điểm ra quyết định.
+
+=== Slide 4  [22 giây] ===
+Giờ đến phần khó — phục vụ nhiều người cùng lúc. Mỗi ví tự đặt nhịp độ và trần riêng. Mỗi lần chạy, agent cộng dồn ai đến hạn, thực thi tổng cộng như một giao dịch swap duy nhất, rồi chia phần nhận về theo tỷ lệ đóng góp — gán phần dư làm tròn một cách tất định để sổ sách luôn khớp. Một giao dịch phục vụ tất cả; không ai bù cho ai.
+
+=== Slide 5  [35 giây] ===
+Và đây không phải sơ đồ — nó đã chạy on-chain, không người giám sát. Hai ví, mỗi ví một USDC, gộp thành một giao dịch swap hai USDC sang EURC, chia không phẩy tám chín sáu chín bảy bảy và không phẩy tám chín sáu chín bảy sáu — cộng lại đúng bằng tổng. Đây là giao dịch đó trên ArcScan. Swap là thật, và các đường link là nguồn sự thật.
+
+=== Slide 6  [25 giây] ===
+Nó phi lưu ký ngay từ thiết kế, dùng cả hai nửa của bộ ví Circle. Agent chạy trên Developer-Controlled Wallet — không có khóa thô để rò rỉ. Còn người dùng chỉ cần đăng nhập với Google để tạo một Circle User-Controlled Wallet thật trên Arc — không MetaMask, không seed phrase. Mọi hành động đều được ủy quyền bằng chữ ký của chính người dùng; agent có thể thực thi, nhưng không bao giờ tự bịa sự đồng ý của bạn.
+
+=== Slide 7  [22 giây] ===
+Nó thậm chí tự kiểm toán. Sau mỗi lần chạy, agent băm sổ cái đã commit và ghi hash đó vào một hợp đồng chuyên dụng trên Arc Testnet mà chỉ ví của nó được ghi. Hơn mười bốn attestation, do cron ghi, không con người tham gia. Hợp đồng không giữ tiền — một lỗi ở đó cũng không di chuyển được token — và bất kỳ ai cũng tính lại được hash ở chế độ chỉ đọc.
+
+=== Slide 8  [26 giây] ===
+Giờ đến phần trung thực. Tuyến cirBTC trên Arc Testnet gặp sự cố thanh khoản — không có route suốt mười bốn ngày liền. Đó là thị trường, không phải lỗi — và chúng tôi chứng minh được nó chỉ cô lập ở cirBTC. Điều quan trọng là cách agent phản ứng: nó nhận ra lỗi mang tính cấu trúc, ghi vào reflections của chính nó, và giữ lại tiền để bảo toàn vốn — không người giám sát. Biết khi nào không hành động là nửa khó hơn của một agent quản tiền tự động.
+
+=== Slide 9  [20 giây] ===
+Sâu thêm một lớp vào programmable money: agent có thể tự trả tiền cho đầu vào của chính nó. Qua x402 — HTTP bốn không hai, Payment Required — nó mở khóa một bản tin thị trường có tính phí bằng một ủy quyền USDC đã ký. Một lệnh, không cần khóa, tái hiện toàn bộ quá trình bắt tay. Được xác minh bằng mật mã, phần settle bị khóa — một module cộng thêm không hề chạm vào đường DCA.
+
+=== Slide 10  [17 giây] ===
+Bên trong: TypeScript và Claude qua tool-use đã kiểm tra, Circle Swap Kit cùng cả hai loại ví, một neo kiểm toán bằng Solidity, và một cron GitHub Actions — nên không cần server. Sáu mươi lăm unit test canh đường tiền, và giao dịch thật cần bật hai công tắc riêng biệt. Code đã test nắm quyền trên tiền.
+
+=== Slide 11  [17 giây] ===
+Vậy điều gì làm nó khác biệt? Tuyên bố khó được chứng minh, không phải khẳng định suông — nhiều người, một swap, chia đến đơn vị cuối, hai lần, không giám sát. Thực thi thật, kiểm chứng được, thay vì một video demo. Một kiến trúc an toàn nơi code, chứ không phải mô hình, nắm quyền trên tiền. Và một agent tự kiểm toán on-chain và báo cáo mỗi lần chạy.
+
+=== Slide 12  [26 giây] ===
+Hai con đường độc lập — phán đoán của Claude và guardrail của code — gặp nhau tại mỗi quyết định. Chính giao điểm đó là nơi trú ngụ sự an toàn của một agent quản tiền điều khiển bởi LLM. Nó đang chạy tại aura-dca chấm x-y-z, mã nguồn mở, và mọi tuyên bố ở đây đều kiểm chứng được on-chain. Cảm ơn đã theo dõi.

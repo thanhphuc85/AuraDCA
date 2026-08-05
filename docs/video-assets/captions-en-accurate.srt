@@ -1,0 +1,48 @@
+1
+00:00:00,000 --> 00:00:14,088
+Meet Aura DCA — an autonomous dollar-cost-averaging agent built on Arc Network. Its whole idea fits in one line: let Claude drive the strategy, but let code own every number that touches money.
+
+2
+00:00:14,788 --> 00:00:37,108
+Agent-driven finance hides a real tension. A language model is brilliant at judgment — but you can never let it be the final authority on how much money to move. One hallucinated number drains the wallet. And the moment the money isn't yours, the agent has to be fair as well as safe: every user's schedule honoured, every user's funds ring-fenced.
+
+3
+00:00:37,808 --> 00:01:10,448
+Here's how we resolve it. Claude recommends — it reads the balance, the budget, and its own trade history, then proposes an amount with reasoning, through a forced, schema-validated tool call. But clamp decision — a pure, unit-tested function — re-derives the real limit from hard guardrails and decides the number actually spent. Claude is never trusted with the final figure, and every run records which rule bound the result. That split is our logo: two orbits that meet only at the decision.
+
+4
+00:01:11,148 --> 00:01:36,492
+Now the hard part — serving many users at once. Each wallet sets its own cadence and caps. Every run, the agent adds up who's due, executes the sum as a single swap, then splits the proceeds pro-rata by contribution — assigning the rounding remainder deterministically so the books always close. One transaction serves everyone; nobody subsidises anyone.
+
+5
+00:01:37,192 --> 00:02:02,752
+And this isn't a diagram — it ran on-chain, unsupervised. Two wallets, one USDC each, pooled into a single two-USDC swap into EURC, split point eight nine six nine seven seven and point eight nine six nine seven six — adding back to the exact total. Here's that transaction on ArcScan. The swap is real, and the links are the source of truth.
+
+6
+00:02:03,452 --> 00:02:29,732
+It's non-custodial by construction, using both halves of Circle's wallet stack. The agent runs on a Developer-Controlled Wallet — no raw key to leak. And end users just sign in with Google to mint a real Circle User-Controlled Wallet on Arc — no MetaMask, no seed phrase. Every action is authorised by the user's own signature; the agent can execute, but it can never invent your consent.
+
+7
+00:02:30,432 --> 00:02:53,520
+It even audits itself. After every run the agent hashes its committed ledger and records that hash in a purpose-built Arc Testnet contract only its wallet can write to. Fourteen-plus attestations, written by the cron with no human in the loop. The contract holds no funds — a bug there can't move a token — and anyone can recompute the hash read-only.
+
+8
+00:02:54,220 --> 00:03:24,556
+Now the honest part. The cir-B-T-C route on Arc Testnet went into a liquidity outage — no route available for fourteen straight days. That's the market, not a bug — and we can prove it's isolated to cir-B-T-C. What matters is how the agent reacted: it recognised the failure as structural, wrote that to its own reflections, and withheld spend to preserve capital — unsupervised. Knowing when not to act is the harder half of an autonomous money agent.
+
+9
+00:03:25,256 --> 00:03:51,848
+One layer deeper into programmable money: the agent can pay for its own inputs. Over x-four-oh-two — H-T-T-P four-oh-two, Payment Required — it unlocks a metered market brief with a signed USDC authorization. One command, no keys, reproduces the whole handshake. It's cryptographically verified, with settlement gated off — an additive module that never touches the D-C-A path.
+
+10
+00:03:52,548 --> 00:04:12,948
+Under the hood: TypeScript and Claude via validated tool-use, Circle Swap Kit and both wallet types, a Solidity audit anchor, and a GitHub Actions cron — so there's no server to host. Sixty-five unit tests guard the money path, and live trading needs two separate switches enabled. Tested code owns the money.
+
+11
+00:04:13,648 --> 00:04:36,904
+So what sets it apart? The hard claim is proven, not asserted — many users, one swap, split to the last unit, twice, unsupervised. Real, verifiable execution instead of a demo video. A safety architecture where code, not the model, owns the money. And an agent that audits itself on-chain and reports every run.
+
+12
+00:04:37,604 --> 00:04:58,412
+Two independent paths — Claude's judgment and the code's guardrails — meeting at every decision. That intersection is exactly where the safety of an L-L-M-driven money agent lives. It's live at aura-d-c-a dot x-y-z, the code is open, and every claim here is verifiable on-chain. Thanks for watching.
+
