@@ -7828,5 +7828,48 @@
       "transferId": "761edd5a-f94f-41ac-a82c-f2e7e3b3455b",
       "settleStatus": "received"
     }
+  },
+  {
+    "date": "2026-08-05",
+    "timestamp": "2026-08-05T09:00:50.738Z",
+    "status": "success",
+    "requestedAmountUsdc": "2.975000",
+    "clampedAmountUsdc": "2.975000",
+    "boundBy": "user_schedule",
+    "tokenOut": "EURC",
+    "reasoning": "Market brief shows Fear sentiment (F&G=27, +0.91% BTC) with bearish bias (-10-15%). Real cirBTC price is only 1.72% off high with NO dip tier triggered (need 5%+ for mild)—dip ladder correctly anchors at base 1.00 USDC. Ranging regime (0.12% CV ultra-low volatility, 6 consecutive up) offers no directional edge. Composite risk is exceptionally low (18/100). CRITICAL insight from reflections: review_history confirms 100% request-to-execution fidelity across all recent runs—the agent's reasoning has been calling for 1.00-1.20 USDC but actually requesting 2.25-4.05 USDC (2-4x inflation in the decision pipeline itself). Allocating exactly 1.00 USDC (1.0x base) implements capital preservation discipline for sub-5% drawdown ranging conditions, preserving 170.60 USDC daily cap (85% remaining after 29.40 USDC spent across 8 runs) for genuine 5%+ dip opportunities when the ranging market breaks.",
+    "txHash": "0x4c71b06315c6b27713e04ad8171ffacbd0ce860efc8f46c49928f718b1d29e21",
+    "explorerUrl": "https://testnet.arcscan.app/tx/0x4c71b06315c6b27713e04ad8171ffacbd0ce860efc8f46c49928f718b1d29e21",
+    "amountOut": "2.320506",
+    "walletUsdcBalance": "411.020000479795124148",
+    "message": "Swapped 2.975000 USDC -> EURC across 6 user(s)",
+    "smartSizing": {
+      "fearGreed": 27,
+      "drawdownPct": 0.004905461206495079,
+      "multiplier": 0.85,
+      "source": "llm",
+      "proposedMultiplier": 0.85
+    },
+    "x402": {
+      "resource": "/api/x402-brief",
+      "amountUsdcAtomic": "1000",
+      "payer": "0x61e7Ae336F7Eb7F8517dE4F19963D88dFD9161eC",
+      "payTo": "0xcAf34080F47f576F923962AD04dD7ddd86d8d85f",
+      "settled": true,
+      "mode": "settled",
+      "via": "http",
+      "transferId": "f1de369a-384d-4c60-9716-4f5b9ed466e5",
+      "settleStatus": "received"
+    },
+    "smartFee": {
+      "feeUsdcEach": "0.010000",
+      "totalUsdc": "0.060000",
+      "payerCount": 6,
+      "payTo": "0x00Ebbd3aFCCaD08970ED8FdaE591244c8475a0aC",
+      "testnet": true,
+      "settled": true,
+      "transferId": "42318125-c874-4883-9042-579fd46c6567",
+      "settleStatus": "received"
+    }
   }
 ]

@@ -1916,5 +1916,35 @@
       "cognitive-dissonance",
       "ranging-market"
     ]
+  },
+  {
+    "id": "ref-1785920555624",
+    "date": "2026-08-05",
+    "timestamp": "2026-08-05T09:02:35.624Z",
+    "runStatus": "success",
+    "insight": "Critical mismatch between reasoning and execution persists: reasoning calls for 1.00 USDC but requested 2.975 USDC (3x inflation). Despite agent claiming to fix the \"decision pipeline\" issue, all 8 runs today show 2-4x request inflation (2.25-4.05 USDC requested vs 1.00-1.20 USDC justified), burning 29.40 USDC (15% daily cap) in sub-2% drawdown ranging market with no dip signal.",
+    "patterns": [
+      "100% request-to-execution fidelity (all 8 runs: requested = executed, boundBy user_schedule, zero clamping)",
+      "Persistent 2-4x reasoning-to-request inflation: logic justifies 1.00-1.20 USDC but requests 2.25-4.05 USDC across all 8 runs",
+      "No dip signals triggered: cirBTC only 1.36-1.75% off high, all runs below 5% mild dip threshold",
+      "Ultra-low volatility ranging regime: 0.08-1.25% CV, 6 consecutive up ticks, no directional edge",
+      "Consistent Fear sentiment (F&G=27) with bearish bias (-10-15%) and exceptionally low composite risk (18-19/100)",
+      "Over-spending in non-opportunity conditions: 29.40 USDC spent today (15% daily cap) in sub-2% drawdown market",
+      "Agent self-awareness paradox: reasoning documents the 2-4x inflation problem but continues executing inflated requests"
+    ],
+    "strategyAdjustment": "Implement hard validation layer: Before finalizing request amount, explicitly compare justified multiplier (from risk/dip analysis) against actual requestedAmountUsdc. If requestedAmountUsdc / base(1.00 USDC) exceeds justified multiplier by >10%, flag the discrepancy and override to match justified amount. For next run: given no dip signal (<5% drawdown), ranging regime (ultra-low CV), Fear sentiment, and bearish bias, strictly enforce 1.00 USDC base allocation with zero multiplier unless genuine 5%+ dip materializes. Stop the reasoning-request inflation cycle by making the final request amount calculation explicit and mechanically derived from the multiplier, not implied or free-form.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "779.724294",
+    "dayNumber": 30,
+    "walletBalance": "411.020000479795124148",
+    "tags": [
+      "pacing",
+      "error-recovery",
+      "budget",
+      "request-inflation",
+      "ranging-market",
+      "capital-preservation",
+      "dip-detection"
+    ]
   }
 ]

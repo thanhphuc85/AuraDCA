@@ -1,12 +1,6 @@
 [
   {
     "date": "2026-07-28",
-    "timestamp": "2026-07-28T12:53:54.713Z",
-    "priceUsd": 63395.082019856,
-    "source": "circle_swapkit"
-  },
-  {
-    "date": "2026-07-28",
     "timestamp": "2026-07-28T15:21:12.775Z",
     "priceUsd": 63395.082019856,
     "source": "circle_swapkit"
@@ -3597,6 +3591,12 @@
     "date": "2026-08-05",
     "timestamp": "2026-08-05T08:45:33.598Z",
     "priceUsd": 64118,
+    "source": "coingecko_btc_spot"
+  },
+  {
+    "date": "2026-08-05",
+    "timestamp": "2026-08-05T09:00:50.738Z",
+    "priceUsd": 64102,
     "source": "coingecko_btc_spot"
   }
 ]
