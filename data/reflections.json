@@ -1804,5 +1804,34 @@
       "strategy-confusion",
       "clamping"
     ]
+  },
+  {
+    "id": "ref-1785906139249",
+    "date": "2026-08-05",
+    "timestamp": "2026-08-05T05:02:19.249Z",
+    "runStatus": "success",
+    "insight": "Agent is caught in a severe reasoning loop: repeatedly claiming \"ALL requests execute exactly as specified\" while simultaneously requesting 3.45-3.90 USDC but reasoning for 1.20-2.50 USDC allocations. This disconnect reveals the agent is not reading its own reasoning correctly.",
+    "patterns": [
+      "Zero clamping for 8+ consecutive runs - all bounded by user_schedule, suggesting system accepts wide request range",
+      "Agent reasoning recommends 1.20-2.50 USDC (1.2-2.5x base) for sub-5% drawdowns but actually requests 2.55-4.05 USDC (2.55-4.05x base) - consistent 50-100% inflation between stated logic and actual request",
+      "No dip tier triggered across all recent runs - market only 1.36-1.93% off highs, well below 5% mild dip threshold",
+      "Ranging regime persistent (0.30-1.25% CV, 6 consecutive up ticks) with no directional edge",
+      "Fear/Extreme Fear sentiment (F&G 25-27) constant but drawdown remains minimal",
+      "Daily cap utilization moderate: 17.40/200 USDC spent across 5 runs today (9% used, 91% remaining)",
+      "Cumulative pace: 768.20 USDC over 30 days = 25.61 USDC/day average, on track with 200 USDC daily cap"
+    ],
+    "strategyAdjustment": "IMMEDIATE FIX: The agent must align actual requested amounts with its stated reasoning. If reasoning says \"allocate 1.20 USDC for sub-5% drawdown\", then request exactly 1.20 USDC, not 3.45 USDC. Next run: (1) Read the reasoning section carefully, (2) extract the specific USDC amount justified (e.g., \"1.2x base = 1.20 USDC\"), (3) request that exact amount in the API call. For current market conditions (sub-2% drawdown, ranging, Fear sentiment), reasoning correctly identifies 1.2-2.0x base (1.20-2.00 USDC) as appropriate - actually request amounts in that range to preserve capital for genuine 5%+ dips.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "768.199294",
+    "dayNumber": 30,
+    "walletBalance": "403.126319562789537126",
+    "tags": [
+      "pacing",
+      "reasoning-disconnect",
+      "agent-confusion",
+      "capital-preservation",
+      "ranging-market",
+      "false-dip-signals"
+    ]
   }
 ]
