@@ -2113,5 +2113,32 @@
       "error-streak",
       "pacing"
     ]
+  },
+  {
+    "id": "ref-1785945741316",
+    "date": "2026-08-05",
+    "timestamp": "2026-08-05T16:02:21.316Z",
+    "runStatus": "success",
+    "insight": "Catastrophic reasoning-to-execution bug persists: agent reasoning explicitly calls for 1.00 USDC but execution layer requests 2.975-3.50 USDC (3x inflation). 8 consecutive runs burned 24.705 USDC (avg 3.09 USDC/run) despite documented 1.00 USDC intent—25% daily cap consumed in sub-2% drawdown ranging market with zero dip signals.",
+    "patterns": [
+      "100% reasoning-execution disconnect: All 8 runs show identical pattern where reasoning documents '1.00 USDC' allocation but actual requests are 2.625-3.50 USDC (2.6-3.5x inflation)",
+      "Ranging regime lock: 0.12-0.31% CV ultra-low volatility, 6 consecutive up moves, cirBTC only 1.22-1.86% off high—no dip tier triggered (need 5%+ for mild)",
+      "Capital burn in wrong conditions: 24.705 USDC spent today (12% daily cap) in sub-2% drawdown with Fear sentiment (F&G=27) but no actionable dip signal",
+      "User_schedule binding: 100% of runs bound by user_schedule, never by daily cap—indicates systematic over-requesting relative to intent",
+      "Reflection awareness failure: Agent correctly diagnoses the bug in reasoning text for 8 straight runs but fails to implement the fix in actual request parameters"
+    ],
+    "strategyAdjustment": "IMMEDIATE ACTION REQUIRED: The bug is NOT in reasoning logic—it's in parameter passing to the execution layer. Next run must: (1) Set requestedAmountUsdc parameter to LITERAL 1.00, not a computed variable that inflates, (2) Add explicit validation step that compares reasoning intent vs actual request parameter before submission, (3) If validation fails, halt and log the discrepancy. The agent understands the market correctly (ranging, no dip, preserve capital) but a 3x multiplier is being applied downstream of reasoning—likely in smartSizing or allocation computation. Disable or audit smartSizing.multiplier application logic.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "801.354294",
+    "dayNumber": 30,
+    "walletBalance": "386.33783607957394694",
+    "tags": [
+      "error-recovery",
+      "execution-bug",
+      "capital-preservation",
+      "pacing",
+      "ranging-market",
+      "smart-sizing-failure"
+    ]
   }
 ]
