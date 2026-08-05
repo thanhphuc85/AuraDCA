@@ -2170,5 +2170,31 @@
       "system-diagnostic-needed",
       "pacing"
     ]
+  },
+  {
+    "id": "ref-1785952976540",
+    "date": "2026-08-05",
+    "timestamp": "2026-08-05T18:02:56.540Z",
+    "runStatus": "success",
+    "insight": "Critical system failure: Agent reasoning explicitly calls for 1.00 USDC base buys in ranging markets at price highs (0-1.86% off high), but execution layer consistently delivers 2.975-3.50 USDC (3x inflation). All 8 runs today burned 56.98 USDC (28% daily cap) in sub-5% drawdown conditions with no dip tiers triggered.",
+    "patterns": [
+      "Catastrophic reasoning-to-execution disconnect: 8/8 runs show 3x inflation between intended 1.00 USDC and actual 2.975-3.50 USDC requests",
+      "Ranging regime lock: 0.15-0.31% CV ultra-low volatility across all runs, no directional edge available",
+      "Price at/near highs: 0.00-1.86% drawdown across all runs, zero dip tier activations (need 5%+ for mild)",
+      "Daily cap burn accelerating: 28% utilized (56.98/200 USDC) in sub-optimal conditions, leaving only 72% for genuine opportunities",
+      "Agent self-awareness vs execution: reasoning sections explicitly diagnose the bug and call for 1.00 USDC but requestedAmountUsdc field consistently shows ~3x higher"
+    ],
+    "strategyAdjustment": "EMERGENCY DIAGNOSTIC REQUIRED: The inflation bug is NOT in reasoning logic (which correctly identifies 1.00 USDC for ranging/high-price conditions) but in the execution layer between reasoning output and requestedAmountUsdc field. Investigate: (1) Is there a hidden multiplier being applied after reasoning? (2) Is user_schedule constraint overriding the proposed amount? (3) Is there a minimum amount floor being enforced? The agent must trace the exact data flow from reasoning conclusion to API request payload. Until root cause is identified, the agent cannot fix capital preservation—reflections alone are insufficient.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "807.304294",
+    "dayNumber": 30,
+    "walletBalance": "380.238912457456322672",
+    "tags": [
+      "error-recovery",
+      "clamping",
+      "budget",
+      "pacing",
+      "system-bug"
+    ]
   }
 ]
