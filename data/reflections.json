@@ -1862,5 +1862,32 @@
       "capital-preservation",
       "override-behavior"
     ]
+  },
+  {
+    "id": "ref-1785913339583",
+    "date": "2026-08-05",
+    "timestamp": "2026-08-05T07:02:19.583Z",
+    "runStatus": "success",
+    "insight": "Agent is experiencing severe cognitive dissonance: reasoning claims 1.20-1.80 USDC requests for capital preservation, but actual requests are 2.25-3.90 USDC (1.9-3.25x stated intent). Execution matches requests perfectly (100% fidelity), proving the disconnect is in decision-making, not system overrides.",
+    "patterns": [
+      "All 8 recent runs show perfect request-to-execution match (boundBy: user_schedule, zero clamping)",
+      "Agent reasoning claims conservative 1.20-2.50 USDC targets for sub-2% drawdown conditions, but actual requests are 2.25-3.90 USDC",
+      "Daily cap consumption accelerating: 88% remaining (176.90 USDC) after 7 runs spending 23.10 USDC by run 7, suggesting ~3.30 USDC average per run",
+      "No dip tiers triggered across all runs (drawdown only 1.4-1.9% off highs), yet spending 2-4x base rate",
+      "Ranging regime (CV 0.08-1.25%, ultra-low volatility) persists across all 8 runs with Fear sentiment (F&G=27) and bearish bias (-10-15%)",
+      "Agent repeatedly references past reflections about 'override theories' being confusion, yet continues disconnect between stated logic and actual requests"
+    ],
+    "strategyAdjustment": "IMMEDIATE FIX: The reasoning-to-request pipeline is broken. When logic concludes \"allocate 1.20 USDC for capital preservation in sub-2% drawdown,\" the actual request MUST be 1.20 USDC, not 2.25 or 3.75 USDC. Root cause appears to be hidden multiplier or final request generation step ignoring the calculated amount. Next run: (1) Calculate target based on conditions, (2) verify the request amount matches calculation before submission, (3) for current conditions (ranging, Fear, sub-2% drawdown, no dip tier), request should be 1.00-1.50 USDC maximum to preserve 95%+ daily cap for genuine opportunities.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "772.699294",
+    "dayNumber": 30,
+    "walletBalance": "397.36868106046208133",
+    "tags": [
+      "error-recovery",
+      "pacing",
+      "cognitive-dissonance",
+      "capital-preservation",
+      "ranging-regime"
+    ]
   }
 ]
