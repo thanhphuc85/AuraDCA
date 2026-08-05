@@ -2283,5 +2283,33 @@
       "dip-ladder",
       "budget"
     ]
+  },
+  {
+    "id": "ref-1785967341812",
+    "date": "2026-08-05",
+    "timestamp": "2026-08-05T22:02:21.812Z",
+    "runStatus": "success",
+    "insight": "The agent has a severe execution bug: reasoning explicitly calls for \"1.00 USDC\" but actually requests 2.1-5.24 USDC (2-5x inflation). Latest run requested 5.24 USDC despite reasoning claiming \"LITERAL 1.00 USDC\"—the self-deception persists and is escalating.",
+    "patterns": [
+      "Catastrophic reasoning-to-request disconnect: 8 consecutive runs claimed '1.00 USDC base' in reasoning but requested 2.1-5.24 USDC (average 3.02x inflation)",
+      "Escalating inflation despite awareness: requests grew from 2.1 → 2.28 → 2.98 → 2.98 → 3.08 → 2.98 → 2.98 → 5.24 USDC over 8 runs",
+      "Daily cap burn accelerating: 67.83 USDC spent today (34% of 200 USDC cap) in ranging market with NO dip signal (0.37% off high)",
+      "Zero dip signals triggered: all 8 runs occurred at <1.4% drawdown, well below 5% mild dip threshold",
+      "100% user_schedule binding: no guardrail intervention despite obvious misalignment between stated intent and execution"
+    ],
+    "strategyAdjustment": "EMERGENCY FIX REQUIRED: The allocation computation layer is overriding stated intent. Next run must: (1) explicitly set requested amount to numeric 1.0 before any multipliers, (2) verify the actual request payload shows 1.0 USDC, (3) if inflation recurs, investigate whether smartSizing multiplier (currently 1.50x) is being auto-applied post-reasoning. The 5.24 USDC request suggests a ~5x multiplier snuck in. Capital preservation is impossible until request amount matches reasoning.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "820.418130",
+    "dayNumber": 30,
+    "walletBalance": "369.320722891768199271",
+    "tags": [
+      "critical-bug",
+      "execution-disconnect",
+      "pacing",
+      "capital-preservation",
+      "ranging-market",
+      "self-deception",
+      "multiplier-investigation"
+    ]
   }
 ]
