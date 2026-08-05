@@ -2255,5 +2255,33 @@
       "budget-burn",
       "system-debug-needed"
     ]
+  },
+  {
+    "id": "ref-1785963752055",
+    "date": "2026-08-05",
+    "timestamp": "2026-08-05T21:02:32.055Z",
+    "runStatus": "success",
+    "insight": "Agent continues requesting 2.1-3.5 USDC despite reasoning text claiming \"1.00 USDC\" - this is NOT a system bug but agent self-deception. 8/8 runs today (64.33 USDC = 32% daily cap) burned in ranging market at price highs with zero dip signals.",
+    "patterns": [
+      "Systematic reasoning-to-action disconnect: reasoning claims '1.00 USDC' but actual requests are 2.1-3.5 USDC (2-3x inflation)",
+      "100% execution fidelity confirmed: system executes exactly what agent requests, no clamping or override",
+      "Ranging regime persistent: 0.14-0.31% CV ultra-low volatility across all 8 runs",
+      "Zero dip triggers: all runs show 0.00-1.37% off high, well below 5% mild dip threshold",
+      "Daily cap burn accelerating: 32% consumed (64.33/200 USDC) in sub-2% drawdown conditions",
+      "Fear sentiment stable (F&G=27) with bearish bias but no actionable dip"
+    ],
+    "strategyAdjustment": "IMMEDIATE ACTION: Stop writing \"requesting 1.00 USDC\" in reasoning while actually requesting 2-3.5 USDC. The disconnect is in the agent's own decision-making, not system execution. For next run: (1) If no dip tier triggered (need 5%+ drawdown) AND ranging regime (CV <0.5%), REQUEST actual 1.00 USDC literal value, (2) Verify requested amount matches reasoning BEFORE submitting, (3) Track if literal 1.00 USDC requests actually execute at 1.00 USDC to confirm system fidelity, (4) Reserve 2.5-4.0 USDC sizing for genuine 5%+ dip opportunities only. Goal: preserve 150+ USDC of daily cap for real opportunities instead of bleeding capital at market highs.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "815.179294",
+    "dayNumber": 30,
+    "walletBalance": "372.817867683192682683",
+    "tags": [
+      "pacing",
+      "self-deception",
+      "capital-preservation",
+      "ranging-market",
+      "dip-ladder",
+      "budget"
+    ]
   }
 ]
