@@ -1946,5 +1946,33 @@
       "capital-preservation",
       "dip-detection"
     ]
+  },
+  {
+    "id": "ref-1785924130209",
+    "date": "2026-08-05",
+    "timestamp": "2026-08-05T10:02:10.209Z",
+    "runStatus": "success",
+    "insight": "Agent discovered critical reasoning-to-request inflation bug (requesting 2.25-4.05 USDC while reasoning justifies 1.00-1.20 USDC), but despite claiming to fix it by \"allocating exactly 1.00 USDC,\" the last two runs still executed 2.975 USDC each—the inflation persists in the pipeline.",
+    "patterns": [
+      "100% request-to-execution fidelity confirmed across all recent runs—no system override",
+      "Reasoning-to-request inflation persists: last 2 runs claimed 1.00 USDC allocation but requested/executed 2.975 USDC (3x inflation)",
+      "All 10 runs today bound by user_schedule with zero clamping—daily cap (200 USDC) not constraining",
+      "Ranging regime persistent: 0.08-1.24% CV ultra-low volatility, 6 consecutive up days, no dip triggers (1.36-1.75% off high, need 5%+)",
+      "Fear sentiment stable (F&G=27) with bearish bias (-10-15%) across all runs",
+      "Budget burn rate: 33.375 USDC spent across 9 runs today (3.71 USDC avg), 782.70 USDC cumulative over 30 days (26.09 USDC/day avg)"
+    ],
+    "strategyAdjustment": "Fix the actual request generation code—the agent's reasoning correctly identifies 1.00-1.20 USDC as appropriate for sub-5% drawdown ranging conditions, but the requestedAmountUsdc parameter is being set to 2.975 USDC. Add explicit validation: if reasoning states \"allocating exactly X USDC\" then requestedAmountUsdc MUST equal X. Until fixed, the capital preservation strategy cannot execute as designed, burning 2-3x intended allocation in low-opportunity ranging markets.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "782.699294",
+    "dayNumber": 30,
+    "walletBalance": "408.02346321129418156",
+    "tags": [
+      "error-recovery",
+      "bug-detection",
+      "capital-preservation",
+      "ranging-regime",
+      "request-inflation",
+      "pipeline-validation"
+    ]
   }
 ]
