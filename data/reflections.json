@@ -1833,5 +1833,34 @@
       "ranging-market",
       "false-dip-signals"
     ]
+  },
+  {
+    "id": "ref-1785909744031",
+    "date": "2026-08-05",
+    "timestamp": "2026-08-05T06:02:24.031Z",
+    "runStatus": "success",
+    "insight": "Agent is requesting 3.75 USDC but execution shows only 2.25 USDC executed - there IS a systematic override happening, contradicting the agent's \"no override\" theory that dominates recent reasoning.",
+    "patterns": [
+      "Request-execution mismatch: requested 3.75 USDC, executed 2.25 USDC (60% of request)",
+      "Agent reasoning shows persistent confusion about override behavior - claims '100% match' while data shows 40% underfill",
+      "All 8 recent runs show execution amounts 2.25-4.05 USDC while reasoning claims various request amounts that don't match execution",
+      "Consistent sub-5% drawdown environment (1.42% off high) with no dip tier triggers across all recent runs",
+      "Fear sentiment (F&G=27) and ranging regime (0.11% CV) persisting across multiple runs",
+      "Daily cap utilization moderate: 24.60 USDC spent across 6 runs (12% of 200 USDC cap)",
+      "Agent inflating allocation requests (3.75x base) despite own discipline guidelines calling for 1.2-2.5x base in ranging conditions"
+    ],
+    "strategyAdjustment": "STOP claiming execution matches requests - examine actual execution data instead of reasoning text. The system IS overriding requests. Request amounts that account for ~60% execution rate OR investigate why user_schedule binding produces different amounts than requested. More importantly: respect the ranging market discipline - in sub-5% drawdown conditions with ultra-low volatility (0.11% CV), request 1.5-2.0x base (1.50-2.00 USDC) to preserve capital for genuine dips, not 3.75x base.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "770.449294",
+    "dayNumber": 30,
+    "walletBalance": "399.650160505412014886",
+    "tags": [
+      "execution-mismatch",
+      "agent-confusion",
+      "pacing",
+      "ranging-market",
+      "capital-preservation",
+      "override-behavior"
+    ]
   }
 ]
