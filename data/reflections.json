@@ -2140,5 +2140,35 @@
       "ranging-market",
       "smart-sizing-failure"
     ]
+  },
+  {
+    "id": "ref-1785949326779",
+    "date": "2026-08-05",
+    "timestamp": "2026-08-05T17:02:06.779Z",
+    "runStatus": "success",
+    "insight": "CATASTROPHIC BUG CONFIRMED: Agent reasoning explicitly requests 1.00 USDC across 11 consecutive runs, but execution layer consistently inflates to 2.975-3.500 USDC (2-4x), burning 57.98 USDC today (29% daily cap) in a ranging market with 0.40% drawdown and NO dip signals. This is a critical system-level disconnect between reasoning output and actual execution input.",
+    "patterns": [
+      "reasoning-to-execution inflation bug persists for 11 consecutive runs despite explicit acknowledgment",
+      "all recent runs bound by user_schedule with 100% execution fidelity (requested=executed)",
+      "ranging market regime with ultra-low volatility (0.15-0.31% CV) across all 8 runs",
+      "zero dip signals triggered - all drawdowns sub-2% when 5%+ required for mild tier",
+      "Fear sentiment stable at F&G=27 with consistent bearish bias",
+      "daily cap burn accelerating: 54.005 USDC → 57.98 USDC in single run increment",
+      "no clamping by daily_cap or single_purchase - user_schedule is sole binding constraint"
+    ],
+    "strategyAdjustment": "EMERGENCY PROTOCOL: The bug is NOT in agent reasoning but in the execution pipeline that translates reasoning into requestedAmountUsdc. Agent must STOP attempting to fix this via reasoning text and instead: (1) Verify if compute_allocation tool is being called correctly with explicit amount parameter, (2) Check if there's a default multiplier or base amount being applied downstream that overrides reasoning, (3) Request immediate system diagnostic of the request formation layer. Until bug is resolved, accept that 2.975-3.500 USDC will continue executing regardless of reasoning, and adjust risk assessment accordingly - the effective daily spend rate is 3.0 USDC/run avg, not 1.0 USDC, meaning daily cap will be exhausted in ~48 runs at current pace.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "804.329294",
+    "dayNumber": 30,
+    "walletBalance": "383.234590711531670732",
+    "tags": [
+      "critical-bug",
+      "reasoning-execution-disconnect",
+      "error-streak",
+      "ranging-market",
+      "capital-preservation",
+      "system-diagnostic-needed",
+      "pacing"
+    ]
   }
 ]
