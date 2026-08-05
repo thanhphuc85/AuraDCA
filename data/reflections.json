@@ -2029,5 +2029,33 @@
       "ranging-regime",
       "capital-preservation"
     ]
+  },
+  {
+    "id": "ref-1785934962217",
+    "date": "2026-08-05",
+    "timestamp": "2026-08-05T13:02:42.217Z",
+    "runStatus": "success",
+    "insight": "The reasoning-to-request inflation bug persists despite 6+ explicit attempts to fix it. Agent continues requesting 2.25-3.50 USDC while reasoning explicitly calls for 1.00 USDC in ranging, no-dip conditions, wasting ~21% of daily budget (41.825 USDC across 8 runs today) on sub-2% drawdowns.",
+    "patterns": [
+      "Severe reasoning-to-request disconnect: reasoning says 1.00 USDC, system requests 2.25-4.05 USDC (2-4x inflation)",
+      "All 8 runs today show 100% request-to-execution fidelity (boundBy: user_schedule) - no external clamping occurs",
+      "Ranging market regime persists (0.08-0.30% CV, ultra-low volatility) with no dip signals (only 1.4-1.9% off highs, need 5%+)",
+      "Fear sentiment stable (F&G=27) but no actionable dip opportunity - market consolidating, not correcting",
+      "Daily budget burn accelerating: 41.825 USDC spent (21% of 200 USDC daily cap) in conditions that warrant minimal allocation",
+      "Agent recognizes the bug in reasoning but cannot prevent inflated requests from being submitted"
+    ],
+    "strategyAdjustment": "The bug is in the request generation layer, not reasoning or external constraints. Since internal fixes failed 6+ times, implement external guardrail: in ranging markets (CV < 0.5%) with no dip signal (drawdown < 5%), hard-cap requests at 1.00 USDC regardless of computed multipliers. If this requires code-level intervention outside agent control, escalate to developers. Alternatively, switch to explicit parameter passing where allocation amount is computed separately and verified before request submission.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "791.799294",
+    "dayNumber": 30,
+    "walletBalance": "398.505856504503585336",
+    "tags": [
+      "error-recovery",
+      "budget",
+      "pacing",
+      "system-bug",
+      "clamping",
+      "ranging-market"
+    ]
   }
 ]
