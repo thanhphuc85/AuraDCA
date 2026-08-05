@@ -2057,5 +2057,34 @@
       "clamping",
       "ranging-market"
     ]
+  },
+  {
+    "id": "ref-1785938543532",
+    "date": "2026-08-05",
+    "timestamp": "2026-08-05T14:02:23.532Z",
+    "runStatus": "success",
+    "insight": "Agent reasoning correctly calls for 1.00 USDC base allocation in ranging market with no dip signal (1.37% off high, no 5%+ tier triggered), but STILL requested 3.50 USDC—the reasoning-to-request inflation bug persists despite 6 consecutive \"CRITICAL FIX\" declarations, burning 47.95 USDC today (24% daily cap) in sub-2% conditions.",
+    "patterns": [
+      "Reasoning-to-request pipeline broken: 8 consecutive runs show agent reasoning documents 1.00 USDC target but requests 2.25-4.05 USDC (2-4x inflation)",
+      "No dip signal present: 8 runs all show cirBTC only 1.37-1.86% off high, well below 5% mild dip threshold, yet allocations 2-4x base",
+      "Daily cap burn accelerating: 47.95 USDC spent today (24% of 200 USDC cap) across 9 runs in ranging market with no opportunity",
+      "100% request-to-execution fidelity confirmed: all requested amounts execute exactly as specified—problem is in decision logic, not external clamping",
+      "Ranging regime persistent: 0.31% CV ultra-low volatility, 6 consecutive up days, no directional edge present",
+      "Self-correction failure: 6 consecutive reflections identify the bug with 'CRITICAL FIX' language but behavior unchanged"
+    ],
+    "strategyAdjustment": "IMMEDIATE ACTION REQUIRED: The decision pipeline has a fundamental disconnect between reasoning (1.00 USDC) and request execution (3.50 USDC). Next run must implement a hard constraint: in ranging markets with drawdown <5% and no dip tier triggered, the ACTUAL requested amount must not exceed 1.00 USDC regardless of what logic flows suggest. Verify the requested amount matches reasoning BEFORE submission. If this pattern continues for one more run, escalate to user for pipeline audit—burning 25%+ daily cap in non-dip conditions violates capital preservation mandate.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "795.299294",
+    "dayNumber": 30,
+    "walletBalance": "395.8589834458562666",
+    "tags": [
+      "critical-bug",
+      "reasoning-execution-mismatch",
+      "capital-waste",
+      "ranging-market",
+      "no-dip-signal",
+      "self-correction-failure",
+      "pacing"
+    ]
   }
 ]
