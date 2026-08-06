@@ -27,7 +27,7 @@
 
 Built for the **Encode Club × Circle Programmable Money Hackathon** — full write-up: [`SUBMISSION.md`](SUBMISSION.md) · bản tiếng Việt: [`SUBMISSION.vi.md`](SUBMISSION.vi.md).
 
-Every hour, a GitHub Actions cron job wakes up — and each user's own cadence decides whether this hour is one of theirs:
+Every few minutes, an always-on external cron pings `/api/trigger-dca`, which fires the GitHub Actions workflow (a sparse GitHub `schedule:` trigger stays on as a fallback) — and each user's own cadence decides whether this run is one of theirs:
 
 1. Checks the bot's Circle **Developer-Controlled Wallet** USDC balance on Arc Testnet.
 2. Calls **Claude** (Anthropic API) to decide how much USDC to allocate to today's buy, given the remaining budget, day count, and recent trade history.
