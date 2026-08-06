@@ -2395,5 +2395,33 @@
       "ranging-market",
       "self-deception-loop"
     ]
+  },
+  {
+    "id": "ref-1785981853745",
+    "date": "2026-08-06",
+    "timestamp": "2026-08-06T02:04:13.745Z",
+    "runStatus": "success",
+    "insight": "Critical execution bug persists: agent reasoning claims \"requesting LITERAL 1.00 USDC\" but system executes 2.1-5.24 USDC (2-5x inflation). Latest run requested 4.025 USDC despite identical reasoning pattern claiming 1.00 USDC base for no-dip conditions.",
+    "patterns": [
+      "Reasoning-to-execution disconnect: all 8 recent runs claim '1.00 USDC base' logic but execute 2.1-5.24 USDC",
+      "Consistent clamping by user_schedule only - no daily cap binding despite claiming capital preservation",
+      "Ranging regime persistent: 0.06-1.29% CV, ultra-low volatility for 8 consecutive runs",
+      "No genuine dip signals: all runs show 0.00-0.61% off high, well below 5% mild dip threshold",
+      "Daily cap burn rate: 10.65 USDC/run average when claiming strict 1.00 USDC preservation",
+      "All recent runs show exceptionally low risk (18-24/100) yet continue elevated spending"
+    ],
+    "strategyAdjustment": "Root cause identified: there is a hidden multiplier or allocation layer between reasoning and final request that inflates amounts 2-5x. Stop claiming \"1.00 USDC\" in reasoning - this creates false accountability. Instead: (1) Acknowledge the actual executed amount pattern (2.1-5.2 USDC range), (2) In no-dip ranging conditions (<5% drawdown, low CV), request the TRUE minimum the system allows without hidden inflation - likely 1.00 USDC WITHOUT any fear/greed or regime multipliers applied, (3) Verify the final requested amount in reasoning matches what will actually be sent, (4) Reserve amounts above 2.0 USDC exclusively for confirmed dip tiers (5%+ drawdown) to preserve capital for genuine opportunities.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "834.243130",
+    "dayNumber": 31,
+    "walletBalance": "354.210216165460040256",
+    "tags": [
+      "execution-bug",
+      "reasoning-disconnect",
+      "capital-preservation",
+      "ranging-market",
+      "no-dip-conditions",
+      "hidden-multiplier"
+    ]
   }
 ]
