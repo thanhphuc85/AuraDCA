@@ -2900,5 +2900,32 @@
       "allocation-collapse",
       "simulated-execution"
     ]
+  },
+  {
+    "id": "ref-1786024927144",
+    "date": "2026-08-06",
+    "timestamp": "2026-08-06T14:02:07.144Z",
+    "runStatus": "success",
+    "insight": "Arc cirBTC route recovered after 4-run outage causing allocation collapse from 2.13-3.75 USDC to microscopic amounts (0.000013-0.000760 USDC). Current run executed 2.875 USDC successfully, restoring normal DCA flow.",
+    "patterns": [
+      "Route instability caused 4 consecutive simulated executions with microscopic allocations",
+      "Swap history shows -10.71% drawdown triggering moderate dip signal, diverging from real cirBTC price only 0.79% off ATH",
+      "Consistently clamped by user_schedule with 17-21% daily cap utilization across all runs",
+      "Market regime stable: ranging classification (71-73% confidence) with ultra-low volatility (0.54-1.00%) across all 8 runs",
+      "Fear index pinned at 25 (Extreme Fear) across entire session",
+      "No genuine dip tiers triggered - all runs show <2% distance from ATH, well below 5% mild dip threshold"
+    ],
+    "strategyAdjustment": "Monitor route stability closely over next 3-5 runs to confirm recovery is sustained. The -10.71% drawdown signal from swap history vs 0.79% real cirBTC distance suggests swap execution pricing divergence - investigate whether this reflects slippage, route-specific pricing issues, or data inconsistency. If route remains stable, resume normal sizing. Maintain current conservative base allocation (1.00 USDC anchor) given no genuine dip conditions and ranging market with no directional edge. Daily cap utilization at 21% leaves adequate capacity for true 5%+ dip opportunities.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "868.818398",
+    "dayNumber": 31,
+    "walletBalance": "379.233712377576919456",
+    "tags": [
+      "error-recovery",
+      "route-stability",
+      "pacing",
+      "signal-quality",
+      "market-timing"
+    ]
   }
 ]
