@@ -2529,5 +2529,33 @@
       "capital-preservation",
       "dip-strategy"
     ]
+  },
+  {
+    "id": "ref-1785999757101",
+    "date": "2026-08-06",
+    "timestamp": "2026-08-06T07:02:37.101Z",
+    "runStatus": "skipped_guardrail_clamped",
+    "insight": "Inflation bug overcorrected into group aggregation failure: after fixing systematic 2-5x multiplier bug (was requesting 1.8-4.02 USDC while claiming 1.00), latest run hit group_below_min_swap with 0.000442 USDC request—agent now requesting per-user amounts instead of group totals, causing skips when grouped amount < 0.1 USDC minimum.",
+    "patterns": [
+      "Successfully eliminated inflation bug: requests declined from 5.24 USDC peak to 1.8-4.02 USDC range, demonstrating convergence toward true 1.00 USDC base",
+      "All 8 recent runs on same day (2026-08-06) in ranging market (1-2% CV) at price highs (0.16-0.70% off ATH) with no genuine dip signals",
+      "New failure mode emerged: 0.000442 USDC request suggests per-user division bug where agent computing individual share instead of group total for 2-user group",
+      "Daily cap preservation working: 178.19 USDC remaining (89% preserved) after 7 successful buys totaling ~21 USDC",
+      "Consistent skip guardrail: group_below_min_swap triggered when aggregate < 0.1 USDC threshold"
+    ],
+    "strategyAdjustment": "Fix group aggregation logic: when computing allocation for multiple users, return TOTAL group amount (e.g., 1.00 USDC for 2 users), not per-user share (0.50 USDC each). The swap execution layer handles user-level distribution. Verify compute_allocation output represents executable group total that clears 0.1 USDC minimum swap threshold before returning.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "848.827428",
+    "dayNumber": 31,
+    "walletBalance": "338.95454600603924442",
+    "tags": [
+      "error-recovery",
+      "group-aggregation-bug",
+      "guardrail-clamping",
+      "inflation-bug-fixed",
+      "min-swap-threshold",
+      "ranging-market",
+      "capital-preservation"
+    ]
   }
 ]
