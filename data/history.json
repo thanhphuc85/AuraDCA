@@ -8051,7 +8051,9 @@
       "mode": "settled",
       "via": "http",
       "transferId": "243fc6e8-a4ec-463b-8fc6-25e7e68eff78",
-      "settleStatus": "received"
+      "settleStatus": "completed",
+      "txHash": "0x20fe79f43e7ca867596aecc4b220a8b4928b0b1b7b82eb3851fccc4bc73e07fa",
+      "explorerUrl": "https://testnet.arcscan.app/tx/0x20fe79f43e7ca867596aecc4b220a8b4928b0b1b7b82eb3851fccc4bc73e07fa"
     },
     "smartFee": {
       "feeUsdcEach": "0.010000",
@@ -8061,7 +8063,9 @@
       "testnet": true,
       "settled": true,
       "transferId": "6e473baa-7b27-4bfc-8d77-bc77234954a3",
-      "settleStatus": "received"
+      "settleStatus": "completed",
+      "txHash": "0x20fe79f43e7ca867596aecc4b220a8b4928b0b1b7b82eb3851fccc4bc73e07fa",
+      "explorerUrl": "https://testnet.arcscan.app/tx/0x20fe79f43e7ca867596aecc4b220a8b4928b0b1b7b82eb3851fccc4bc73e07fa"
     }
   },
   {
@@ -8094,7 +8098,9 @@
       "mode": "settled",
       "via": "http",
       "transferId": "72c1a9f0-8517-47ef-98be-4e909d6b4508",
-      "settleStatus": "received"
+      "settleStatus": "completed",
+      "txHash": "0x496bf7b38ec3c74f97804504ca6f7807e6ec8f40475961be5eb4b13372679913",
+      "explorerUrl": "https://testnet.arcscan.app/tx/0x496bf7b38ec3c74f97804504ca6f7807e6ec8f40475961be5eb4b13372679913"
     },
     "smartFee": {
       "feeUsdcEach": "0.010000",
@@ -8104,7 +8110,9 @@
       "testnet": true,
       "settled": true,
       "transferId": "f463d58c-863f-4e60-a459-a4da9d92ecc6",
-      "settleStatus": "received"
+      "settleStatus": "completed",
+      "txHash": "0x496bf7b38ec3c74f97804504ca6f7807e6ec8f40475961be5eb4b13372679913",
+      "explorerUrl": "https://testnet.arcscan.app/tx/0x496bf7b38ec3c74f97804504ca6f7807e6ec8f40475961be5eb4b13372679913"
     }
   },
   {
@@ -8137,7 +8145,9 @@
       "mode": "settled",
       "via": "http",
       "transferId": "eba1d1f6-76c2-4cde-8d4c-d1c61c04007b",
-      "settleStatus": "received"
+      "settleStatus": "completed",
+      "txHash": "0x334fe00ad677a4bf81351e5d3b1191bc22becbe949043dbdb324f03c7f6e8a2f",
+      "explorerUrl": "https://testnet.arcscan.app/tx/0x334fe00ad677a4bf81351e5d3b1191bc22becbe949043dbdb324f03c7f6e8a2f"
     },
     "smartFee": {
       "feeUsdcEach": "0.010000",
@@ -8147,7 +8157,9 @@
       "testnet": true,
       "settled": true,
       "transferId": "cd277298-6ca9-483e-b185-067973db282e",
-      "settleStatus": "received"
+      "settleStatus": "completed",
+      "txHash": "0xd44a73de9b49d3cdfb53d9a642197567350682b0e689c49881b7a803a2998553",
+      "explorerUrl": "https://testnet.arcscan.app/tx/0xd44a73de9b49d3cdfb53d9a642197567350682b0e689c49881b7a803a2998553"
     }
   },
   {
@@ -8180,7 +8192,9 @@
       "mode": "settled",
       "via": "http",
       "transferId": "a85202f5-034a-4650-a282-b380e98cbb52",
-      "settleStatus": "received"
+      "settleStatus": "completed",
+      "txHash": "0x1fded2281b060fbb07d5a8f42c59316a7368aa4256b92dfbd5b416cc1a56a8ea",
+      "explorerUrl": "https://testnet.arcscan.app/tx/0x1fded2281b060fbb07d5a8f42c59316a7368aa4256b92dfbd5b416cc1a56a8ea"
     },
     "smartFee": {
       "feeUsdcEach": "0.010000",
@@ -8190,7 +8204,9 @@
       "testnet": true,
       "settled": true,
       "transferId": "761edd5a-f94f-41ac-a82c-f2e7e3b3455b",
-      "settleStatus": "received"
+      "settleStatus": "completed",
+      "txHash": "0x1fded2281b060fbb07d5a8f42c59316a7368aa4256b92dfbd5b416cc1a56a8ea",
+      "explorerUrl": "https://testnet.arcscan.app/tx/0x1fded2281b060fbb07d5a8f42c59316a7368aa4256b92dfbd5b416cc1a56a8ea"
     }
   },
   {
@@ -8223,7 +8239,9 @@
       "mode": "settled",
       "via": "http",
       "transferId": "f1de369a-384d-4c60-9716-4f5b9ed466e5",
-      "settleStatus": "received"
+      "settleStatus": "completed",
+      "txHash": "0x7c41fb8665d8d10cba2423eb20fe09cc4c99bbbf73cfda8a1d0eb4ab0ddd1980",
+      "explorerUrl": "https://testnet.arcscan.app/tx/0x7c41fb8665d8d10cba2423eb20fe09cc4c99bbbf73cfda8a1d0eb4ab0ddd1980"
     },
     "smartFee": {
       "feeUsdcEach": "0.010000",
@@ -8233,7 +8251,9 @@
       "testnet": true,
       "settled": true,
       "transferId": "42318125-c874-4883-9042-579fd46c6567",
-      "settleStatus": "received"
+      "settleStatus": "completed",
+      "txHash": "0x7c41fb8665d8d10cba2423eb20fe09cc4c99bbbf73cfda8a1d0eb4ab0ddd1980",
+      "explorerUrl": "https://testnet.arcscan.app/tx/0x7c41fb8665d8d10cba2423eb20fe09cc4c99bbbf73cfda8a1d0eb4ab0ddd1980"
     }
   },
   {
@@ -8266,7 +8286,9 @@
       "mode": "settled",
       "via": "http",
       "transferId": "db5d80a4-a492-4cc3-a147-feffe97a234b",
-      "settleStatus": "received"
+      "settleStatus": "completed",
+      "txHash": "0xa91f58e5ad9c2ee940873e93ecf92b1412cffe8e7551f3505856fea95251cb4f",
+      "explorerUrl": "https://testnet.arcscan.app/tx/0xa91f58e5ad9c2ee940873e93ecf92b1412cffe8e7551f3505856fea95251cb4f"
     },
     "smartFee": {
       "feeUsdcEach": "0.010000",
@@ -8276,7 +8298,9 @@
       "testnet": true,
       "settled": true,
       "transferId": "f6bc23fd-e3f4-493e-b7d5-640ee26911cd",
-      "settleStatus": "received"
+      "settleStatus": "completed",
+      "txHash": "0xa91f58e5ad9c2ee940873e93ecf92b1412cffe8e7551f3505856fea95251cb4f",
+      "explorerUrl": "https://testnet.arcscan.app/tx/0xa91f58e5ad9c2ee940873e93ecf92b1412cffe8e7551f3505856fea95251cb4f"
     }
   },
   {
@@ -8309,7 +8333,9 @@
       "mode": "settled",
       "via": "http",
       "transferId": "96581f40-e8b7-43eb-aba1-28e306d7a694",
-      "settleStatus": "received"
+      "settleStatus": "completed",
+      "txHash": "0xb67fab1a0f273deaeadf0023e7e36fcf2d807755a23f39ca5901b2655796b1e6",
+      "explorerUrl": "https://testnet.arcscan.app/tx/0xb67fab1a0f273deaeadf0023e7e36fcf2d807755a23f39ca5901b2655796b1e6"
     },
     "smartFee": {
       "feeUsdcEach": "0.010000",
@@ -8319,7 +8345,9 @@
       "testnet": true,
       "settled": true,
       "transferId": "aded1279-b6b6-4633-b89d-f7795626655b",
-      "settleStatus": "received"
+      "settleStatus": "completed",
+      "txHash": "0xb67fab1a0f273deaeadf0023e7e36fcf2d807755a23f39ca5901b2655796b1e6",
+      "explorerUrl": "https://testnet.arcscan.app/tx/0xb67fab1a0f273deaeadf0023e7e36fcf2d807755a23f39ca5901b2655796b1e6"
     }
   },
   {
@@ -8352,7 +8380,9 @@
       "mode": "settled",
       "via": "http",
       "transferId": "6c7255cf-04b1-4f1c-9822-af37539fb534",
-      "settleStatus": "received"
+      "settleStatus": "completed",
+      "txHash": "0xd229725f753992da10884df6ec8d2b80ed31b5fc444c2bce7c3e71c088d20597",
+      "explorerUrl": "https://testnet.arcscan.app/tx/0xd229725f753992da10884df6ec8d2b80ed31b5fc444c2bce7c3e71c088d20597"
     },
     "smartFee": {
       "feeUsdcEach": "0.010000",
@@ -8362,7 +8392,9 @@
       "testnet": true,
       "settled": true,
       "transferId": "f4feedd6-d09f-4ea4-88c2-ad8c13452d2b",
-      "settleStatus": "received"
+      "settleStatus": "completed",
+      "txHash": "0xd229725f753992da10884df6ec8d2b80ed31b5fc444c2bce7c3e71c088d20597",
+      "explorerUrl": "https://testnet.arcscan.app/tx/0xd229725f753992da10884df6ec8d2b80ed31b5fc444c2bce7c3e71c088d20597"
     }
   },
   {
@@ -8395,7 +8427,9 @@
       "mode": "settled",
       "via": "http",
       "transferId": "4e5bad6b-9820-4688-aa5d-76afd66eef68",
-      "settleStatus": "received"
+      "settleStatus": "completed",
+      "txHash": "0x052f1cb0aca81b962a4e4b4a29eca6d5f7dad223c419862c5cfcdae388c14297",
+      "explorerUrl": "https://testnet.arcscan.app/tx/0x052f1cb0aca81b962a4e4b4a29eca6d5f7dad223c419862c5cfcdae388c14297"
     },
     "smartFee": {
       "feeUsdcEach": "0.010000",
@@ -8405,7 +8439,9 @@
       "testnet": true,
       "settled": true,
       "transferId": "6066f907-c6d9-465f-abbe-5b2393c7f9f0",
-      "settleStatus": "received"
+      "settleStatus": "completed",
+      "txHash": "0x052f1cb0aca81b962a4e4b4a29eca6d5f7dad223c419862c5cfcdae388c14297",
+      "explorerUrl": "https://testnet.arcscan.app/tx/0x052f1cb0aca81b962a4e4b4a29eca6d5f7dad223c419862c5cfcdae388c14297"
     }
   },
   {
@@ -8438,7 +8474,9 @@
       "mode": "settled",
       "via": "http",
       "transferId": "68fca125-64ba-422c-836d-f3c3277104d9",
-      "settleStatus": "received"
+      "settleStatus": "completed",
+      "txHash": "0x335e76c836c4a9c6752ba448f42a7a31be02479a8b2eb835498e29dd69452ae1",
+      "explorerUrl": "https://testnet.arcscan.app/tx/0x335e76c836c4a9c6752ba448f42a7a31be02479a8b2eb835498e29dd69452ae1"
     },
     "smartFee": {
       "feeUsdcEach": "0.010000",
@@ -8448,7 +8486,9 @@
       "testnet": true,
       "settled": true,
       "transferId": "53d7ccf6-ee40-4bf3-9e5f-84aa129c857a",
-      "settleStatus": "received"
+      "settleStatus": "completed",
+      "txHash": "0x335e76c836c4a9c6752ba448f42a7a31be02479a8b2eb835498e29dd69452ae1",
+      "explorerUrl": "https://testnet.arcscan.app/tx/0x335e76c836c4a9c6752ba448f42a7a31be02479a8b2eb835498e29dd69452ae1"
     }
   },
   {
@@ -8481,7 +8521,9 @@
       "mode": "settled",
       "via": "http",
       "transferId": "a1f491d3-9b37-4b4f-bdf0-4d7cd38bf3a4",
-      "settleStatus": "received"
+      "settleStatus": "completed",
+      "txHash": "0x0ffffea98d982a875e089b04e33b2ca1d0c9570060c9b219195c8e4f323a599a",
+      "explorerUrl": "https://testnet.arcscan.app/tx/0x0ffffea98d982a875e089b04e33b2ca1d0c9570060c9b219195c8e4f323a599a"
     },
     "smartFee": {
       "feeUsdcEach": "0.010000",
@@ -8491,7 +8533,9 @@
       "testnet": true,
       "settled": true,
       "transferId": "871d2d95-e319-43d4-9566-b45562cc2bba",
-      "settleStatus": "received"
+      "settleStatus": "completed",
+      "txHash": "0x0ffffea98d982a875e089b04e33b2ca1d0c9570060c9b219195c8e4f323a599a",
+      "explorerUrl": "https://testnet.arcscan.app/tx/0x0ffffea98d982a875e089b04e33b2ca1d0c9570060c9b219195c8e4f323a599a"
     }
   },
   {
@@ -8524,7 +8568,9 @@
       "mode": "settled",
       "via": "http",
       "transferId": "3e568c27-8334-4932-a3c0-5c9a08c3773d",
-      "settleStatus": "received"
+      "settleStatus": "completed",
+      "txHash": "0xf17a2a6907606df5a554af7b4991eb07d08fc1a8e4fd4da3721a26400e352bee",
+      "explorerUrl": "https://testnet.arcscan.app/tx/0xf17a2a6907606df5a554af7b4991eb07d08fc1a8e4fd4da3721a26400e352bee"
     },
     "smartFee": {
       "feeUsdcEach": "0.010000",
@@ -8534,7 +8580,9 @@
       "testnet": true,
       "settled": true,
       "transferId": "fa5be95e-101b-4480-9574-9c30caf0dd1e",
-      "settleStatus": "received"
+      "settleStatus": "completed",
+      "txHash": "0xf17a2a6907606df5a554af7b4991eb07d08fc1a8e4fd4da3721a26400e352bee",
+      "explorerUrl": "https://testnet.arcscan.app/tx/0xf17a2a6907606df5a554af7b4991eb07d08fc1a8e4fd4da3721a26400e352bee"
     }
   },
   {
@@ -8579,7 +8627,9 @@
       "testnet": true,
       "settled": true,
       "transferId": "f9452c72-c3bf-461e-aeb8-14460be1dc8c",
-      "settleStatus": "received"
+      "settleStatus": "completed",
+      "txHash": "0xeb3b2524ba5bb0210ea823ec805f968d2fb7137f8fc6bc0d072bec75a1abd823",
+      "explorerUrl": "https://testnet.arcscan.app/tx/0xeb3b2524ba5bb0210ea823ec805f968d2fb7137f8fc6bc0d072bec75a1abd823"
     }
   },
   {
@@ -8612,7 +8662,9 @@
       "mode": "settled",
       "via": "http",
       "transferId": "582a51b6-49d4-4f80-a0e5-e5ce773fc3b7",
-      "settleStatus": "received"
+      "settleStatus": "completed",
+      "txHash": "0x16c959836aee45b799b0fba3f5cfd4ce0afe7a63cffb4e26379adad7c8e7d7fc",
+      "explorerUrl": "https://testnet.arcscan.app/tx/0x16c959836aee45b799b0fba3f5cfd4ce0afe7a63cffb4e26379adad7c8e7d7fc"
     },
     "smartFee": {
       "feeUsdcEach": "0.010000",
@@ -8622,7 +8674,9 @@
       "testnet": true,
       "settled": true,
       "transferId": "1bade84c-2e70-4248-a74f-91194b938974",
-      "settleStatus": "received"
+      "settleStatus": "completed",
+      "txHash": "0x16c959836aee45b799b0fba3f5cfd4ce0afe7a63cffb4e26379adad7c8e7d7fc",
+      "explorerUrl": "https://testnet.arcscan.app/tx/0x16c959836aee45b799b0fba3f5cfd4ce0afe7a63cffb4e26379adad7c8e7d7fc"
     }
   },
   {
@@ -8655,7 +8709,9 @@
       "mode": "settled",
       "via": "http",
       "transferId": "47bafdfd-1ac4-4344-b169-205f5cb6ff5a",
-      "settleStatus": "received"
+      "settleStatus": "completed",
+      "txHash": "0x6cabd39d484b9ea166e90c0856275cac3343a8058490d92794e8c274cd059d2b",
+      "explorerUrl": "https://testnet.arcscan.app/tx/0x6cabd39d484b9ea166e90c0856275cac3343a8058490d92794e8c274cd059d2b"
     },
     "smartFee": {
       "feeUsdcEach": "0.010000",
@@ -8665,7 +8721,9 @@
       "testnet": true,
       "settled": true,
       "transferId": "458f0156-fc76-4410-b890-9a4eced82773",
-      "settleStatus": "received"
+      "settleStatus": "completed",
+      "txHash": "0x6cabd39d484b9ea166e90c0856275cac3343a8058490d92794e8c274cd059d2b",
+      "explorerUrl": "https://testnet.arcscan.app/tx/0x6cabd39d484b9ea166e90c0856275cac3343a8058490d92794e8c274cd059d2b"
     }
   },
   {
@@ -8698,7 +8756,9 @@
       "mode": "settled",
       "via": "http",
       "transferId": "a7e7fe91-07d3-416f-bb54-c252c8b7bccc",
-      "settleStatus": "received"
+      "settleStatus": "completed",
+      "txHash": "0x6ccf143dcd590f71fa678db4a8b471fb8f6d5534038d00c2982304a10641d3eb",
+      "explorerUrl": "https://testnet.arcscan.app/tx/0x6ccf143dcd590f71fa678db4a8b471fb8f6d5534038d00c2982304a10641d3eb"
     },
     "smartFee": {
       "feeUsdcEach": "0.010000",
@@ -8708,7 +8768,9 @@
       "testnet": true,
       "settled": true,
       "transferId": "14ca4305-7399-43c3-b6ad-72e25315c7c7",
-      "settleStatus": "received"
+      "settleStatus": "completed",
+      "txHash": "0x6ccf143dcd590f71fa678db4a8b471fb8f6d5534038d00c2982304a10641d3eb",
+      "explorerUrl": "https://testnet.arcscan.app/tx/0x6ccf143dcd590f71fa678db4a8b471fb8f6d5534038d00c2982304a10641d3eb"
     }
   },
   {
@@ -8741,7 +8803,9 @@
       "mode": "settled",
       "via": "http",
       "transferId": "4a32da66-2cb9-4924-84b8-e60273fddbff",
-      "settleStatus": "received"
+      "settleStatus": "completed",
+      "txHash": "0x8d113551677a8d6f6f76320d420201974cc7cdafd3b36b9cdc1c6550eb64a552",
+      "explorerUrl": "https://testnet.arcscan.app/tx/0x8d113551677a8d6f6f76320d420201974cc7cdafd3b36b9cdc1c6550eb64a552"
     },
     "smartFee": {
       "feeUsdcEach": "0.010000",
@@ -8751,7 +8815,9 @@
       "testnet": true,
       "settled": true,
       "transferId": "d4787326-d61e-45b7-833f-9eb39b3118b6",
-      "settleStatus": "received"
+      "settleStatus": "completed",
+      "txHash": "0x8d113551677a8d6f6f76320d420201974cc7cdafd3b36b9cdc1c6550eb64a552",
+      "explorerUrl": "https://testnet.arcscan.app/tx/0x8d113551677a8d6f6f76320d420201974cc7cdafd3b36b9cdc1c6550eb64a552"
     }
   },
   {
@@ -8784,7 +8850,9 @@
       "mode": "settled",
       "via": "http",
       "transferId": "4aa7c7c6-2037-4da1-a517-580540f7ddea",
-      "settleStatus": "received"
+      "settleStatus": "completed",
+      "txHash": "0x71b85f92cd3c31a8603455360b4ae7d7dcd45ca9886b1990975fc6e5e944258f",
+      "explorerUrl": "https://testnet.arcscan.app/tx/0x71b85f92cd3c31a8603455360b4ae7d7dcd45ca9886b1990975fc6e5e944258f"
     },
     "smartFee": {
       "feeUsdcEach": "0.010000",
@@ -8794,7 +8862,9 @@
       "testnet": true,
       "settled": true,
       "transferId": "2f40281d-91de-4c2b-987e-7b64e84670b8",
-      "settleStatus": "received"
+      "settleStatus": "completed",
+      "txHash": "0x71b85f92cd3c31a8603455360b4ae7d7dcd45ca9886b1990975fc6e5e944258f",
+      "explorerUrl": "https://testnet.arcscan.app/tx/0x71b85f92cd3c31a8603455360b4ae7d7dcd45ca9886b1990975fc6e5e944258f"
     }
   },
   {
@@ -8827,7 +8897,9 @@
       "mode": "settled",
       "via": "http",
       "transferId": "62b3c9da-0fb7-41b8-b745-728c360aa32b",
-      "settleStatus": "received"
+      "settleStatus": "completed",
+      "txHash": "0xd356acf815f2e4bd05725e43e1e088384bca9897a56d695fe6a87011f82d249a",
+      "explorerUrl": "https://testnet.arcscan.app/tx/0xd356acf815f2e4bd05725e43e1e088384bca9897a56d695fe6a87011f82d249a"
     },
     "smartFee": {
       "feeUsdcEach": "0.010000",
@@ -8837,7 +8909,9 @@
       "testnet": true,
       "settled": true,
       "transferId": "c5e081ed-bc1b-4977-a4fb-d633c31b666f",
-      "settleStatus": "received"
+      "settleStatus": "completed",
+      "txHash": "0x78b0381c9b1922956f0cd33b5ea08cd7e122e1940b128042d4f702b25392013c",
+      "explorerUrl": "https://testnet.arcscan.app/tx/0x78b0381c9b1922956f0cd33b5ea08cd7e122e1940b128042d4f702b25392013c"
     }
   },
   {
@@ -8870,7 +8944,9 @@
       "mode": "settled",
       "via": "http",
       "transferId": "6a23b5d1-2ef8-46b6-834c-cf0936544fc7",
-      "settleStatus": "received"
+      "settleStatus": "completed",
+      "txHash": "0xc194e336f034a6dbe252f38ad4f673a9703861d661deed1d50f4364240eb7e23",
+      "explorerUrl": "https://testnet.arcscan.app/tx/0xc194e336f034a6dbe252f38ad4f673a9703861d661deed1d50f4364240eb7e23"
     },
     "smartFee": {
       "feeUsdcEach": "0.010000",
@@ -8880,7 +8956,9 @@
       "testnet": true,
       "settled": true,
       "transferId": "ae497a2f-b400-477b-8198-e638fbf4c696",
-      "settleStatus": "received"
+      "settleStatus": "completed",
+      "txHash": "0xc194e336f034a6dbe252f38ad4f673a9703861d661deed1d50f4364240eb7e23",
+      "explorerUrl": "https://testnet.arcscan.app/tx/0xc194e336f034a6dbe252f38ad4f673a9703861d661deed1d50f4364240eb7e23"
     }
   },
   {
@@ -8913,7 +8991,9 @@
       "mode": "settled",
       "via": "http",
       "transferId": "d1faca7f-352c-4e0f-a760-c978554dc336",
-      "settleStatus": "received"
+      "settleStatus": "completed",
+      "txHash": "0xafe8c1da84eafa873462c125455d65c603c468445aaf2b519c8c44893dcb8ffb",
+      "explorerUrl": "https://testnet.arcscan.app/tx/0xafe8c1da84eafa873462c125455d65c603c468445aaf2b519c8c44893dcb8ffb"
     },
     "smartFee": {
       "feeUsdcEach": "0.010000",
@@ -8923,7 +9003,9 @@
       "testnet": true,
       "settled": true,
       "transferId": "a59569bb-402d-432e-9035-fc3f9ae681fb",
-      "settleStatus": "received"
+      "settleStatus": "completed",
+      "txHash": "0xafe8c1da84eafa873462c125455d65c603c468445aaf2b519c8c44893dcb8ffb",
+      "explorerUrl": "https://testnet.arcscan.app/tx/0xafe8c1da84eafa873462c125455d65c603c468445aaf2b519c8c44893dcb8ffb"
     }
   },
   {
@@ -8956,7 +9038,9 @@
       "mode": "settled",
       "via": "http",
       "transferId": "1757015e-f3e9-4c2c-9f3e-48aedd1b642f",
-      "settleStatus": "received"
+      "settleStatus": "completed",
+      "txHash": "0xc4acce57e2b908d52fea554c9271597bc1bf6a1b4abd44c1bcacbfcabad3e379",
+      "explorerUrl": "https://testnet.arcscan.app/tx/0xc4acce57e2b908d52fea554c9271597bc1bf6a1b4abd44c1bcacbfcabad3e379"
     },
     "smartFee": {
       "feeUsdcEach": "0.010000",
@@ -8966,7 +9050,9 @@
       "testnet": true,
       "settled": true,
       "transferId": "54818d01-999e-4bc7-9350-fae0105bbf21",
-      "settleStatus": "received"
+      "settleStatus": "completed",
+      "txHash": "0xc4acce57e2b908d52fea554c9271597bc1bf6a1b4abd44c1bcacbfcabad3e379",
+      "explorerUrl": "https://testnet.arcscan.app/tx/0xc4acce57e2b908d52fea554c9271597bc1bf6a1b4abd44c1bcacbfcabad3e379"
     }
   },
   {
@@ -8999,7 +9085,9 @@
       "mode": "settled",
       "via": "http",
       "transferId": "426cf1ec-8c4d-4e94-b4bd-2f4fdd04f49d",
-      "settleStatus": "received"
+      "settleStatus": "completed",
+      "txHash": "0xeddbc76cc3439fd0ca59e12fb46270767411e974b2ae65a48ed37aa4c57abd96",
+      "explorerUrl": "https://testnet.arcscan.app/tx/0xeddbc76cc3439fd0ca59e12fb46270767411e974b2ae65a48ed37aa4c57abd96"
     },
     "smartFee": {
       "feeUsdcEach": "0.010000",
@@ -9009,7 +9097,9 @@
       "testnet": true,
       "settled": true,
       "transferId": "b448d39a-a5e1-4831-9b93-fd1adcae5d13",
-      "settleStatus": "received"
+      "settleStatus": "completed",
+      "txHash": "0xeddbc76cc3439fd0ca59e12fb46270767411e974b2ae65a48ed37aa4c57abd96",
+      "explorerUrl": "https://testnet.arcscan.app/tx/0xeddbc76cc3439fd0ca59e12fb46270767411e974b2ae65a48ed37aa4c57abd96"
     }
   },
   {
