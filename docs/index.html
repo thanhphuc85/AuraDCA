@@ -4125,8 +4125,9 @@
         var sfLink = sfHash ? (sf.explorerUrl || (ARC.explorer + '/tx/' + sfHash)) : '';
         var sfState = sfHash ? ' · settled' : (sfPending ? ' · settling' : ' · testnet');
         var sfInner = '⚡ ' + sf.totalUsdc + ' USDC smart fee · ' + sf.payerCount + ' payer' + (sf.payerCount === 1 ? '' : 's') + sfState + (sfLink ? ' ↗' : '');
-        var sfTip = 'x402 smart execution fee: ' + sf.payerCount + ' smart user(s) charged ' + sf.feeUsdcEach + ' USDC each (' + sf.totalUsdc + ' USDC total) → ' + sf.payTo
-          + (sfHash ? ' — settled on-chain via Circle Gateway (tx ' + sfHash + ')'
+        var sfTo = /^0x[0-9a-fA-F]{6,}$/.test(sf.settledTo || '') ? sf.settledTo : '';
+        var sfTip = 'x402 smart execution fee: ' + sf.payerCount + ' smart user(s) charged ' + sf.feeUsdcEach + ' USDC each (' + sf.totalUsdc + ' USDC total), accrued to the agent treasury (' + sf.payTo + ')'
+          + (sfHash ? ' — the agent settled the collected fee on-chain via Circle Gateway' + (sfTo ? ' to the fee-collector (' + sfTo + ')' : '') + ' (tx ' + sfHash + ')'
              : (sfPending ? ' — settled via Circle Gateway; on-chain batch tx pending (transfer ' + sf.transferId + ')'
                 : ' — testnet demo, deducted from deposited balance, ledger-accounted (not settled on-chain)'));
         var sfBg = sfHash ? 'rgba(52,211,153,.14);color:var(--green)' : 'rgba(138,92,246,.12);color:var(--violet)';
