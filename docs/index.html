@@ -3607,7 +3607,7 @@
       var closest = 0, minD = Infinity;
       for (var k = 0; k < n; k++) { var cx2 = padL + gap * k + gap / 2; var d = Math.abs(cx2 - sx); if (d < minD) { minD = d; closest = k; } }
       var dd = daily[closest];
-      showTip(ev, '<div class="tt-label">' + dd.date + '</div><div class="tt-val">' + fmt(dd.amt, 4) + ' USDC</div><div class="tt-sub">' + dd.runs + (dd.runs === 1 ? ' run' : ' runs') + '</div>');
+      showTip(ev, '<div class="tt-label">' + dd.date + '</div><div class="tt-val">' + fmt(dd.amt, 4) + ' USDC</div><div class="tt-sub">' + (_L().lrDayRuns || "{n} run(s)").replace("{n}", dd.runs) + '</div>');
     });
     host.querySelector("svg").addEventListener("mouseleave", hideTip);
   }
@@ -5071,7 +5071,7 @@
       lbTotalDeps: "Total deposits",
       alertDipDetail: "from high — dip-buying opportunity",
       alertClampDetail: "/10 recent runs clamped by guardrails",
-      lrChartSub: "{n} completed run(s) · {u} USDC total", lrDailySub: "{n} execution(s) · avg {a} USDC", lrDonutSub: "{n} total run(s)", lrLatest: "Latest:", lrFills: "fill(s)",
+      lrChartSub: "{n} completed run(s) · {u} USDC total", lrDailySub: "{n} day(s) · avg {a} USDC/day", lrDayRuns: "{n} run(s)", lrDonutSub: "{n} total run(s)", lrLatest: "Latest:", lrFills: "fill(s)",
       cRuns: "runs", cSuccess: "success", cSimulated: "simulated", cDry: "dry", cError: "error", cSkipped: "skipped",
       navDashboard: "Dashboard", navSchedule: "My DCA Schedule", navHistory: "Live Runs / History", navDipSignals: "Dip Signals", navTreasury: "Treasury", navAnalytics: "Analytics", navSettings: "Settings", navGithub: "GitHub Source", navExplorer: "Arc Explorer ↗", sbFoot: "Autonomous DCA on Arc Testnet",
       dashDeployed: "Total USDC Deployed", dashToday: "Today's DCA", dashUsers: "Active Users", dashSuccess: "Success Rate", dashUsersOf: "of {n} with a schedule",
@@ -5309,7 +5309,7 @@
       lbTotalDeps: "Tổng lượt nạp",
       alertDipDetail: "so với đỉnh — cơ hội bắt đáy",
       alertClampDetail: "/10 lượt gần đây bị rào chắn cắt",
-      lrChartSub: "{n} lượt hoàn tất · tổng {u} USDC", lrDailySub: "{n} lượt · TB {a} USDC", lrDonutSub: "tổng {n} lượt", lrLatest: "Mới nhất:", lrFills: "lượt khớp",
+      lrChartSub: "{n} lượt hoàn tất · tổng {u} USDC", lrDailySub: "{n} ngày · TB {a} USDC/ngày", lrDayRuns: "{n} lượt", lrDonutSub: "tổng {n} lượt", lrLatest: "Mới nhất:", lrFills: "lượt khớp",
       cRuns: "lượt", cSuccess: "thành công", cSimulated: "mô phỏng", cDry: "chạy thử", cError: "lỗi", cSkipped: "bỏ qua",
       navDashboard: "Bảng điều khiển", navSchedule: "Lịch DCA của tôi", navHistory: "Lịch sử chạy", navDipSignals: "Tín hiệu bắt đáy", navTreasury: "Ngân quỹ", navAnalytics: "Phân tích", navSettings: "Cài đặt", navGithub: "Mã nguồn GitHub", navExplorer: "Arc Explorer ↗", sbFoot: "DCA tự động trên Arc Testnet",
       dashDeployed: "Tổng USDC đã triển khai", dashToday: "DCA hôm nay", dashUsers: "Người dùng hoạt động", dashSuccess: "Tỉ lệ thành công", dashUsersOf: "trên {n} có lịch",
