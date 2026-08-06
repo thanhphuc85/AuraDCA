@@ -3060,5 +3060,32 @@
       "ranging-market",
       "volatility-preservation"
     ]
+  },
+  {
+    "id": "ref-1786057333148",
+    "date": "2026-08-06",
+    "timestamp": "2026-08-06T23:02:13.148Z",
+    "runStatus": "success",
+    "insight": "All 8 runs today show -10.71% to -12.95% swap drawdown triggering false moderate dip signals, but real cirBTC price is only 0.34-0.96% off ATH with no actual dip. Agent correctly identifies this as Arc cirBTC route pricing artifact and ignores the false signal, maintaining disciplined base allocations of 2.025-3.375 USDC.",
+    "patterns": [
+      "Persistent -10.7% to -13% swap drawdown across all runs vs real price <1% off ATH - confirmed route-specific pricing artifact",
+      "100% bounded by user_schedule with consistent 21-29% daily cap utilization - pacing well-controlled",
+      "Market regime stable at 71-74% confidence ranging classification with ultra-low 0.24-1.17% volatility",
+      "71% portfolio deployed with 50-71% capacity preserved for genuine 5%+ dip opportunities",
+      "Zero error streaks, 100% success rate today after previous Arc cirBTC route instability episodes resolved"
+    ],
+    "strategyAdjustment": "Continue current strategy of ignoring swap history drawdown signals when real price feed contradicts them. The -12.86% swap drawdown is a persistent data quality issue, not actionable alpha. Maintain base allocations in this ranging, low-volatility regime (BTC at $64,304, FGI=25) and preserve 71% capacity for genuine 5%+ dips when volatility returns above 2-3%. If swap drawdown persists beyond -15% while real price remains <2% off ATH, consider flagging the data source for investigation.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "883.018398",
+    "dayNumber": 31,
+    "walletBalance": "357.964285759211582378",
+    "tags": [
+      "data-quality",
+      "false-signal",
+      "pacing",
+      "ranging-market",
+      "route-artifact",
+      "discipline"
+    ]
   }
 ]
