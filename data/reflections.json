@@ -2423,5 +2423,32 @@
       "no-dip-conditions",
       "hidden-multiplier"
     ]
+  },
+  {
+    "id": "ref-1785985342964",
+    "date": "2026-08-06",
+    "timestamp": "2026-08-06T03:02:22.964Z",
+    "runStatus": "success",
+    "insight": "Despite 10+ consecutive reflections claiming to request \"LITERAL 1.00 USDC\", agent continues executing 2.1-5.2 USDC purchases (2-5x inflation). The bug is in the decision layer itself—reasoning claims base allocation but actual requested amounts remain inflated. Today burned 19.675 USDC (9.8% daily cap) across 8 runs in sub-1% drawdown ranging conditions with no dip signal.",
+    "patterns": [
+      "Systematic reasoning-to-execution disconnect: all 8 recent runs claimed '1.00 USDC base' but requested 2.1-5.24 USDC",
+      "Ranging regime persistent: 0.06-1.29% CV ultra-low volatility, price hovering 0.02-0.63% off highs",
+      "No dip triggers: 8 consecutive runs with 0% dip tier activation, yet spending 2-5x base",
+      "Self-awareness without correction: agent correctly diagnoses inflation bug in reasoning but continues inflated requests",
+      "Capital burn in optimal preservation conditions: 19.675 USDC spent today in 18-22/100 risk, extreme fear, no dip signal environment"
+    ],
+    "strategyAdjustment": "HARD OVERRIDE REQUIRED: The reflections are accurate but ineffective—agent knows the bug exists but cannot self-correct. Implement explicit numerical discipline: when dip ladder shows base 1.00 USDC AND drawdown <5% AND ranging regime AND risk <30, the requestedAmountUsdc field must be set to exactly 1.00, not computed through any multiplier chain. Add explicit validation step: if (reasoning contains \"1.00 USDC\" but requested > 1.50) => force requested = 1.00. Alternative: disable all smart sizing multipliers in ranging/low-risk regimes until agent demonstrates 5 consecutive runs of accurate base allocation execution.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "837.218130",
+    "dayNumber": 31,
+    "walletBalance": "350.165171210815840256",
+    "tags": [
+      "error-recovery",
+      "pacing",
+      "clamping",
+      "systematic-bug",
+      "capital-preservation",
+      "ranging-market"
+    ]
   }
 ]
