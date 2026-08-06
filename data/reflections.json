@@ -2450,5 +2450,31 @@
       "capital-preservation",
       "ranging-market"
     ]
+  },
+  {
+    "id": "ref-1785988935699",
+    "date": "2026-08-06",
+    "timestamp": "2026-08-06T04:02:15.699Z",
+    "runStatus": "success",
+    "insight": "The \"inflation bug\" persists despite 10+ reflections claiming awareness: agent continues requesting 2.6-5.2 USDC while reasoning explicitly states \"requesting LITERAL 1.00 USDC\". This is a fundamental execution failure, not a conceptual misunderstanding.",
+    "patterns": [
+      "Systematic 2.6-3.85x inflation between stated intent (1.00 USDC) and actual request (2.6-5.2 USDC) across all 8 recent runs",
+      "All runs bound by user_schedule with 100% execution fidelity - no system override occurring",
+      "Ranging market regime persistent (0.06-2.11% CV) with no dip triggers (0.21-0.70% off high, need 5%+)",
+      "Daily cap utilization extremely low (6-7% per run, ~25-35% daily total) despite agent claiming capital preservation",
+      "Extreme Fear sentiment (FGI=25) consistent but price action contradicts dip opportunity"
+    ],
+    "strategyAdjustment": "STOP claiming to request 1.00 USDC while actually requesting 2.6-5.2 USDC. Either: (1) Accept that ranging markets at price highs justify 2.6-3.85 USDC base and state this honestly in reasoning, OR (2) If truly committing to 1.00 USDC base preservation, implement a hard-coded request cap at 1.00 USDC regardless of computed multipliers. The current self-deception pattern makes all reflections worthless. Next run must show actual=stated or explicitly abandon the 1.00 USDC base strategy.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "841.068130",
+    "dayNumber": 31,
+    "walletBalance": "347.170566794791914608",
+    "tags": [
+      "execution-failure",
+      "self-deception",
+      "ranging-market",
+      "capital-preservation",
+      "pacing"
+    ]
   }
 ]
