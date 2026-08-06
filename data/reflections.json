@@ -3006,5 +3006,32 @@
       "false-dip-signal",
       "infrastructure"
     ]
+  },
+  {
+    "id": "ref-1786047430884",
+    "date": "2026-08-06",
+    "timestamp": "2026-08-06T20:17:10.884Z",
+    "runStatus": "success",
+    "insight": "Arc cirBTC route instability resolved after 4 consecutive simulated runs (allocation collapse to microscopic <$0.001 amounts). Normal execution resumed at 2.875 USDC with persistent -12.90% swap history drawdown confirmed as route-specific pricing artifact, not genuine dip signal.",
+    "patterns": [
+      "Intermittent Arc cirBTC route failures causing allocation collapse to microscopic amounts (<$0.001) triggering simulated executions",
+      "Persistent -10% to -13% drawdown in swap history vs real cirBTC price feed confirmed as route-specific pricing divergence, not actual dip opportunity",
+      "Consistent ranging market regime (72-74% confidence, ultra-low <1% volatility) offering no directional edge across all 8 runs",
+      "Daily cap utilization stable at 21-26% with 70% portfolio deployed and no campaign budget constraints",
+      "Bearish sentiment persistent (FGI=25 Extreme Fear) while BTC price consolidates near ATH ($64,157-$64,704 range)"
+    ],
+    "strategyAdjustment": "Continue baseline DCA execution at 2.5-3.5 USDC range during route stability. Do not increase allocations based on swap history drawdown signals until real cirBTC price feed confirms >5% dip from ATH. Monitor for genuine price dips given Extreme Fear sentiment (FGI=25) and ranging regime—true capitulation opportunity would show both swap history AND real feed alignment. If route instability returns (allocation <$0.01), immediately flag for simulated execution rather than attempting real swap.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "877.943398",
+    "dayNumber": 31,
+    "walletBalance": "366.782400040831913118",
+    "tags": [
+      "error-recovery",
+      "route-stability",
+      "signal-quality",
+      "false-dip-signals",
+      "pacing",
+      "market-timing"
+    ]
   }
 ]
