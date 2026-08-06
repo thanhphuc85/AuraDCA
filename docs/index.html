@@ -3560,12 +3560,22 @@
   // ---------- daily DCA bar chart ----------
   function renderDailyChart(history) {
     var host = $("dailyChartHost");
-    var daily = [];
+    // Aggregate by calendar day (the section is "DCA amount by day"): summing
+    // per-date avoids drawing one bar per execution, which — with hundreds of
+    // runs in a ~392px-wide plot — overlaps the semi-transparent gradient bars
+    // into a jagged moiré rather than clean daily columns.
+    var byDate = {}, daily = [];
     history.forEach(function (e) {
       if (!SUCCESS[e.status]) return;
       var amt = parseFloat(e.clampedAmountUsdc || "0") || 0;
-      if (amt > 0) daily.push({ date: e.date, amt: amt, status: e.status });
+      if (amt <= 0) return;
+      var d = byDate[e.date];
+      if (!d) { d = byDate[e.date] = { date: e.date, amt: 0, runs: 0, allSuccess: true }; daily.push(d); }
+      d.amt += amt;
+      d.runs++;
+      if (e.status !== "success") d.allSuccess = false;
     });
+    daily.sort(function (a, b) { return a.date < b.date ? -1 : a.date > b.date ? 1 : 0; });
     if (!daily.length) {
       host.innerHTML = '<div class="empty-state fade-in"><div class="empty-icon">📅</div><p class="empty-title">No daily data yet</p><p class="empty-desc">DCA amounts will appear as bars after successful runs.</p></div>';
       $("dailySub").textContent = "No data";
@@ -3574,14 +3584,16 @@
     $("dailySub").textContent = (_L().lrDailySub || "{n} execution(s) · avg {a} USDC").replace("{n}", daily.length).replace("{a}", fmt(daily.reduce(function (s, d) { return s + d.amt; }, 0) / daily.length, 4));
     var W = 440, H = 170, padL = 40, padR = 8, padT = 12, padB = 26;
     var max = Math.ceil(Math.max.apply(null, daily.map(function (d) { return d.amt; })) * 1.2) || 1;
-    var n = daily.length, bw = Math.max(6, Math.min(32, (W - padL - padR) / n * 0.7)), gap = (W - padL - padR) / n;
+    // Bar width is capped to the column spacing (never a fixed floor above it),
+    // so bars stay separated no matter how many days are plotted.
+    var n = daily.length, gap = (W - padL - padR) / n, bw = Math.max(2, Math.min(32, gap * 0.7));
     var grid = gridLines(W, H, padL, padR, padT, padB, max, 3, '', 2);
     var bars = "", labels = "";
     for (var i = 0; i < n; i++) {
       var cx = padL + gap * i + gap / 2;
       var bh = (H - padT - padB) * (daily[i].amt / max);
       var by = H - padB - bh;
-      var color = daily[i].status === "success" ? "url(#db1)" : "url(#db2)";
+      var color = daily[i].allSuccess ? "url(#db1)" : "url(#db2)";
       bars += '<rect x="' + (cx - bw / 2).toFixed(1) + '" y="' + by.toFixed(1) + '" width="' + bw.toFixed(1) + '" height="' + bh.toFixed(1) + '" rx="3" fill="' + color + '" opacity="0.85"/>';
       if (n <= 10 || i % Math.ceil(n / 8) === 0) labels += '<text x="' + cx.toFixed(1) + '" y="' + (H - 6) + '" text-anchor="middle" class="chart-label">' + daily[i].date.slice(5) + '</text>';
     }
@@ -3595,7 +3607,7 @@
       var closest = 0, minD = Infinity;
       for (var k = 0; k < n; k++) { var cx2 = padL + gap * k + gap / 2; var d = Math.abs(cx2 - sx); if (d < minD) { minD = d; closest = k; } }
       var dd = daily[closest];
-      showTip(ev, '<div class="tt-label">' + dd.date + '</div><div class="tt-val">' + fmt(dd.amt, 4) + ' USDC</div><div class="tt-sub">' + statusLabel(dd.status) + '</div>');
+      showTip(ev, '<div class="tt-label">' + dd.date + '</div><div class="tt-val">' + fmt(dd.amt, 4) + ' USDC</div><div class="tt-sub">' + dd.runs + (dd.runs === 1 ? ' run' : ' runs') + '</div>');
     });
     host.querySelector("svg").addEventListener("mouseleave", hideTip);
   }
