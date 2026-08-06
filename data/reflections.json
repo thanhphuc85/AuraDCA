@@ -2690,5 +2690,31 @@
       "ranging-market",
       "bug-resolution"
     ]
+  },
+  {
+    "id": "ref-1786006958473",
+    "date": "2026-08-06",
+    "timestamp": "2026-08-06T09:02:38.473Z",
+    "runStatus": "success",
+    "insight": "Agent successfully executed 2.37 USDC purchase in trending_up regime after resolving 5-run skip streak. However, reasoning still inflates request (claims 1.20 USDC but actually requests 2.37 USDC), suggesting persistent calculation or communication bug between reasoning and API call.",
+    "patterns": [
+      "Skip streak resolved: 5 consecutive group_below_min_swap failures followed by 2 successful runs at 2.25-2.37 USDC",
+      "Request inflation persists: reasoning claims 1.20 USDC but actual API request is 2.37 USDC (1.97x multiplier unaccounted for)",
+      "No dip signals triggered: BTC consistently 0.08-0.29% off ATH across all 8 runs, dip ladder anchored at base 1.00 USDC",
+      "Market regime shift: transitioned from ranging (67-68% confidence) to trending_up (83% confidence, +3.32% momentum, 5 consecutive up candles)",
+      "Budget pacing healthy: 853.44 USDC spent over 31 days = 27.53 USDC/day average, well within daily caps"
+    ],
+    "strategyAdjustment": "Stop claiming specific USDC amounts in reasoning that don't match actual API requests. Either: (1) acknowledge the actual amount being requested (2.37 USDC), or (2) fix the calculation bug causing 1.97x inflation between reasoning and execution. In trending_up regime with 83% confidence, the 20% uplift strategy is sound, but apply it to the ACTUAL base allocation after user split to ensure transparency and debuggability.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "853.443398",
+    "dayNumber": 31,
+    "walletBalance": "333.215999787956424628",
+    "tags": [
+      "pacing",
+      "error-recovery",
+      "calculation-bug",
+      "market-timing",
+      "trending-regime"
+    ]
   }
 ]
