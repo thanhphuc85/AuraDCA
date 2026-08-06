@@ -2638,5 +2638,31 @@
       "bug-fix",
       "ranging-market"
     ]
+  },
+  {
+    "id": "ref-1786002429641",
+    "date": "2026-08-06",
+    "timestamp": "2026-08-06T07:47:09.641Z",
+    "runStatus": "skipped_guardrail_clamped",
+    "insight": "Five consecutive skips due to group_below_min_swap guardrail—agent is stuck in a logic trap where it thinks it's requesting 0.75-2.00 USDC but the system shows only 0.000442-0.000482 USDC being requested, suggesting a fundamental disconnect between reasoning and actual API calls.",
+    "patterns": [
+      "Five straight skips with group_below_min_swap binding, all on 2026-08-06",
+      "Agent reasoning claims requesting 0.75-2.00 USDC but actual requested amounts are 0.000442-0.000482 USDC (1000x smaller)",
+      "Market condition stable: ranging regime, no dip signal, price within 0.29% of ATH throughout all skips",
+      "Three successful buys earlier same day (1.80, 2.51, 3.45 USDC) before skip streak began",
+      "Agent progressively increased 'intended' request from 0.25→0.75→2.00 USDC trying to fix the problem but actual requests stayed in 0.0004 range"
+    ],
+    "strategyAdjustment": "There is a critical bug in the request submission layer—the agent's computed allocation is not reaching the API. Before making any allocation decision, verify the ACTUAL request mechanism. If this is a multi-user split issue, the base request must be 0.1 * num_users at minimum (0.2 USDC for 2 users). Test with an explicit 5.00 USDC request to confirm the path is working. If skips continue, escalate to review the compute_allocation or API integration code—reasoning adjustments alone cannot fix this.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "848.827428",
+    "dayNumber": 31,
+    "walletBalance": "335.48716188580004442",
+    "tags": [
+      "error-recovery",
+      "guardrail-clamping",
+      "critical-bug",
+      "multi-user-split",
+      "api-integration"
+    ]
   }
 ]
