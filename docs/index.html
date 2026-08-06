@@ -3618,10 +3618,10 @@
     var total = history.length;
     $("donutSub").textContent = (_L().lrDonutSub || "{n} total run(s)").replace("{n}", total);
     var slices = [
-      { label: "Success", count: counts.success, color: "#34d399" },
-      { label: "Dry run", count: counts.dry_run, color: "#60a5fa" },
-      { label: "Skipped", count: counts.skipped, color: "#fbbf24" },
-      { label: "Error", count: counts.error, color: "#fb7185" },
+      { label: (_L().dlSuccess||"Success"), count: counts.success, color: "#34d399" },
+      { label: (_L().dlDry||"Dry run"), count: counts.dry_run, color: "#60a5fa" },
+      { label: (_L().dlSkipped||"Skipped"), count: counts.skipped, color: "#fbbf24" },
+      { label: (_L().dlError||"Error"), count: counts.error, color: "#fb7185" },
     ].filter(function (s) { return s.count > 0; });
     var R = 80, r = 50, cx = 120, cy = 100, paths = "", angle = -90;
     slices.forEach(function (s) {
@@ -3636,7 +3636,7 @@
       angle += sweep;
     });
     var centerText = '<text x="' + cx + '" y="' + (cy - 4) + '" text-anchor="middle" fill="var(--text)" font-family="Sora" font-size="22" font-weight="800">' + total + '</text>' +
-      '<text x="' + cx + '" y="' + (cy + 14) + '" text-anchor="middle" fill="var(--muted)" font-size="11">runs</text>';
+      '<text x="' + cx + '" y="' + (cy + 14) + '" text-anchor="middle" fill="var(--muted)" font-size="11">' + (_L().dlRuns||"runs") + '</text>';
     host.innerHTML =
       '<svg class="donut-chart" viewBox="0 0 240 200">' + paths + centerText + '</svg>' +
       '<div class="donut-legend">' + slices.map(function (s) {
@@ -3731,7 +3731,7 @@
     $("memStrategy").textContent = "Strategy: " + latest.strategyAdjustment;
     var confClass = latest.confidenceLevel === "high" ? "conf-high" : (latest.confidenceLevel === "medium" ? "conf-medium" : "conf-low");
     $("memMeta").innerHTML = "Day " + latest.dayNumber + " · " + latest.date +
-      ' · <span class="conf-badge ' + confClass + '">' + latest.confidenceLevel + " confidence</span>";
+      ' · <span class="conf-badge ' + confClass + '">' + (_L()['conf_'+latest.confidenceLevel]||latest.confidenceLevel) + '</span>';
 
     var tagCounts = {};
     reflections.forEach(function (r) {
@@ -3748,11 +3748,11 @@
     });
     var topPatterns = Object.keys(patternCounts).sort(function (a, b) { return patternCounts[b] - patternCounts[a]; }).slice(0, 5);
     if (topPatterns.length) {
-      $("tagCloud").innerHTML += '<div style="width:100%;margin-top:12px;padding-top:12px;border-top:1px solid rgba(255,255,255,.06);font-size:12px;color:var(--muted);">Top patterns: ' +
+      $("tagCloud").innerHTML += '<div style="width:100%;margin-top:12px;padding-top:12px;border-top:1px solid rgba(255,255,255,.06);font-size:12px;color:var(--muted);">' + (_L().topPatterns||"Top patterns:") + ' ' +
         topPatterns.map(function (p) { return '<span style="color:var(--text);font-size:12px;">' + p + '</span> <span style="color:var(--muted);">(' + patternCounts[p] + '×)</span>'; }).join(" · ") + '</div>';
     }
 
-    $("refTimelineSub").textContent = reflections.length + " reflection(s) stored";
+    $("refTimelineSub").textContent = (_L().refStored||"{n} reflection(s) stored").replace("{n}", reflections.length);
     var items = reflections.slice().reverse().slice(0, 10);
     $("refTimeline").innerHTML = items.map(function (r) {
       var dotClass = r.confidenceLevel || "low";
@@ -3761,8 +3761,8 @@
         '<div class="ref-dot-col"><div class="ref-dot ' + dotClass + '"></div></div>' +
         '<div class="ref-body">' +
         '<p class="ref-insight">' + (r.insight || "") + '</p>' +
-        '<p class="ref-meta">' + r.date + ' · ' + (r.runStatus || "").replace(/_/g, " ") +
-        ' · <span class="conf-badge conf-' + dotClass + '">' + r.confidenceLevel + '</span></p>' +
+        '<p class="ref-meta">' + r.date + ' · ' + (typeof statusLabel === "function" ? statusLabel(r.runStatus) : (r.runStatus || "").replace(/_/g, " ")) +
+        ' · <span class="conf-badge conf-' + dotClass + '">' + (_L()['conf_' + r.confidenceLevel] || r.confidenceLevel) + '</span></p>' +
         (tagsHtml ? '<div class="ref-tags">' + tagsHtml + '</div>' : "") +
         '</div></div>';
     }).join("") || '<div style="color:var(--muted);padding:16px 0;font-size:13px;">No reflections yet.</div>';
@@ -3879,7 +3879,7 @@
     var showAllBtn = $("showAllRuns");
     if (history.length > (userSettings.tableRows || 10)) {
       showAllBtn.style.display = "";
-      showAllBtn.textContent = state.showAllRuns ? "Show less" : "Show all (" + history.length + ")";
+      showAllBtn.textContent = state.showAllRuns ? (_L().showLess||"Show less") : (_L().showAllN||"Show all ({n})").replace("{n}", history.length);
     } else { showAllBtn.style.display = "none"; }
     var rows = reversed.slice(0, limit).map(function (e) {
       var tx = e.txHash
@@ -4786,7 +4786,7 @@
     var tok = _fillTok;
     var outDp = tok === "cirBTC" ? 8 : 6;
     var title = $("priceChartTitle");
-    if (title) title.textContent = "USDC → " + tok + " fill price";
+    if (title) title.textContent = "USDC → " + tok + " " + (_L().lrFillWord||"fill price");
     var latest = swaps[swaps.length - 1];
     var prev = swaps.length > 1 ? swaps[swaps.length - 2] : latest;
     var change = prev.price > 0 ? ((latest.price - prev.price) / prev.price * 100) : 0;
@@ -4911,13 +4911,13 @@
     list.innerHTML = toks.map(function (t) {
       var d = byTok[t];
       var note = t === "cirBTC"
-        ? '<span style="color:var(--amber);">route in outage — agent rides it out</span>'
-        : '<span style="color:var(--green);">live route</span>';
+        ? '<span style="color:var(--amber);">' + (_L().tsOutage||"route in outage — agent rides it out") + '</span>'
+        : '<span style="color:var(--green);">' + (_L().tsLive||"live route") + '</span>';
       return '<div class="lb-row">' +
         '<div style="flex:1;min-width:0;"><b>' + t + '</b> <span style="font-size:11px;margin-left:6px;">' + note + '</span></div>' +
         '<div style="text-align:right;">' +
-          '<div class="lb-amt">≈ ' + fmt(d.daily, 2) + ' USDC/day</div>' +
-          '<div style="font-size:11px;color:var(--muted);">' + d.wallets + ' wallet(s)' + (d.smart ? ' · 🧠 ' + d.smart + ' smart' : '') + '</div>' +
+          '<div class="lb-amt">≈ ' + fmt(d.daily, 2) + ' ' + (_L().usdcDay||"USDC/day") + '</div>' +
+          '<div style="font-size:11px;color:var(--muted);">' + d.wallets + ' ' + (_L().wallets||"wallet(s)") + (d.smart ? ' · 🧠 ' + d.smart + ' smart' : '') + '</div>' +
         '</div>' +
       '</div>';
     }).join("");
@@ -4976,9 +4976,9 @@
       var sorted = Object.values(depositors).sort(function (a, b) { return b.total - a.total; });
 
       $("lbSummary").innerHTML =
-        '<div class="lb-stat"><div class="lb-val">' + fmt(totalDeposited, 2) + '</div><div class="lb-label">Total deposited (USDC)</div></div>' +
-        '<div class="lb-stat"><div class="lb-val">' + sorted.length + '</div><div class="lb-label">Unique depositors</div></div>' +
-        '<div class="lb-stat"><div class="lb-val">' + deps.length + '</div><div class="lb-label">Total deposits</div></div>';
+        '<div class="lb-stat"><div class="lb-val">' + fmt(totalDeposited, 2) + '</div><div class="lb-label">' + (_L().lbTotalDep||"Total deposited (USDC)") + '</div></div>' +
+        '<div class="lb-stat"><div class="lb-val">' + sorted.length + '</div><div class="lb-label">' + (_L().lbUniqueDep||"Unique depositors") + '</div></div>' +
+        '<div class="lb-stat"><div class="lb-val">' + deps.length + '</div><div class="lb-label">' + (_L().lbTotalDeps||"Total deposits") + '</div></div>';
 
       $("lbCount").textContent = sorted.length + " depositor(s) · " + deps.length + " transaction(s)";
       var maxAmt = sorted[0] ? sorted[0].total : 1;
@@ -5037,6 +5037,28 @@
       dataFullBackup: "Full backup (JSON)",
       dataHistCsv: "History (CSV)",
       dataNote: "Includes all runs, reflections, and strategy data",
+      dlSuccess: "Success",
+      dlDry: "Dry run",
+      dlSkipped: "Skipped",
+      dlError: "Error",
+      dlRuns: "runs",
+      refStored: "{n} reflection(s) stored",
+      topPatterns: "Top patterns:",
+      conf_high: "high",
+      conf_medium: "medium",
+      conf_low: "low",
+      showLess: "Show less",
+      showAllN: "Show all ({n})",
+      lrFillWord: "fill price",
+      tsOutage: "route in outage — agent rides it out",
+      tsLive: "live route",
+      usdcDay: "USDC/day",
+      wallets: "wallet(s)",
+      lbTotalDep: "Total deposited (USDC)",
+      lbUniqueDep: "Unique depositors",
+      lbTotalDeps: "Total deposits",
+      alertDipDetail: "from high — dip-buying opportunity",
+      alertClampDetail: "/10 recent runs clamped by guardrails",
       lrChartSub: "{n} completed run(s) · {u} USDC total", lrDailySub: "{n} execution(s) · avg {a} USDC", lrDonutSub: "{n} total run(s)", lrLatest: "Latest:", lrFills: "fill(s)",
       cRuns: "runs", cSuccess: "success", cSimulated: "simulated", cDry: "dry", cError: "error", cSkipped: "skipped",
       navDashboard: "Dashboard", navSchedule: "My DCA Schedule", navHistory: "Live Runs / History", navDipSignals: "Dip Signals", navTreasury: "Treasury", navAnalytics: "Analytics", navSettings: "Settings", navGithub: "GitHub Source", navExplorer: "Arc Explorer ↗", sbFoot: "Autonomous DCA on Arc Testnet",
@@ -5253,6 +5275,28 @@
       dataFullBackup: "Sao lưu đầy đủ (JSON)",
       dataHistCsv: "Lịch sử (CSV)",
       dataNote: "Bao gồm mọi lượt chạy, suy ngẫm và dữ liệu chiến lược",
+      dlSuccess: "Thành công",
+      dlDry: "Chạy thử",
+      dlSkipped: "Bỏ qua",
+      dlError: "Lỗi",
+      dlRuns: "lượt",
+      refStored: "{n} suy ngẫm đã lưu",
+      topPatterns: "Mẫu hình nổi bật:",
+      conf_high: "cao",
+      conf_medium: "vừa",
+      conf_low: "thấp",
+      showLess: "Thu gọn",
+      showAllN: "Xem tất cả ({n})",
+      lrFillWord: "giá khớp",
+      tsOutage: "tuyến gián đoạn — agent chờ qua",
+      tsLive: "tuyến trực tiếp",
+      usdcDay: "USDC/ngày",
+      wallets: "ví",
+      lbTotalDep: "Tổng đã nạp (USDC)",
+      lbUniqueDep: "Người nạp",
+      lbTotalDeps: "Tổng lượt nạp",
+      alertDipDetail: "so với đỉnh — cơ hội bắt đáy",
+      alertClampDetail: "/10 lượt gần đây bị rào chắn cắt",
       lrChartSub: "{n} lượt hoàn tất · tổng {u} USDC", lrDailySub: "{n} lượt · TB {a} USDC", lrDonutSub: "tổng {n} lượt", lrLatest: "Mới nhất:", lrFills: "lượt khớp",
       cRuns: "lượt", cSuccess: "thành công", cSimulated: "mô phỏng", cDry: "chạy thử", cError: "lỗi", cSkipped: "bỏ qua",
       navDashboard: "Bảng điều khiển", navSchedule: "Lịch DCA của tôi", navHistory: "Lịch sử chạy", navDipSignals: "Tín hiệu bắt đáy", navTreasury: "Ngân quỹ", navAnalytics: "Phân tích", navSettings: "Cài đặt", navGithub: "Mã nguồn GitHub", navExplorer: "Arc Explorer ↗", sbFoot: "DCA tự động trên Arc Testnet",
@@ -5691,7 +5735,7 @@
       var curP = prices[prices.length - 1];
       var dd = Math.abs((curP - highP) / highP);
       if (dd >= 0.10) {
-        alerts.push({ icon: "📉", title: _L().intelAlertDip || "Significant dip", detail: (dd * 100).toFixed(1) + "% from high — dip-buying opportunity" });
+        alerts.push({ icon: "📉", title: _L().intelAlertDip || "Significant dip", detail: (dd * 100).toFixed(1) + "% " + (_L().alertDipDetail||"from high — dip-buying opportunity") });
       }
     }
     // Count only runs where a hard guardrail actually bound the amount. Every
@@ -5701,7 +5745,7 @@
     var GUARDRAIL_BOUNDS = { max_daily_usdc: 1, wallet_available_after_reserve: 1, remaining_daily_cap: 1, remaining_campaign_budget: 1, group_below_min_swap: 1, allowance_below_min: 1 };
     var clampCount = last10.filter(function (e) { return GUARDRAIL_BOUNDS[e.boundBy]; }).length;
     if (clampCount >= 5) {
-      alerts.push({ icon: "⚠️", title: _L().intelAlertClamping || "Frequent clamping", detail: clampCount + "/10 recent runs clamped by guardrails" });
+      alerts.push({ icon: "⚠️", title: _L().intelAlertClamping || "Frequent clamping", detail: clampCount + " " + (_L().alertClampDetail||"/10 recent runs clamped by guardrails") });
     }
     if (sr < 0.5 && last10.length >= 5) {
       alerts.push({ icon: "📊", title: _L().intelAlertLowSuccess || "Low success rate", detail: Math.round(sr * 100) + "% success in last 10 runs" });
