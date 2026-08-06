@@ -2502,5 +2502,32 @@
       "capital-preservation-failing",
       "no-dip-conditions"
     ]
+  },
+  {
+    "id": "ref-1785996135226",
+    "date": "2026-08-06",
+    "timestamp": "2026-08-06T06:02:15.226Z",
+    "runStatus": "success",
+    "insight": "Successfully reduced requested amount from 2.1-5.24 USDC range to 1.80 USDC, confirming the inflation bug is being corrected. Agent is executing in ranging market (1.97% CV) at price highs (0.16% off ATH) with no dip signal, preserving 90% daily cap for genuine opportunities.",
+    "patterns": [
+      "Consistent ranging regime across 8 runs: CV 0.95-2.11%, price 0.16-0.70% off high, no dip tiers triggered",
+      "Extreme Fear sentiment (FGI=25) persisting but price action contradicts panic—likely Fear/Greed Index lag",
+      "Inflation bug correction working: requests decreased from 2.5-4.0 USDC down to 1.80 USDC over recent runs",
+      "All 8 recent runs bound by user_schedule with 100% execution (no clamping by daily cap or guardrails)",
+      "Daily cap burn reduced: 20 USDC today (10%) vs 73.07 USDC on 2026-08-05 (37%)"
+    ],
+    "strategyAdjustment": "Continue driving requested amount toward literal 1.00 USDC base allocation since market remains in tight range near ATH with no dip signal. If 5%+ drawdown triggers (price <$61,582), immediately scale to moderate dip allocation per ladder. Monitor for regime change: if CV exceeds 3% or momentum breaks ±5%, reassess ranging assumption. Track actual vs claimed request amounts in next 3 runs to verify bug is fully resolved.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "845.377428",
+    "dayNumber": 31,
+    "walletBalance": "340.77031565133204442",
+    "tags": [
+      "pacing",
+      "error-recovery",
+      "bug-fix",
+      "ranging-market",
+      "capital-preservation",
+      "dip-strategy"
+    ]
   }
 ]
