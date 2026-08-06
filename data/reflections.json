@@ -2795,5 +2795,32 @@
       "ranging-market",
       "budget"
     ]
+  },
+  {
+    "id": "ref-1786021326823",
+    "date": "2026-08-06",
+    "timestamp": "2026-08-06T13:02:06.823Z",
+    "runStatus": "simulated",
+    "insight": "Latest run executed in simulated mode at $0.00076 (down from $2.13-$3.75 range in prior runs), likely due to Arc cirBTC route being offline. Market remains ranging near ATH ($64,363, only 0.87% off high) with no genuine dip opportunities emerging despite Extreme Fear (FGI=25).",
+    "patterns": [
+      "skip-streak bug fully resolved with 6 consecutive successful executions",
+      "consistently no dip tier triggered - price staying within 0.08-0.87% of ATH across all 8 runs",
+      "ranging market regime dominant (71-73% confidence) with ultra-low volatility (0.63-2.34% CV)",
+      "daily cap utilization at 20% with 80% budget preserved for genuine dips",
+      "execution amounts varying wildly from $0.00076 to $3.75 suggesting infrastructure or routing issues"
+    ],
+    "strategyAdjustment": "Monitor for Arc cirBTC route stability - simulated fills at micro-amounts provide no real exposure. If route remains offline, consider pausing executions or switching to alternative liquidity sources. In ranging markets near ATH with no dip triggers, maintain minimal base allocations (1.0-1.5 USDC) to preserve 90%+ daily cap for when genuine 5%+ dips materialize. The 80% preserved capacity strategy is working correctly - don't increase base spending in non-dip conditions.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "865.943398",
+    "dayNumber": 31,
+    "walletBalance": "382.50681802534333488",
+    "tags": [
+      "infrastructure-issue",
+      "simulated-execution",
+      "ranging-market",
+      "no-dip-signal",
+      "budget-preservation",
+      "route-offline"
+    ]
   }
 ]

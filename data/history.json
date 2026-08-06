@@ -9734,5 +9734,86 @@
       "settleStatus": "received",
       "settledTo": "0xcaf34080f47f576f923962ad04dd7ddd86d8d85f"
     }
+  },
+  {
+    "date": "2026-08-06",
+    "timestamp": "2026-08-06T13:00:45.045Z",
+    "status": "success",
+    "requestedAmountUsdc": "3.250000",
+    "clampedAmountUsdc": "3.250000",
+    "boundBy": "user_schedule",
+    "tokenOut": "EURC",
+    "reasoning": "Market brief shows bearish sentiment (FGI=25 Extreme Fear, +0.11% BTC at $64,363 near 7-day lows) with -10-15% allocation bias despite high on-chain activity indicating active trading. Real cirBTC price at $64,363 is only 0.87% off ATH with NO dip tier triggered (need 5%+ for mild). Market regime classified as ranging (73% confidence, +1.16% momentum, ultra-low 0.63% volatility) offering no directional edge. Composite risk is low (28/100) with minimal volatility, no error streaks, and 69% portfolio deployed. Reflections confirm skip-streak bug fully resolved with five consecutive successful executions. Spending pace shows 20% daily cap utilization with no campaign budget constraints and 80% capacity preserved for genuine 5%+ dip opportunities.",
+    "txHash": "0xc6f079b43a5161dd8276996ff791bcd0bb70053254e0094b50e88fadea56a990",
+    "explorerUrl": "https://testnet.arcscan.app/tx/0xc6f079b43a5161dd8276996ff791bcd0bb70053254e0094b50e88fadea56a990",
+    "amountOut": "2.4156",
+    "walletUsdcBalance": "382.50681802534333488",
+    "message": "Swapped 3.250000 USDC -> EURC across 4 user(s)",
+    "smartSizing": {
+      "fearGreed": 25,
+      "drawdownPct": 0.007983847351304696,
+      "multiplier": 1.3,
+      "source": "llm",
+      "proposedMultiplier": 1.3
+    },
+    "x402": {
+      "resource": "/api/x402-brief",
+      "amountUsdcAtomic": "1000",
+      "payer": "0x61e7Ae336F7Eb7F8517dE4F19963D88dFD9161eC",
+      "payTo": "0xcAf34080F47f576F923962AD04dD7ddd86d8d85f",
+      "settled": true,
+      "mode": "settled",
+      "via": "http",
+      "transferId": "8a881586-ae64-4153-9910-d78e5df76b5b",
+      "settleStatus": "received"
+    },
+    "smartFee": {
+      "feeUsdcEach": "0.010000",
+      "totalUsdc": "0.040000",
+      "payerCount": 4,
+      "payTo": "0x00Ebbd3aFCCaD08970ED8FdaE591244c8475a0aC",
+      "testnet": true,
+      "settled": true,
+      "transferId": "d331c237-0a7d-4676-a6b2-12a4cbb4706c",
+      "settleStatus": "received",
+      "settledTo": "0xcaf34080f47f576f923962ad04dd7ddd86d8d85f"
+    }
+  },
+  {
+    "date": "2026-08-06",
+    "timestamp": "2026-08-06T13:00:45.045Z",
+    "status": "simulated",
+    "simulated": true,
+    "requestedAmountUsdc": "0.000760",
+    "clampedAmountUsdc": "0.000760",
+    "boundBy": "user_schedule",
+    "tokenOut": "cirBTC",
+    "reasoning": "Market brief shows bearish sentiment (FGI=25 Extreme Fear, +0.11% BTC at $64,363 near 7-day lows) with -10-15% allocation bias despite high on-chain activity indicating active trading. Real cirBTC price at $64,363 is only 0.87% off ATH with NO dip tier triggered (need 5%+ for mild). Market regime classified as ranging (73% confidence, +1.16% momentum, ultra-low 0.63% volatility) offering no directional edge. Composite risk is low (28/100) with minimal volatility, no error streaks, and 69% portfolio deployed. Reflections confirm skip-streak bug fully resolved with five consecutive successful executions. Spending pace shows 20% daily cap utilization with no campaign budget constraints and 80% capacity preserved for genuine 5%+ dip opportunities.",
+    "amountOut": "0.00000001",
+    "priceUsd": 64363,
+    "walletUsdcBalance": "382.50681802534333488",
+    "message": "[SIMULATED] Arc cirBTC route offline — paper-filled 0.00000001 cirBTC for 0.000760 USDC at $64363.00/cirBTC (no on-chain swap; real funds untouched)",
+    "x402": {
+      "resource": "/api/x402-brief",
+      "amountUsdcAtomic": "1000",
+      "payer": "0x61e7Ae336F7Eb7F8517dE4F19963D88dFD9161eC",
+      "payTo": "0xcAf34080F47f576F923962AD04dD7ddd86d8d85f",
+      "settled": true,
+      "mode": "settled",
+      "via": "http",
+      "transferId": "8a881586-ae64-4153-9910-d78e5df76b5b",
+      "settleStatus": "received"
+    },
+    "smartFee": {
+      "feeUsdcEach": "0.010000",
+      "totalUsdc": "0.040000",
+      "payerCount": 4,
+      "payTo": "0x00Ebbd3aFCCaD08970ED8FdaE591244c8475a0aC",
+      "testnet": true,
+      "settled": true,
+      "transferId": "d331c237-0a7d-4676-a6b2-12a4cbb4706c",
+      "settleStatus": "received",
+      "settledTo": "0xcaf34080f47f576f923962ad04dd7ddd86d8d85f"
+    }
   }
 ]
