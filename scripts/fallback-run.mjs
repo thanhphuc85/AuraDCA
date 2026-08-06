@@ -29,6 +29,7 @@ import { execSync, spawnSync } from "node:child_process";
 import { fileURLToPath } from "node:url";
 import path from "node:path";
 import fs from "node:fs";
+import os from "node:os";
 
 const REPO = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const STALE_MIN = Number(process.env.FALLBACK_STALE_MIN || 45);
@@ -38,6 +39,22 @@ const WORKFLOW = "dca.yml";
 
 const log = (m) => console.log(`[fallback ${new Date().toISOString()}] ${m}`);
 const sh = (cmd) => execSync(cmd, { cwd: REPO, stdio: "pipe", encoding: "utf8" }).trim();
+
+// Operational alert (distinct from the bot's own DCA-result Telegram messages):
+// tells you the PRIMARY GitHub Actions path is down and this fallback took over.
+async function alertTelegram(text) {
+  const token = (process.env.TELEGRAM_BOT_TOKEN || "").trim();
+  const chatId = (process.env.TELEGRAM_CHAT_ID || "").trim();
+  if (!token || !chatId) { log("Telegram not configured — skipping ops alert."); return; }
+  try {
+    const r = await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ chat_id: chatId, text, disable_web_page_preview: true }),
+    });
+    if (!r.ok) log(`Telegram ops alert failed: ${r.status}`);
+  } catch (e) { log(`Telegram ops alert error: ${e.message}`); }
+}
 const shTry = (cmd) => { try { return sh(cmd); } catch (e) { log(`\`${cmd}\` failed: ${(e.stderr || e.message || "").toString().trim()}`); return null; } };
 
 // --- 0. Start from the latest committed state so our ledger read is current. ---
@@ -90,6 +107,7 @@ if (await githubHealthy()) {
 
 // --- 2. Take over: run the real bot exactly like the workflow does. ---
 log("Primary path DOWN — running the DCA bot locally as fallback.");
+await alertTelegram(`⚠️ Aura DCA — GitHub Actions không phản hồi. Fallback executor trên "${os.hostname()}" đang tiếp quản lượt DCA này. (Kết quả run sẽ báo ở tin nhắn kế tiếp.)`);
 const run = spawnSync("npx", ["tsx", "src/index.ts"], {
   cwd: REPO,
   stdio: "inherit",
@@ -117,4 +135,5 @@ for (let attempt = 1; attempt <= 5; attempt++) {
   }
 }
 log("push failed after 5 attempts — the run is committed locally but not on main; resolve manually.");
+await alertTelegram(`🔴 Aura DCA — fallback trên "${os.hostname()}" đã chạy DCA nhưng KHÔNG push được kết quả lên main sau 5 lần thử. Ledger đã đổi cục bộ — cần xử lý tay để tránh lệch trạng thái.`);
 process.exit(1);
