@@ -1,10 +1,10 @@
 import type { AppConfig } from "./config.js";
 import { createWallet } from "./wallet.js";
-import { readHistory, appendEntry, recentHistory, dayCount, alreadySpentToday, remainingCampaignBudget, outageStreak } from "./history/store.js";
+import { readHistory, appendEntry, recentHistory, dayCount, alreadySpentToday, paperSpentToday, remainingCampaignBudget, outageStreak } from "./history/store.js";
 import { readReflections, appendReflection } from "./history/reflectionStore.js";
 import { readLedger, writeLedger, ensureDefaultRates } from "./ledger/store.js";
 import { scanDeposits } from "./ledger/scanner.js";
-import { computeScheduledSpends, applyScheduledDistribution, applySimulatedDistribution, groupSpendsByToken, smartSizeMultiplier, activeDailyBudgetTotal, splitScheduledBySettlement } from "./ledger/schedule.js";
+import { computeScheduledSpends, applyScheduledDistribution, applySimulatedDistribution, groupSpendsByToken, smartSizeMultiplier, activeDailyBudgetTotal, simDailyBudgetTotal, splitScheduledBySettlement } from "./ledger/schedule.js";
 import type { UserSpend } from "./ledger/schedule.js";
 import { computeAllowanceSpends, pullUsdcFromUser, sendTokenToUser } from "./ledger/allowance.js";
 import { requestWithdrawal, processPendingWithdrawals } from "./ledger/withdraw.js";
@@ -465,14 +465,29 @@ export async function runDailyDca(config: AppConfig): Promise<RunOutcome> {
       )
     : { proceed: false, amountUsdc: "0", boundBy: "no_live_spend" };
   const liveExecutable = clamp.proceed ? Number.parseFloat(clamp.amountUsdc) : 0;
-  // Per-group scale for LIVE groups only; simulated groups always settle at 1.0.
   const liveScale = liveTotal > 0 && liveExecutable > 0 ? liveExecutable / liveTotal : 0;
 
+  // Paper (simulated) daily ceiling — the paper-side mirror of the live clamp.
+  // Paper fills bypass the wallet/reserve/campaign clamp by design (#2: real funds
+  // must not throttle paper), which left the aggregate paper pace bounded only by
+  // per-user caps — so a capless smart schedule could accumulate an outsized paper
+  // position. Bound simTotal by the crowd's paper daily budget minus what already
+  // paper-filled today, then scale paper groups pro-rata just like liveScale. A 0
+  // ceiling (no sim users / no derivable budget) means "no bound" — unchanged.
+  const simCeiling = simDailyBudgetTotal(ledger, isSimNow);
+  const paperToday = Number.parseFloat(paperSpentToday(history, date));
+  const simRemaining = simCeiling > 0 ? Math.max(0, simCeiling - paperToday) : Number.POSITIVE_INFINITY;
+  const simExecutable = simTotal > 0 ? Math.min(simTotal, simRemaining) : 0;
+  const simScale = simTotal > 0 && simExecutable > 0 ? simExecutable / simTotal : 0;
+  if (simCeiling > 0 && simExecutable < simTotal) {
+    logger.info(`Paper spend ${simTotal.toFixed(6)} USDC clamped to ${simExecutable.toFixed(6)} by sim daily ceiling ${simCeiling} (paper spent today ${paperToday.toFixed(6)})`);
+  }
+
   // Skip the whole run only when the live portion is dust/blocked AND there is no
-  // paper work either. When paper fills are due, fall through: they settle
-  // regardless of the wallet, and any dust/blocked live group emits its own
-  // per-group skip in the loop below.
-  if (liveExecutable < minSwap && simTotal <= 0) {
+  // executable paper work either. When paper fills are due, fall through: they
+  // settle regardless of the wallet, and any dust/blocked/ceiling-clamped group
+  // emits its own per-group skip in the loop below.
+  if (liveExecutable < minSwap && simExecutable <= 0) {
     const insufficient = clamp.boundBy === "wallet_available_after_reserve";
     logger.info(`Live spend ${liveTotal} USDC clamped to ${liveExecutable} by ${clamp.boundBy}; skipping`);
     return writeAndReturn({
@@ -492,7 +507,7 @@ export async function runDailyDca(config: AppConfig): Promise<RunOutcome> {
 
   // Advisory market commentary (non-fatal). Sizing is deterministic; the agent's
   // reasoning is kept only to enrich the dashboard's AI insights + reflections.
-  let reasoning = `Rate-based DCA: ${schedule.spends.length} active user(s), executing ~${(liveExecutable + simTotal).toFixed(6)} USDC this run (${liveExecutable.toFixed(6)} live + ${simTotal.toFixed(6)} paper).`;
+  let reasoning = `Rate-based DCA: ${schedule.spends.length} active user(s), executing ~${(liveExecutable + simExecutable).toFixed(6)} USDC this run (${liveExecutable.toFixed(6)} live + ${simExecutable.toFixed(6)} paper).`;
   try {
     const outage = outageStreak(history);
     const context: DecisionContext = {
@@ -506,7 +521,7 @@ export async function runDailyDca(config: AppConfig): Promise<RunOutcome> {
       // The amount is deterministic (per-user schedule sum, live + paper). Hand it to
       // the advisory agent so its rationale explains THIS number instead of proposing
       // its own — which used to print a USDC figure that didn't match what executed.
-      plannedAmountUsdc: (liveExecutable + simTotal).toFixed(6),
+      plannedAmountUsdc: (liveExecutable + simExecutable).toFixed(6),
       outageConsecutiveRuns: outage.consecutiveRuns,
       outageDurationDays: outage.days,
       recentHistory: recentHistory(history).map((e) => ({
@@ -564,18 +579,21 @@ export async function runDailyDca(config: AppConfig): Promise<RunOutcome> {
     const groupSpends = groups.get(token)!;
     const users = groupSpends.length;
     const groupScheduled = groupSpends.reduce((s, x) => s + x.spend, 0);
-    // Simulated groups settle in full (paper, no real USDC); live groups carry
-    // the wallet clamp via liveScale.
+    // LIVE groups carry the wallet clamp via liveScale; SIMULATED groups carry the
+    // paper daily-ceiling clamp via simScale (both 1.0 when nothing bound them).
     const sim = info.simulated === true && priceNow > 0;
-    const groupScale = sim ? 1 : liveScale;
+    const groupScale = sim ? simScale : liveScale;
     const groupExec = Number.parseFloat((groupScheduled * groupScale).toFixed(6));
-    // When a LIVE group was clamped (groupScale < 1), report the guardrail that
-    // ACTUALLY bound it — clampDecision already picked the real binding (daily
-    // cap, wallet reserve, campaign budget, …). Hard-coding "wallet_available_
-    // after_reserve" here mislabels e.g. a daily-cap clamp, which is dishonest in
-    // an audit trail whose whole point is that the number is trustworthy. Paper
-    // groups are never wallet-clamped, so they always report "user_schedule".
-    const boundBy = !sim && groupScale < 1 ? clamp.boundBy : "user_schedule";
+    // When a group was clamped (groupScale < 1), report the guardrail that ACTUALLY
+    // bound it: for LIVE, clampDecision already picked the real binding (daily cap,
+    // wallet reserve, campaign budget, …) — hard-coding "wallet_available_after_
+    // reserve" would mislabel e.g. a daily-cap clamp, dishonest in an audit trail
+    // whose whole point is that the number is trustworthy. For PAPER, the only
+    // aggregate bound is the sim daily ceiling. Unclamped groups report
+    // "user_schedule".
+    const boundBy = groupScale < 1
+      ? (sim ? "sim_daily_ceiling" : clamp.boundBy)
+      : "user_schedule";
 
     // The DEX dust floor (minSwap) only guards a LIVE on-chain swap: a real swap
     // below the pool minimum reverts. A paper (simulated) fill moves no real USDC

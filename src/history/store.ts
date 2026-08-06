@@ -77,6 +77,17 @@ export function alreadySpentToday(history: HistoryEntry[], date: string): string
   return total.toFixed(6);
 }
 
+// Paper (simulated) USDC "spent" today. Kept separate from alreadySpentToday
+// because paper fills touch no real funds — the live daily cap must not count
+// them — while the paper daily ceiling (simDailyBudgetTotal) must. dry_run is
+// excluded: it persists nothing, so it can never accrue against a ceiling.
+export function paperSpentToday(history: HistoryEntry[], date: string): string {
+  const total = history
+    .filter((e) => e.date === date && e.status === "simulated")
+    .reduce((sum, e) => sum + Number.parseFloat(e.clampedAmountUsdc ?? "0"), 0);
+  return total.toFixed(6);
+}
+
 export function totalSpent(history: HistoryEntry[]): string {
   const total = history
     .filter((e) => SUCCESS_STATUSES.has(e.status))
