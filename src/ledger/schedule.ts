@@ -314,6 +314,73 @@ export function activeDailyBudgetTotal(ledger: Ledger): number {
   return Number.parseFloat(total.toFixed(USDC_DECIMALS));
 }
 
+// Rough expected number of DCA runs per UTC day for a user, used only to size a
+// nominal daily budget when the user set no explicit daily cap. Mirrors the
+// cadence math in isDueNow/the dashboard; a fractional value (e.g. every-3-days →
+// 1/3) is fine because it only scales a fallback estimate.
+function estimateRunsPerDay(user: UserAccount): number {
+  switch (user.dcaFrequency) {
+    case "hours":
+      return 24 / Math.max(1, Math.min(24, Math.floor(user.dcaEveryHours ?? 24)));
+    case "days":
+      return 1 / Math.max(1, Math.floor(user.dcaEveryDays ?? 1));
+    case "weekly":
+      return (Array.isArray(user.dcaWeekdays) ? user.dcaWeekdays.length : 0) / 7;
+    case "daily":
+      return 1;
+    default:
+      // Legacy rate model fires at fixed slots; dcaRunsPerDay ∈ {1,2,3}.
+      return user.dcaRunsPerDay === 1 || user.dcaRunsPerDay === 2 ? user.dcaRunsPerDay : 3;
+  }
+}
+
+/**
+ * Aggregate daily paper (simulated) budget: the largest total that funded, active,
+ * non-manual users who DCA into a SIMULATED-route token could legitimately paper-
+ * fill in one UTC day. This is the paper-side mirror of activeDailyBudgetTotal —
+ * used to bound the run's simulated spend the same way clampDecision bounds the
+ * live spend, since paper fills bypass the wallet/reserve/campaign clamp by design.
+ * A user with an explicit daily cap contributes that cap; otherwise their nominal
+ * daily spend (per-run × runs/day, or the legacy rate), WIDENED by their smart-mode
+ * max multiplier so this aggregate bound never neuters an individual's smart
+ * upsizing — only the crowd-wide paper pace is capped. Returns 0 when no such user
+ * exists, which the caller treats as "no ceiling" (unchanged behaviour).
+ */
+export function simDailyBudgetTotal(
+  ledger: Ledger,
+  isSimulated: (token: string) => boolean,
+  defaultToken: string = DEFAULT_DCA_TOKEN,
+): number {
+  let total = 0;
+  for (const user of Object.values(ledger.users)) {
+    if (user.dcaPaused) continue;
+    if (user.dcaMode === "manual") continue;
+    if (!(Number.parseFloat(user.usdcBalance ?? "0") > 0)) continue;
+    if (!isSimulated(user.dcaTokenOut || defaultToken)) continue;
+
+    const cap = Number.parseFloat(user.dcaDailyCapUsdc ?? "");
+    if (Number.isFinite(cap) && cap > 0) {
+      total += cap;
+      continue;
+    }
+    // No explicit cap: derive a nominal daily budget from the schedule.
+    let nominalDaily = 0;
+    if (user.dcaFrequency) {
+      const perRun = Number.parseFloat(user.dcaAmountPerRun ?? "");
+      if (Number.isFinite(perRun) && perRun > 0) nominalDaily = perRun * estimateRunsPerDay(user);
+    } else {
+      const rate = Number.parseFloat(user.dcaRatePerDay ?? "");
+      if (Number.isFinite(rate) && rate > 0) nominalDaily = rate;
+    }
+    if (!(nominalDaily > 0)) continue;
+    const maxMult = user.dcaMode === "smart"
+      ? (user.dcaSmartMaxMult != null && user.dcaSmartMaxMult >= 1 ? user.dcaSmartMaxMult : SMART_DEFAULT_MAX_MULT)
+      : 1;
+    total += nominalDaily * maxMult;
+  }
+  return Number.parseFloat(total.toFixed(USDC_DECIMALS));
+}
+
 /**
  * Honest PAPER settlement for a token whose real Arc route is offline (cirBTC).
  * Mirrors applyScheduledDistribution's per-user bookkeeping, but touches ONLY the

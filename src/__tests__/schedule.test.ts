@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { computeScheduledSpends, applyScheduledDistribution, applySimulatedDistribution, groupSpendsByToken, smartSizeMultiplier, smartMarketDeviation, applySmartMultiplier, splitScheduledBySettlement } from "../ledger/schedule.js";
+import { computeScheduledSpends, applyScheduledDistribution, applySimulatedDistribution, groupSpendsByToken, smartSizeMultiplier, smartMarketDeviation, applySmartMultiplier, splitScheduledBySettlement, simDailyBudgetTotal } from "../ledger/schedule.js";
 import type { Ledger, UserAccount } from "../types.js";
 
 // UserSpend factory — tokenOut defaults to cirBTC (the historical single-token case).
@@ -557,5 +557,53 @@ describe("splitScheduledBySettlement — live (real-swap) vs simulated (paper) t
     }
     expect(exec["cirBTC"]).toBeCloseTo(3, 6);   // paper fill is NOT throttled by the wallet
     expect(exec["EURC"]).toBeCloseTo(0.5, 6);   // live buy carries the wallet clamp
+  });
+});
+
+describe("simDailyBudgetTotal — aggregate paper daily ceiling", () => {
+  const isSim = (t: string) => t === "cirBTC"; // cirBTC route is offline → paper
+
+  it("sums explicit per-user daily caps of sim users", () => {
+    const L = mkLedger([
+      mkUser("0xa", { dcaTokenOut: "cirBTC", dcaDailyCapUsdc: "5" }),
+      mkUser("0xb", { dcaTokenOut: "cirBTC", dcaDailyCapUsdc: "3" }),
+    ]);
+    expect(simDailyBudgetTotal(L, isSim)).toBeCloseTo(8, 6);
+  });
+
+  it("excludes users whose token is not simulated", () => {
+    const L = mkLedger([
+      mkUser("0xa", { dcaTokenOut: "cirBTC", dcaDailyCapUsdc: "5" }),
+      mkUser("0xb", { dcaTokenOut: "EURC", dcaDailyCapUsdc: "9" }),
+    ]);
+    expect(simDailyBudgetTotal(L, isSim)).toBeCloseTo(5, 6);
+  });
+
+  it("falls back to nominal daily spend (per-run × runs/day) when no cap is set", () => {
+    const daily = mkLedger([mkUser("0xa", { dcaTokenOut: "cirBTC", dcaMode: "auto", dcaFrequency: "daily", dcaAmountPerRun: "2" })]);
+    expect(simDailyBudgetTotal(daily, isSim)).toBeCloseTo(2, 6); // daily → 1 run/day
+    const every6h = mkLedger([mkUser("0xb", { dcaTokenOut: "cirBTC", dcaMode: "auto", dcaFrequency: "hours", dcaEveryHours: 6, dcaAmountPerRun: "1" })]);
+    expect(simDailyBudgetTotal(every6h, isSim)).toBeCloseTo(4, 6); // 24/6 = 4 runs/day
+  });
+
+  it("widens a capless smart user's budget by their max multiplier (never neuters smart upsizing)", () => {
+    const explicit = mkLedger([mkUser("0xa", { dcaTokenOut: "cirBTC", dcaMode: "smart", dcaFrequency: "daily", dcaAmountPerRun: "2", dcaSmartMaxMult: 3 })]);
+    expect(simDailyBudgetTotal(explicit, isSim)).toBeCloseTo(6, 6); // 2 × 1 × 3
+    const dflt = mkLedger([mkUser("0xb", { dcaTokenOut: "cirBTC", dcaMode: "smart", dcaFrequency: "daily", dcaAmountPerRun: "2" })]);
+    expect(simDailyBudgetTotal(dflt, isSim)).toBeCloseTo(6, 6); // 2 × 1 × SMART_DEFAULT_MAX_MULT(3)
+  });
+
+  it("ignores paused, manual, and unfunded users", () => {
+    const L = mkLedger([
+      mkUser("0xa", { dcaTokenOut: "cirBTC", dcaDailyCapUsdc: "5", dcaPaused: true }),
+      mkUser("0xb", { dcaTokenOut: "cirBTC", dcaDailyCapUsdc: "5", dcaMode: "manual" }),
+      mkUser("0xc", { dcaTokenOut: "cirBTC", dcaDailyCapUsdc: "5", usdcBalance: "0" }),
+    ]);
+    expect(simDailyBudgetTotal(L, isSim)).toBe(0);
+  });
+
+  it("returns 0 (caller treats as no ceiling) when no sim user can be budgeted", () => {
+    const L = mkLedger([mkUser("0xa", { dcaTokenOut: "EURC", dcaDailyCapUsdc: "5" })]);
+    expect(simDailyBudgetTotal(L, isSim)).toBe(0);
   });
 });
