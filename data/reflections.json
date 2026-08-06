@@ -2822,5 +2822,31 @@
       "budget-preservation",
       "route-offline"
     ]
+  },
+  {
+    "id": "ref-1786022212564",
+    "date": "2026-08-06",
+    "timestamp": "2026-08-06T13:16:52.564Z",
+    "runStatus": "simulated",
+    "insight": "Requested amounts collapsed from 2.13-3.75 USDC range to 0.000014 USDC in last two runs, triggering simulated executions due to Arc cirBTC route instability. This represents a ~99.99% allocation reduction and signals a critical system failure distinct from the previously resolved skip-streak bug.",
+    "patterns": [
+      "Six consecutive successful real executions (2.25-3.75 USDC) followed by two simulated runs with microscopic amounts (0.000760, 0.000014 USDC)",
+      "All runs bound by user_schedule with no daily cap clamping despite 21% utilization and 379 USDC balance available",
+      "Market regime consistently classified as ranging (71-73% confidence) with ultra-low volatility (0.54-2.34% CV) near ATH",
+      "No dip tiers triggered across all 8 runs - price stayed within 1.17% of ATH throughout",
+      "Arc cirBTC route showing instability - last two runs paper-filled due to route offline status"
+    ],
+    "strategyAdjustment": "Investigate root cause of allocation collapse: verify if compute_allocation function is receiving correct inputs, check for new minimum threshold enforcement, or if Arc route failures are triggering fallback logic that reduces amounts. If Arc route remains unstable, implement circuit breaker to skip executions entirely rather than simulating with invalid amounts. Resume normal 1.0-3.75 USDC allocation range once route stability confirmed and allocation logic validated.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "865.943398",
+    "dayNumber": 31,
+    "walletBalance": "379.23660423748293488",
+    "tags": [
+      "error-recovery",
+      "allocation-failure",
+      "route-instability",
+      "pacing",
+      "system-failure"
+    ]
   }
 ]
