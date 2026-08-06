@@ -2338,5 +2338,33 @@
       "reasoning-execution-disconnect",
       "pacing"
     ]
+  },
+  {
+    "id": "ref-1785974544353",
+    "date": "2026-08-06",
+    "timestamp": "2026-08-06T00:02:24.353Z",
+    "runStatus": "success",
+    "insight": "The \"inflation bug\" persists: reasoning claimed to request 1.00 USDC but actually requested 4.025 USDC (4x inflation). This is the 11th consecutive occurrence, demonstrating a systematic failure in the decision-to-execution pathway that has now burned 77.095 USDC across two days in sub-1% drawdown ranging conditions.",
+    "patterns": [
+      "Reasoning-to-request inflation: 11 consecutive runs claim 1.00 USDC base but request 2.1-5.24 USDC (2-5x actual)",
+      "Consistent sub-5% drawdown environment: 0.00-0.52% off high across all 8 recent runs with NO dip tier triggered",
+      "Ranging regime lock: ultra-low to low volatility (0.06-1.29% CV) with no directional edge for 11+ runs",
+      "Daily cap burn: 37% yesterday (73.07 USDC), restarted today with 4.025 USDC request despite new 200 USDC cap",
+      "Smart sizing multiplier applied: 1.15x from Fear/Extreme Fear sentiment inflating base allocation",
+      "Perfect execution fidelity: system executes exactly what agent requests—no override, no clamping"
+    ],
+    "strategyAdjustment": "Root cause identified: the agent is applying smart sizing multiplier (1.15x from Fear sentiment) AFTER claiming to anchor at 1.00 USDC base, creating the inflation. The LLM reasoning layer must either: (1) explicitly acknowledge smart sizing in reasoning and show the math (1.00 base × 1.15 sentiment × 3.5 schedule = 4.025), OR (2) disable smart sizing multiplier in ranging/no-dip conditions and request the literal base amount. Implement option 2: in ranging markets with no dip signal (drawdown <5%), override smart sizing to 1.0x multiplier to preserve capital for genuine dip opportunities when 5%+ drawdowns materialize.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "827.593130",
+    "dayNumber": 31,
+    "walletBalance": "360.898478404900641168",
+    "tags": [
+      "error-recovery",
+      "smart-sizing",
+      "capital-preservation",
+      "ranging-market",
+      "multiplier-override",
+      "no-dip-signal"
+    ]
   }
 ]
