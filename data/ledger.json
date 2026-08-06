@@ -1,17 +1,17 @@
 {
   "version": 1,
-  "lastScannedBlock": 55606636,
+  "lastScannedBlock": 55608383,
   "users": {
     "0x615a9b4d30e81cc6658d6b94e9b9609a34dc97b5": {
       "address": "0x615a9b4d30e81cc6658d6b94e9b9609a34dc97b5",
-      "usdcBalance": "108.491281",
+      "usdcBalance": "129.491281",
       "cirBtcBalance": "0",
-      "totalDeposited": "258.000000",
+      "totalDeposited": "279.000000",
       "totalSwapped": "143.388719",
       "totalWithdrawnCirBtc": "0",
       "totalWithdrawnUsdc": "5.000000",
       "firstSeen": "2026-07-09T22:59:39.139Z",
-      "lastActivity": "2026-08-06T12:26:40.218Z",
+      "lastActivity": "2026-08-06T12:30:34.484Z",
       "dcaRatePerDay": "0.500000",
       "dcaPaused": false,
       "dcaRateIsCustom": true,
@@ -72,14 +72,14 @@
     },
     "0xfc337ba1f00e8092fe2d073fed0072a0a43d2219": {
       "address": "0xfc337ba1f00e8092fe2d073fed0072a0a43d2219",
-      "usdcBalance": "66.939928",
+      "usdcBalance": "86.939928",
       "cirBtcBalance": "0",
-      "totalDeposited": "269.000000",
+      "totalDeposited": "289.000000",
       "totalSwapped": "145.430072",
       "totalWithdrawnCirBtc": "0",
       "totalWithdrawnUsdc": "56.000000",
       "firstSeen": "2026-07-23T20:43:41.414Z",
-      "lastActivity": "2026-08-06T12:29:09.676Z",
+      "lastActivity": "2026-08-06T12:30:34.484Z",
       "dcaRatePerDay": "0.500000",
       "dcaRateIsCustom": true,
       "dcaPaused": false,
@@ -891,6 +891,22 @@
       "amount": "20.000000",
       "blockNumber": 55599628,
       "recordedAt": "2026-08-06T11:30:43.713Z"
+    },
+    {
+      "id": "0x0b778fd8f4fcb1a43cbb1ec426f9f6b3ebc776fd445f947b4880957dd1365db9-1",
+      "txHash": "0x0b778fd8f4fcb1a43cbb1ec426f9f6b3ebc776fd445f947b4880957dd1365db9",
+      "from": "0x615a9b4d30e81cc6658d6b94e9b9609a34dc97b5",
+      "amount": "21.000000",
+      "blockNumber": 55607823,
+      "recordedAt": "2026-08-06T12:30:34.484Z"
+    },
+    {
+      "id": "0xacaca648626e8cde3a02af5116af48562e3faff3051d9676c31a773d0ca54909-14",
+      "txHash": "0xacaca648626e8cde3a02af5116af48562e3faff3051d9676c31a773d0ca54909",
+      "from": "0xfc337ba1f00e8092fe2d073fed0072a0a43d2219",
+      "amount": "20.000000",
+      "blockNumber": 55608165,
+      "recordedAt": "2026-08-06T12:30:34.484Z"
     }
   ],
   "distributions": [
