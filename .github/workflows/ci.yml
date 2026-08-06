@@ -5,6 +5,7 @@ name: CI
 # branch-protection rules so a red run blocks the merge — that is what stops a
 # regression (e.g. the reasoning/execution mismatch) from reaching production.
 on:
+  workflow_dispatch: {} # allow manual runs (e.g. on a feature branch before merge)
   pull_request:
     branches: [main]
   push:
