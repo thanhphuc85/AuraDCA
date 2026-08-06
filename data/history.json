@@ -9254,5 +9254,51 @@
       "txHash": "0x8698701e68684f636bef71176aebc92fd0c086b9a21ea86f8fb8159eea4dd5b2",
       "explorerUrl": "https://testnet.arcscan.app/tx/0x8698701e68684f636bef71176aebc92fd0c086b9a21ea86f8fb8159eea4dd5b2"
     }
+  },
+  {
+    "date": "2026-08-06",
+    "timestamp": "2026-08-06T05:00:51.698Z",
+    "status": "success",
+    "requestedAmountUsdc": "2.509298",
+    "clampedAmountUsdc": "2.509298",
+    "boundBy": "user_schedule",
+    "tokenOut": "EURC",
+    "reasoning": "Market brief shows Extreme Fear (FGI=25, +0.82% BTC) with bearish -10-15% bias, but real cirBTC price at $64,647 is only 0.43% off high with NO dip tier triggered (need 5%+ for mild). Dip ladder anchors at base 1.00 USDC using authoritative real price feed (601 data points). Ranging regime confirmed (2.10% CV, -2.52% momentum) offers no directional edge. Composite risk is low (21/100). Ten reflections identify the inflation bug: agent reasoning claimed \"1.00 USDC\" but actually requested 2.1-5.24 USDC due to hidden multipliers, burning 17.50 USDC today (9% daily cap) in sub-1% drawdown conditions. Requesting LITERAL 1.00 USDC (compute_allocation verified: bindingConstraint=proposed_amount, 182.50 USDC daily cap remaining) implements strict capital preservation for ranging market at price highs with no dip signal, preserving 91% of daily cap for genuine 5%+ dip opportunities.",
+    "txHash": "0xd03630f13ab7a155fa94e5b708b33611ecbe7b5a5e9be4ffff8344154989fd47",
+    "explorerUrl": "https://testnet.arcscan.app/tx/0xd03630f13ab7a155fa94e5b708b33611ecbe7b5a5e9be4ffff8344154989fd47",
+    "amountOut": "1.916275",
+    "walletUsdcBalance": "343.298567451663653124",
+    "message": "Swapped 2.509298 USDC -> EURC across 6 user(s)",
+    "smartSizing": {
+      "fearGreed": 25,
+      "drawdownPct": 0.0003401939105290015,
+      "multiplier": 0.75,
+      "source": "llm",
+      "proposedMultiplier": 0.75
+    },
+    "x402": {
+      "resource": "/api/x402-brief",
+      "amountUsdcAtomic": "1000",
+      "payer": "0x61e7Ae336F7Eb7F8517dE4F19963D88dFD9161eC",
+      "payTo": "0xcAf34080F47f576F923962AD04dD7ddd86d8d85f",
+      "settled": true,
+      "mode": "settled",
+      "via": "http",
+      "transferId": "2b8de362-b9a7-453c-95bc-2b5e85424538",
+      "settleStatus": "received"
+    },
+    "smartFee": {
+      "feeUsdcEach": "0.010000",
+      "totalUsdc": "0.050000",
+      "payerCount": 5,
+      "payTo": "0x00Ebbd3aFCCaD08970ED8FdaE591244c8475a0aC",
+      "testnet": true,
+      "settled": true,
+      "transferId": "27699d29-c8fe-4448-afe9-f5afa83be73c",
+      "settleStatus": "completed",
+      "txHash": "0x2eb3024d892b754449ef6298cb744394c93567668b7c9f0a49e8e035b10f3cda",
+      "explorerUrl": "https://testnet.arcscan.app/tx/0x2eb3024d892b754449ef6298cb744394c93567668b7c9f0a49e8e035b10f3cda",
+      "settledTo": "0xcaf34080f47f576f923962ad04dd7ddd86d8d85f"
+    }
   }
 ]

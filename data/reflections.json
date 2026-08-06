@@ -2476,5 +2476,31 @@
       "capital-preservation",
       "pacing"
     ]
+  },
+  {
+    "id": "ref-1785992544811",
+    "date": "2026-08-06",
+    "timestamp": "2026-08-06T05:02:24.811Z",
+    "runStatus": "success",
+    "insight": "Despite reasoning claiming \"LITERAL 1.00 USDC\" requests, the agent continues executing 2.51-5.24 USDC purchases (2.5-5x inflation). The bug persists across all 8 recent runs—the inflation occurs between decision reasoning and actual execution, not in the reasoning layer.",
+    "patterns": [
+      "Systematic 2.5-5x inflation between stated intent (1.00 USDC) and executed amount (2.51-5.24 USDC) across 100% of recent runs",
+      "All runs bound by user_schedule, never hitting daily cap despite claiming capital preservation",
+      "Ranging market regime stable (0.95-2.11% CV) with no dip tiers triggered (all drawdowns <1% vs 5% mild threshold)",
+      "Composite risk consistently low (18-24/100) yet daily spend averages 17.5 USDC (9% of 200 USDC cap)",
+      "Agent reasoning correctly identifies no-dip conditions but execution layer ignores the 1.00 USDC directive"
+    ],
+    "strategyAdjustment": "The inflation bug is NOT in the reasoning layer—it's in the execution pipeline between decision and actual swap. Stop claiming \"LITERAL 1.00 USDC\" in reasoning when the system will ignore it. Instead: (1) Investigate what multipliers/fees are applied post-decision (smartSizing shows 0.75x but amounts are inflating, not deflating), (2) If 2.5 USDC is the minimum executable amount, state that explicitly and request it only when conditions warrant, (3) In ranging/no-dip conditions, consider requesting 0 USDC or skipping the run entirely rather than burning capital on forced base buys at market highs.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "843.577428",
+    "dayNumber": 31,
+    "walletBalance": "343.298567451663653124",
+    "tags": [
+      "execution-bug",
+      "inflation-persistent",
+      "ranging-regime",
+      "capital-preservation-failing",
+      "no-dip-conditions"
+    ]
   }
 ]
