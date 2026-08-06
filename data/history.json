@@ -9445,5 +9445,28 @@
       "transferId": "4206784a-00ea-475d-996b-cb534a6a62f6",
       "settleStatus": "received"
     }
+  },
+  {
+    "date": "2026-08-06",
+    "timestamp": "2026-08-06T07:26:21.890Z",
+    "status": "skipped_guardrail_clamped",
+    "requestedAmountUsdc": "0.000464",
+    "clampedAmountUsdc": "0",
+    "boundBy": "group_below_min_swap",
+    "tokenOut": "cirBTC",
+    "reasoning": "Market brief shows Extreme Fear (FGI=25, +1.36% BTC) with bearish sentiment but high on-chain activity. Real cirBTC price at $64,881 is only 0.07% off ATH with NO dip tier triggered (need 5%+ for mild)—dip ladder recommends base 1.00 USDC. Ranging regime confirmed (2.01% CV, +2.73% momentum, 67% confidence) offers no directional edge. Risk is medium (35/100) due to 2 consecutive skips from group_below_min_swap bug. Last 2 runs overcorrected the inflation bug by requesting 1.00 USDC which splits to 0.0005 USDC/user (below 0.1 min). Requesting 2.00 USDC ensures each user gets ≥1.00 USDC (above threshold with margin) while preserving 87% daily cap for genuine 5%+ dip opportunities in ranging market near ATH.",
+    "walletUsdcBalance": "335.48931613280884442",
+    "message": "No buy for cirBTC: 2 user(s), executable 0.000464 USDC < min swap 0.1",
+    "x402": {
+      "resource": "/api/x402-brief",
+      "amountUsdcAtomic": "1000",
+      "payer": "0x61e7Ae336F7Eb7F8517dE4F19963D88dFD9161eC",
+      "payTo": "0xcAf34080F47f576F923962AD04dD7ddd86d8d85f",
+      "settled": true,
+      "mode": "settled",
+      "via": "http",
+      "transferId": "480ff5e0-fb51-4507-9422-0674ff5507c5",
+      "settleStatus": "received"
+    }
   }
 ]

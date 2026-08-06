@@ -2584,5 +2584,32 @@
       "multi-user-threshold",
       "ranging-market"
     ]
+  },
+  {
+    "id": "ref-1786001256666",
+    "date": "2026-08-06",
+    "timestamp": "2026-08-06T07:27:36.666Z",
+    "runStatus": "skipped_guardrail_clamped",
+    "insight": "Three consecutive skips from group_below_min_swap guardrail reveal a critical bug: the agent overcorrected the inflation issue by requesting 1.00-2.00 USDC total, but with 2 users this splits to ~0.0005 USDC per user, far below the 0.1 USDC minimum swap threshold. The allocation logic must account for per-user distribution before the swap threshold check.",
+    "patterns": [
+      "Three consecutive runs hit group_below_min_swap guardrail with ~0.0004-0.0005 USDC per user",
+      "Successfully corrected inflation bug (requests declined from 2.1-5.24 USDC to 1.00-2.00 USDC range)",
+      "Market consistently ranging near ATH (0.07-0.70% off high) with no dip tiers triggered for 8 runs",
+      "All runs show Extreme Fear sentiment (FGI=25) but price near all-time highs - sentiment/price divergence",
+      "Risk score climbing from 20-22 to 35 due to consecutive skip streak"
+    ],
+    "strategyAdjustment": "Calculate minimum viable allocation as: (num_users × 0.1 USDC minimum per user) + safety margin. With 2 users, request minimum 0.25 USDC (0.125 per user with margin). In no-dip conditions near ATH in ranging market, this preserves 99%+ of daily budget while avoiding the group_below_min_swap trap. When genuine 5%+ dip triggers, scale normally from that floor.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "848.827428",
+    "dayNumber": 31,
+    "walletBalance": "335.48931613280884442",
+    "tags": [
+      "error-recovery",
+      "guardrail-clamping",
+      "allocation-logic",
+      "per-user-distribution",
+      "budget-preservation",
+      "skip-streak"
+    ]
   }
 ]
