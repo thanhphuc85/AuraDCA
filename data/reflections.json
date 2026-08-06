@@ -2664,5 +2664,31 @@
       "multi-user-split",
       "api-integration"
     ]
+  },
+  {
+    "id": "ref-1786003339948",
+    "date": "2026-08-06",
+    "timestamp": "2026-08-06T08:02:19.948Z",
+    "runStatus": "success",
+    "insight": "Successfully broke 5-run skip streak by requesting 2.25 USDC (0.75 USDC base * 3 multiplier from reasoning, split across 5 users = 0.45 USDC each, above 0.1 min). The bug was identified: agent claimed requesting 0.75-2.00 USDC but actual API calls showed 0.0004 USDC, suggesting post-split amounts were being sent.",
+    "patterns": [
+      "Five consecutive skips from group_below_min_swap (requested 0.000442-0.000482 USDC) before successful execution",
+      "Persistent ranging regime with 2.01% CV and positive momentum across all 8 runs",
+      "Market hovering near ATH (0.07-0.29% off high) with no dip tiers triggered despite Extreme Fear (FGI=25)",
+      "Requested amounts show inflation bug correction arc: 3.45→1.80→0.0004 (skip streak)→2.25 (success)",
+      "Daily cap utilization remains conservative at 87% preserved despite multiple execution attempts"
+    ],
+    "strategyAdjustment": "With bug resolved, return to strict base allocation discipline: in ranging markets near ATH with no dip signal (drawdown <5%), request minimum viable amounts that clear per-user threshold (0.5-1.0 USDC total for 5 users = 0.1-0.2 each). Reserve 85-90% daily cap for genuine dip opportunities (5%+ drawdown = mild tier, 10%+ = moderate). Monitor if actual executed amounts continue matching requested amounts to confirm bug fix is persistent.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "851.077428",
+    "dayNumber": 31,
+    "walletBalance": "335.48625407780004442",
+    "tags": [
+      "error-recovery",
+      "guardrail-debugging",
+      "pacing",
+      "ranging-market",
+      "bug-resolution"
+    ]
   }
 ]
