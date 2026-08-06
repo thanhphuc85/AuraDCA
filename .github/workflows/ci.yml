@@ -1,0 +1,36 @@
+name: CI
+
+# Quality gate for every PR into main (and pushes to main): typecheck, unit
+# tests, and a coverage ratchet. Make this a REQUIRED status check in the repo's
+# branch-protection rules so a red run blocks the merge — that is what stops a
+# regression (e.g. the reasoning/execution mismatch) from reaching production.
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+# A newer push to the same branch/PR supersedes the older run.
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  quality:
+    name: Typecheck · Tests · Coverage
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+
+      - run: npm ci --no-audit --no-fund
+
+      - name: Typecheck
+        run: npm run typecheck
+
+      - name: Tests + coverage (ratchet)
+        run: npm run coverage
