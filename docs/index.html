@@ -1007,69 +1007,69 @@
 <div class="wrap">
 
   <div class="settings-drawer" id="settingsDrawer">
-    <h3 style="margin:0 0 14px;">Dashboard Settings</h3>
+    <h3 style="margin:0 0 14px;" data-t="setDashTitle">Dashboard Settings</h3>
     <div class="settings-grid">
       <div class="setting-group">
-        <label for="setRefresh">Auto-refresh data</label>
+        <label for="setRefresh" data-t="setRefreshLbl">Auto-refresh data</label>
         <select id="setRefresh">
-          <option value="0">Off</option>
-          <option value="30">Every 30 seconds</option>
-          <option value="60">Every minute</option>
-          <option value="300">Every 5 minutes</option>
+          <option value="0" data-t="setRefreshOff">Off</option>
+          <option value="30" data-t="setRefresh30">Every 30 seconds</option>
+          <option value="60" data-t="setRefresh60">Every minute</option>
+          <option value="300" data-t="setRefresh300">Every 5 minutes</option>
         </select>
       </div>
       <div class="setting-group">
-        <label for="setRows">History rows to display</label>
+        <label for="setRows" data-t="setRowsLbl">History rows to display</label>
         <select id="setRows">
-          <option value="5">5 rows</option>
-          <option value="10">10 rows</option>
-          <option value="20">20 rows</option>
-          <option value="50">50 rows</option>
+          <option value="5" data-t="setRows5">5 rows</option>
+          <option value="10" data-t="setRows10">10 rows</option>
+          <option value="20" data-t="setRows20">20 rows</option>
+          <option value="50" data-t="setRows50">50 rows</option>
         </select>
       </div>
       <div class="setting-group">
-        <label for="setCacheToggle">Cache data locally</label>
+        <label for="setCacheToggle" data-t="setCacheLbl">Cache data locally</label>
         <select id="setCacheToggle">
-          <option value="1">Enabled — faster page loads</option>
-          <option value="0">Disabled — always fetch fresh</option>
+          <option value="1" data-t="setCacheOn">Enabled — faster page loads</option>
+          <option value="0" data-t="setCacheOff">Disabled — always fetch fresh</option>
         </select>
       </div>
     </div>
-    <h3 style="margin:18px 0 14px;">Telegram Notifications</h3>
+    <h3 style="margin:18px 0 14px;" data-t="setTgTitle">Telegram Notifications</h3>
     <div class="settings-grid">
       <div class="setting-group">
-        <label for="setTgToken">Bot token</label>
+        <label for="setTgToken" data-t="setTgTokenLbl">Bot token</label>
         <input type="text" id="setTgToken" placeholder="123456:ABC-DEF..." style="font-family:ui-monospace,monospace;font-size:12px;" />
       </div>
       <div class="setting-group">
-        <label for="setTgChatId">Chat ID</label>
+        <label for="setTgChatId" data-t="setTgChatLbl">Chat ID</label>
         <input type="text" id="setTgChatId" placeholder="-100123456789" style="font-family:ui-monospace,monospace;font-size:12px;" />
       </div>
       <div class="setting-group">
-        <label for="setTgEvents">Notify on</label>
+        <label for="setTgEvents" data-t="setTgEventsLbl">Notify on</label>
         <select id="setTgEvents">
-          <option value="all">All runs (success + error)</option>
-          <option value="success">Success only</option>
-          <option value="error">Errors only</option>
-          <option value="off">Off</option>
+          <option value="all" data-t="setTgAll">All runs (success + error)</option>
+          <option value="success" data-t="setTgSuccess">Success only</option>
+          <option value="error" data-t="setTgError">Errors only</option>
+          <option value="off" data-t="setTgOff">Off</option>
         </select>
       </div>
       <div class="setting-group" style="display:flex;align-items:flex-end;">
-        <button class="btn ghost" id="tgTestBtn" style="padding:8px 14px;font-size:12px;width:100%;">Send test message</button>
+        <button class="btn ghost" id="tgTestBtn" style="padding:8px 14px;font-size:12px;width:100%;" data-t="setTgTest">Send test message</button>
       </div>
     </div>
     <div class="status-note" id="tgStatus" style="margin-top:6px;"></div>
-    <p style="font-size:11px;color:var(--muted);margin:8px 0 0;">Create a bot via <a href="https://t.me/BotFather" target="_blank" rel="noopener">@BotFather</a>, get your chat ID from <a href="https://t.me/userinfobot" target="_blank" rel="noopener">@userinfobot</a>. These messages are sent from your browser (only while this tab is open). For <b>always-on</b> alerts from the autonomous agent — a buy landing, an error, the smart multiplier used — set <code>TELEGRAM_BOT_TOKEN</code> and <code>TELEGRAM_CHAT_ID</code> as GitHub Actions secrets; the cron then pushes on every run.</p>
+    <p style="font-size:11px;color:var(--muted);margin:8px 0 0;" data-t="setTgNote">Create a bot via <a href="https://t.me/BotFather" target="_blank" rel="noopener">@BotFather</a>, get your chat ID from <a href="https://t.me/userinfobot" target="_blank" rel="noopener">@userinfobot</a>. These messages are sent from your browser (only while this tab is open). For <b>always-on</b> alerts from the autonomous agent — a buy landing, an error, the smart multiplier used — set <code>TELEGRAM_BOT_TOKEN</code> and <code>TELEGRAM_CHAT_ID</code> as GitHub Actions secrets; the cron then pushes on every run.</p>
     <h3 style="margin:18px 0 14px;" data-t="setWithdrawApiTitle">Backend API</h3>
     <div class="settings-grid">
       <div class="setting-group" style="grid-column:1/-1;">
         <label for="setWdApi" data-t="setWdApiLabel">API base URL (optional)</label>
-        <input type="url" id="setWdApi" placeholder="Leave empty — uses this site's own /api/*" style="font-family:ui-monospace,monospace;font-size:12px;width:100%;" />
+        <input type="url" id="setWdApi" data-tph="setWdApiPh" placeholder="Leave empty — uses this site's own /api/*" style="font-family:ui-monospace,monospace;font-size:12px;width:100%;" />
       </div>
     </div>
     <p style="font-size:11px;color:var(--muted);margin:8px 0 0;" data-t="setWdApiHelp">Routes every signed action — withdraw, set schedule, run now, chat — to a backend. Leave empty to use this site's own <code>/api/*</code> (works on the Vercel deployment). Set a URL only when the dashboard is served from a static host with no serverless functions.</p>
     <p id="setApiHostWarn" style="font-size:11px;color:var(--amber);margin:8px 0 0;display:none;"></p>
-    <div class="settings-saved" id="settingsSaved">Settings saved</div>
+    <div class="settings-saved" id="settingsSaved" data-t="setSaved">Settings saved</div>
   </div>
 
   <div id="reconnectBar"></div>
@@ -1148,7 +1148,7 @@
         <input type="text" id="wlAddrInput" placeholder="Token contract address (0x...)" maxlength="42" />
         <input type="text" id="wlSymInput" class="wl-sym-input" placeholder="Symbol" maxlength="10" />
         <input type="number" id="wlDecInput" class="wl-dec-input" placeholder="Decimals" min="0" max="18" value="18" />
-        <button class="btn" id="wlAddBtn" style="padding:10px 18px;font-size:13px;">Add token</button>
+        <button class="btn" id="wlAddBtn" style="padding:10px 18px;font-size:13px;" data-t="wlAddBtn">Add token</button>
       </div>
       <div class="status-note" id="wlStatus"></div>
     </div>
@@ -1162,44 +1162,44 @@
   </section>
 
   <section class="reveal" id="strategySection">
-    <div class="eyebrow">Market read</div>
-    <div class="h2">How Smart mode sizes your buys</div>
-    <p class="sub">Each wallet sets its own schedule; the agent pools everyone's buys per token into one on-chain swap. In <b>Smart</b> mode it sizes each buy by the market — the cirBTC dip <b>and</b> the live Fear &amp; Greed index — proposing a multiplier that code clamps to a safe range (0.5× floor, your max). <b>Auto</b> mode buys a flat amount. The values below are live.</p>
+    <div class="eyebrow" data-t="stratEye2">Market read</div>
+    <div class="h2" data-t="stratTitle2">How Smart mode sizes your buys</div>
+    <p class="sub" data-t="stratSub2">Each wallet sets its own schedule; the agent pools everyone's buys per token into one on-chain swap. In <b>Smart</b> mode it sizes each buy by the market — the cirBTC dip <b>and</b> the live Fear &amp; Greed index — proposing a multiplier that code clamps to a safe range (0.5× floor, your max). <b>Auto</b> mode buys a flat amount. The values below are live.</p>
     <div class="strategy-grid">
       <div class="strat-tile" style="--sg:rgba(138,92,246,.15);">
-        <span class="st-val" id="stBaseAmt">—</span><span class="st-label" id="stBaseLabel">Base amount / run</span>
+        <span class="st-val" id="stBaseAmt">—</span><span class="st-label" id="stBaseLabel" data-t="stBaseLbl">Base amount / run</span>
       </div>
       <div class="strat-tile" style="--sg:rgba(47,134,230,.15);">
-        <span class="st-val" id="stSuggestedAmt">—</span><span class="st-label">Smart multiplier (live)</span>
+        <span class="st-val" id="stSuggestedAmt">—</span><span class="st-label" data-t="stSmartMultLbl">Smart multiplier (live)</span>
       </div>
       <div class="strat-tile" style="--sg:rgba(245,165,36,.15);">
-        <span class="st-val" id="stDrawdown">—</span><span class="st-label">cirBTC drawdown</span>
+        <span class="st-val" id="stDrawdown">—</span><span class="st-label" data-t="stDrawdownLbl">cirBTC drawdown</span>
       </div>
       <div class="strat-tile" style="--sg:rgba(52,211,153,.15);">
         <div id="stDipSignal"><span class="dip-signal dip-none"><span class="dip-pulse"></span> Loading…</span></div>
-        <span class="st-label" style="margin-top:6px;display:block;">Fear &amp; Greed (live)</span>
+        <span class="st-label" style="margin-top:6px;display:block;" data-t="stFngLbl">Fear &amp; Greed (live)</span>
       </div>
     </div>
     <div class="card" style="margin-top:16px;">
-      <h3>The sizing curve</h3>
-      <p class="cs">Smart mode folds the cirBTC dip <b>and</b> the Fear &amp; Greed index into one bounded multiplier: the agent proposes the number, code clamps it to [0.5×, your max]. The tiers below are computed from that same formula at sensitivity 1 — the large number is the dip acting alone, and the line under it is what <b>today's</b> Fear &amp; Greed turns it into (extreme fear adds on top, extreme greed subtracts). During the cirBTC route outage there's no live cirBTC price, so the dip reads <b>n/a</b> and Fear &amp; Greed carries the signal on its own.</p>
+      <h3 data-t="stCurveTitle">The sizing curve</h3>
+      <p class="cs" data-t="stCurveSub">Smart mode folds the cirBTC dip <b>and</b> the Fear &amp; Greed index into one bounded multiplier: the agent proposes the number, code clamps it to [0.5×, your max]. The tiers below are computed from that same formula at sensitivity 1 — the large number is the dip acting alone, and the line under it is what <b>today's</b> Fear &amp; Greed turns it into (extreme fear adds on top, extreme greed subtracts). During the cirBTC route outage there's no live cirBTC price, so the dip reads <b>n/a</b> and Fear &amp; Greed carries the signal on its own.</p>
       <div class="strat-thresholds" id="stratThresholds">
         <div class="strat-th">
-          <div class="th-pct">5% dip</div>
+          <div class="th-pct" data-t="dip5">5% dip</div>
           <div class="th-mult" id="thMildMult">—</div>
-          <div class="th-label">Mild dip</div>
+          <div class="th-label" data-t="stMildDip">Mild dip</div>
           <div class="th-label" id="thMildLive" style="margin-top:6px;color:var(--cyan);"></div>
         </div>
         <div class="strat-th">
-          <div class="th-pct">10% dip</div>
+          <div class="th-pct" data-t="dip10">10% dip</div>
           <div class="th-mult" id="thModMult">—</div>
-          <div class="th-label">Moderate dip</div>
+          <div class="th-label" data-t="stModDip">Moderate dip</div>
           <div class="th-label" id="thModLive" style="margin-top:6px;color:var(--cyan);"></div>
         </div>
         <div class="strat-th">
-          <div class="th-pct">20% dip</div>
+          <div class="th-pct" data-t="dip20">20% dip</div>
           <div class="th-mult" id="thStrongMult">—</div>
-          <div class="th-label">Strong dip</div>
+          <div class="th-label" data-t="stStrongDip">Strong dip</div>
           <div class="th-label" id="thStrongLive" style="margin-top:6px;color:var(--cyan);"></div>
         </div>
       </div>
@@ -1213,7 +1213,7 @@
     <div class="h2">What the agent has done</div>
     <p class="sub">Every run is recorded on-chain and committed to the repo — full transparency.</p>
     <div class="export-bar" id="historyExportBar" style="display:none;">
-      <span class="export-label">Export:</span>
+      <span class="export-label" data-t="exportLbl">Export:</span>
       <button class="btn-sm" id="exportHistCSV"><span class="ic">📄</span> CSV</button>
       <button class="btn-sm" id="exportHistJSON"><span class="ic">{ }</span> JSON</button>
     </div>
@@ -1222,29 +1222,29 @@
     <span id="tTotal" style="display:none;"></span><span id="tRuns" style="display:none;"></span><span id="tLast" style="display:none;"></span>
 
     <div class="card">
-      <h3>Cumulative USDC deployed</h3>
+      <h3 data-t="lrCumTitle">Cumulative USDC deployed</h3>
       <p class="cs" id="chartSub"><span class="skel skel-line w60" style="display:inline-block;height:12px;"></span></p>
       <div id="chartHost"><div class="chart-loading"><div class="spinner"></div><span style="font-size:13px;color:var(--muted);">Loading chart data…</span></div></div>
     </div>
 
     <div class="card" style="margin-top:16px;display:none;" id="priceChartCard">
       <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;">
-        <h3 id="priceChartTitle" style="margin:0;">Fill price</h3>
+        <h3 id="priceChartTitle" style="margin:0;" data-t="lrFillTitle">Fill price</h3>
         <div id="priceChartTabs" style="display:flex;gap:6px;"></div>
       </div>
       <p class="cs" id="priceSub"><span class="skel skel-line w60" style="display:inline-block;height:12px;"></span></p>
       <div id="priceChartHost"><div class="chart-loading"><div class="spinner"></div><span style="font-size:13px;color:var(--muted);">Loading price data…</span></div></div>
-      <p class="note" style="margin-top:12px;font-size:12px;line-height:1.55;">ℹ️ A rising fill price is <b>price impact</b>, not a bug: Arc Testnet's EURC pool is thin, so the agent's own repeated buys move the rate against it (a 1&nbsp;USDC buy fills better than a 2&nbsp;USDC one at the same moment). The agent records exactly what the pool returned — deep liquidity on mainnet removes this.</p>
+      <p class="note" style="margin-top:12px;font-size:12px;line-height:1.55;" data-t="lrFillNote">ℹ️ A rising fill price is <b>price impact</b>, not a bug: Arc Testnet's EURC pool is thin, so the agent's own repeated buys move the rate against it (a 1&nbsp;USDC buy fills better than a 2&nbsp;USDC one at the same moment). The agent records exactly what the pool returned — deep liquidity on mainnet removes this.</p>
     </div>
 
     <div class="grid" style="margin-top:16px;grid-template-columns:1fr 1fr;gap:16px;">
       <div class="card">
-        <h3>Daily DCA amounts</h3>
+        <h3 data-t="lrDailyTitle">Daily DCA amounts</h3>
         <p class="cs" id="dailySub"><span class="skel skel-line w60" style="display:inline-block;height:12px;"></span></p>
         <div id="dailyChartHost"><div class="chart-loading"><div class="spinner"></div><span style="font-size:13px;color:var(--muted);">Loading…</span></div></div>
       </div>
       <div class="card">
-        <h3>Run status distribution</h3>
+        <h3 data-t="lrStatusTitle">Run status distribution</h3>
         <p class="cs" id="donutSub"><span class="skel skel-line w60" style="display:inline-block;height:12px;"></span></p>
         <div id="donutHost"><div class="chart-loading"><div class="spinner"></div><span style="font-size:13px;color:var(--muted);">Loading…</span></div></div>
       </div>
@@ -1252,11 +1252,11 @@
 
     <div class="card tbl-wrap" style="margin-top:16px;">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
-        <div><h3 style="margin:0;">Recent runs</h3><p class="cs" style="margin:4px 0 0;" id="runsCount">What Claude proposed, what the guardrails allowed, and why.</p></div>
-        <button class="btn-sm" id="showAllRuns" style="display:none;">Show all</button>
+        <div><h3 style="margin:0;" data-t="lrRecentTitle">Recent runs</h3><p class="cs" style="margin:4px 0 0;" id="runsCount">What Claude proposed, what the guardrails allowed, and why.</p></div>
+        <button class="btn-sm" id="showAllRuns" style="display:none;" data-t="lrShowAll">Show all</button>
       </div>
       <table id="runsTable"><thead>
-        <tr><th>Date</th><th>Status</th><th>Requested</th><th>Executed</th><th>Bound by</th><th>Claude's reasoning</th><th>Tx</th></tr>
+        <tr><th data-t="thDate">Date</th><th data-t="thStatus">Status</th><th data-t="thRequested">Requested</th><th data-t="thExecuted">Executed</th><th data-t="thBoundBy">Bound by</th><th data-t="thReasoning">Claude's reasoning</th><th data-t="thTx">Tx</th></tr>
       </thead><tbody id="runsBody">
         <tr><td><div class="skel skel-line w80"></div></td><td><div class="skel skel-line" style="width:70px;"></div></td><td><div class="skel skel-line w40"></div></td><td><div class="skel skel-line w40"></div></td><td><div class="skel skel-line w60"></div></td><td><div class="skel skel-line w80"></div></td><td><div class="skel skel-line w40"></div></td></tr>
         <tr><td><div class="skel skel-line w80"></div></td><td><div class="skel skel-line" style="width:70px;"></div></td><td><div class="skel skel-line w40"></div></td><td><div class="skel skel-line w40"></div></td><td><div class="skel skel-line w60"></div></td><td><div class="skel skel-line w80"></div></td><td><div class="skel skel-line w40"></div></td></tr>
@@ -1270,7 +1270,7 @@
     <div class="h2">What the agent has learned</div>
     <p class="sub">After every run, the agent reflects on its decisions and outcomes — building persistent memory that shapes future strategy.</p>
     <div class="export-bar" id="reflExportBar" style="display:none;">
-      <span class="export-label">Export:</span>
+      <span class="export-label" data-t="exportLbl">Export:</span>
       <button class="btn-sm" id="exportReflCSV"><span class="ic">📄</span> CSV</button>
       <button class="btn-sm" id="exportReflJSON"><span class="ic">{ }</span> JSON</button>
     </div>
@@ -1284,7 +1284,7 @@
 
     <div class="card">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
-        <h3 style="margin:0;">Reflection timeline</h3>
+        <h3 style="margin:0;" data-t="memTimeline">Reflection timeline</h3>
         <p class="cs" style="margin:0;" id="refTimelineSub"></p>
       </div>
       <div class="ref-timeline" id="refTimeline"></div>
@@ -1305,20 +1305,20 @@
         </div>
         <div class="deposit-details">
           <div class="agent-addr-box">
-            <div class="agent-addr-label">Agent Wallet Address</div>
+            <div class="agent-addr-label" data-t="fAddrLbl">Agent Wallet Address</div>
             <div class="agent-addr-full" id="agentAddrFull"></div>
             <div class="agent-addr-actions">
-              <button class="btn ghost" id="copyAgent">Copy address</button>
-              <a class="btn ghost" id="agentScan" target="_blank" rel="noopener">View on ArcScan ↗</a>
+              <button class="btn ghost" id="copyAgent" data-t="fCopy">Copy address</button>
+              <a class="btn ghost" id="agentScan" target="_blank" rel="noopener" data-t="fScan">View on ArcScan ↗</a>
             </div>
           </div>
           <div class="deposit-stats">
-            <div class="deposit-stat"><div class="ds-val" id="treasuryBal">—</div><div class="ds-label">Treasury balance (USDC)</div><div class="ds-label" id="treasuryTokens" style="margin-top:5px;opacity:.8;line-height:1.5;"></div></div>
-            <div class="deposit-stat"><div class="ds-val" id="treasuryNet">Arc Testnet</div><div class="ds-label">Network</div></div>
+            <div class="deposit-stat"><div class="ds-val" id="treasuryBal">—</div><div class="ds-label" data-t="fTreasBal">Treasury balance (USDC)</div><div class="ds-label" id="treasuryTokens" style="margin-top:5px;opacity:.8;line-height:1.5;"></div></div>
+            <div class="deposit-stat"><div class="ds-val" id="treasuryNet">Arc Testnet</div><div class="ds-label" data-t="fNetwork">Network</div></div>
           </div>
           <div class="deposit-form">
-            <input id="depositAmt" type="number" min="0" step="0.01" placeholder="Amount in USDC" />
-            <button class="btn" id="depositBtn">Deposit to agent</button>
+            <input id="depositAmt" type="number" min="0" step="0.01" data-tph="fAmtPh" placeholder="Amount in USDC" />
+            <button class="btn" id="depositBtn" data-t="fDeposit">Deposit to agent</button>
           </div>
           <div class="status-note" id="depositStatus"></div>
         </div>
@@ -1373,8 +1373,8 @@
       <!-- Token to DCA into -->
       <div class="sched-label" data-t="schedTokenLabel">Token to buy</div>
       <select id="schedToken" class="sched-input" style="margin-bottom:4px;">
-        <option value="cirBTC">cirBTC — tokenized BTC</option>
-        <option value="EURC">EURC — euro stablecoin</option>
+        <option value="cirBTC" data-t="tokCir">cirBTC — tokenized BTC</option>
+        <option value="EURC" data-t="tokEur">EURC — euro stablecoin</option>
       </select>
       <p class="cs" id="schedTokenHint" style="margin:4px 2px 12px;color:var(--muted);"></p>
 
@@ -1409,13 +1409,13 @@
         <div id="schedWeekdaysRow" style="display:none;margin-top:10px;">
           <div class="sched-label" data-t="schedWeekdaysLabel">Run on (UTC)</div>
           <div class="sched-weekdays" id="schedWeekdays">
-            <button type="button" class="wd-chip" data-wd="1">Mon</button>
-            <button type="button" class="wd-chip" data-wd="2">Tue</button>
-            <button type="button" class="wd-chip" data-wd="3">Wed</button>
-            <button type="button" class="wd-chip" data-wd="4">Thu</button>
-            <button type="button" class="wd-chip" data-wd="5">Fri</button>
-            <button type="button" class="wd-chip" data-wd="6">Sat</button>
-            <button type="button" class="wd-chip" data-wd="0">Sun</button>
+            <button type="button" class="wd-chip" data-wd="1" data-t="wdMon">Mon</button>
+            <button type="button" class="wd-chip" data-wd="2" data-t="wdTue">Tue</button>
+            <button type="button" class="wd-chip" data-wd="3" data-t="wdWed">Wed</button>
+            <button type="button" class="wd-chip" data-wd="4" data-t="wdThu">Thu</button>
+            <button type="button" class="wd-chip" data-wd="5" data-t="wdFri">Fri</button>
+            <button type="button" class="wd-chip" data-wd="6" data-t="wdSat">Sat</button>
+            <button type="button" class="wd-chip" data-wd="0" data-t="wdSun">Sun</button>
           </div>
         </div>
 
@@ -1476,34 +1476,34 @@
   </section>
 
   <section class="reveal" id="intelligenceSection" style="display:none;">
-    <div class="eyebrow">Agent intelligence</div>
-    <div class="h2">How the agent is doing</div>
-    <p class="sub">Live risk, market regime, decision confidence and pattern alerts, derived from the agent's run history and reflections.</p>
+    <div class="eyebrow" data-t="intelEye2">Agent intelligence</div>
+    <div class="h2" data-t="intelTitle2">How the agent is doing</div>
+    <p class="sub" data-t="intelSub2">Live risk, market regime, decision confidence and pattern alerts, derived from the agent's run history and reflections.</p>
     <div class="intel-grid">
       <div class="intel-card" style="--ig:rgba(251,113,133,.12);">
         <span class="intel-icon">🛡️</span>
         <span class="intel-val" id="intelRiskVal">—</span>
-        <span class="intel-label">Risk score</span>
+        <span class="intel-label" data-t="intelRisk2">Risk score</span>
         <div class="intel-gauge"><div class="intel-gauge-fill" id="intelRiskGauge" style="width:0%;background:var(--green);"></div></div>
         <span class="intel-sub" id="intelRiskSub">—</span>
       </div>
       <div class="intel-card" style="--ig:rgba(47,134,230,.12);">
         <span class="intel-icon">🧭</span>
         <span class="intel-val" id="intelRegimeVal">—</span>
-        <span class="intel-label">Market regime</span>
+        <span class="intel-label" data-t="intelRegime2">Market regime</span>
         <span class="intel-sub" id="intelRegimeSub">—</span>
       </div>
       <div class="intel-card" style="--ig:rgba(138,92,246,.12);">
         <span class="intel-icon">🧠</span>
         <span class="intel-val" id="intelConfVal">—</span>
-        <span class="intel-label">Decision confidence</span>
+        <span class="intel-label" data-t="intelConf2">Decision confidence</span>
         <div class="intel-gauge"><div class="intel-gauge-fill" id="intelConfGauge" style="width:0%;background:#8a5cf6;"></div></div>
         <span class="intel-sub" id="intelConfSub">—</span>
       </div>
       <div class="intel-card" style="--ig:rgba(52,211,153,.12);">
         <span class="intel-icon">📈</span>
         <span class="intel-val" id="intelMomentumVal">—</span>
-        <span class="intel-label">Price momentum</span>
+        <span class="intel-label" data-t="intelMom2">Price momentum</span>
         <div class="intel-gauge"><div class="intel-gauge-fill" id="intelMomentumGauge" style="width:0%;background:var(--green);"></div></div>
         <span class="intel-sub" id="intelMomentumSub">—</span>
       </div>
@@ -1517,8 +1517,8 @@
     <p class="sub" data-t="lbSub">Everyone who has deposited USDC into the agent's DCA treasury — fully transparent, sourced from on-chain data.</p>
     <div class="lb-summary" id="lbSummary"></div>
     <div class="card" style="margin-bottom:16px;display:none;" id="tokenSplitCard">
-      <h3>DCA targets — who buys what</h3>
-      <p class="cs">Active schedules grouped by the token each wallet chose. Daily totals come from each schedule (per-run amount × cadence, capped by the wallet's daily cap).</p>
+      <h3 data-t="lbSplitTitle">DCA targets — who buys what</h3>
+      <p class="cs" data-t="lbSplitSub">Active schedules grouped by the token each wallet chose. Daily totals come from each schedule (per-run amount × cadence, capped by the wallet's daily cap).</p>
       <div id="tokenSplitList"></div>
     </div>
     <div class="card">
@@ -1533,9 +1533,9 @@
     <div class="h2">Export your data</div>
     <p class="sub">Download run history and reflections for offline analysis.</p>
     <div class="card" style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;">
-      <button class="btn-sm" id="exportAllJSON"><span class="ic">💾</span> Full backup (JSON)</button>
-      <button class="btn-sm" id="exportAllCSV"><span class="ic">📊</span> History (CSV)</button>
-      <span style="font-size:12px;color:var(--muted);">Includes all runs, reflections, and strategy data</span>
+      <button class="btn-sm" id="exportAllJSON"><span class="ic">💾</span> <span data-t="dataFullBackup">Full backup (JSON)</span></button>
+      <button class="btn-sm" id="exportAllCSV"><span class="ic">📊</span> <span data-t="dataHistCsv">History (CSV)</span></button>
+      <span style="font-size:12px;color:var(--muted);" data-t="dataNote">Includes all runs, reflections, and strategy data</span>
     </div>
     <!-- Hidden import elements (keep JS working) -->
     <div style="display:none;">
@@ -2029,6 +2029,10 @@
   var _ledgerData = null;
 
   function $(id) { return document.getElementById(id); }
+  // Current-language dict, safe to call before `var T`/`currentLang` initialise
+  // (the cached-data render fires above their definitions). Returns {} until ready,
+  // so callers must supply a literal English fallback per key.
+  function _L() { return (typeof T !== "undefined" && typeof currentLang !== "undefined" && T[currentLang]) ? T[currentLang] : {}; }
   function short(a) { return a.slice(0, 6) + "…" + a.slice(-4); }
   function fmt(n, d) { return Number(n).toLocaleString("en-US", { maximumFractionDigits: d == null ? 4 : d }); }
 
@@ -3567,7 +3571,7 @@
       $("dailySub").textContent = "No data";
       return;
     }
-    $("dailySub").textContent = daily.length + " execution(s) · avg " + fmt(daily.reduce(function (s, d) { return s + d.amt; }, 0) / daily.length, 4) + " USDC";
+    $("dailySub").textContent = (_L().lrDailySub || "{n} execution(s) · avg {a} USDC").replace("{n}", daily.length).replace("{a}", fmt(daily.reduce(function (s, d) { return s + d.amt; }, 0) / daily.length, 4));
     var W = 440, H = 170, padL = 40, padR = 8, padT = 12, padB = 26;
     var max = Math.ceil(Math.max.apply(null, daily.map(function (d) { return d.amt; })) * 1.2) || 1;
     var n = daily.length, bw = Math.max(6, Math.min(32, (W - padL - padR) / n * 0.7)), gap = (W - padL - padR) / n;
@@ -3612,7 +3616,7 @@
       else counts.error++;
     });
     var total = history.length;
-    $("donutSub").textContent = total + " total run(s)";
+    $("donutSub").textContent = (_L().lrDonutSub || "{n} total run(s)").replace("{n}", total);
     var slices = [
       { label: "Success", count: counts.success, color: "#34d399" },
       { label: "Dry run", count: counts.dry_run, color: "#60a5fa" },
@@ -3853,7 +3857,7 @@
 
     if (typeof renderDashboard === "function") { window.__dash = { history: history, total: total }; renderDashboard(history, total); }
 
-    $("chartSub").textContent = completed.length + " completed run(s) · " + fmt(total, 4) + " USDC total";
+    $("chartSub").textContent = (_L().lrChartSub || "{n} completed run(s) · {u} USDC total").replace("{n}", completed.length).replace("{u}", fmt(total, 4));
     renderChart(points);
 
     function rowClass(s) {
@@ -3870,7 +3874,8 @@
     var dryCount = history.filter(function(e){ return e.status === "dry_run"; }).length;
     var errCount = history.filter(function(e){ return e.status && e.status.indexOf("error") >= 0; }).length;
     var skipCount = history.length - successCount - simCount - dryCount - errCount;
-    $("runsCount").innerHTML = history.length + ' runs · <span style="color:#6ee7b7">' + successCount + ' success</span>' + (simCount ? ' · <span style="color:#7fe6f5">' + simCount + ' simulated</span>' : '') + ' · <span style="color:#8fc0ff">' + dryCount + ' dry</span>' + (errCount ? ' · <span style="color:#fda4af">' + errCount + ' error</span>' : '') + (skipCount > 0 ? ' · <span style="color:#fbcf6b">' + skipCount + ' skipped</span>' : '');
+    var _tc = _L();
+    $("runsCount").innerHTML = history.length + ' ' + (_tc.cRuns||'runs') + ' · <span style="color:#6ee7b7">' + successCount + ' ' + (_tc.cSuccess||'success') + '</span>' + (simCount ? ' · <span style="color:#7fe6f5">' + simCount + ' ' + (_tc.cSimulated||'simulated') + '</span>' : '') + ' · <span style="color:#8fc0ff">' + dryCount + ' ' + (_tc.cDry||'dry') + '</span>' + (errCount ? ' · <span style="color:#fda4af">' + errCount + ' ' + (_tc.cError||'error') + '</span>' : '') + (skipCount > 0 ? ' · <span style="color:#fbcf6b">' + skipCount + ' ' + (_tc.cSkipped||'skipped') + '</span>' : '');
     var showAllBtn = $("showAllRuns");
     if (history.length > (userSettings.tableRows || 10)) {
       showAllBtn.style.display = "";
@@ -4787,7 +4792,7 @@
     var change = prev.price > 0 ? ((latest.price - prev.price) / prev.price * 100) : 0;
     var changeStr = (change >= 0 ? "+" : "") + change.toFixed(2) + "%";
     var changeColor = change >= 0 ? "var(--green)" : "var(--red)";
-    $("priceSub").innerHTML = "Latest: <b>" + fmt(latest.price, 4) + " USDC/" + tok + "</b> <span style='color:" + changeColor + ";font-weight:700;'>" + changeStr + "</span> · " + swaps.length + " fill(s)";
+    $("priceSub").innerHTML = (_L().lrLatest || "Latest:") + " <b>" + fmt(latest.price, 4) + " USDC/" + tok + "</b> <span style='color:" + changeColor + ";font-weight:700;'>" + changeStr + "</span> · " + swaps.length + " " + (_L().lrFills || "fill(s)");
 
     var W = 920, H = 220, padL = 54, padR = 12, padT = 16, padB = 28;
     var prices = swaps.map(function (s) { return s.price; });
@@ -5016,12 +5021,107 @@
       heroDesc: '<b>Claude</b> decides the strategy — <b>code owns every number that touches money.</b> Pick any token the network supports; each run pools everyone\'s buys by token and settles a real swap through Circle\'s Swap Kit on Arc Testnet, authorized by your own wallet. No server, no human in the loop.',
       connectWallet: "Connect Wallet", viewSource: "View source ↗", liveSwap: "See a live swap ↗",
       usdcDeployed: "USDC deployed", agentRuns: "Agent runs", lastDecision: "Last decision",
+      wdMon: "Mon",
+      wdTue: "Tue",
+      wdWed: "Wed",
+      wdThu: "Thu",
+      wdFri: "Fri",
+      wdSat: "Sat",
+      wdSun: "Sun",
+      dip5: "5% dip",
+      dip10: "10% dip",
+      dip20: "20% dip",
+      tokCir: "cirBTC — tokenized BTC",
+      tokEur: "EURC — euro stablecoin",
+      wlAddBtn: "Add token",
+      dataFullBackup: "Full backup (JSON)",
+      dataHistCsv: "History (CSV)",
+      dataNote: "Includes all runs, reflections, and strategy data",
+      lrChartSub: "{n} completed run(s) · {u} USDC total", lrDailySub: "{n} execution(s) · avg {a} USDC", lrDonutSub: "{n} total run(s)", lrLatest: "Latest:", lrFills: "fill(s)",
+      cRuns: "runs", cSuccess: "success", cSimulated: "simulated", cDry: "dry", cError: "error", cSkipped: "skipped",
       navDashboard: "Dashboard", navSchedule: "My DCA Schedule", navHistory: "Live Runs / History", navDipSignals: "Dip Signals", navTreasury: "Treasury", navAnalytics: "Analytics", navSettings: "Settings", navGithub: "GitHub Source", navExplorer: "Arc Explorer ↗", sbFoot: "Autonomous DCA on Arc Testnet",
       dashDeployed: "Total USDC Deployed", dashToday: "Today's DCA", dashUsers: "Active Users", dashSuccess: "Success Rate", dashUsersOf: "of {n} with a schedule",
       dashFreshness: "📊 Ledger figures update on each agent run (~hourly). A new deposit or wallet appears once the next run scans it on-chain — it isn't instant.",
       agentCardTitle: "🤖 Your DCA Agent", agentSubtitleDefault: "Runs on the schedule you set — pick your cadence, or switch to Manual and trigger buys yourself with no daily limit.",
       agentNextRun: "Next agent run", agentConnectHint: "Connect your wallet to set your DCA rate.", agentSetRate: "⚙️ Set DCA rate", latestDecisionTitle: "🧠 Latest decision",
       agentSubtitleManual: "Manual mode — trigger buys from chat, no daily limit.", agentSubtitleCadence: "Runs {c} on Arc Testnet — fully your schedule.", agentSubtitlePaused: "Paused — turn it back on or switch to Manual to keep control.",
+      setDashTitle: "Dashboard Settings",
+      setRefreshLbl: "Auto-refresh data",
+      setRefreshOff: "Off",
+      setRefresh60: "Every minute",
+      setRefresh300: "Every 5 minutes",
+      setRefresh30: "Every 30 seconds",
+      setRowsLbl: "History rows to display",
+      setRows5: "5 rows",
+      setRows10: "10 rows",
+      setRows20: "20 rows",
+      setRows50: "50 rows",
+      setCacheLbl: "Cache data locally",
+      setCacheOn: "Enabled — faster page loads",
+      setCacheOff: "Disabled — always fetch fresh",
+      setTgTitle: "Telegram Notifications",
+      setTgTokenLbl: "Bot token",
+      setTgChatLbl: "Chat ID",
+      setTgEventsLbl: "Notify on",
+      setTgAll: "All runs (success + error)",
+      setTgSuccess: "Success only",
+      setTgError: "Errors only",
+      setTgOff: "Off",
+      setTgTest: "Send test message",
+      setSaved: "Settings saved",
+      setTgNote: "Create a bot via <a href=\"https://t.me/BotFather\" target=\"_blank\" rel=\"noopener\">@BotFather</a>, get your chat ID from <a href=\"https://t.me/userinfobot\" target=\"_blank\" rel=\"noopener\">@userinfobot</a>. These messages are sent from your browser (only while this tab is open). For <b>always-on</b> alerts from the autonomous agent — a buy landing, an error, the smart multiplier used — set <code>TELEGRAM_BOT_TOKEN</code> and <code>TELEGRAM_CHAT_ID</code> as GitHub Actions secrets; the cron then pushes on every run.",
+      setWdApiPh: "Leave empty — uses this site's own /api/*",
+      stratEye2: "Market read",
+      stratTitle2: "How Smart mode sizes your buys",
+      stratSub2: "Each wallet sets its own schedule; the agent pools everyone's buys per token into one on-chain swap. In <b>Smart</b> mode it sizes each buy by the market — the cirBTC dip <b>and</b> the live Fear &amp; Greed index — proposing a multiplier that code clamps to a safe range (0.5× floor, your max). <b>Auto</b> mode buys a flat amount. The values below are live.",
+      stBaseLbl: "Base amount / run",
+      stSmartMultLbl: "Smart multiplier (live)",
+      stDrawdownLbl: "cirBTC drawdown",
+      stFngLbl: "Fear & Greed (live)",
+      stCurveTitle: "The sizing curve",
+      stCurveSub: "Smart mode folds the cirBTC dip <b>and</b> the Fear &amp; Greed index into one bounded multiplier: the agent proposes the number, code clamps it to [0.5×, your max]. The tiers below are computed from that same formula at sensitivity 1 — the large number is the dip acting alone, and the line under it is what <b>today's</b> Fear &amp; Greed turns it into (extreme fear adds on top, extreme greed subtracts). During the cirBTC route outage there's no live cirBTC price, so the dip reads <b>n/a</b> and Fear &amp; Greed carries the signal on its own.",
+      stMildDip: "Mild dip",
+      stModDip: "Moderate dip",
+      stStrongDip: "Strong dip",
+      trackEye2: "Live track record",
+      trackTitle2: "What the agent has done",
+      trackSub2: "Every run is recorded on-chain and committed to the repo — full transparency.",
+      exportLbl: "Export:",
+      lrCumTitle: "Cumulative USDC deployed",
+      lrFillTitle: "Fill price",
+      lrFillNote: "ℹ️ A rising fill price is <b>price impact</b>, not a bug: Arc Testnet's EURC pool is thin, so the agent's own repeated buys move the rate against it (a 1&nbsp;USDC buy fills better than a 2&nbsp;USDC one at the same moment). The agent records exactly what the pool returned — deep liquidity on mainnet removes this.",
+      lrDailyTitle: "Daily DCA amounts",
+      lrStatusTitle: "Run status distribution",
+      lrRecentTitle: "Recent runs",
+      lrRecentSub: "What Claude proposed, what the guardrails allowed, and why.",
+      lrShowAll: "Show all",
+      thDate: "Date",
+      thStatus: "Status",
+      thRequested: "Requested",
+      thExecuted: "Executed",
+      thBoundBy: "Bound by",
+      thReasoning: "Claude's reasoning",
+      thTx: "Tx",
+      memTimeline: "Reflection timeline",
+      fAddrLbl: "Agent Wallet Address",
+      fCopy: "Copy address",
+      fScan: "View on ArcScan ↗",
+      fTreasBal: "Treasury balance (USDC)",
+      fNetwork: "Network",
+      fAmtPh: "Amount in USDC",
+      fDeposit: "Deposit to agent",
+      intelEye2: "Agent intelligence",
+      intelTitle2: "How the agent is doing",
+      intelSub2: "Live risk, market regime, decision confidence and pattern alerts, derived from the agent's run history and reflections.",
+      intelRisk2: "Risk score",
+      intelRegime2: "Market regime",
+      intelConf2: "Decision confidence",
+      intelMom2: "Price momentum",
+      lbSplitTitle: "DCA targets — who buys what",
+      lbSplitSub: "Active schedules grouped by the token each wallet chose. Daily totals come from each schedule (per-run amount × cadence, capped by the wallet's daily cap).",
+      dataEye2: "Data",
+      dataTitle2: "Export your data",
+      dataSub2: "Download run history and reflections for offline analysis.",
       howEye: "How it works", howTitle: "Claude recommends. Code decides.",
       howSub: "The LLM is never the final authority on how much money moves.",
       step1t: "Claude decides", step1d: "Given balance, budget, day count & history, Claude returns a proposed amount + reasoning via a forced, schema-validated tool call.",
@@ -5137,12 +5237,107 @@
       heroDesc: '<b>Claude</b> quyết định chiến lược — <b>code nắm mọi con số động đến tiền.</b> Chọn bất kỳ token nào mạng hỗ trợ; mỗi lượt chạy gộp lệnh mua theo token và settle thành một swap thật qua Circle Swap Kit trên Arc Testnet, được chính ví của bạn ký duyệt. Không server, không cần người can thiệp.',
       connectWallet: "Kết nối ví", viewSource: "Mã nguồn ↗", liveSwap: "Xem giao dịch ↗",
       usdcDeployed: "USDC đã triển khai", agentRuns: "Lần chạy", lastDecision: "Quyết định gần nhất",
+      wdMon: "T2",
+      wdTue: "T3",
+      wdWed: "T4",
+      wdThu: "T5",
+      wdFri: "T6",
+      wdSat: "T7",
+      wdSun: "CN",
+      dip5: "Giảm 5%",
+      dip10: "Giảm 10%",
+      dip20: "Giảm 20%",
+      tokCir: "cirBTC — BTC token hoá",
+      tokEur: "EURC — stablecoin euro",
+      wlAddBtn: "Thêm token",
+      dataFullBackup: "Sao lưu đầy đủ (JSON)",
+      dataHistCsv: "Lịch sử (CSV)",
+      dataNote: "Bao gồm mọi lượt chạy, suy ngẫm và dữ liệu chiến lược",
+      lrChartSub: "{n} lượt hoàn tất · tổng {u} USDC", lrDailySub: "{n} lượt · TB {a} USDC", lrDonutSub: "tổng {n} lượt", lrLatest: "Mới nhất:", lrFills: "lượt khớp",
+      cRuns: "lượt", cSuccess: "thành công", cSimulated: "mô phỏng", cDry: "chạy thử", cError: "lỗi", cSkipped: "bỏ qua",
       navDashboard: "Bảng điều khiển", navSchedule: "Lịch DCA của tôi", navHistory: "Lịch sử chạy", navDipSignals: "Tín hiệu bắt đáy", navTreasury: "Ngân quỹ", navAnalytics: "Phân tích", navSettings: "Cài đặt", navGithub: "Mã nguồn GitHub", navExplorer: "Arc Explorer ↗", sbFoot: "DCA tự động trên Arc Testnet",
       dashDeployed: "Tổng USDC đã triển khai", dashToday: "DCA hôm nay", dashUsers: "Người dùng hoạt động", dashSuccess: "Tỉ lệ thành công", dashUsersOf: "trên {n} có lịch",
       dashFreshness: "📊 Số liệu sổ cái cập nhật mỗi lượt agent chạy (~mỗi giờ). Khoản nạp hoặc ví mới chỉ xuất hiện sau khi lượt chạy kế tiếp quét trên chuỗi — không tức thời.",
       agentCardTitle: "🤖 Agent DCA của bạn", agentSubtitleDefault: "Chạy theo lịch bạn đặt — chọn nhịp, hoặc chuyển sang Thủ công và tự bấm mua không giới hạn ngày.",
       agentNextRun: "Lượt chạy kế tiếp", agentConnectHint: "Kết nối ví để đặt tỉ lệ DCA.", agentSetRate: "⚙️ Đặt tỉ lệ DCA", latestDecisionTitle: "🧠 Quyết định gần nhất",
       agentSubtitleManual: "Chế độ Thủ công — tự bấm mua từ chat, không giới hạn ngày.", agentSubtitleCadence: "Chạy {c} trên Arc Testnet — hoàn toàn theo lịch của bạn.", agentSubtitlePaused: "Đã tạm dừng — bật lại hoặc chuyển sang Thủ công để giữ quyền kiểm soát.",
+      setDashTitle: "Cài đặt Dashboard",
+      setRefreshLbl: "Tự động làm mới dữ liệu",
+      setRefreshOff: "Tắt",
+      setRefresh60: "Mỗi phút",
+      setRefresh300: "Mỗi 5 phút",
+      setRefresh30: "Mỗi 30 giây",
+      setRowsLbl: "Số dòng lịch sử hiển thị",
+      setRows5: "5 dòng",
+      setRows10: "10 dòng",
+      setRows20: "20 dòng",
+      setRows50: "50 dòng",
+      setCacheLbl: "Lưu cache dữ liệu cục bộ",
+      setCacheOn: "Bật — tải trang nhanh hơn",
+      setCacheOff: "Tắt — luôn tải mới",
+      setTgTitle: "Thông báo Telegram",
+      setTgTokenLbl: "Bot token",
+      setTgChatLbl: "Chat ID",
+      setTgEventsLbl: "Thông báo khi",
+      setTgAll: "Mọi lượt (thành công + lỗi)",
+      setTgSuccess: "Chỉ thành công",
+      setTgError: "Chỉ lỗi",
+      setTgOff: "Tắt",
+      setTgTest: "Gửi tin nhắn thử",
+      setSaved: "Đã lưu cài đặt",
+      setTgNote: "Tạo bot qua <a href=\"https://t.me/BotFather\" target=\"_blank\" rel=\"noopener\">@BotFather</a>, lấy chat ID từ <a href=\"https://t.me/userinfobot\" target=\"_blank\" rel=\"noopener\">@userinfobot</a>. Các tin này được gửi từ trình duyệt của bạn (chỉ khi tab đang mở). Để nhận cảnh báo <b>luôn bật</b> từ agent tự động — một lệnh mua, một lỗi, hệ số smart đã dùng — hãy đặt <code>TELEGRAM_BOT_TOKEN</code> và <code>TELEGRAM_CHAT_ID</code> làm GitHub Actions secret; cron sẽ đẩy mỗi lượt chạy.",
+      setWdApiPh: "Để trống — dùng /api/* của chính site này",
+      stratEye2: "Đọc thị trường",
+      stratTitle2: "Chế độ Smart định lượng mua thế nào",
+      stratSub2: "Mỗi ví tự đặt lịch riêng; agent gộp lệnh mua theo token thành một swap on-chain. Ở chế độ <b>Smart</b>, mỗi lệnh được định lượng theo thị trường — mức giảm của cirBTC <b>và</b> chỉ số Fear &amp; Greed trực tiếp — đề xuất một hệ số mà code kẹp trong khoảng an toàn (sàn 0.5×, tối đa của bạn). Chế độ <b>Auto</b> mua một mức cố định. Các giá trị bên dưới là trực tiếp.",
+      stBaseLbl: "Mức cơ bản / lượt",
+      stSmartMultLbl: "Hệ số Smart (trực tiếp)",
+      stDrawdownLbl: "Mức giảm cirBTC",
+      stFngLbl: "Fear & Greed (trực tiếp)",
+      stCurveTitle: "Đường cong định lượng",
+      stCurveSub: "Chế độ Smart gộp mức giảm cirBTC <b>và</b> chỉ số Fear &amp; Greed thành một hệ số có giới hạn: agent đề xuất con số, code kẹp về [0.5×, tối đa của bạn]. Các bậc bên dưới tính từ chính công thức đó ở độ nhạy 1 — số lớn là mức giảm tác động một mình, và dòng dưới nó là kết quả sau khi Fear &amp; Greed <b>hôm nay</b> điều chỉnh (sợ hãi cực độ cộng thêm, tham lam cực độ trừ đi). Trong lúc tuyến cirBTC gián đoạn không có giá trực tiếp, mức giảm hiển thị <b>n/a</b> và Fear &amp; Greed tự mang tín hiệu.",
+      stMildDip: "Giảm nhẹ",
+      stModDip: "Giảm vừa",
+      stStrongDip: "Giảm mạnh",
+      trackEye2: "Lịch sử chạy trực tiếp",
+      trackTitle2: "Agent đã làm gì",
+      trackSub2: "Mỗi lượt chạy được ghi on-chain và commit vào repo — minh bạch hoàn toàn.",
+      exportLbl: "Xuất:",
+      lrCumTitle: "Tổng USDC đã triển khai (luỹ kế)",
+      lrFillTitle: "Giá khớp",
+      lrFillNote: "ℹ️ Giá khớp tăng là <b>tác động giá</b>, không phải lỗi: pool EURC trên Arc Testnet mỏng, nên chính các lệnh mua lặp lại của agent làm tỉ giá bất lợi (một lệnh 1&nbsp;USDC khớp tốt hơn lệnh 2&nbsp;USDC cùng thời điểm). Agent ghi đúng những gì pool trả về — thanh khoản sâu trên mainnet sẽ loại bỏ điều này.",
+      lrDailyTitle: "Lượng DCA theo ngày",
+      lrStatusTitle: "Phân bố trạng thái các lượt",
+      lrRecentTitle: "Các lượt gần đây",
+      lrRecentSub: "Claude đề xuất gì, rào chắn cho phép gì, và vì sao.",
+      lrShowAll: "Xem tất cả",
+      thDate: "Ngày",
+      thStatus: "Trạng thái",
+      thRequested: "Đề xuất",
+      thExecuted: "Thực thi",
+      thBoundBy: "Giới hạn bởi",
+      thReasoning: "Lý do của Claude",
+      thTx: "Tx",
+      memTimeline: "Dòng thời gian suy ngẫm",
+      fAddrLbl: "Địa chỉ ví Agent",
+      fCopy: "Sao chép địa chỉ",
+      fScan: "Xem trên ArcScan ↗",
+      fTreasBal: "Số dư quỹ (USDC)",
+      fNetwork: "Mạng",
+      fAmtPh: "Số tiền (USDC)",
+      fDeposit: "Nạp vào agent",
+      intelEye2: "Trí tuệ Agent",
+      intelTitle2: "Agent đang hoạt động ra sao",
+      intelSub2: "Rủi ro, chế độ thị trường, độ tự tin quyết định và cảnh báo mẫu hình — trực tiếp, rút ra từ lịch sử chạy và suy ngẫm của agent.",
+      intelRisk2: "Điểm rủi ro",
+      intelRegime2: "Chế độ thị trường",
+      intelConf2: "Độ tự tin quyết định",
+      intelMom2: "Đà giá",
+      lbSplitTitle: "Mục tiêu DCA — ai mua gì",
+      lbSplitSub: "Các lịch đang hoạt động, nhóm theo token mà mỗi ví chọn. Tổng mỗi ngày tính từ từng lịch (mức mỗi lượt × nhịp, giới hạn bởi cap ngày của ví).",
+      dataEye2: "Dữ liệu",
+      dataTitle2: "Xuất dữ liệu của bạn",
+      dataSub2: "Tải lịch sử chạy và suy ngẫm để phân tích offline.",
       howEye: "Cách hoạt động", howTitle: "Claude đề xuất. Code quyết định.",
       howSub: "LLM không bao giờ là thẩm quyền cuối cùng về số tiền di chuyển.",
       step1t: "Claude quyết định", step1d: "Dựa trên số dư, ngân sách, số ngày & lịch sử, Claude đề xuất số tiền + lý do qua tool call có schema cố định.",
@@ -5268,6 +5463,10 @@
         if (t[key].indexOf("<") >= 0) el.innerHTML = t[key]; else el.textContent = t[key];
       }
     });
+    document.querySelectorAll("[data-tph]").forEach(function (el) {
+      var k = el.getAttribute("data-tph");
+      if (t[k] != null) el.setAttribute("placeholder", t[k]);
+    });
     // Hero (special structure)
     var h1 = document.querySelector(".hero h1");
     if (h1) h1.innerHTML = t.heroH1a + '<span class="grad">' + t.heroGrad + '</span>' + t.heroH1b;
@@ -5389,15 +5588,15 @@
     $("intelRiskGauge").style.width = riskScore + "%";
     var riskEl = $("intelRiskSub");
     if (riskScore <= 30) {
-      riskEl.textContent = T[currentLang].intelRiskLow || "Low risk";
+      riskEl.textContent = _L().intelRiskLow || "Low risk";
       riskEl.className = "intel-sub risk-low";
       $("intelRiskGauge").style.background = "var(--green)";
     } else if (riskScore <= 60) {
-      riskEl.textContent = T[currentLang].intelRiskMed || "Medium risk";
+      riskEl.textContent = _L().intelRiskMed || "Medium risk";
       riskEl.className = "intel-sub risk-med";
       $("intelRiskGauge").style.background = "var(--amber)";
     } else {
-      riskEl.textContent = T[currentLang].intelRiskHigh || "High risk";
+      riskEl.textContent = _L().intelRiskHigh || "High risk";
       riskEl.className = "intel-sub risk-high";
       $("intelRiskGauge").style.background = "var(--red)";
     }
@@ -5408,7 +5607,7 @@
     if (mkt.length < 3) {
       regimeEl.textContent = "—";
       regimeEl.className = "intel-val regime-nodata";
-      regimeSub.textContent = T[currentLang].intelRegimeNoData || "Need more data";
+      regimeSub.textContent = _L().intelRegimeNoData || "Need more data";
     } else {
       var rp = mkt.slice(-7);
       var rpMean = rp.reduce(function (a, b) { return a + b; }, 0) / rp.length;
@@ -5428,10 +5627,10 @@
         else { consDown++; consUp = 0; }
       }
       var regime, regimeClass;
-      if (rpCv > 0.15) { regime = T[currentLang].intelRegimeVolatile || "Volatile"; regimeClass = "regime-volatile"; }
-      else if (momentum > 0.03 && consUp >= 2) { regime = T[currentLang].intelRegimeUp || "Trending ↑"; regimeClass = "regime-trend-up"; }
-      else if (momentum < -0.03 && consDown >= 2) { regime = T[currentLang].intelRegimeDown || "Trending ↓"; regimeClass = "regime-trend-down"; }
-      else { regime = T[currentLang].intelRegimeRange || "Ranging"; regimeClass = "regime-range"; }
+      if (rpCv > 0.15) { regime = _L().intelRegimeVolatile || "Volatile"; regimeClass = "regime-volatile"; }
+      else if (momentum > 0.03 && consUp >= 2) { regime = _L().intelRegimeUp || "Trending ↑"; regimeClass = "regime-trend-up"; }
+      else if (momentum < -0.03 && consDown >= 2) { regime = _L().intelRegimeDown || "Trending ↓"; regimeClass = "regime-trend-down"; }
+      else { regime = _L().intelRegimeRange || "Ranging"; regimeClass = "regime-range"; }
       regimeEl.textContent = regime;
       regimeEl.className = "intel-val " + regimeClass;
       regimeSub.textContent = "CV " + (rpCv * 100).toFixed(1) + "% · " + mktSrc;
@@ -5455,7 +5654,7 @@
     } else {
       confEl.textContent = "—";
       confGauge.style.width = "0%";
-      confSub.textContent = T[currentLang].intelConfNoData || "No reflections";
+      confSub.textContent = _L().intelConfNoData || "No reflections";
       confSub.className = "intel-sub conf-low";
     }
 
@@ -5475,24 +5674,24 @@
       var momPct = Math.min(100, Math.abs(momVal) * 5);
       momGauge.style.width = momPct + "%";
       momGauge.style.background = momVal >= 0 ? "var(--green)" : "var(--red)";
-      momSub.textContent = (momVal > 2 ? (T[currentLang].intelMomBullish || "Bullish") : (momVal < -2 ? (T[currentLang].intelMomBearish || "Bearish") : (T[currentLang].intelMomNeutral || "Neutral"))) + " · " + mktSrc;
+      momSub.textContent = (momVal > 2 ? (_L().intelMomBullish || "Bullish") : (momVal < -2 ? (_L().intelMomBearish || "Bearish") : (_L().intelMomNeutral || "Neutral"))) + " · " + mktSrc;
     } else {
       momEl.textContent = "—";
       momGauge.style.width = "0%";
-      momSub.textContent = T[currentLang].intelMomNoData || "Need data";
+      momSub.textContent = _L().intelMomNoData || "Need data";
     }
 
     // --- Pattern Alerts ---
     var alerts = [];
     if (errorStreak >= 2) {
-      alerts.push({ icon: "🔴", title: T[currentLang].intelAlertErrorStreak || "Error streak", detail: errorStreak + " consecutive errors/skips" });
+      alerts.push({ icon: "🔴", title: _L().intelAlertErrorStreak || "Error streak", detail: errorStreak + " consecutive errors/skips" });
     }
     if (prices.length >= 3) {
       var highP = Math.max.apply(null, prices);
       var curP = prices[prices.length - 1];
       var dd = Math.abs((curP - highP) / highP);
       if (dd >= 0.10) {
-        alerts.push({ icon: "📉", title: T[currentLang].intelAlertDip || "Significant dip", detail: (dd * 100).toFixed(1) + "% from high — dip-buying opportunity" });
+        alerts.push({ icon: "📉", title: _L().intelAlertDip || "Significant dip", detail: (dd * 100).toFixed(1) + "% from high — dip-buying opportunity" });
       }
     }
     // Count only runs where a hard guardrail actually bound the amount. Every
@@ -5502,10 +5701,10 @@
     var GUARDRAIL_BOUNDS = { max_daily_usdc: 1, wallet_available_after_reserve: 1, remaining_daily_cap: 1, remaining_campaign_budget: 1, group_below_min_swap: 1, allowance_below_min: 1 };
     var clampCount = last10.filter(function (e) { return GUARDRAIL_BOUNDS[e.boundBy]; }).length;
     if (clampCount >= 5) {
-      alerts.push({ icon: "⚠️", title: T[currentLang].intelAlertClamping || "Frequent clamping", detail: clampCount + "/10 recent runs clamped by guardrails" });
+      alerts.push({ icon: "⚠️", title: _L().intelAlertClamping || "Frequent clamping", detail: clampCount + "/10 recent runs clamped by guardrails" });
     }
     if (sr < 0.5 && last10.length >= 5) {
-      alerts.push({ icon: "📊", title: T[currentLang].intelAlertLowSuccess || "Low success rate", detail: Math.round(sr * 100) + "% success in last 10 runs" });
+      alerts.push({ icon: "📊", title: _L().intelAlertLowSuccess || "Low success rate", detail: Math.round(sr * 100) + "% success in last 10 runs" });
     }
     if (Array.isArray(reflections) && reflections.length >= 3) {
       var latestRef = reflections[reflections.length - 1];
@@ -5514,12 +5713,12 @@
         // unavailable, so the latest one can be days old — showing it undated
         // made stale guidance read as current.
         var refText = latestRef.strategyAdjustment.length > 80 ? latestRef.strategyAdjustment.slice(0, 80) + "…" : latestRef.strategyAdjustment;
-        alerts.push({ icon: "🧠", title: T[currentLang].intelAlertStrategy || "Strategy update", detail: (latestRef.date ? latestRef.date + " — " : "") + refText });
+        alerts.push({ icon: "🧠", title: _L().intelAlertStrategy || "Strategy update", detail: (latestRef.date ? latestRef.date + " — " : "") + refText });
       }
     }
     var pa = $("patternAlerts");
     if (alerts.length === 0) {
-      pa.innerHTML = '<div class="pattern-alert"><span class="pa-icon">✅</span><span class="pa-text"><span class="pa-title">' + (T[currentLang].intelNoAlerts || "All clear") + '</span><span class="pa-detail">' + (T[currentLang].intelNoAlertsDetail || "No unusual patterns detected. Agent is running normally.") + '</span></span></div>';
+      pa.innerHTML = '<div class="pattern-alert"><span class="pa-icon">✅</span><span class="pa-text"><span class="pa-title">' + (_L().intelNoAlerts || "All clear") + '</span><span class="pa-detail">' + (_L().intelNoAlertsDetail || "No unusual patterns detected. Agent is running normally.") + '</span></span></div>';
     } else {
       pa.innerHTML = alerts.map(function (a) {
         return '<div class="pattern-alert"><span class="pa-icon">' + a.icon + '</span><span class="pa-text"><span class="pa-title">' + a.title + '</span><br><span class="pa-detail">' + a.detail + '</span></span></div>';
