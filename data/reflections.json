@@ -2927,5 +2927,31 @@
       "signal-quality",
       "market-timing"
     ]
+  },
+  {
+    "id": "ref-1786028516633",
+    "date": "2026-08-06",
+    "timestamp": "2026-08-06T15:01:56.633Z",
+    "runStatus": "success",
+    "insight": "Arc cirBTC route has fully stabilized after 4-run outage, returning to normal 2.875 USDC allocations. Persistent -10.7% drawdown signal in swap history is route-specific pricing artifact, not a genuine dip opportunity—need to recalibrate dip detection to filter routing noise.",
+    "patterns": [
+      "Route recovery confirmed: 3 consecutive successful 2.875 USDC executions after 4-run collapse to microscopic amounts",
+      "Swap history drawdown (-10.71% to -10.76%) remains static across runs while real cirBTC price is 0.34-0.79% off ATH—clear divergence indicates routing/slippage artifact not market dip",
+      "Daily cap utilization stable at 19-23% with ranging market (73-74% confidence, sub-1% volatility) offering no directional edge",
+      "Fear index pinned at 25 for multiple runs with BTC consolidating $64,157-$64,704 range—low conviction sideways grind"
+    ],
+    "strategyAdjustment": "Stop treating swap history drawdown as dip signal when real price feeds show no corresponding dip (5%+ threshold). The -10.7% drawdown is baked into Arc cirBTC route pricing/slippage, not a buying opportunity. Revert to pure real-price dip detection until swap history recalibrates. Continue conservative 2.125-3.25 USDC base sizing in ranging conditions to preserve 75%+ capacity for genuine 5%+ dips when volatility returns.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "871.693398",
+    "dayNumber": 31,
+    "walletBalance": "376.341746409660530656",
+    "tags": [
+      "error-recovery",
+      "route-stability",
+      "signal-quality",
+      "dip-detection",
+      "ranging-market",
+      "pacing"
+    ]
   }
 ]
