@@ -2742,5 +2742,32 @@
       "pacing",
       "sentiment-override"
     ]
+  },
+  {
+    "id": "ref-1786014128238",
+    "date": "2026-08-06",
+    "timestamp": "2026-08-06T11:02:08.238Z",
+    "runStatus": "success",
+    "insight": "Successfully executing at 3.75 USDC with skip-streak bug fully resolved. Market hovering near ATH (0.59% off) with no dip tiers triggered, so agent correctly preserving 83% daily cap for genuine opportunities while maintaining scheduled DCA discipline.",
+    "patterns": [
+      "Skip-streak bug completely resolved after 4 consecutive skips - last 4 runs all successful (2.25, 2.37, 3.38, 3.75 USDC)",
+      "Consistently near ATH with 0.07-0.59% drawdowns - no dip tiers triggering (need 5%+ for mild)",
+      "Daily cap utilization stable at 15-17% - preserving 83-85% capacity for genuine dips",
+      "Market regime oscillating between trending_up (83-85% confidence) and ranging (71% confidence) within same day",
+      "Extreme Fear sentiment (FGI=25) persisting across all 8 runs despite BTC near ATH"
+    ],
+    "strategyAdjustment": "Continue current base allocation strategy (1.0-1.5x multiplier) for ranging markets near ATH. When market regime shows trending_up with 80%+ confidence and 3%+ momentum, increase to 1.2-1.5x multiplier to capture momentum. Preserve 80%+ daily cap capacity for genuine 5%+ dip opportunities. If BTC triggers mild dip tier (5-10% drawdown), increase allocation to 2-3x base; moderate dip (10-15%) to 4-5x base. Monitor for regime shift from ranging to trending_down which would favor larger dip-buying allocations.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "860.568398",
+    "dayNumber": 31,
+    "walletBalance": "327.435229533533746196",
+    "tags": [
+      "error-recovery",
+      "pacing",
+      "market-timing",
+      "budget",
+      "ranging-market",
+      "near-ath"
+    ]
   }
 ]
