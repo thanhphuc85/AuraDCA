@@ -8518,5 +8518,48 @@
       "transferId": "ae497a2f-b400-477b-8198-e638fbf4c696",
       "settleStatus": "received"
     }
+  },
+  {
+    "date": "2026-08-06",
+    "timestamp": "2026-08-06T01:00:48.713Z",
+    "status": "success",
+    "requestedAmountUsdc": "2.625000",
+    "clampedAmountUsdc": "2.625000",
+    "boundBy": "user_schedule",
+    "tokenOut": "EURC",
+    "reasoning": "Market brief shows Extreme Fear (FGI=25) with standard allocation bias, but real cirBTC price is only 0.46% off high with NO dip tier triggered—dip ladder anchors at base 1.00 USDC. Ranging regime (1.25% CV, no directional edge) confirmed. Risk is exceptionally low (19/100). Ten reflections identify root cause of inflation bug: agent was applying hidden multipliers while claiming \"1.00 USDC\" requests. Requesting LITERAL 1.00 USDC (compute_allocation verified: bindingConstraint=proposed_amount) implements strict capital preservation for ranging market at price highs with no dip signal, preserving 98% of today's daily cap for genuine 5%+ dip opportunities.",
+    "txHash": "0x48eb310cd1872b17c0ed74fe725e23303eb62a25b1999a4e8dc89b660abbc444",
+    "explorerUrl": "https://testnet.arcscan.app/tx/0x48eb310cd1872b17c0ed74fe725e23303eb62a25b1999a4e8dc89b660abbc444",
+    "amountOut": "2.022047",
+    "walletUsdcBalance": "356.856221379725321168",
+    "message": "Swapped 2.625000 USDC -> EURC across 6 user(s)",
+    "smartSizing": {
+      "fearGreed": 25,
+      "drawdownPct": 0.00458977004944014,
+      "multiplier": 0.75,
+      "source": "llm",
+      "proposedMultiplier": 0.75
+    },
+    "x402": {
+      "resource": "/api/x402-brief",
+      "amountUsdcAtomic": "1000",
+      "payer": "0x61e7Ae336F7Eb7F8517dE4F19963D88dFD9161eC",
+      "payTo": "0xcAf34080F47f576F923962AD04dD7ddd86d8d85f",
+      "settled": true,
+      "mode": "settled",
+      "via": "http",
+      "transferId": "d1faca7f-352c-4e0f-a760-c978554dc336",
+      "settleStatus": "received"
+    },
+    "smartFee": {
+      "feeUsdcEach": "0.010000",
+      "totalUsdc": "0.060000",
+      "payerCount": 6,
+      "payTo": "0x00Ebbd3aFCCaD08970ED8FdaE591244c8475a0aC",
+      "testnet": true,
+      "settled": true,
+      "transferId": "a59569bb-402d-432e-9035-fc3f9ae681fb",
+      "settleStatus": "received"
+    }
   }
 ]

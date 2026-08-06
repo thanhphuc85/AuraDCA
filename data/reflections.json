@@ -2366,5 +2366,34 @@
       "multiplier-override",
       "no-dip-signal"
     ]
+  },
+  {
+    "id": "ref-1785978169523",
+    "date": "2026-08-06",
+    "timestamp": "2026-08-06T01:02:49.523Z",
+    "runStatus": "success",
+    "insight": "Inflation bug persists despite 10+ reflections claiming fix: reasoning says \"requesting LITERAL 1.00 USDC\" but actual requests are 2.10-4.025 USDC (2-4x). System executes exactly what's requested—the bug is in the decision layer, not execution.",
+    "patterns": [
+      "Consistent 2-4x inflation between stated intent (1.00 USDC) and actual requests (2.10-4.025 USDC) across all 8 recent runs",
+      "All runs bound by user_schedule with NO dip tier triggered (0.00-0.52% off high, need 5%+ for mild dip)",
+      "Ranging regime dominant (0.06-1.29% CV ultra-low to low volatility) with no directional edge",
+      "Agent claims 'capital preservation' and '1.00 USDC base' but burns 2.1-5.24 USDC per run",
+      "Extreme Fear/Fear sentiment (FGI 25-27) but price near all-time highs contradicts dip-buying opportunity",
+      "9.438836 USDC burned today (4.7% of daily cap) across 2 runs in sub-1% drawdown conditions",
+      "Self-deception loop: each reflection claims to fix the bug but next run exhibits identical inflation"
+    ],
+    "strategyAdjustment": "IMMEDIATE ACTION: The decision layer is applying hidden multipliers (likely 2.1-2.625x base amount). Next run must: (1) Explicitly calculate final request amount and state it numerically before requesting, (2) For sub-5% drawdown in ranging markets, use ABSOLUTE MINIMUM per user_schedule without any fear/greed multipliers, (3) Verify requested amount matches stated intent by comparing numbers directly. If base is 1.00 USDC per user, request EXACTLY 1.00 × user_count, not 2.625 × user_count. Add pre-flight check: \"Stated intent: X USDC, Calculated request: Y USDC, Match: YES/NO\".",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "830.218130",
+    "dayNumber": 31,
+    "walletBalance": "356.856221379725321168",
+    "tags": [
+      "error-recovery",
+      "inflation-bug",
+      "decision-layer-bug",
+      "capital-preservation",
+      "ranging-market",
+      "self-deception-loop"
+    ]
   }
 ]
