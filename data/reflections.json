@@ -2716,5 +2716,31 @@
       "market-timing",
       "trending-regime"
     ]
+  },
+  {
+    "id": "ref-1786010522760",
+    "date": "2026-08-06",
+    "timestamp": "2026-08-06T10:02:02.760Z",
+    "runStatus": "success",
+    "insight": "Successfully executed 3.375 USDC on trending_up momentum (85% confidence, +3.53%) despite Extreme Fear (FGI=25) and near-ATH price. Skip-streak bug fully resolved—three consecutive successful executions at increasing sizes (2.25→2.37→3.38 USDC) confirm the fix is stable.",
+    "patterns": [
+      "Skip-streak bug permanently resolved after 5 consecutive failures - requesting proper total amounts (not per-user splits) fixed group_below_min_swap guardrail violations",
+      "Agent now successfully overrides bearish sentiment when trending_up regime has high confidence (83-85%) and strong momentum (+3.32% to +3.53%)",
+      "Allocation sizes increasing appropriately with uptrend strength: 2.25→2.37→3.38 USDC correlates with 5→6 consecutive up candles",
+      "No dip signals triggering near ATH (0.08-0.49% off high) - base 1.00 USDC anchor holding correctly",
+      "Daily cap utilization remains conservative at 15% with 87%+ capacity preserved for genuine dip opportunities"
+    ],
+    "strategyAdjustment": "Continue momentum-based sizing in trending_up regime: use 1.2-1.5x base multiplier when confidence >80% and consecutive candles >5. Monitor for regime shift to ranging or trending_down - if volatility (CV) rises above 3% or momentum turns negative, immediately reduce to strict 1.0x base. If a genuine 5%+ dip triggers during uptrend, layer allocations: execute 2-3x multiplier on first dip tier, then scale into deeper tiers at 4-5x.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "856.818398",
+    "dayNumber": 31,
+    "walletBalance": "330.830912389639597332",
+    "tags": [
+      "momentum-trading",
+      "error-recovery",
+      "regime-detection",
+      "pacing",
+      "sentiment-override"
+    ]
   }
 ]
