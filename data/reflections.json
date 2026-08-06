@@ -2953,5 +2953,32 @@
       "ranging-market",
       "pacing"
     ]
+  },
+  {
+    "id": "ref-1786044933760",
+    "date": "2026-08-06",
+    "timestamp": "2026-08-06T19:35:33.760Z",
+    "runStatus": "simulated",
+    "insight": "Arc cirBTC route instability has returned after brief recovery, collapsing allocation from 3.375 USDC to 0.000307 USDC and triggering simulated execution. This is the second outage episode on day 31, suggesting chronic route reliability issues.",
+    "patterns": [
+      "Arc cirBTC route instability causing allocation collapse: 4 consecutive microscopic allocations (0.000014-0.000760 USDC), brief 2-run recovery (2.875-3.375 USDC), then immediate return to failure (0.000307 USDC)",
+      "Persistent -10.90% drawdown signal in swap history identified as route-specific pricing artifact, not genuine dip opportunity — correctly ignored in decision-making",
+      "Market regime stable: ranging with 73-74% confidence, ultra-low volatility (0.24-0.63%), no directional edge for 8 consecutive runs",
+      "Spending pace healthy: 20-24% daily cap utilization with no campaign budget pressure",
+      "Risk metrics consistently low (27-28/100) with 69-70% portfolio deployed and no error streaks"
+    ],
+    "strategyAdjustment": "Implement route health monitoring and failover logic. When Arc cirBTC route triggers simulated execution due to unavailability, either: (1) skip the run entirely to preserve capital for reliable execution windows, or (2) maintain minimum viable allocation (e.g., 1.00 USDC base) instead of microscopic amounts that provide no meaningful accumulation. Consider flagging route instability to infrastructure team if pattern persists beyond 48 hours. Continue ignoring the -10.90% swap history drawdown signal as confirmed pricing artifact.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "875.068398",
+    "dayNumber": 31,
+    "walletBalance": "370.181679301498469568",
+    "tags": [
+      "error-recovery",
+      "route-instability",
+      "allocation-collapse",
+      "simulated-execution",
+      "signal-quality",
+      "infrastructure"
+    ]
   }
 ]

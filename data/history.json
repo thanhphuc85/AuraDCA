@@ -9981,5 +9981,86 @@
       "settleStatus": "received",
       "settledTo": "0xcaf34080f47f576f923962ad04dd7ddd86d8d85f"
     }
+  },
+  {
+    "date": "2026-08-06",
+    "timestamp": "2026-08-06T19:33:58.238Z",
+    "status": "success",
+    "requestedAmountUsdc": "3.375000",
+    "clampedAmountUsdc": "3.375000",
+    "boundBy": "user_schedule",
+    "tokenOut": "EURC",
+    "reasoning": "Market brief shows bearish sentiment with Extreme Fear (FGI=25, BTC -0.80% at $64,346) but bullish +10-15% allocation bias reflecting capitulation opportunity, supported by high on-chain activity signaling active accumulation during fear phases. Real cirBTC price at $64,346 is only 0.89% off ATH with no dip tier triggered, while swap history shows persistent -10.90% drawdown (moderate dip signal) — reflections confirm this divergence is a route-specific pricing artifact, not a genuine buying opportunity. Market regime classified as ranging (74% confidence, +0.39% momentum, ultra-low 0.24% volatility) with two consecutive down candles, offering no directional edge. Composite risk remains low (27/100) with minimal volatility, no error streaks, and 70% portfolio deployed. Spending pace shows 24% daily cap utilization with no campaign budget constraints and ample capacity preserved for genuine dip opportunities.",
+    "txHash": "0x5b15b5c9e4a4eac7dd54205cb9abc0c8d0e0e8e58ab756e00bd577b5a0915c71",
+    "explorerUrl": "https://testnet.arcscan.app/tx/0x5b15b5c9e4a4eac7dd54205cb9abc0c8d0e0e8e58ab756e00bd577b5a0915c71",
+    "amountOut": "2.571433",
+    "walletUsdcBalance": "370.181679301498469568",
+    "message": "Swapped 3.375000 USDC -> EURC across 4 user(s)",
+    "smartSizing": {
+      "fearGreed": 25,
+      "drawdownPct": 0.008169430914359701,
+      "multiplier": 1.35,
+      "source": "llm",
+      "proposedMultiplier": 1.35
+    },
+    "x402": {
+      "resource": "/api/x402-brief",
+      "amountUsdcAtomic": "1000",
+      "payer": "0x61e7Ae336F7Eb7F8517dE4F19963D88dFD9161eC",
+      "payTo": "0xcAf34080F47f576F923962AD04dD7ddd86d8d85f",
+      "settled": true,
+      "mode": "settled",
+      "via": "http",
+      "transferId": "3b1e8e46-3443-4d60-81b8-f102449faaf1",
+      "settleStatus": "received"
+    },
+    "smartFee": {
+      "feeUsdcEach": "0.010000",
+      "totalUsdc": "0.040000",
+      "payerCount": 4,
+      "payTo": "0x00Ebbd3aFCCaD08970ED8FdaE591244c8475a0aC",
+      "testnet": true,
+      "settled": true,
+      "transferId": "a19373d0-7667-415c-bcb5-6eb142e5fa38",
+      "settleStatus": "received",
+      "settledTo": "0xcaf34080f47f576f923962ad04dd7ddd86d8d85f"
+    }
+  },
+  {
+    "date": "2026-08-06",
+    "timestamp": "2026-08-06T19:33:58.238Z",
+    "status": "simulated",
+    "simulated": true,
+    "requestedAmountUsdc": "0.000307",
+    "clampedAmountUsdc": "0.000307",
+    "boundBy": "user_schedule",
+    "tokenOut": "cirBTC",
+    "reasoning": "Market brief shows bearish sentiment with Extreme Fear (FGI=25, BTC -0.80% at $64,346) but bullish +10-15% allocation bias reflecting capitulation opportunity, supported by high on-chain activity signaling active accumulation during fear phases. Real cirBTC price at $64,346 is only 0.89% off ATH with no dip tier triggered, while swap history shows persistent -10.90% drawdown (moderate dip signal) — reflections confirm this divergence is a route-specific pricing artifact, not a genuine buying opportunity. Market regime classified as ranging (74% confidence, +0.39% momentum, ultra-low 0.24% volatility) with two consecutive down candles, offering no directional edge. Composite risk remains low (27/100) with minimal volatility, no error streaks, and 70% portfolio deployed. Spending pace shows 24% daily cap utilization with no campaign budget constraints and ample capacity preserved for genuine dip opportunities.",
+    "amountOut": "0.00000000",
+    "priceUsd": 64346,
+    "walletUsdcBalance": "370.181679301498469568",
+    "message": "[SIMULATED] Arc cirBTC route offline — paper-filled 0.00000000 cirBTC for 0.000307 USDC at $64346.00/cirBTC (no on-chain swap; real funds untouched)",
+    "x402": {
+      "resource": "/api/x402-brief",
+      "amountUsdcAtomic": "1000",
+      "payer": "0x61e7Ae336F7Eb7F8517dE4F19963D88dFD9161eC",
+      "payTo": "0xcAf34080F47f576F923962AD04dD7ddd86d8d85f",
+      "settled": true,
+      "mode": "settled",
+      "via": "http",
+      "transferId": "3b1e8e46-3443-4d60-81b8-f102449faaf1",
+      "settleStatus": "received"
+    },
+    "smartFee": {
+      "feeUsdcEach": "0.010000",
+      "totalUsdc": "0.040000",
+      "payerCount": 4,
+      "payTo": "0x00Ebbd3aFCCaD08970ED8FdaE591244c8475a0aC",
+      "testnet": true,
+      "settled": true,
+      "transferId": "a19373d0-7667-415c-bcb5-6eb142e5fa38",
+      "settleStatus": "received",
+      "settledTo": "0xcaf34080f47f576f923962ad04dd7ddd86d8d85f"
+    }
   }
 ]
