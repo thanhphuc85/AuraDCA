@@ -1,7 +1,7 @@
 import { defineConfig } from "vitest/config";
 
 // Coverage acts as a ratchet in CI: thresholds sit just below the current
-// numbers (stmts ~73 / branch ~65 / func ~62 / lines ~75), so a PR that drops
+// numbers (stmts ~87 / branch ~74 / func ~84 / lines ~89), so a PR that drops
 // test coverage on the already-tested modules fails, while ordinary changes
 // pass. Only files the tests import are counted (all: false) — untested
 // orchestration/UI (run.ts, api/, the dashboard) isn't dragged into the
@@ -19,10 +19,10 @@ export default defineConfig({
         "**/*.config.*",
       ],
       thresholds: {
-        statements: 70,
-        branches: 60,
-        functions: 58,
-        lines: 70,
+        statements: 85,
+        branches: 72,
+        functions: 82,
+        lines: 87,
       },
     },
   },
