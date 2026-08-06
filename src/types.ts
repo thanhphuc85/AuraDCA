@@ -104,6 +104,9 @@ export interface HistoryEntry {
     settleStatus?: string; // Gateway transfer status (received | batched | confirmed…)
     txHash?: string; // on-chain settlement hash, once the batch lands
     explorerUrl?: string;
+    // On-chain recipient of the settlement tx (endpoint's X402_PAY_TO). Distinct
+    // from `payTo` (the ledger accrual treasury): agent treasury → fee-collector.
+    settledTo?: string;
   };
 }
 

@@ -43,7 +43,7 @@ function fakeClient(over: Partial<GatewayPayClient> = {}): GatewayPayClient & {
 }
 
 // A fake fetch that returns a canned Gateway transfer record.
-function fetchReturning(rec: { status?: string; txHash?: string | null }): typeof fetch {
+function fetchReturning(rec: { status?: string; txHash?: string | null; toAddress?: string | null }): typeof fetch {
   return (async () => ({ ok: true, json: async () => rec })) as unknown as typeof fetch;
 }
 
@@ -76,7 +76,7 @@ describe("x402 settlement — Circle Gateway rail", () => {
       privateKey: "0xpk",
       url: "https://brief.example/api/x402-brief",
       clientFactory: async () => client,
-      resolveFetch: fetchReturning({ status: "confirmed", txHash: "0xabc123def456" }),
+      resolveFetch: fetchReturning({ status: "confirmed", txHash: "0xabc123def456", toAddress: "0xseller" }),
     });
     expect(res.transferId).toBe("transfer-uuid-1");
     expect(res.status).toBe("confirmed");
@@ -84,6 +84,7 @@ describe("x402 settlement — Circle Gateway rail", () => {
     expect(res.explorerUrl).toBe("https://testnet.arcscan.app/tx/0xabc123def456");
     expect(res.amountUsdcAtomic).toBe("1000");
     expect(res.payer).toBe(client.address);
+    expect(res.payTo).toBe("0xseller"); // on-chain recipient resolved from the facilitator
     expect(res.network).toBe(ARC_TESTNET_CAIP2);
     expect(client.payCalls).toEqual(["https://brief.example/api/x402-brief"]);
     expect(client.deposits).toEqual([]); // no deposit floor set → no top-up
@@ -168,11 +169,11 @@ describe("x402 settlement — Circle Gateway rail", () => {
 
   it("resolveGatewayTransfer returns the on-chain hash once present", async () => {
     const r = await resolveGatewayTransfer("transfer-uuid-1", {
-      fetchImpl: fetchReturning({ status: "completed", txHash: "0xfeed" }),
+      fetchImpl: fetchReturning({ status: "completed", txHash: "0xfeed", toAddress: "0xseller" }),
       tries: 3,
       delayMs: 0,
     });
-    expect(r).toEqual({ status: "completed", txHash: "0xfeed" });
+    expect(r).toEqual({ status: "completed", txHash: "0xfeed", toAddress: "0xseller" });
   });
 
   it("resolveGatewayTransfer reports last status with null hash when still batching", async () => {
@@ -181,7 +182,7 @@ describe("x402 settlement — Circle Gateway rail", () => {
       tries: 2,
       delayMs: 0,
     });
-    expect(r).toEqual({ status: "batched", txHash: null });
+    expect(r).toEqual({ status: "batched", txHash: null, toAddress: null });
   });
 });
 

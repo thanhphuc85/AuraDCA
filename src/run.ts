@@ -696,6 +696,7 @@ export async function runDailyDca(config: AppConfig): Promise<RunOutcome> {
         smartFeeReceipt.settleStatus = settled.status;
         smartFeeReceipt.txHash = settled.txHash;
         smartFeeReceipt.explorerUrl = settled.explorerUrl;
+        smartFeeReceipt.settledTo = settled.payTo;
         logger.info(`x402 smart fee: settled ${smartFeeReceipt.totalUsdc} USDC on-chain → ${settled.txHash ?? `transfer ${settled.transferId} (tx pending, status ${settled.status})`}`);
       } catch (err) {
         logger.warn(`x402 smart fee: on-chain settlement failed (${(err as Error).message}) — fee stays ledger-only`);

@@ -28,7 +28,7 @@ export interface SmartFeeReceipt {
   feeUsdcEach: string; // the flat fee rate applied per smart payer this run
   totalUsdc: string; // sum actually charged across all payers
   payerCount: number; // how many smart users were charged (fee > 0)
-  payTo: string; // treasury address the fee accrues to
+  payTo: string; // LEDGER accrual target — the agent treasury the fee is booked to
   testnet: true; // demo fee — never a real on-chain user payment
   // Filled by run.ts when the collected fee is settled on-chain via Circle Gateway
   // (X402_SETTLE_ENABLED + X402_SMART_FEE_URL). Absent = ledger-accounted only.
@@ -37,6 +37,10 @@ export interface SmartFeeReceipt {
   settleStatus?: string;
   txHash?: string;
   explorerUrl?: string;
+  // On-chain recipient of the settlement tx (the endpoint's X402_PAY_TO seller).
+  // Distinct from `payTo` by design: the fee accrues to the agent treasury in the
+  // ledger, then the agent settles that collected fee on-chain to the fee-collector.
+  settledTo?: string;
 }
 
 export function isSmartFeeEnabled(): boolean {

@@ -36,12 +36,14 @@ export interface GatewaySettleResult {
   explorerUrl?: string; // only when txHash is known
   amountUsdcAtomic: string; // atomic units actually settled (USDC, 6dp)
   payer: string;
+  payTo?: string; // on-chain recipient of the settlement (the resource's seller address)
   network: string; // CAIP-2
 }
 
 export interface GatewayTransferStatus {
   status: string;
   txHash: string | null;
+  toAddress: string | null; // on-chain recipient reported by the facilitator
 }
 
 /**
@@ -66,10 +68,11 @@ export async function resolveGatewayTransfer(
     try {
       const r = await doFetch(url, { headers: { "content-type": "application/json" } });
       if (r.ok) {
-        const j = (await r.json()) as { status?: string; txHash?: string | null };
+        const j = (await r.json()) as { status?: string; txHash?: string | null; toAddress?: string | null };
         const status = j.status ?? "unknown";
-        if (j.txHash) return { status, txHash: j.txHash };
-        if (i === tries - 1) return { status, txHash: null };
+        const toAddress = j.toAddress ?? null;
+        if (j.txHash) return { status, txHash: j.txHash, toAddress };
+        if (i === tries - 1) return { status, txHash: null, toAddress };
       }
     } catch {
       /* transient — retry */
@@ -152,6 +155,7 @@ export async function settleResourceViaGateway(opts: SettleResourceOpts): Promis
   // receipt still carries the transfer id so the dashboard can resolve it later.
   let status = "received";
   let txHash: string | undefined;
+  let payTo: string | undefined;
   const resolved = await resolveGatewayTransfer(transferId, {
     fetchImpl: opts.resolveFetch,
     tries: opts.resolveTries,
@@ -160,6 +164,7 @@ export async function settleResourceViaGateway(opts: SettleResourceOpts): Promis
   if (resolved) {
     status = resolved.status;
     if (resolved.txHash) txHash = resolved.txHash;
+    if (resolved.toAddress) payTo = resolved.toAddress;
   }
 
   return {
@@ -169,6 +174,7 @@ export async function settleResourceViaGateway(opts: SettleResourceOpts): Promis
     explorerUrl: txHash ? `${ARC_TESTNET_EXPLORER}/tx/${txHash}` : undefined,
     amountUsdcAtomic: res.amount.toString(),
     payer: gateway.address,
+    payTo,
     network: ARC_TESTNET_CAIP2,
   };
 }
