@@ -2848,5 +2848,31 @@
       "pacing",
       "system-failure"
     ]
+  },
+  {
+    "id": "ref-1786023096371",
+    "date": "2026-08-06",
+    "timestamp": "2026-08-06T13:31:36.371Z",
+    "runStatus": "simulated",
+    "insight": "Arc cirBTC route instability has caused allocation collapse from 2.13-3.75 USDC range to microscopic amounts (0.000013-0.000760 USDC) for 3 consecutive runs, triggering simulated executions that prevent actual capital deployment despite favorable low-risk conditions.",
+    "patterns": [
+      "allocation collapse from normal 2-4 USDC range to sub-0.001 USDC amounts",
+      "three consecutive simulated executions due to Arc route offline",
+      "consistent ranging market regime (73% confidence, <1% momentum, <1% volatility)",
+      "persistent near-ATH conditions (0.5-1.2% off ATH) with no dip tiers triggered",
+      "daily cap utilization remains low at 21% despite route instability"
+    ],
+    "strategyAdjustment": "Implement route fallback mechanism: when Arc cirBTC route is offline, either (1) defer execution for 1-2 hours and retry, or (2) use alternative swap route if available, or (3) explicitly skip run rather than simulating with microscopic amounts. Current simulated executions waste scheduling opportunities without deploying capital. Additionally, monitor route health before requesting allocation to avoid calculation based on unavailable liquidity.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "865.943398",
+    "dayNumber": 31,
+    "walletBalance": "379.23559160241733488",
+    "tags": [
+      "route-failure",
+      "allocation-collapse",
+      "simulated-execution",
+      "liquidity-issue",
+      "infrastructure"
+    ]
   }
 ]
