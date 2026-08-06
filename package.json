@@ -15,7 +15,8 @@
     "attest": "tsx src/attestOnce.ts",
     "verify-attest": "tsx src/verifyAttest.ts",
     "x402-demo": "tsx src/x402/demo.ts",
-    "x402-settle": "tsx src/x402/settleDemo.ts"
+    "x402-settle": "tsx src/x402/settleDemo.ts",
+    "x402-backfill": "tsx src/x402/backfill.ts"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.110.0",
