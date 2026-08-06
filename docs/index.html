@@ -3620,10 +3620,11 @@
       $("donutSub").textContent = "No data";
       return;
     }
-    var counts = { success: 0, dry_run: 0, skipped: 0, error: 0 };
+    var counts = { success: 0, dry_run: 0, simulated: 0, skipped: 0, error: 0 };
     history.forEach(function (e) {
       if (e.status === "success") counts.success++;
       else if (e.status === "dry_run") counts.dry_run++;
+      else if (e.status === "simulated") counts.simulated++;
       else if (e.status && e.status.indexOf("skip") === 0) counts.skipped++;
       else counts.error++;
     });
@@ -3632,6 +3633,7 @@
     var slices = [
       { label: (_L().dlSuccess||"Success"), count: counts.success, color: "#34d399" },
       { label: (_L().dlDry||"Dry run"), count: counts.dry_run, color: "#60a5fa" },
+      { label: (_L().dlSimulated||"Simulated"), count: counts.simulated, color: "#22d3ee" },
       { label: (_L().dlSkipped||"Skipped"), count: counts.skipped, color: "#fbbf24" },
       { label: (_L().dlError||"Error"), count: counts.error, color: "#fb7185" },
     ].filter(function (s) { return s.count > 0; });
@@ -5051,6 +5053,7 @@
       dataNote: "Includes all runs, reflections, and strategy data",
       dlSuccess: "Success",
       dlDry: "Dry run",
+      dlSimulated: "Simulated",
       dlSkipped: "Skipped",
       dlError: "Error",
       dlRuns: "runs",
@@ -5289,6 +5292,7 @@
       dataNote: "Bao gồm mọi lượt chạy, suy ngẫm và dữ liệu chiến lược",
       dlSuccess: "Thành công",
       dlDry: "Chạy thử",
+      dlSimulated: "Mô phỏng",
       dlSkipped: "Bỏ qua",
       dlError: "Lỗi",
       dlRuns: "lượt",
