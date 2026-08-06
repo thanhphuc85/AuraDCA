@@ -961,18 +961,18 @@
     <b>Aura DCA</b>
   </div>
   <nav class="sb-nav">
-    <a class="sb-link active" data-target="top"><span class="ic">🏠</span> Dashboard</a>
-    <a class="sb-link" data-target="portfolioSection"><span class="ic">📅</span> My DCA Schedule</a>
-    <a class="sb-link" data-target="trackSection"><span class="ic">📜</span> Live Runs / History</a>
-    <a class="sb-link" data-target="strategySection"><span class="ic">📉</span> Dip Signals</a>
-    <a class="sb-link" data-target="fundSection"><span class="ic">🏦</span> Treasury</a>
-    <a class="sb-link" data-target="leaderboardSection"><span class="ic">📊</span> Analytics</a>
-    <a class="sb-link" data-target="settingsDrawer"><span class="ic">⚙️</span> Settings</a>
+    <a class="sb-link active" data-target="top"><span class="ic">🏠</span> <span data-t="navDashboard">Dashboard</span></a>
+    <a class="sb-link" data-target="portfolioSection"><span class="ic">📅</span> <span data-t="navSchedule">My DCA Schedule</span></a>
+    <a class="sb-link" data-target="trackSection"><span class="ic">📜</span> <span data-t="navHistory">Live Runs / History</span></a>
+    <a class="sb-link" data-target="strategySection"><span class="ic">📉</span> <span data-t="navDipSignals">Dip Signals</span></a>
+    <a class="sb-link" data-target="fundSection"><span class="ic">🏦</span> <span data-t="navTreasury">Treasury</span></a>
+    <a class="sb-link" data-target="leaderboardSection"><span class="ic">📊</span> <span data-t="navAnalytics">Analytics</span></a>
+    <a class="sb-link" data-target="settingsDrawer"><span class="ic">⚙️</span> <span data-t="navSettings">Settings</span></a>
     <div class="sb-sep"></div>
-    <a class="sb-link" href="https://github.com/thanhphuc85/AuraDCA" target="_blank" rel="noopener"><span class="ic">💻</span> GitHub Source</a>
-    <a class="sb-link" href="https://testnet.arcscan.app" target="_blank" rel="noopener"><span class="ic">🔎</span> Arc Explorer ↗</a>
+    <a class="sb-link" href="https://github.com/thanhphuc85/AuraDCA" target="_blank" rel="noopener"><span class="ic">💻</span> <span data-t="navGithub">GitHub Source</span></a>
+    <a class="sb-link" href="https://testnet.arcscan.app" target="_blank" rel="noopener"><span class="ic">🔎</span> <span data-t="navExplorer">Arc Explorer ↗</span></a>
   </nav>
-  <div class="sb-foot">Autonomous DCA on Arc Testnet</div>
+  <div class="sb-foot" data-t="sbFoot">Autonomous DCA on Arc Testnet</div>
 </aside>
 <div class="sb-overlay" id="sbOverlay"></div>
 
@@ -1080,8 +1080,8 @@
     <div class="agent-upgrade live" title="Live now: every agent run pays a real x402 USDC micro-payment for its market-brief input on Arc Testnet. On-chain settlement runs through Circle Gateway (Nanopayments) — when enabled, each brief settles on-chain with a real tx hash shown in the run history.">✅ x402 live on Arc — the agent pays <b>USDC per run</b> for its market brief; on-chain settlement via <b>Circle Gateway</b></div>
     <div class="cta">
       <button class="btn" id="connectHero">Connect Wallet</button>
-      <a class="btn ghost" href="https://github.com/thanhphuc85/AuraDCA" target="_blank" rel="noopener">View source ↗</a>
-      <a class="btn ghost" href="https://testnet.arcscan.app/tx/0x83097f432db9c013b3f8d7748b58f18484c2a5fde4ce500c221ee38524250933" target="_blank" rel="noopener">See a live swap ↗</a>
+      <a class="btn ghost" href="https://github.com/thanhphuc85/AuraDCA" target="_blank" rel="noopener" data-t="viewSource">View source ↗</a>
+      <a class="btn ghost" href="https://testnet.arcscan.app/tx/0x83097f432db9c013b3f8d7748b58f18484c2a5fde4ce500c221ee38524250933" target="_blank" rel="noopener" data-t="liveSwap">See a live swap ↗</a>
     </div>
     <div class="band reveal">
       <div class="g"><div class="n" id="bTotal"><div class="skel skel-num"></div></div><div class="l">USDC deployed</div></div>
@@ -1092,29 +1092,29 @@
 
   <section class="reveal" id="dashSection">
     <div class="dash-stats">
-      <div class="dash-card"><div class="dc-ic">💸</div><div class="dc-val" id="dsDeployed"><div class="skel skel-num"></div></div><div class="dc-lbl">Total USDC Deployed</div></div>
-      <div class="dash-card"><div class="dc-ic">📅</div><div class="dc-val" id="dsToday"><div class="skel skel-num"></div></div><div class="dc-lbl">Today's DCA</div></div>
-      <div class="dash-card" title="Wallets with a funded DCA schedule (balance > 0) — the ones the agent actually charges each run."><div class="dc-ic">👥</div><div class="dc-val" id="dsUsers"><div class="skel skel-num"></div></div><div class="dc-lbl">Active Users</div><div class="dc-sub" id="dsUsersSub"></div></div>
-      <div class="dash-card"><div class="dc-ic">✅</div><div class="dc-val" id="dsSuccess"><div class="skel skel-num"></div></div><div class="dc-lbl">Success Rate</div></div>
+      <div class="dash-card"><div class="dc-ic">💸</div><div class="dc-val" id="dsDeployed"><div class="skel skel-num"></div></div><div class="dc-lbl" data-t="dashDeployed">Total USDC Deployed</div></div>
+      <div class="dash-card"><div class="dc-ic">📅</div><div class="dc-val" id="dsToday"><div class="skel skel-num"></div></div><div class="dc-lbl" data-t="dashToday">Today's DCA</div></div>
+      <div class="dash-card" title="Wallets with a funded DCA schedule (balance > 0) — the ones the agent actually charges each run."><div class="dc-ic">👥</div><div class="dc-val" id="dsUsers"><div class="skel skel-num"></div></div><div class="dc-lbl" data-t="dashUsers">Active Users</div><div class="dc-sub" id="dsUsersSub"></div></div>
+      <div class="dash-card"><div class="dc-ic">✅</div><div class="dc-val" id="dsSuccess"><div class="skel skel-num"></div></div><div class="dc-lbl" data-t="dashSuccess">Success Rate</div></div>
     </div>
-    <div class="dash-freshness" id="dashFreshness">📊 Ledger figures update on each agent run (~hourly). A new deposit or wallet appears once the next run scans it on-chain — it isn't instant.</div>
+    <div class="dash-freshness" id="dashFreshness" data-t="dashFreshness">📊 Ledger figures update on each agent run (~hourly). A new deposit or wallet appears once the next run scans it on-chain — it isn't instant.</div>
     <div class="dash-row2">
       <div class="card">
-        <h3 style="margin:0 0 4px;">🤖 Your DCA Agent</h3>
-        <p class="cs" style="margin:0 0 12px;" id="agentSubtitle">Runs on the schedule you set — pick your cadence, or switch to Manual and trigger buys yourself with no daily limit.</p>
+        <h3 style="margin:0 0 4px;" data-t="agentCardTitle">🤖 Your DCA Agent</h3>
+        <p class="cs" style="margin:0 0 12px;" id="agentSubtitle" data-t="agentSubtitleDefault">Runs on the schedule you set — pick your cadence, or switch to Manual and trigger buys yourself with no daily limit.</p>
         <div class="agent-countdown" id="agentCountdown">
-          <span class="ac-label">Next agent run</span>
+          <span class="ac-label" data-t="agentNextRun">Next agent run</span>
           <span class="ac-timer" id="nextRunTimer">—</span>
         </div>
         <div id="agentCardBody">
-          <p class="cs" id="agentConnectHint">Connect your wallet to set your DCA rate.</p>
+          <p class="cs" id="agentConnectHint" data-t="agentConnectHint">Connect your wallet to set your DCA rate.</p>
         </div>
         <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:12px;">
-          <button class="btn btn-ghost" id="agentGoSchedule">⚙️ Set DCA rate</button>
+          <button class="btn btn-ghost" id="agentGoSchedule" data-t="agentSetRate">⚙️ Set DCA rate</button>
         </div>
       </div>
       <div class="card">
-        <h3 style="margin:0 0 4px;">🧠 Latest decision</h3>
+        <h3 style="margin:0 0 4px;" data-t="latestDecisionTitle">🧠 Latest decision</h3>
         <div class="cs" style="margin:0 0 10px;" id="agentLastStatus"><div class="skel skel-line w40"></div></div>
         <div id="agentLastDecision" class="agent-last"><div class="skel skel-line w80"></div><div class="skel skel-line w60"></div></div>
       </div>
@@ -3781,7 +3781,7 @@
     var active = scheduled.filter(function (u) { return parseFloat(u.usdcBalance || "0") > 0; }).length;
     var us = $("dsUsers"); if (us && ledgerLoaded) us.textContent = String(active);
     var uss = $("dsUsersSub");
-    if (uss && ledgerLoaded) uss.textContent = active === scheduled.length ? "" : "of " + scheduled.length + " with a schedule";
+    if (uss && ledgerLoaded) uss.textContent = active === scheduled.length ? "" : (((typeof T !== "undefined" && T[currentLang]) ? T[currentLang] : {}).dashUsersOf || "of {n} with a schedule").replace("{n}", scheduled.length);
     var done = history.filter(function (e) { return e.status === "success" || e.status === "dry_run" || e.status === "simulated"; }).length;
     var sr = $("dsSuccess"); if (sr) sr.textContent = history.length ? Math.round(done / history.length * 100) + "%" : "—";
     var last = history[history.length - 1];
@@ -3851,7 +3851,7 @@
     countUp($("bRuns"), history.length, "", 0);
     $("bLast").textContent = lastTxt;
 
-    if (typeof renderDashboard === "function") renderDashboard(history, total);
+    if (typeof renderDashboard === "function") { window.__dash = { history: history, total: total }; renderDashboard(history, total); }
 
     $("chartSub").textContent = completed.length + " completed run(s) · " + fmt(total, 4) + " USDC total";
     renderChart(points);
@@ -5016,6 +5016,12 @@
       heroDesc: '<b>Claude</b> decides the strategy — <b>code owns every number that touches money.</b> Pick any token the network supports; each run pools everyone\'s buys by token and settles a real swap through Circle\'s Swap Kit on Arc Testnet, authorized by your own wallet. No server, no human in the loop.',
       connectWallet: "Connect Wallet", viewSource: "View source ↗", liveSwap: "See a live swap ↗",
       usdcDeployed: "USDC deployed", agentRuns: "Agent runs", lastDecision: "Last decision",
+      navDashboard: "Dashboard", navSchedule: "My DCA Schedule", navHistory: "Live Runs / History", navDipSignals: "Dip Signals", navTreasury: "Treasury", navAnalytics: "Analytics", navSettings: "Settings", navGithub: "GitHub Source", navExplorer: "Arc Explorer ↗", sbFoot: "Autonomous DCA on Arc Testnet",
+      dashDeployed: "Total USDC Deployed", dashToday: "Today's DCA", dashUsers: "Active Users", dashSuccess: "Success Rate", dashUsersOf: "of {n} with a schedule",
+      dashFreshness: "📊 Ledger figures update on each agent run (~hourly). A new deposit or wallet appears once the next run scans it on-chain — it isn't instant.",
+      agentCardTitle: "🤖 Your DCA Agent", agentSubtitleDefault: "Runs on the schedule you set — pick your cadence, or switch to Manual and trigger buys yourself with no daily limit.",
+      agentNextRun: "Next agent run", agentConnectHint: "Connect your wallet to set your DCA rate.", agentSetRate: "⚙️ Set DCA rate", latestDecisionTitle: "🧠 Latest decision",
+      agentSubtitleManual: "Manual mode — trigger buys from chat, no daily limit.", agentSubtitleCadence: "Runs {c} on Arc Testnet — fully your schedule.", agentSubtitlePaused: "Paused — turn it back on or switch to Manual to keep control.",
       howEye: "How it works", howTitle: "Claude recommends. Code decides.",
       howSub: "The LLM is never the final authority on how much money moves.",
       step1t: "Claude decides", step1d: "Given balance, budget, day count & history, Claude returns a proposed amount + reasoning via a forced, schema-validated tool call.",
@@ -5131,6 +5137,12 @@
       heroDesc: '<b>Claude</b> quyết định chiến lược — <b>code nắm mọi con số động đến tiền.</b> Chọn bất kỳ token nào mạng hỗ trợ; mỗi lượt chạy gộp lệnh mua theo token và settle thành một swap thật qua Circle Swap Kit trên Arc Testnet, được chính ví của bạn ký duyệt. Không server, không cần người can thiệp.',
       connectWallet: "Kết nối ví", viewSource: "Mã nguồn ↗", liveSwap: "Xem giao dịch ↗",
       usdcDeployed: "USDC đã triển khai", agentRuns: "Lần chạy", lastDecision: "Quyết định gần nhất",
+      navDashboard: "Bảng điều khiển", navSchedule: "Lịch DCA của tôi", navHistory: "Lịch sử chạy", navDipSignals: "Tín hiệu bắt đáy", navTreasury: "Ngân quỹ", navAnalytics: "Phân tích", navSettings: "Cài đặt", navGithub: "Mã nguồn GitHub", navExplorer: "Arc Explorer ↗", sbFoot: "DCA tự động trên Arc Testnet",
+      dashDeployed: "Tổng USDC đã triển khai", dashToday: "DCA hôm nay", dashUsers: "Người dùng hoạt động", dashSuccess: "Tỉ lệ thành công", dashUsersOf: "trên {n} có lịch",
+      dashFreshness: "📊 Số liệu sổ cái cập nhật mỗi lượt agent chạy (~mỗi giờ). Khoản nạp hoặc ví mới chỉ xuất hiện sau khi lượt chạy kế tiếp quét trên chuỗi — không tức thời.",
+      agentCardTitle: "🤖 Agent DCA của bạn", agentSubtitleDefault: "Chạy theo lịch bạn đặt — chọn nhịp, hoặc chuyển sang Thủ công và tự bấm mua không giới hạn ngày.",
+      agentNextRun: "Lượt chạy kế tiếp", agentConnectHint: "Kết nối ví để đặt tỉ lệ DCA.", agentSetRate: "⚙️ Đặt tỉ lệ DCA", latestDecisionTitle: "🧠 Quyết định gần nhất",
+      agentSubtitleManual: "Chế độ Thủ công — tự bấm mua từ chat, không giới hạn ngày.", agentSubtitleCadence: "Chạy {c} trên Arc Testnet — hoàn toàn theo lịch của bạn.", agentSubtitlePaused: "Đã tạm dừng — bật lại hoặc chuyển sang Thủ công để giữ quyền kiểm soát.",
       howEye: "Cách hoạt động", howTitle: "Claude đề xuất. Code quyết định.",
       howSub: "LLM không bao giờ là thẩm quyền cuối cùng về số tiền di chuyển.",
       step1t: "Claude quyết định", step1d: "Dựa trên số dư, ngân sách, số ngày & lịch sử, Claude đề xuất số tiền + lý do qua tool call có schema cố định.",
@@ -5285,6 +5297,10 @@
     // Re-render the portfolio so dynamic bits the [data-t] loop overwrote — the
     // simulated (paper) badge + sub on the cirBTC card — are reapplied last.
     if (typeof renderPortfolio === "function" && typeof _ledgerData !== "undefined" && _ledgerData) renderPortfolio(_ledgerData);
+    // Re-render the dashboard cards so JS-set strings (Active-Users sub, latest-
+    // decision status) follow the language toggle instead of freezing at whatever
+    // language was active when the data first loaded.
+    if (typeof renderDashboard === "function" && window.__dash) renderDashboard(window.__dash.history, window.__dash.total);
   }
   $("langToggle").addEventListener("click", function () {
     applyLang(currentLang === "en" ? "vi" : "en");
