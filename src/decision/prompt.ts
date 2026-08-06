@@ -60,5 +60,14 @@ Rules:
 - If you describe how long the cirBTC-route outage has lasted, cite the provided \`outageDurationDays\` (distinct calendar days) and \`outageConsecutiveRuns\` fields verbatim. NEVER infer the outage's length in days from the number of failed runs: the cron fires hourly, so N failed runs is about N/24 days, not N days.`;
 
 export function buildUserPrompt(context: DecisionContext): string {
-  return `Today's DCA decision context:\n\n${JSON.stringify(context, null, 2)}\n\nPlease analyze the situation using your tools before making a decision.`;
+  // When the run's amount is already fixed by the deterministic per-user schedules
+  // (Cách B), the agent is an ADVISORY commentator, not the allocator: it must not
+  // invent its own buy size, because that number would be shown next to — and
+  // contradict — the amount that actually executes. Pin amountUsdc to the planned
+  // figure and forbid citing any other USDC buy amount in the prose.
+  const planned = context.plannedAmountUsdc;
+  const directive = planned
+    ? `\n\nIMPORTANT — the buy amount for this run is ALREADY DETERMINED by the users' DCA schedules: ${planned} USDC. You are NOT choosing the amount; you are explaining it. Set amountUsdc to exactly ${planned}, set proceed to true, and in \`reasoning\` describe ONLY the market conditions (sentiment, dip, regime, risk, pacing, reflections). Do NOT state, recommend, or imply any USDC buy figure other than ${planned}.`
+    : "";
+  return `Today's DCA decision context:\n\n${JSON.stringify(context, null, 2)}\n\nPlease analyze the situation using your tools before making a decision.${directive}`;
 }

@@ -503,6 +503,10 @@ export async function runDailyDca(config: AppConfig): Promise<RunOutcome> {
       dcaStrategy: config.dcaStrategy,
       remainingCampaignBudgetUsdc: remainingCampaignBudget(history, config.guardrails.campaignTotalBudgetUsdc),
       alreadySpentTodayUsdc: alreadySpentToday(history, date),
+      // The amount is deterministic (per-user schedule sum, live + paper). Hand it to
+      // the advisory agent so its rationale explains THIS number instead of proposing
+      // its own — which used to print a USDC figure that didn't match what executed.
+      plannedAmountUsdc: (liveExecutable + simTotal).toFixed(6),
       outageConsecutiveRuns: outage.consecutiveRuns,
       outageDurationDays: outage.days,
       recentHistory: recentHistory(history).map((e) => ({
@@ -573,13 +577,21 @@ export async function runDailyDca(config: AppConfig): Promise<RunOutcome> {
     // groups are never wallet-clamped, so they always report "user_schedule".
     const boundBy = !sim && groupScale < 1 ? clamp.boundBy : "user_schedule";
 
-    if (groupExec < minSwap) {
+    // The DEX dust floor (minSwap) only guards a LIVE on-chain swap: a real swap
+    // below the pool minimum reverts. A paper (simulated) fill moves no real USDC
+    // and settles on-book at the live price, so it has no sub-minimum to clear —
+    // gating it on minSwap wrongly stranded small smart-mode buys into an
+    // offline-route token. Skip a paper group only when it rounds to nothing.
+    const belowFloor = sim ? groupExec <= 0 : groupExec < minSwap;
+    if (belowFloor) {
       entries.push({
         date, timestamp, status: "skipped_guardrail_clamped",
         requestedAmountUsdc: groupScheduled.toFixed(6), clampedAmountUsdc: "0",
-        boundBy: "group_below_min_swap", tokenOut: token, reasoning,
+        boundBy: sim ? "group_zero_amount" : "group_below_min_swap", tokenOut: token, reasoning,
         walletUsdcBalance: usdcBalance,
-        message: `No buy for ${token}: ${users} user(s), executable ${groupExec.toFixed(6)} USDC < min swap ${minSwap}`,
+        message: sim
+          ? `No paper fill for ${token}: ${users} user(s), executable rounds to 0 USDC`
+          : `No buy for ${token}: ${users} user(s), executable ${groupExec.toFixed(6)} USDC < min swap ${minSwap}`,
       });
       continue;
     }

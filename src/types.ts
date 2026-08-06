@@ -118,6 +118,11 @@ export interface DecisionContext {
   dcaStrategy: DcaStrategy;
   remainingCampaignBudgetUsdc?: string;
   alreadySpentTodayUsdc: string;
+  // The USDC amount this run will actually spend, already fixed by the deterministic
+  // per-user DCA schedules (Cách B). When set, the agent does NOT choose the amount —
+  // it must set amountUsdc to exactly this and keep its reasoning free of any other
+  // USDC buy figure, so the displayed rationale never contradicts what executes.
+  plannedAmountUsdc?: string;
   // Code-measured cirBTC-route outage. outageDurationDays is DISTINCT calendar
   // days; outageConsecutiveRuns is the trailing failed-run tally. The agent must
   // cite the days figure and never derive days from the run count.
