@@ -2611,5 +2611,32 @@
       "budget-preservation",
       "skip-streak"
     ]
+  },
+  {
+    "id": "ref-1786001508294",
+    "date": "2026-08-06",
+    "timestamp": "2026-08-06T07:31:48.294Z",
+    "runStatus": "skipped_guardrail_clamped",
+    "insight": "Four consecutive skips due to group_below_min_swap bug: agent requests 0.25-2.00 USDC total but with 2 users this splits to ~0.0001-0.001 USDC per user, far below 0.1 USDC minimum swap threshold. The fix is backwards—need to request MORE not less.",
+    "patterns": [
+      "Four consecutive group_below_min_swap skips with progressively smaller requests (0.000442→0.000455→0.000464→0.000468 USDC)",
+      "Successfully corrected inflation bug earlier in day (requests declined from 2.1-5.24 USDC to 1.00-3.85 USDC range)",
+      "Market ranging near ATH (64,475-64,881) with no dip tier triggered—consistently 0.07-0.70% off high",
+      "Risk score escalating with skip streak: 22→29→35→42/100",
+      "Reasoning shows awareness of bug but proposed fix (0.25 USDC total → 0.125/user) still below threshold"
+    ],
+    "strategyAdjustment": "For 2-user groups, request MINIMUM 0.50 USDC total (0.25 USDC per user, 2.5x safety margin above 0.1 threshold). In ranging market near ATH with no dip signal, base allocation should be 0.50-1.00 USDC to avoid skip trap while preserving 99.5%+ daily cap. Stop requesting sub-0.001 USDC amounts—the math error is clear: requested amount is already POST-split, not pre-split.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "848.827428",
+    "dayNumber": 31,
+    "walletBalance": "335.48813186214244442",
+    "tags": [
+      "error-recovery",
+      "clamping",
+      "pacing",
+      "group_below_min_swap",
+      "bug-fix",
+      "ranging-market"
+    ]
   }
 ]
