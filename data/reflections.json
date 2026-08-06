@@ -3033,5 +3033,32 @@
       "pacing",
       "market-timing"
     ]
+  },
+  {
+    "id": "ref-1786053822169",
+    "date": "2026-08-06",
+    "timestamp": "2026-08-06T22:03:42.169Z",
+    "runStatus": "success",
+    "insight": "Route stability has fully recovered after chronic Arc cirBTC instability. Successfully executed 3.05 USDC swapping to EURC (not cirBTC), suggesting token diversification strategy is working around previous route issues. Daily cap utilization remains conservative at 27% despite persistent false dip signals.",
+    "patterns": [
+      "Persistent -12.95% drawdown in swap history continues to trigger false moderate dip signals across all recent runs",
+      "Arc cirBTC route instability resolved - 5 of last 8 runs successful vs 2 simulated microscopic failures",
+      "Consistent 25-27% daily cap utilization shows conservative pacing despite bearish market (FGI=25, 4 consecutive down candles)",
+      "Token diversification active - latest run swapped to EURC instead of cirBTC, likely mitigating route risk",
+      "Market regime stuck in ultra-low volatility ranging (0.24-1.07% volatility) for entire recent history with no genuine 5%+ dip opportunities"
+    ],
+    "strategyAdjustment": "Continue current conservative pacing at 25-30% daily cap utilization to preserve 70%+ capacity for genuine volatility events. Monitor EURC swap execution quality vs cirBTC to validate token diversification as a route stability solution. If false dip signals from swap history drawdown persist beyond 10 consecutive runs, consider recalibrating the drawdown threshold from -10% to -15% to filter route-specific pricing artifacts. In ranging markets with sub-2% volatility, maintain base allocations and avoid chasing false signals.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "880.993398",
+    "dayNumber": 31,
+    "walletBalance": "363.880622825586942982",
+    "tags": [
+      "route-recovery",
+      "token-diversification",
+      "false-signals",
+      "pacing",
+      "ranging-market",
+      "volatility-preservation"
+    ]
   }
 ]
