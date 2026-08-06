@@ -2980,5 +2980,31 @@
       "signal-quality",
       "infrastructure"
     ]
+  },
+  {
+    "id": "ref-1786045602936",
+    "date": "2026-08-06",
+    "timestamp": "2026-08-06T19:46:42.936Z",
+    "runStatus": "simulated",
+    "insight": "Arc cirBTC route instability has returned, collapsing allocations from 2.88-3.38 USDC to microscopic amounts (0.000011 USDC) for 4 of last 8 runs, creating a pattern of brief recoveries followed by immediate outages that fragments execution quality.",
+    "patterns": [
+      "Arc cirBTC route instability recurring: 4 simulated runs with microscopic allocations (0.000011-0.000307 USDC) interspersed with 3 successful runs at normal size (2.88-3.38 USDC)",
+      "Persistent -10% to -13% swap history drawdown flagged as moderate dip signal, but reflections confirm this is route-specific pricing artifact not genuine buying opportunity",
+      "Market regime stable: ranging with 72-74% confidence, ultra-low volatility (0.24-0.81%), no directional edge for 8 consecutive runs",
+      "Composite risk consistently low (27-30/100) with 70% portfolio deployed, no error streaks",
+      "Daily cap utilization trending up from 21% to 26% despite route failures fragmenting execution"
+    ],
+    "strategyAdjustment": "Implement route health monitoring with failover logic: if Arc cirBTC route shows consecutive microscopic allocations or simulated fills, temporarily switch to alternative cirBTC route or pause cirBTC purchases until route stability confirmed for 2+ consecutive runs at normal allocation levels. Document route-specific drawdown baseline to avoid false dip signals from pricing artifacts.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "875.068398",
+    "dayNumber": 31,
+    "walletBalance": "366.783871454129705118",
+    "tags": [
+      "error-recovery",
+      "route-instability",
+      "allocation-collapse",
+      "false-dip-signal",
+      "infrastructure"
+    ]
   }
 ]
