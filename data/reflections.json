@@ -2769,5 +2769,31 @@
       "ranging-market",
       "near-ath"
     ]
+  },
+  {
+    "id": "ref-1786017726680",
+    "date": "2026-08-06",
+    "timestamp": "2026-08-06T12:02:06.680Z",
+    "runStatus": "success",
+    "insight": "Four consecutive successful executions confirm skip-streak bug is fully resolved. Agent is now operating in stable ranging market (72% confidence, 0.80% volatility) near ATH with no dip signals, correctly executing small base allocations (2.125 USDC) while preserving 81% daily cap capacity.",
+    "patterns": [
+      "Skip-streak bug fully resolved after 5 consecutive failures - agent now consistently requests appropriate total amounts",
+      "Market near ATH (0.58% off) with no dip tiers triggered across all 8 runs - price stuck in tight range",
+      "Ranging regime dominant (71-72% confidence) with ultra-low volatility (0.80-1.00%) indicating consolidation phase",
+      "Extreme Fear sentiment (FGI=25) persisting but not driving price action - sentiment/price divergence",
+      "Daily cap utilization stable at 15-19% with consistent small base allocations preserving capacity"
+    ],
+    "strategyAdjustment": "Maintain current conservative pacing in ranging market near ATH. Continue base-level allocations (2-3 USDC) to preserve 80%+ daily cap for genuine 5%+ dip opportunities. Monitor for breakout from current 0.5-1% range - if volatility increases above 2% or dip tier triggers, scale up appropriately. No changes needed to amount calculation logic as bug is confirmed resolved.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "862.693398",
+    "dayNumber": 31,
+    "walletBalance": "343.660065089559194196",
+    "tags": [
+      "error-recovery",
+      "pacing",
+      "market-timing",
+      "ranging-market",
+      "budget"
+    ]
   }
 ]
