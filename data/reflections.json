@@ -4032,5 +4032,35 @@
       "capacity-preservation",
       "ath-proximity"
     ]
+  },
+  {
+    "id": "ref-1786143729767",
+    "date": "2026-08-07",
+    "timestamp": "2026-08-07T23:02:09.767Z",
+    "runStatus": "success",
+    "insight": "Day 32 showing perfect execution discipline in ultra-tight ranging market (0.43-0.86% off ATH, 0.9-1.3% volatility) with zero clamping issues—all 8 runs bound by user_schedule except 1 sim hit ceiling, confirming strategy is correctly preserving 88% capacity while BTC consolidates near $64,800-65,000 with no genuine dip signals.",
+    "patterns": [
+      "Zero clamping across all real trades - only user_schedule binding for 8 consecutive runs",
+      "Ultra-low volatility regime persisting (0.9-1.3% range) with BTC trading 0.4-0.9% off ATH in tight consolidation",
+      "Consistent 26-30% daily cap utilization maintaining disciplined base DCA pace (~30 USDC/day out of 200 cap)",
+      "Fear index stable at 29 (bearish) despite price near ATH - sentiment/price divergence continues",
+      "Portfolio concentration holding steady at 73-76% deployed with 350 USDC balance preserved",
+      "Strategy correctly identifying Arc cirBTC pricing artifacts as false dip signals across all runs",
+      "Ranging market regime classification at 70-72% confidence with negative momentum (-1% to -2%) and no directional edge"
+    ],
+    "strategyAdjustment": "Maintain current conservative base DCA approach - market regime validates the strategy of preserving capacity (350 USDC / 88% of firepower) for volatility expansion. Continue ignoring sub-1% price movements as noise. If volatility breaks above 2-3% threshold OR price dips 5%+ from current $64,900 level (trigger at $61,655), increase multiplier aggressively to 2-3x. Monitor for regime shift from ranging to trending that would justify deploying reserved capital.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "943.419368",
+    "dayNumber": 32,
+    "walletBalance": "350.918094366379983203",
+    "tags": [
+      "pacing",
+      "ranging-market",
+      "discipline",
+      "capacity-preservation",
+      "low-volatility",
+      "consolidation",
+      "no-clamping"
+    ]
   }
 ]
