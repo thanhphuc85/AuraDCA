@@ -3520,5 +3520,34 @@
       "dip-discipline",
       "capacity-preservation"
     ]
+  },
+  {
+    "id": "ref-1786104126035",
+    "date": "2026-08-07",
+    "timestamp": "2026-08-07T12:02:06.035Z",
+    "runStatus": "success",
+    "insight": "Day 32 showing excellent strategic discipline: consistently executing base DCA near ATH ($64,968, only 0.15% off peak) while correctly ignoring persistent false moderate dip signals (-10.10% drawdown) from Arc cirBTC pricing artifacts across 8+ consecutive runs.",
+    "patterns": [
+      "Never clamped by daily cap - consistently bound by user_schedule at 12-17% daily utilization",
+      "Persistent false moderate dip signals from Arc cirBTC route-specific pricing artifacts correctly ignored for 8+ runs",
+      "BTC consolidating near ATH with Fear index stuck at 29 despite price strength",
+      "Market regime oscillating between ranging (68-72% confidence) and brief trending_up signal, now back to ranging",
+      "Portfolio 74% deployed with 321 USDC balance maintaining 88% capacity for genuine dips",
+      "Zero error streaks, 60% execution reliability stable, composite risk consistently low (22-29/100)",
+      "Cumulative spend 920 USDC over 32 days = 28.8 USDC/day average, well below daily capacity"
+    ],
+    "strategyAdjustment": "Continue current strategy with high confidence: maintain base DCA sizing (2.5-3 USDC range) in this tight ATH consolidation, preserve false-dip discipline by requiring real 5%+ drawdowns to trigger ladder, and keep 85%+ powder dry for genuine volatility events. If BTC breaks above ATH convincingly OR Fear index rises above 35-40, consider modest 1.2-1.3x multiplier to capture momentum. If genuine 5%+ dip materializes, aggressive ladder deployment is warranted given strong 321 USDC reserves and only 17% daily cap utilization.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "920.393398",
+    "dayNumber": 32,
+    "walletBalance": "321.169813732414204201",
+    "tags": [
+      "pacing",
+      "dip-discipline",
+      "false-signal-filtering",
+      "ath-consolidation",
+      "capacity-preservation",
+      "market-timing"
+    ]
   }
 ]
