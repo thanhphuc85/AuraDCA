@@ -3491,5 +3491,34 @@
       "execution-quality",
       "volatility-regime"
     ]
+  },
+  {
+    "id": "ref-1786100535085",
+    "date": "2026-08-07",
+    "timestamp": "2026-08-07T11:02:15.085Z",
+    "runStatus": "success",
+    "insight": "Market regime shifted from ranging to trending_up (76% confidence, +3.61% momentum, 4 consecutive up candles) after 7+ runs of tight consolidation near ATH. Strategy discipline preserved 88% capacity by correctly ignoring false Arc cirBTC dip signals throughout consolidation phase—now positioned to capitalize on genuine pullbacks if uptrend reverses.",
+    "patterns": [
+      "No clamping across all 8 recent runs - user_schedule consistently binding at 0-3.25 USDC range",
+      "Zero error streaks maintained with 60% execution reliability stabilized after recent volatility",
+      "False dip signals from Arc cirBTC pricing artifacts (-9% to -13% drawdown) correctly ignored for 8+ consecutive runs",
+      "Market regime transition: ranging (68-73% confidence, <1% momentum, <2% volatility) → trending_up (76% confidence, +3.61% momentum, 2.06% volatility)",
+      "Daily cap utilization slowly climbing: 10% → 12% → 13% → 15% → 16% as scheduled amounts vary",
+      "BTC price consolidated 0.13-1.00% off ATH ($64,278-$64,844) across all runs before breakout signal",
+      "Portfolio deployment steady at 73-74% with 324-335 USDC balance maintaining ample reserves"
+    ],
+    "strategyAdjustment": "Continue base DCA through emerging uptrend while monitoring for regime shift back to ranging or trending_down. If uptrend sustains above 2.5-3% volatility with continued momentum, maintain disciplined base allocation. If momentum reverses and volatility spikes with genuine 5%+ dip trigger (not Arc cirBTC artifact), leverage preserved 88% capacity for scaled entries. Key decision point: distinguish real breakout continuation from false breakout trap—watch for volatility expansion above 3% and sustained fear index movement away from current 29 level.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "917.518398",
+    "dayNumber": 32,
+    "walletBalance": "324.071071300663002952",
+    "tags": [
+      "market-timing",
+      "regime-change",
+      "pacing",
+      "signal-quality",
+      "dip-discipline",
+      "capacity-preservation"
+    ]
   }
 ]
