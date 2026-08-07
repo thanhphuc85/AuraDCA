@@ -3087,5 +3087,33 @@
       "route-artifact",
       "discipline"
     ]
+  },
+  {
+    "id": "ref-1786060939690",
+    "date": "2026-08-07",
+    "timestamp": "2026-08-07T00:02:19.690Z",
+    "runStatus": "success",
+    "insight": "Day 32 showing consistent execution at base 2.875 USDC with no dip tiers triggered for 8+ consecutive runs. Arc cirBTC route pricing artifact (-12.95% drawdown) persists but agent correctly ignores false moderate dip signals, waiting for genuine 5%+ real price dips.",
+    "patterns": [
+      "No clamping for 8+ runs - user_schedule is the only binding constraint",
+      "Persistent -12.95% swap history drawdown triggering false moderate dip signals across all recent runs",
+      "BTC ranging 0.71-1.02% off ATH with ultra-low volatility (0.24-1.20%) - no genuine dip opportunities materializing",
+      "Fear index improving from Extreme Fear 25 to Fear 29, but allocation bias remains bearish -10-15%",
+      "71% portfolio deployed consistently with 355 USDC balance preserving capacity",
+      "Daily cap utilization steady at 23-29% with no budget constraints"
+    ],
+    "strategyAdjustment": "Continue ignoring Arc cirBTC swap history drawdown signals - confirmed as route-specific pricing artifact over 8 runs. Maintain base allocations (2.5-3.0 USDC range) in this ultra-low volatility ranging regime. With BTC hovering just 1% off ATH and 355 USDC balance remaining, preserve dry powder for genuine 5%+ dip opportunities when volatility returns. Monitor for volatility regime shift or true price dislocations rather than reacting to persistent false signals from swap route instability.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "885.893398",
+    "dayNumber": 32,
+    "walletBalance": "355.918093263383193542",
+    "tags": [
+      "pacing",
+      "signal-quality",
+      "false-positive",
+      "ranging-market",
+      "route-stability",
+      "dry-powder"
+    ]
   }
 ]
