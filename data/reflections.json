@@ -3115,5 +3115,32 @@
       "route-stability",
       "dry-powder"
     ]
+  },
+  {
+    "id": "ref-1786064528950",
+    "date": "2026-08-07",
+    "timestamp": "2026-08-07T01:02:08.950Z",
+    "runStatus": "success",
+    "insight": "Healthy steady-state execution with correct route artifact rejection. BTC ranging near ATH ($64,260, only 1.03% off peak) with ultra-low 1.06% volatility—no genuine dip opportunities present despite persistent -12.78% swap history drawdown that correctly gets ignored as Arc cirBTC pricing bug.",
+    "patterns": [
+      "Consistent base allocation execution: 8 consecutive runs at 2.025-3.375 USDC bounded by user_schedule with no clamping intervention",
+      "Persistent false dip signal: -10.90% to -12.95% swap history drawdown across all 8 runs correctly identified as Arc cirBTC route artifact, not genuine buying opportunity",
+      "Ultra-low volatility regime: 0.24-1.20% volatility across all runs with ranging market classification (71-74% confidence), offering no directional edge",
+      "Fear index recovery: improved from Extreme Fear 25 to Fear 29 over 2 days while BTC stable near $64,300",
+      "Zero clamping pressure: all runs bounded by user_schedule, no daily cap or budget constraints binding",
+      "Execution reliability improving: 40% → 50% → 60% → 70% over last 4 runs on 2026-08-06 to 2026-08-07"
+    ],
+    "strategyAdjustment": "Continue base allocation discipline in this ranging, low-volatility regime near ATH. Do not increase allocation until genuine dip tier triggers (5%+ decline from ATH) or volatility breaks above 2-3% signaling regime change. Monitor for volatility expansion—when it arrives, the preserved 353 USDC balance (28% daily cap capacity remaining) positions us well for genuine dip ladder deployment. Maintain route artifact rejection discipline that has correctly prevented false dip buying across 8+ runs.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "888.768398",
+    "dayNumber": 32,
+    "walletBalance": "353.020953465428611142",
+    "tags": [
+      "pacing",
+      "market-timing",
+      "error-recovery",
+      "signal-quality",
+      "ranging-regime"
+    ]
   }
 ]
