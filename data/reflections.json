@@ -3200,5 +3200,35 @@
       "capacity-preservation",
       "stable-execution"
     ]
+  },
+  {
+    "id": "ref-1786075339092",
+    "date": "2026-08-07",
+    "timestamp": "2026-08-07T04:02:19.092Z",
+    "runStatus": "success",
+    "insight": "DCA strategy is correctly ignoring false dip signals from Arc cirBTC route pricing artifacts (~-13% persistent drawdown) and maintaining disciplined base allocation at 2.875 USDC. Market ranging at ATH (BTC $64,234, only 1.07% off peak) with ultra-low volatility (0.32%) requires patience—no genuine dip opportunities exist yet.",
+    "patterns": [
+      "Persistent -12.54% to -12.95% drawdown across 8 consecutive runs confirmed as route-specific pricing artifact, not genuine dip",
+      "Ultra-low volatility regime sustained (0.15%-1.20%) with ranging market classification (71-74% confidence)",
+      "Execution reliability recovered and stabilized at 80% after previous Arc cirBTC route instability",
+      "Zero clamping by daily cap across all 8 runs—consistently bound by user_schedule only",
+      "Composite risk consistently low (21-32/100) with zero error streaks",
+      "Daily cap utilization extremely conservative at 4-6% in recent runs",
+      "BTC hovering near ATH ($64,234-$64,465, <1.1% off peak) with no 5%+ dip triggers"
+    ],
+    "strategyAdjustment": "Continue current disciplined approach: maintain base 2.875 USDC allocation during ranging/ATH conditions, ignore persistent Arc cirBTC route drawdown signal, and preserve 94-96% daily capacity (344 USDC balance) for genuine 5%+ dip opportunities. Monitor for volatility breakout above 2-3% which would signal potential directional regime change. If BTC breaks above ATH or drops 5%+ from current levels, reassess dip ladder activation thresholds.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "897.393398",
+    "dayNumber": 32,
+    "walletBalance": "344.332725263023296512",
+    "tags": [
+      "pacing",
+      "dip-signal-accuracy",
+      "route-stability",
+      "ranging-market",
+      "ath-proximity",
+      "execution-recovery",
+      "false-positive-filtering"
+    ]
   }
 ]
