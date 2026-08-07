@@ -3859,5 +3859,36 @@
       "dip-discipline",
       "volatility-regime"
     ]
+  },
+  {
+    "id": "ref-1786130188821",
+    "date": "2026-08-07",
+    "timestamp": "2026-08-07T19:16:28.821Z",
+    "runStatus": "simulated",
+    "insight": "Strategy executing flawlessly in tight ranging market near ATH ($64,800, only 0.67% off peak). 8 consecutive runs correctly maintained base DCA discipline, ignoring persistent false Arc cirBTC pricing artifacts while preserving 88% capacity (297 USDC reserve) for genuine 5%+ dip opportunities.",
+    "patterns": [
+      "consistently bound by user_schedule for 8+ runs — no clamping by daily/campaign caps",
+      "ultra-low volatility regime persisting (0.73-1.31%) with ranging classification 70-72% confidence",
+      "persistent false 'mild dip' signals from Arc cirBTC route pricing artifacts correctly ignored across all runs",
+      "execution toggling between real success and simulated runs (last 2 simulated with dust amounts 0.000012-0.000265 USDC)",
+      "spending pace extremely conservative at 20-27% daily cap utilization maintaining 297-314 USDC reserve",
+      "composite risk stable at 30-31/100 driven primarily by 75-76% portfolio concentration, not volatility or error streaks",
+      "Fear index locked at 29 (Fear territory) for entire sequence despite BTC near ATH",
+      "zero error streaks maintained across all 8 runs"
+    ],
+    "strategyAdjustment": "Continue current base DCA discipline in tight range near ATH. Do not chase false Arc cirBTC dip signals. Monitor for genuine volatility breakout above 2-3% to activate dip ladder — current 1.31% volatility offers no edge. If BTC breaks below $61,560 (5% dip threshold), immediately scale to tier-1 allocations using preserved capacity. Watch for transition from simulated back to real execution mode to confirm route stability.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "937.818398",
+    "dayNumber": 32,
+    "walletBalance": "297.175311558669010201",
+    "tags": [
+      "pacing",
+      "ranging-market",
+      "false-signal-avoidance",
+      "capacity-preservation",
+      "discipline",
+      "simulated-execution",
+      "low-volatility"
+    ]
   }
 ]
