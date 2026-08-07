@@ -3549,5 +3549,33 @@
       "capacity-preservation",
       "market-timing"
     ]
+  },
+  {
+    "id": "ref-1786107740083",
+    "date": "2026-08-07",
+    "timestamp": "2026-08-07T13:02:20.084Z",
+    "runStatus": "simulated",
+    "insight": "Strategy discipline holding strong across 8+ runs at BTC ATH ($65,237)—correctly ignoring persistent false dip signals (-9-10% drawdowns) from Arc cirBTC pricing artifacts while maintaining base DCA with healthy 19% daily cap utilization and 318 USDC reserve (88% capacity) for genuine opportunities.",
+    "patterns": [
+      "Persistent false dip signals (-9-10% drawdowns) from Arc cirBTC route pricing artifacts correctly ignored across all 8 runs",
+      "BTC ranging near ATH with ultra-low volatility (0.69-2.06%) and no genuine dip tiers triggered (need 5%+ drawdown)",
+      "Consistent low composite risk (25-29/100) with zero error streaks and 60-70% execution reliability",
+      "Daily cap utilization ranging 12-19% showing disciplined base DCA pacing",
+      "74% portfolio deployed with 318-333 USDC balance maintaining 88% capacity reserve",
+      "Market regime oscillating between ranging (68-72% confidence) and brief trending_up signal, but no sustained directional edge"
+    ],
+    "strategyAdjustment": "Continue current strategy—base DCA execution is optimal near ATH with no genuine dips. Maintain 5%+ drawdown threshold for dip ladder activation. Monitor for volatility increase above 2-3% which would signal potential genuine dip opportunities. If BTC breaks above $65,237 ATH convincingly (>2% sustained), consider slightly reducing position sizes to preserve even more capacity. If genuine 5%+ dip materializes, aggressive deployment of 50-100 USDC is justified given strong reserve position and 32-day campaign maturity.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "922.518398",
+    "dayNumber": 32,
+    "walletBalance": "318.268286741587946125",
+    "tags": [
+      "pacing",
+      "false-signals",
+      "market-timing",
+      "ATH-behavior",
+      "budget-reserve",
+      "discipline"
+    ]
   }
 ]
