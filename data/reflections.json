@@ -3290,5 +3290,32 @@
       "pacing",
       "route-pricing-artifact"
     ]
+  },
+  {
+    "id": "ref-1786086136766",
+    "date": "2026-08-07",
+    "timestamp": "2026-08-07T07:02:16.766Z",
+    "runStatus": "simulated",
+    "insight": "Arc cirBTC route failure forced simulated fill at 0.000595 USDC (99.98% reduction from scheduled 2.875 USDC), severely disrupting pacing on Day 32 despite 100% execution reliability in prior 7 runs.",
+    "patterns": [
+      "Execution reliability dropped from 100% to simulated fill due to Arc route offline - technical infrastructure failure rather than market/strategy issue",
+      "Persistent false moderate dip signal from -12.83% swap history drawdown correctly ignored for 8+ consecutive runs - strategy discipline holding",
+      "Ultra-low volatility regime (0.46%) persisting across all 8 runs with ranging market at 73% confidence and BTC hovering 0.86-1.17% off ATH",
+      "Spending pace healthy at 10% daily cap utilization before route failure, with 335 USDC balance (90% campaign capacity preserved)",
+      "Zero error streaks and low composite risk (20/100) maintained across period - risk management working effectively"
+    ],
+    "strategyAdjustment": "On next run, verify Arc cirBTC route availability before scheduling full amount. If route remains offline, implement fallback: either (1) defer full scheduled amount to next working run to maintain pacing integrity, or (2) identify alternative cirBTC liquidity route. Current 906 USDC spent over 32 days suggests ~28 USDC/day average - missing one 2.875 USDC buy is recoverable, but consecutive route failures would require pacing recalibration. Continue ignoring false swap history dip signals until genuine 5%+ market dip materializes.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "906.018398",
+    "dayNumber": 32,
+    "walletBalance": "335.647271506858393776",
+    "tags": [
+      "execution-failure",
+      "route-offline",
+      "pacing",
+      "error-recovery",
+      "infrastructure-risk",
+      "false-signal-discipline"
+    ]
   }
 ]
