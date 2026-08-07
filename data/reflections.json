@@ -3230,5 +3230,35 @@
       "execution-recovery",
       "false-positive-filtering"
     ]
+  },
+  {
+    "id": "ref-1786078933385",
+    "date": "2026-08-07",
+    "timestamp": "2026-08-07T05:02:13.385Z",
+    "runStatus": "success",
+    "insight": "Strategy operating in stable equilibrium: 8 consecutive successful executions at base 2.875 USDC (no clamping), correctly ignoring false -11-12% drawdown signals from Arc cirBTC pricing artifacts, while BTC consolidates near ATH ($64,170-$64,389) in ultra-low volatility (0.15-1.20%) ranging regime.",
+    "patterns": [
+      "No clamping across all 8 recent runs - consistently bound by user_schedule at 2.875 USDC",
+      "False dip signals (-11.69% to -12.95% drawdown) appearing in every run but correctly identified as Arc cirBTC route-specific pricing artifacts, not genuine buying opportunities",
+      "Execution reliability improved from 40% to 80% over recent runs, now fully stabilized",
+      "Ultra-low volatility environment (0.15-1.20%) with ranging market regime (71-74% confidence) - no directional edge available",
+      "BTC price stable near ATH (only 0.83-1.17% off peak at $64,170-$64,389), well below 5% mild dip threshold",
+      "Consistent low composite risk (21-32/100) with zero error streaks maintained",
+      "Daily cap utilization very conservative at 4-7%, preserving 93-96% capacity",
+      "Portfolio deployment stable at 71-72% with healthy 341-355 USDC balance"
+    ],
+    "strategyAdjustment": "Maintain current strategy: continue base 2.875 USDC scheduled buys, ignore persistent Arc cirBTC drawdown artifacts, and preserve dry powder (341 USDC, 93% daily cap available) for genuine dip opportunities requiring 5%+ decline from ATH or volatility spike above 2-3%. No adjustment needed - false signal filtering is working correctly and risk profile is optimal.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "900.268398",
+    "dayNumber": 32,
+    "walletBalance": "341.438681183170500416",
+    "tags": [
+      "pacing",
+      "signal-quality",
+      "false-positive-filtering",
+      "ranging-market",
+      "execution-reliability",
+      "capacity-preservation"
+    ]
   }
 ]
