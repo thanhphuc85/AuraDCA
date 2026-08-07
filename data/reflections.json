@@ -3802,5 +3802,34 @@
       "false-dip-filtering",
       "concentration-risk"
     ]
+  },
+  {
+    "id": "ref-1786125726896",
+    "date": "2026-08-07",
+    "timestamp": "2026-08-07T18:02:06.896Z",
+    "runStatus": "success",
+    "insight": "Strategy executing exactly as designed: 8 consecutive successful runs maintaining base DCA in ranging market near ATH (BTC $64,707-$65,190, <1% off ATH), correctly ignoring persistent false dip signals from Arc cirBTC pricing artifacts while preserving 88% capacity for genuine 5%+ drawdowns.",
+    "patterns": [
+      "Zero clamping across all runs - user_schedule bound only, indicating guardrails are properly calibrated",
+      "Market regime stable: 71-72% confidence ranging classification with ultra-low 0.73-1.19% volatility for 8+ runs",
+      "Persistent false dip signal (-8.75% to -9.10% drawdown) correctly ignored across entire session - Arc cirBTC pricing artifact successfully filtered",
+      "Composite risk stable 28-31/100: driven by 74-76% portfolio concentration, minimal volatility, zero error streaks",
+      "100% execution success rate on real transactions (5/5), 0% on simulated (3/3 sim were test runs)",
+      "Daily spend rate consistent 20-25% of daily cap with 302-316 USDC balance remaining",
+      "Fear index pinned at 29 (bearish) across all 8 runs despite BTC consolidating near ATH"
+    ],
+    "strategyAdjustment": "Continue current approach - no adjustment needed. Strategy is working precisely as intended: maintaining disciplined base DCA in tight consolidation (0.07-0.81% off ATH), correctly filtering false dip signals through multi-source validation, and preserving dry powder (302 USDC, 32% of budget) for genuine volatility expansion above 2-3% or legitimate 5%+ dips. If volatility remains sub-1.5% for 3+ more days, consider micro-reduction in base DCA size to extend campaign runway past day 60.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "935.868398",
+    "dayNumber": 32,
+    "walletBalance": "302.232045352905170201",
+    "tags": [
+      "pacing",
+      "ranging-market",
+      "false-signal-filtering",
+      "concentration-risk",
+      "discipline",
+      "capacity-preservation"
+    ]
   }
 ]
