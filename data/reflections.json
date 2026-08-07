@@ -3404,5 +3404,33 @@
       "volatility-suppression",
       "capital-preservation"
     ]
+  },
+  {
+    "id": "ref-1786089737156",
+    "date": "2026-08-07",
+    "timestamp": "2026-08-07T08:02:17.156Z",
+    "runStatus": "success",
+    "insight": "Strategy discipline is working: 8+ consecutive runs correctly ignoring false dip signals from Arc cirBTC pricing artifacts (-11% to -13% swap history drawdowns) while BTC trades within 1% of ATH. Base DCA at 3 USDC maintaining steady accumulation in ultra-low volatility ranging market (0.46-0.69%) with 88% capacity preserved for genuine 5%+ dips.",
+    "patterns": [
+      "Consistently bound by user_schedule with no daily cap clamping (7-12% utilization)",
+      "Persistent false moderate dip signals from Arc cirBTC route pricing artifacts ignored across all 8 runs",
+      "Ultra-low volatility ranging regime (0.46-0.69%) with BTC consolidating 0.88-1.17% from ATH",
+      "Fear index locked at 29 (bearish) but no genuine dip materialized",
+      "73% portfolio deployed, execution reliability fluctuating 60-100% but trending stable",
+      "Composite risk consistently low (20-26/100) with zero error streaks"
+    ],
+    "strategyAdjustment": "Continue base DCA discipline at 3 USDC. Do not chase false dip signals until real BTC price (not swap history) drops 5%+ from ATH ($64,900). Monitor for volatility breakout above 2-3% which would signal end of consolidation—if breakout is downward with 5%+ dip, scale to 6-9 USDC using dip ladder; if upward breakout, maintain base allocation. Current 333 USDC balance and 12% daily utilization leaves ample runway for 30+ base buys or 3-4 aggressive dip responses.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "909.018398",
+    "dayNumber": 32,
+    "walletBalance": "332.754447090792893776",
+    "tags": [
+      "pacing",
+      "dip-discipline",
+      "false-signals",
+      "ranging-market",
+      "capacity-preservation",
+      "execution-stability"
+    ]
   }
 ]
