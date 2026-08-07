@@ -1,17 +1,17 @@
 {
   "version": 1,
-  "lastScannedBlock": 55829486,
+  "lastScannedBlock": 55833004,
   "users": {
     "0x615a9b4d30e81cc6658d6b94e9b9609a34dc97b5": {
       "address": "0x615a9b4d30e81cc6658d6b94e9b9609a34dc97b5",
-      "usdcBalance": "112.661281",
+      "usdcBalance": "132.661281",
       "cirBtcBalance": "0",
-      "totalDeposited": "279.000000",
+      "totalDeposited": "299.000000",
       "totalSwapped": "159.938719",
       "totalWithdrawnCirBtc": "0",
       "totalWithdrawnUsdc": "5.000000",
       "firstSeen": "2026-07-09T22:59:39.139Z",
-      "lastActivity": "2026-08-07T20:32:55.894Z",
+      "lastActivity": "2026-08-07T20:45:53.335Z",
       "dcaRatePerDay": "0.500000",
       "dcaPaused": false,
       "dcaRateIsCustom": true,
@@ -35,14 +35,14 @@
     },
     "0xdd6045a634ef2c61d6070552b556aae40099e84b": {
       "address": "0xdd6045a634ef2c61d6070552b556aae40099e84b",
-      "usdcBalance": "109.379423",
+      "usdcBalance": "129.379423",
       "cirBtcBalance": "0",
-      "totalDeposited": "335.000000",
+      "totalDeposited": "355.000000",
       "totalSwapped": "198.450577",
       "totalWithdrawnCirBtc": "0",
       "totalWithdrawnUsdc": "25.800000",
       "firstSeen": "2026-07-10T16:07:29.490Z",
-      "lastActivity": "2026-08-07T20:30:23.506Z",
+      "lastActivity": "2026-08-07T20:45:53.335Z",
       "dcaRatePerDay": "0.500000",
       "dcaPaused": false,
       "dcaRateIsCustom": true,
@@ -72,14 +72,14 @@
     },
     "0xfc337ba1f00e8092fe2d073fed0072a0a43d2219": {
       "address": "0xfc337ba1f00e8092fe2d073fed0072a0a43d2219",
-      "usdcBalance": "70.109928",
+      "usdcBalance": "90.109928",
       "cirBtcBalance": "0",
-      "totalDeposited": "289.000000",
+      "totalDeposited": "309.000000",
       "totalSwapped": "161.980072",
       "totalWithdrawnCirBtc": "0",
       "totalWithdrawnUsdc": "56.000000",
       "firstSeen": "2026-07-23T20:43:41.414Z",
-      "lastActivity": "2026-08-07T20:36:05.669Z",
+      "lastActivity": "2026-08-07T20:45:53.335Z",
       "dcaRatePerDay": "0.500000",
       "dcaRateIsCustom": true,
       "dcaPaused": false,
@@ -921,6 +921,30 @@
       "amount": "20.000000",
       "blockNumber": 55608165,
       "recordedAt": "2026-08-06T12:30:34.484Z"
+    },
+    {
+      "id": "0xed66451a919faf1fee5863dc640dc271324b9aed864dff49470433b58a41fa17-30",
+      "txHash": "0xed66451a919faf1fee5863dc640dc271324b9aed864dff49470433b58a41fa17",
+      "from": "0xdd6045a634ef2c61d6070552b556aae40099e84b",
+      "amount": "20.000000",
+      "blockNumber": 55831167,
+      "recordedAt": "2026-08-07T20:45:53.335Z"
+    },
+    {
+      "id": "0xdc1035aa6c00f1b91733ac3cef34458f1f7c2ba4b02ee5f36811684c77b430fc-21",
+      "txHash": "0xdc1035aa6c00f1b91733ac3cef34458f1f7c2ba4b02ee5f36811684c77b430fc",
+      "from": "0x615a9b4d30e81cc6658d6b94e9b9609a34dc97b5",
+      "amount": "20.000000",
+      "blockNumber": 55831431,
+      "recordedAt": "2026-08-07T20:45:53.335Z"
+    },
+    {
+      "id": "0x23a4e51a196dde537179baf6a3243bfc3ef967193993043ca03406f4a5053955-33",
+      "txHash": "0x23a4e51a196dde537179baf6a3243bfc3ef967193993043ca03406f4a5053955",
+      "from": "0xfc337ba1f00e8092fe2d073fed0072a0a43d2219",
+      "amount": "20.000000",
+      "blockNumber": 55831773,
+      "recordedAt": "2026-08-07T20:45:53.335Z"
     }
   ],
   "distributions": [
