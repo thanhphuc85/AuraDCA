@@ -3317,5 +3317,34 @@
       "infrastructure-risk",
       "false-signal-discipline"
     ]
+  },
+  {
+    "id": "ref-1786087000167",
+    "date": "2026-08-07",
+    "timestamp": "2026-08-07T07:16:40.167Z",
+    "runStatus": "simulated",
+    "insight": "Arc cirBTC route instability continues causing simulated fills with near-zero amounts (0.000014 USDC vs 2.875 USDC scheduled). Strategy correctly ignores false -11% dip signals from pricing artifacts for 8+ consecutive runs, maintaining discipline in ranging market near ATH.",
+    "patterns": [
+      "Arc cirBTC route consistently offline causing simulated fills with fractional amounts",
+      "False moderate dip signals (-11 to -13% drawdown) persisting across all 8 runs due to route-specific pricing artifacts",
+      "Strategy correctly refusing to amplify buys despite false dip signals for 8+ consecutive runs",
+      "Ranging market regime (72-74% confidence) with ultra-low volatility (0.15-0.79%) persisting throughout day",
+      "BTC hovering 0.86-1.17% off ATH with no genuine 5%+ dip materializing",
+      "Execution reliability oscillating between 80-100% as route availability fluctuates",
+      "Daily cap utilization healthy at 4-12% with controlled base DCA execution"
+    ],
+    "strategyAdjustment": "Continue current discipline: ignore Arc cirBTC false dip signals until route stabilizes, maintain base DCA in ranging conditions near ATH, and preserve 88% dry powder (333 USDC) for genuine 5%+ dips when volatility exceeds 2-3%. Monitor for route recovery or consider alternative cirBTC liquidity sources if Arc instability persists beyond 48 hours.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "906.018398",
+    "dayNumber": 32,
+    "walletBalance": "332.757723658712893776",
+    "tags": [
+      "error-recovery",
+      "pacing",
+      "dip-discipline",
+      "route-instability",
+      "ranging-market",
+      "false-signals"
+    ]
   }
 ]
