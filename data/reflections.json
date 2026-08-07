@@ -3577,5 +3577,33 @@
       "budget-reserve",
       "discipline"
     ]
+  },
+  {
+    "id": "ref-1786108614424",
+    "date": "2026-08-07",
+    "timestamp": "2026-08-07T13:16:54.424Z",
+    "runStatus": "simulated",
+    "insight": "Successfully maintaining base DCA discipline at ATH levels ($65,187, 0.08% off peak) while correctly ignoring persistent false dip signals from Arc cirBTC pricing artifacts across 8+ consecutive runs—strategy preserving 88% capacity for genuine 5%+ dips.",
+    "patterns": [
+      "Consistently bound by user_schedule with no guardrail clamping (100% execution rate)",
+      "Persistent false dip signals (-9% to -10% drawdown) from Arc cirBTC route pricing artifacts correctly ignored across all 8 runs",
+      "Price consolidating near ATH ($64,278-$65,237 range, <2% volatility) with ranging market regime (68-72% confidence)",
+      "Healthy pacing: 20% daily cap utilization, 316 USDC balance, 74% portfolio deployed on day 32",
+      "Low composite risk (26-29/100) with zero error streaks and 60% execution reliability maintained",
+      "Fear index stable at 29 (bearish) despite BTC at ATH with high on-chain activity (26K-33K USDC transfers)"
+    ],
+    "strategyAdjustment": "Continue current discipline: maintain base DCA only while BTC consolidates within 5% of ATH in ranging conditions. The dip detection is working correctly—Arc cirBTC false signals are properly identified and ignored. When genuine 5%+ dip materializes (likely requiring >2-3% volatility breakout), the preserved 88% capacity (316 USDC available vs 25 USDC daily cap) provides 12+ days of aggressive buying power. Monitor for volatility regime change or ATH breakdown as trigger for scaling deployment.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "922.518398",
+    "dayNumber": 32,
+    "walletBalance": "316.119123626575336705",
+    "tags": [
+      "pacing",
+      "signal-quality",
+      "market-timing",
+      "ranging-market",
+      "capacity-preservation",
+      "false-positive-handling"
+    ]
   }
 ]
