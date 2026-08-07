@@ -3461,5 +3461,35 @@
       "false-positives",
       "capacity-preservation"
     ]
+  },
+  {
+    "id": "ref-1786096929986",
+    "date": "2026-08-07",
+    "timestamp": "2026-08-07T10:02:09.986Z",
+    "runStatus": "success",
+    "insight": "Strategy discipline holding strong through 8+ consecutive runs in tight ranging market near ATH (BTC $64,279-$64,779, only 0.23-1.00% off ATH). Successfully ignoring persistent false dip signals from Arc cirBTC pricing artifacts while maintaining conservative base DCA at 10-15% daily cap utilization, preserving 88% capacity for genuine 5%+ dip opportunities.",
+    "patterns": [
+      "Consistently bound by user_schedule across all 8 runs - no clamping from daily caps or risk limits",
+      "Persistent false dip signals from Arc cirBTC route-specific pricing artifacts showing -9% to -13% drawdowns despite BTC being <1% off ATH",
+      "Ultra-low volatility environment (0.46-1.77%) with ranging market classification (68-73% confidence) offering no directional edge",
+      "Conservative spend rate: 10-15% daily cap utilization with 326-335 USDC balance maintaining ~88% reserve capacity",
+      "Zero error streaks with 60-100% execution reliability, composite risk consistently low (20-29/100)",
+      "Portfolio deployment stable at 73-74% across all runs",
+      "Fear & Greed index anchored at 29 (fear) despite BTC consolidating near all-time highs"
+    ],
+    "strategyAdjustment": "Continue current disciplined approach: maintain base DCA sizing (2.4-3.3 USDC per run) in this tight consolidation regime, ignore Arc cirBTC false dip signals until real BTC price drops 5%+ from ATH (~$61,500 threshold), and preserve 85-90% budget capacity for genuine volatility expansion above 3%. If BTC breaks above ATH or drops below $61,500, reassess regime classification and adjust multipliers accordingly. Monitor for volatility regime change - current 0.5-2% volatility is historically unsustainable.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "914.643398",
+    "dayNumber": 32,
+    "walletBalance": "326.465923000642190224",
+    "tags": [
+      "pacing",
+      "dip-detection",
+      "false-signals",
+      "ranging-market",
+      "budget-preservation",
+      "execution-quality",
+      "volatility-regime"
+    ]
   }
 ]
