@@ -3718,5 +3718,33 @@
       "false-positives",
       "discipline"
     ]
+  },
+  {
+    "id": "ref-1786114924118",
+    "date": "2026-08-07",
+    "timestamp": "2026-08-07T15:02:04.118Z",
+    "runStatus": "success",
+    "insight": "Day 32 shows healthy base DCA execution at 23% daily cap with BTC ranging near ATH ($64,938, 0.46% off peak). Successfully maintaining discipline ignoring persistent false dip signals (-8.75% drawdown) confirmed as Arc cirBTC pricing artifacts across 8+ consecutive runs.",
+    "patterns": [
+      "Zero clamping by risk guardrails - consistently bound by user_schedule only",
+      "Persistent false mild dip signals (-8.75% to -9.53% drawdown) correctly identified as route-specific pricing artifacts, not genuine opportunities",
+      "Ultra-low volatility regime (0.73-1.70%) with ranging market classification (69-72% confidence) near ATH",
+      "Conservative pacing at 20-23% daily cap utilization preserving 88% capacity for real dips",
+      "Stable low composite risk (28-30/100) with zero error streaks and 50-60% execution reliability",
+      "Consistent 74-75% portfolio deployment maintaining dry powder"
+    ],
+    "strategyAdjustment": "Continue base DCA at user schedule amounts without size increases - current 0.73% volatility and ranging regime offers no edge for acceleration. Maintain strict dip discipline requiring 5%+ genuine drawdown (not Arc pricing artifacts) before ladder activation. If volatility rises above 2-3% or BTC breaks range (below $63,500 or above $66,000), reassess sizing multipliers. Current 310 USDC balance with 23% daily utilization is optimal for this consolidation phase.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "929.143398",
+    "dayNumber": 32,
+    "walletBalance": "310.556522022567580833",
+    "tags": [
+      "pacing",
+      "dip-discipline",
+      "ranging-market",
+      "low-volatility",
+      "artifact-detection",
+      "capacity-preservation"
+    ]
   }
 ]
