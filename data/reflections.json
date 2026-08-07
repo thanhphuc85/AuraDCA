@@ -3142,5 +3142,34 @@
       "signal-quality",
       "ranging-regime"
     ]
+  },
+  {
+    "id": "ref-1786068140535",
+    "date": "2026-08-07",
+    "timestamp": "2026-08-07T02:02:20.535Z",
+    "runStatus": "success",
+    "insight": "Run 32 shows continued execution stability with 80% reliability (+10% from prior run) and consistent 2.875 USDC base sizing. Agent correctly ignores persistent -12.54% swap drawdown as Arc cirBTC pricing artifact, maintaining discipline in non-dip conditions (BTC only 0.86% off ATH).",
+    "patterns": [
+      "Execution reliability improving steadily: 40% → 50% → 60% → 70% → 80% over last 5 runs, suggesting Arc cirBTC route stabilization",
+      "Persistent -12-13% swap drawdown flagged as false moderate dip signal across all 8 recent runs — agent correctly classifies as route-specific pricing artifact, not genuine buying opportunity",
+      "No genuine dip tiers triggered in 8 consecutive runs (BTC 0.71-1.03% off ATH, need 5%+ for mild dip)",
+      "Market regime: ranging with ultra-low volatility (0.79-1.20%) offering no directional edge across all recent runs",
+      "Daily cap utilization low at 24-29% with 350+ USDC balance preserved, ample capacity for genuine dip opportunities",
+      "Composite risk consistently low (22-32/100) with zero error streaks, 70-72% portfolio deployed",
+      "Smart sizing multiplier stable at 1.15x from Fear index 25-29 and minimal drawdown"
+    ],
+    "strategyAdjustment": "Continue current approach: maintain base 2.875 USDC sizing in ranging/non-dip conditions, preserve 70%+ daily capacity for genuine 5%+ dip opportunities when volatility returns above 2-3%. Monitor execution reliability — if it sustains above 75% for 3+ more runs, consider this route stability confirmed and Arc cirBTC pricing artifact resolved. Do not react to swap history drawdown signals unless real price feed confirms corresponding dip tier breach.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "891.643398",
+    "dayNumber": 32,
+    "walletBalance": "350.125209449954688854",
+    "tags": [
+      "execution-reliability",
+      "false-signal-filtering",
+      "pacing",
+      "route-stability",
+      "ranging-market",
+      "capacity-preservation"
+    ]
   }
 ]
