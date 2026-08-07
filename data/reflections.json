@@ -3917,5 +3917,33 @@
       "capacity-preservation",
       "ranging-market"
     ]
+  },
+  {
+    "id": "ref-1786132001184",
+    "date": "2026-08-07",
+    "timestamp": "2026-08-07T19:46:41.184Z",
+    "runStatus": "simulated",
+    "insight": "Day 32 showing first sim_daily_ceiling clamp in recent history after 54.80 USDC real spending today. Strategy successfully maintaining base DCA discipline at 0.43% off ATH while preserving 88% capacity for genuine dips in ultra-low 1.31% volatility ranging regime.",
+    "patterns": [
+      "Consistent ranging regime classification (70-72% confidence) across all 8 runs with ultra-low volatility (0.90-1.31%)",
+      "BTC hovering 0.43-0.86% off ATH throughout day with no genuine dip tiers triggered",
+      "Successfully ignoring false dip signals from Arc cirBTC pricing artifacts across 8+ consecutive runs",
+      "First sim_daily_ceiling clamp after 54.80 USDC real spending (4 successful buys: 2.875, 2.125, 1.725, 1.950 USDC)",
+      "Persistent bearish sentiment (Fear index 29) with analyst recommending 10-15% allocation decrease despite on-chain activity",
+      "76% portfolio concentration stable, composite risk low (30-31/100), zero error streaks maintained"
+    ],
+    "strategyAdjustment": "Continue current discipline—base DCA execution is correct in this tight consolidation near ATH. The sim_daily_ceiling clamp after 54.80 USDC (27% daily cap utilization) confirms guardrails are working as designed. Do NOT increase size in this ranging regime with <2% volatility. Maintain 88% capacity reserve and wait for genuine 5%+ dip with volatility >2-3% before deploying larger amounts. If volatility remains suppressed and ranging continues, consider whether daily cap needs adjustment, but not until pattern persists 5+ more days.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "937.818398",
+    "dayNumber": 32,
+    "walletBalance": "297.171468282786604553",
+    "tags": [
+      "pacing",
+      "clamping",
+      "ranging-regime",
+      "volatility-suppressed",
+      "capacity-preservation",
+      "dip-discipline"
+    ]
   }
 ]
