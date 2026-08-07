@@ -3374,5 +3374,35 @@
       "execution-reliability",
       "dip-discipline"
     ]
+  },
+  {
+    "id": "ref-1786088805000",
+    "date": "2026-08-07",
+    "timestamp": "2026-08-07T07:46:45.000Z",
+    "runStatus": "simulated",
+    "insight": "Day 32 shows consistent execution discipline in tight consolidation—BTC ranging 0.88-1.17% off ATH at $64,170-$64,357 with ultra-low 0.32-0.69% volatility. Strategy correctly ignoring persistent false dip signals from Arc cirBTC pricing artifacts across 8+ consecutive runs, preserving 88% capital capacity (333 USDC) for genuine 5%+ dip opportunities.",
+    "patterns": [
+      "Consistently bound by user_schedule with no guardrail clamping—daily cap utilization stable at 6-12%",
+      "BTC consolidating near ATH (0.88-1.17% off peak) in tight ranging regime with 72-74% confidence, no dip thresholds triggered",
+      "Persistent false moderate dip signals from Arc cirBTC route pricing artifacts correctly ignored across 8+ runs",
+      "Ultra-low volatility environment (0.32-0.69%) offering no directional edge—market in defensive fear mode (Fear index 29)",
+      "Execution reliability fluctuating 70-100% but errors fully cleared—zero error streaks maintained",
+      "Portfolio 72-73% deployed with 88-90% capacity preserved for genuine volatility",
+      "Spending pace healthy and sustainable—cumulative 906 USDC over 32 days averages 28.3 USDC/day"
+    ],
+    "strategyAdjustment": "Continue maintaining discipline in this tight consolidation—do NOT chase false dip signals from Arc cirBTC pricing artifacts. Current pacing is optimal: small scheduled buys preserve capital while volatility remains suppressed below 1%. When true volatility returns above 2-3% and genuine 5%+ dip thresholds trigger, capital reserves (333 USDC) will enable appropriate ladder scaling. Monitor for regime shift from ranging to trending that would justify increased aggression.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "906.018398",
+    "dayNumber": 32,
+    "walletBalance": "332.755724376648893776",
+    "tags": [
+      "pacing",
+      "market-timing",
+      "ranging-regime",
+      "dip-discipline",
+      "false-signals",
+      "volatility-suppression",
+      "capital-preservation"
+    ]
   }
 ]
