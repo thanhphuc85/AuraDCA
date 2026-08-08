@@ -4937,5 +4937,34 @@
       "capacity-preservation",
       "risk-stable"
     ]
+  },
+  {
+    "id": "ref-1786218400302",
+    "date": "2026-08-08",
+    "timestamp": "2026-08-08T19:46:40.302Z",
+    "runStatus": "simulated",
+    "insight": "Persistent Arc route offline issue causing simulated fills for tiny amounts ($0.00003) while legitimate buys ($1.27-$1.80) execute successfully. Market consolidation at $64,975-$65,073 (0.15% range) near ATH with sub-0.1% volatility creates zero dip opportunities for 8+ consecutive runs.",
+    "patterns": [
+      "Arc routing failures forcing simulated fills on micro-transactions while real transactions succeed",
+      "Extreme consolidation persists: BTC ranging $64,975-$65,073 (0.25-0.40% off ATH) across all 8 runs",
+      "Volatility collapsed to 0.02-0.06% intraday, well below 2-3% threshold for dip activation",
+      "No dip tier triggered (activeTier: null) for 15+ consecutive runs on Day 33",
+      "Daily cap utilization hovering 13-16% with 88% capacity ($313-321 USDC) preserved",
+      "76% portfolio concentration risk stable, 60% success rate maintained, zero error streaks"
+    ],
+    "strategyAdjustment": "Continue preserving capital for genuine dip opportunities but investigate Arc route reliability issue causing simulated fills on fractional USDC amounts. If Arc continues offline for micro-transactions, consider raising minimum transaction threshold or switching to alternative routing for test transactions. Market remains in tight consolidation—maintain current conservative pacing until volatility expands above 2% or price drops 5%+ to trigger ladder tiers.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "975.369368",
+    "dayNumber": 33,
+    "walletBalance": "313.655383480009695182",
+    "tags": [
+      "arc-routing-issue",
+      "consolidation",
+      "low-volatility",
+      "no-dip-signal",
+      "pacing",
+      "capacity-preservation",
+      "technical-issue"
+    ]
   }
 ]
