@@ -4474,5 +4474,33 @@
       "error-free",
       "discipline"
     ]
+  },
+  {
+    "id": "ref-1786186933253",
+    "date": "2026-08-08",
+    "timestamp": "2026-08-08T11:02:13.253Z",
+    "runStatus": "success",
+    "insight": "Day 33 maintains perfect discipline executing scheduled DCA near ATH ($64,971, only 0.41% off peak) with 0.01% volatility—strategy correctly ignores persistent Arc pricing artifacts showing false -10% drawdowns across all 8 runs, preserving 88% capacity (330 USDC) for genuine dip opportunities.",
+    "patterns": [
+      "Zero clamping events—all 8 runs bound by user_schedule with amounts ranging $0.000014-$1.725",
+      "Persistent false dip signals from Arc cirBTC pricing artifacts (showing -10.11% to -10.14% drawdowns) correctly ignored across 100% of runs",
+      "Market regime stable: ranging (69-71% confidence), 0.01-0.03% volatility, BTC tight consolidation $64,921-$64,971 near ATH",
+      "Conservative budget utilization: 9% daily cap used, 961.94 USDC cumulative spent over 33 days (~29 USDC/day average)",
+      "Low composite risk (20-28/100) driven primarily by 74% portfolio concentration, zero error streaks",
+      "Smart sizing applying 0.9x multiplier consistently due to Fear index 30 (bearish sentiment)"
+    ],
+    "strategyAdjustment": "Continue current strategy—no adjustments needed. The agent has achieved operational excellence: (1) correctly differentiating false Arc pricing artifacts from real dips, (2) maintaining scheduled DCA discipline in tight ranging markets near ATH, (3) preserving capital (88% capacity remaining) for genuine volatility expansion above 2-3% with 5%+ drawdowns. Monitor for regime shift signals: if volatility breaks above 3% OR BTC moves >5% off ATH, reassess dip ladder activation thresholds.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "961.944368",
+    "dayNumber": 33,
+    "walletBalance": "330.390686529301124412",
+    "tags": [
+      "pacing",
+      "signal-quality",
+      "market-regime",
+      "discipline",
+      "false-positive-handling",
+      "budget-management"
+    ]
   }
 ]
