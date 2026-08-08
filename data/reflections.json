@@ -4413,5 +4413,36 @@
       "dry-powder-preservation",
       "data-quality"
     ]
+  },
+  {
+    "id": "ref-1786179742041",
+    "date": "2026-08-08",
+    "timestamp": "2026-08-08T09:02:22.041Z",
+    "runStatus": "success",
+    "insight": "Day 33 run executed cleanly at the scheduled 1.65 USDC (user_schedule bound, 1.1x Fear&Greed multiplier applied), but the history reveals a problematic mix of near-zero simulated runs (0.000014–0.000595 USDC) alongside real 1.275–1.65 USDC runs — suggesting schedule/simulation mode inconsistencies earlier in the day that are now resolving into real execution.",
+    "patterns": [
+      "All 8 recent runs bound by user_schedule — daily cap has never been the binding constraint today, pacing is very conservative (~7% of daily cap used with 335 USDC balance remaining)",
+      "Fear & Greed stuck at 30 (fear) for every run today — sentiment signal is stale/unchanging and providing no differentiation between runs",
+      "BTC holding tight range $64,921–$64,971, only 0.41–0.48% off ATH, volatility 0.01–0.03% — market is in extreme consolidation, no dip tier triggered across all 10+ runs",
+      "Arc cirBTC pricing artifact (check_price_action showing ~-13% drawdown vs real feed showing -0.44%) has been correctly identified and ignored consistently across all Day 33 runs — artifact recognition is working well",
+      "74% portfolio concentration risk persists as the dominant risk factor across all runs (risk score 20–27/100) with zero error streaks — concentration is the only meaningful risk signal",
+      "Three simulated runs with near-zero amounts (0.000014, 0.000029, 0.000595 USDC) appear mid-history — these are likely test/simulation artifacts, not real strategy decisions, but they inflate run count without contributing to spend",
+      "smartSizing multiplier consistently 1.1x from LLM source — Fear&Greed at 30 is triggering the slight upward multiplier but drawdown is near-zero (0.09%), so the multiplier is driven purely by sentiment, not price action"
+    ],
+    "strategyAdjustment": "1. Investigate the simulated near-zero runs (0.000014–0.000595 USDC) — determine if these are schedule calibration artifacts or a mode-switching bug, and ensure they don't count against daily run limits or distort pacing calculations. 2. With 335 USDC remaining and ~93% of daily cap unused after 10+ runs, consider whether the user_schedule interval is too conservative for the daily budget — if the campaign has 30+ USDC/day target, current pacing (~1.5 USDC per real run) will undershoot unless run frequency increases significantly. 3. Fear&Greed at 30 all day with BTC at ATH is a contradictory signal (market near highs but fearful) — this is likely stale data or index lag; reduce weight on Fear&Greed in multiplier calculation when BTC drawdown is under 1% from ATH, since the signals are contradicting each other. 4. The 74% concentration risk flag has appeared in every single run today without triggering any strategy change — either act on it (rebalance or cap further EURC buys) or formally acknowledge it as an accepted baseline and remove it from the risk scoring to avoid alert fatigue.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "958.869368",
+    "dayNumber": 33,
+    "walletBalance": "335.544596719780511864",
+    "tags": [
+      "pacing",
+      "simulation-artifacts",
+      "market-timing",
+      "budget",
+      "concentration-risk",
+      "signal-quality",
+      "fear-greed-lag",
+      "arc-pricing-artifact"
+    ]
   }
 ]
