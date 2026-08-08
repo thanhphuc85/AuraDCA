@@ -4647,5 +4647,36 @@
       "ranging-market",
       "discipline"
     ]
+  },
+  {
+    "id": "ref-1786196801649",
+    "date": "2026-08-08",
+    "timestamp": "2026-08-08T13:46:41.649Z",
+    "runStatus": "simulated",
+    "insight": "Day 33 shows excellent execution discipline: successfully filtering persistent Arc route pricing artifacts across 8 runs while maintaining scheduled DCA near ATH ($64,967, only 0.41% off peak). Strategy correctly preserves 88% capacity (325 USDC) for genuine dip opportunities in ultra-low volatility regime (0.02-0.04%).",
+    "patterns": [
+      "No dip tier activation across 8 consecutive runs - activeTier: null confirms BTC consolidating within 0.5% of ATH",
+      "Arc route pricing artifacts persist (false -10% to -29% drawdowns reported) but correctly ignored in all runs",
+      "Ultra-low realized volatility (0.01-0.04%) vs market regime volatility (8.66%) shows tight price action with no tradeable dips",
+      "Ranging market regime consistent (43-69% confidence, mixed momentum) with no directional edge for 8+ runs",
+      "Daily cap utilization stable at 9-11% with mix of real ($1.35-2.03) and simulated ($0.00003-0.0006) buys",
+      "75% portfolio concentration and 60% success rate driving medium composite risk (36-39/100)",
+      "Zero error streaks maintained across all Day 33 runs"
+    ],
+    "strategyAdjustment": "Continue current disciplined approach: execute scheduled DCA amounts during tight consolidation, ignore Arc route false signals, and preserve 88% dry powder (325 USDC) for when volatility expands above 2-3% and dip ladder activates. Monitor for breakout from 0.5% ATH range - if BTC drops 5%+ ($61,700) with volatility expansion, increase allocation aggressively per dip ladder tiers. Current 11% daily cap utilization is appropriate given ranging regime and proximity to ATH.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "965.319368",
+    "dayNumber": 33,
+    "walletBalance": "325.593711661065143982",
+    "tags": [
+      "pacing",
+      "market-timing",
+      "error-recovery",
+      "ranging-market",
+      "ATH-consolidation",
+      "arc-pricing-artifact",
+      "dip-discipline",
+      "budget-preservation"
+    ]
   }
 ]
