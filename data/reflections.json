@@ -4794,5 +4794,35 @@
       "no-dip-triggers",
       "disciplined-execution"
     ]
+  },
+  {
+    "id": "ref-1786208525610",
+    "date": "2026-08-08",
+    "timestamp": "2026-08-08T17:02:05.610Z",
+    "runStatus": "success",
+    "insight": "Day 33 shows excellent DCA discipline in a challenging ranging market near ATH ($65,039, only 0.30% off peak). All 8 runs executed at user_schedule baseline with zero dip tier activations, correctly filtering false Arc pricing artifacts while preserving 88% capacity (319 USDC) for genuine volatility events.",
+    "patterns": [
+      "Consistently bound by user_schedule baseline - no dip tiers triggered across all 8 runs despite ranging market",
+      "Ultra-low volatility regime persists (0.01-0.08% intraday, 8.16-8.66% regime volatility) with BTC consolidating within 0.4% of ATH",
+      "Smart sizing applying 0.85x fear-based multiplier consistently (Fear index 30, bearish sentiment)",
+      "Daily cap utilization remains disciplined at 14%, preserving 86% capacity for genuine dip opportunities",
+      "Zero error streaks maintained with 40-60% success rate stabilizing",
+      "Composite risk stable at 39-42/100 driven primarily by 75% concentration risk, not execution risk",
+      "Market regime locked in ranging mode (43-44% confidence) with momentum oscillating -10% to +10% but no breakout",
+      "Arc pricing artifacts correctly identified and filtered - no false dip signals acted upon"
+    ],
+    "strategyAdjustment": "Continue current conservative posture - the ranging market near ATH with sub-0.1% intraday volatility validates holding 86%+ capacity in reserve. Do not chase micro-movements or relax dip thresholds. If BTC breaks below $63,000 (3%+ dip from current) with volatility expanding above 2%, ladder tiers should activate automatically. Until then, maintain user_schedule baseline only. Monitor for concentration risk if portfolio allocation to cirBTC exceeds 80% - may need to diversify if trend continues beyond Day 40.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "972.369368",
+    "dayNumber": 33,
+    "walletBalance": "319.74439854381969715",
+    "tags": [
+      "pacing",
+      "ranging-market",
+      "dip-detection",
+      "capacity-preservation",
+      "volatility-regime",
+      "concentration-risk"
+    ]
   }
 ]
