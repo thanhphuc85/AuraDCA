@@ -11955,5 +11955,86 @@
       "settleStatus": "received",
       "settledTo": "0xcaf34080f47f576f923962ad04dd7ddd86d8d85f"
     }
+  },
+  {
+    "date": "2026-08-08",
+    "timestamp": "2026-08-08T07:00:37.474Z",
+    "status": "success",
+    "requestedAmountUsdc": "1.275000",
+    "clampedAmountUsdc": "1.275000",
+    "boundBy": "user_schedule",
+    "tokenOut": "EURC",
+    "reasoning": "Market brief shows bearish sentiment (Fear index 30) with BTC up 1.08% at $64,971 and analyst recommending 10-15% allocation decrease despite high on-chain activity (27.7K USDC transfers). Real cirBTC price at $64,971 is only 0.41% off ATH with ultra-low 0.02% volatility—no dip tier triggered, dip ladder anchors at base. Market regime remains ranging (71% confidence, -0.15% momentum with 5 consecutive up candles, 1.09% volatility) offering no directional edge. Composite risk is low (20/100) driven by 74% portfolio concentration but minimal volatility and zero error streaks. Reflections from Day 33 confirm persistent discipline across 9+ runs correctly ignoring false dip signals from Arc cirBTC pricing artifacts while maintaining base DCA in tight consolidation near ATH—strategy successfully preserving 88% capacity for genuine 5%+ dip opportunities when volatility expands above 2-3%.",
+    "txHash": "0x41bef5201d494b1269fcf80afe693a7dda46f52da01dae2e242b1577b87fc8a1",
+    "explorerUrl": "https://testnet.arcscan.app/tx/0x41bef5201d494b1269fcf80afe693a7dda46f52da01dae2e242b1577b87fc8a1",
+    "amountOut": "0.953316",
+    "walletUsdcBalance": "338.096888869663072528",
+    "message": "Swapped 1.275000 USDC -> EURC across 3 user(s)",
+    "smartSizing": {
+      "fearGreed": 30,
+      "drawdownPct": 0.0007075072673300829,
+      "multiplier": 0.85,
+      "source": "llm",
+      "proposedMultiplier": 0.85
+    },
+    "x402": {
+      "resource": "/api/x402-brief",
+      "amountUsdcAtomic": "1000",
+      "payer": "0x61e7Ae336F7Eb7F8517dE4F19963D88dFD9161eC",
+      "payTo": "0xcAf34080F47f576F923962AD04dD7ddd86d8d85f",
+      "settled": true,
+      "mode": "settled",
+      "via": "http",
+      "transferId": "6fa19a65-74e9-46c2-ac13-721999513cd8",
+      "settleStatus": "received"
+    },
+    "smartFee": {
+      "feeUsdcEach": "0.010000",
+      "totalUsdc": "0.030000",
+      "payerCount": 3,
+      "payTo": "0x00Ebbd3aFCCaD08970ED8FdaE591244c8475a0aC",
+      "testnet": true,
+      "settled": true,
+      "transferId": "4624058b-7de5-4b6d-b950-19be71236b0c",
+      "settleStatus": "received",
+      "settledTo": "0xcaf34080f47f576f923962ad04dd7ddd86d8d85f"
+    }
+  },
+  {
+    "date": "2026-08-08",
+    "timestamp": "2026-08-08T07:00:37.474Z",
+    "status": "simulated",
+    "simulated": true,
+    "requestedAmountUsdc": "0.000595",
+    "clampedAmountUsdc": "0.000595",
+    "boundBy": "user_schedule",
+    "tokenOut": "cirBTC",
+    "reasoning": "Market brief shows bearish sentiment (Fear index 30) with BTC up 1.08% at $64,971 and analyst recommending 10-15% allocation decrease despite high on-chain activity (27.7K USDC transfers). Real cirBTC price at $64,971 is only 0.41% off ATH with ultra-low 0.02% volatility—no dip tier triggered, dip ladder anchors at base. Market regime remains ranging (71% confidence, -0.15% momentum with 5 consecutive up candles, 1.09% volatility) offering no directional edge. Composite risk is low (20/100) driven by 74% portfolio concentration but minimal volatility and zero error streaks. Reflections from Day 33 confirm persistent discipline across 9+ runs correctly ignoring false dip signals from Arc cirBTC pricing artifacts while maintaining base DCA in tight consolidation near ATH—strategy successfully preserving 88% capacity for genuine 5%+ dip opportunities when volatility expands above 2-3%.",
+    "amountOut": "0.00000001",
+    "priceUsd": 64971,
+    "walletUsdcBalance": "338.096888869663072528",
+    "message": "[SIMULATED] Arc cirBTC route offline — paper-filled 0.00000001 cirBTC for 0.000595 USDC at $64971.00/cirBTC (no on-chain swap; real funds untouched)",
+    "x402": {
+      "resource": "/api/x402-brief",
+      "amountUsdcAtomic": "1000",
+      "payer": "0x61e7Ae336F7Eb7F8517dE4F19963D88dFD9161eC",
+      "payTo": "0xcAf34080F47f576F923962AD04dD7ddd86d8d85f",
+      "settled": true,
+      "mode": "settled",
+      "via": "http",
+      "transferId": "6fa19a65-74e9-46c2-ac13-721999513cd8",
+      "settleStatus": "received"
+    },
+    "smartFee": {
+      "feeUsdcEach": "0.010000",
+      "totalUsdc": "0.030000",
+      "payerCount": 3,
+      "payTo": "0x00Ebbd3aFCCaD08970ED8FdaE591244c8475a0aC",
+      "testnet": true,
+      "settled": true,
+      "transferId": "4624058b-7de5-4b6d-b950-19be71236b0c",
+      "settleStatus": "received",
+      "settledTo": "0xcaf34080f47f576f923962ad04dd7ddd86d8d85f"
+    }
   }
 ]

@@ -4270,5 +4270,32 @@
       "signal-quality",
       "pricing-artifact-handling"
     ]
+  },
+  {
+    "id": "ref-1786172518635",
+    "date": "2026-08-08",
+    "timestamp": "2026-08-08T07:01:58.635Z",
+    "runStatus": "simulated",
+    "insight": "Strategy continues disciplined base DCA execution in tight ranging market near ATH ($64,971, only 0.41% off peak). Successfully avoided false dip signals from Arc route pricing artifacts across 10+ consecutive runs, preserving 88% capacity (338 USDC) for genuine opportunities.",
+    "patterns": [
+      "Consistently bound by user_schedule with no guardrail clamping across all 8 recent runs",
+      "Arc cirBTC route intermittently offline requiring simulated fills—second occurrence in latest run",
+      "Persistent false dip signals from Arc route pricing showing -11% to -14% drawdowns contradicted by real feed at -0.41% to -0.55% off ATH",
+      "Ultra-low volatility regime (0.02% to 1.31%) persisting across entire day with ranging market (70-72% confidence)",
+      "Risk consistently low (20-25/100) with stable 73-74% concentration and zero error streaks",
+      "Pacing at 3% daily cap utilization with ample 338 USDC balance—on track at Day 33 spending 956 USDC"
+    ],
+    "strategyAdjustment": "Continue current approach: maintain base DCA in ranging market, ignore Arc route pricing artifacts when real feed confirms near-ATH prices. Monitor for regime shift signals—if volatility expands above 2-3% or real feed (not Arc route) shows genuine 5%+ drawdown, deploy reserved capacity aggressively. Track Arc route reliability—if offline frequency increases, consider route diversification or fallback logic adjustments.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "955.944368",
+    "dayNumber": 33,
+    "walletBalance": "338.096888869663072528",
+    "tags": [
+      "pacing",
+      "error-recovery",
+      "market-timing",
+      "signal-quality",
+      "route-reliability"
+    ]
   }
 ]
