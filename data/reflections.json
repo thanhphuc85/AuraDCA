@@ -4561,5 +4561,34 @@
       "near-ath",
       "arc-pricing-artifact"
     ]
+  },
+  {
+    "id": "ref-1786194848397",
+    "date": "2026-08-08",
+    "timestamp": "2026-08-08T13:14:08.397Z",
+    "runStatus": "simulated",
+    "insight": "Day 33 execution remains highly disciplined: all 8 runs correctly ignored persistent Arc cirBTC pricing artifacts (showing false -10% to -29% drawdowns) while BTC trades within 0.5% of ATH at $64,968 with sub-0.1% volatility, preserving 88% capacity (325 USDC) for genuine dip opportunities.",
+    "patterns": [
+      "Arc cirBTC route pricing artifacts persist across all 8 runs showing false moderate-to-severe dips while real price remains 0.41-0.48% off ATH",
+      "Zero dip tiers triggered on ladder (activeTier: null) across all runs confirms no genuine buying opportunity",
+      "Ranging market regime dominant (43-71% confidence, 1-9% volatility) with no directional edge for 8 consecutive runs",
+      "Portfolio concentration stable at 74-75% with zero error streaks maintained",
+      "Daily cap utilization remains conservative at 7-11%, spending only scheduled base DCA amounts",
+      "Success rate declined to 60% (from historical higher rates) but error management remains solid"
+    ],
+    "strategyAdjustment": "Continue base DCA execution and Arc artifact filtering—strategy is working correctly. Monitor for volatility expansion above 2-3% which would validate genuine dip signals and justify activating the ladder's 5%+ tiers. If BTC breaks out of 0.5% ATH range or volatility spikes, reassess dip tier thresholds. The 60% success rate warrants investigation: determine if it's related to Arc route issues or execution quality, but maintain current disciplined approach given zero error streaks and proper risk management.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "965.319368",
+    "dayNumber": 33,
+    "walletBalance": "325.597498001115265582",
+    "tags": [
+      "pacing",
+      "signal-quality",
+      "market-timing",
+      "arc-artifact",
+      "ranging-market",
+      "risk-management",
+      "concentration-risk"
+    ]
   }
 ]
