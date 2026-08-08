@@ -4091,5 +4091,37 @@
       "capacity-preservation",
       "low-volatility"
     ]
+  },
+  {
+    "id": "ref-1786150950553",
+    "date": "2026-08-08",
+    "timestamp": "2026-08-08T01:02:30.553Z",
+    "runStatus": "success",
+    "insight": "Strategy successfully maintaining disciplined base DCA in ultra-low volatility ranging market (0.79-1.31%) near ATH, correctly ignoring persistent false dip signals from Arc cirBTC pricing artifacts across 8+ consecutive runs while preserving 88% capacity for genuine opportunities.",
+    "patterns": [
+      "Never clamped by daily cap - consistently bound by user_schedule indicating conservative pacing",
+      "Ultra-low volatility regime persisting (0.79-1.31%) with BTC consolidating within 0.6% of ATH across all 8 runs",
+      "Ranging market regime stable at 70-72% confidence with negative momentum (-0.30% to -2.15%) and no directional edge",
+      "Composite risk consistently low (25-30/100) despite 73-76% portfolio concentration due to minimal volatility and zero error streaks",
+      "False dip signals recurring from Arc cirBTC pricing artifacts showing -11.35% to -11.61% drawdowns contradicted by real feed showing only -0.43% to -0.60% off ATH",
+      "Fear & Greed stable in fear zone (29-30) with bearish sentiment but high on-chain activity (30K+ transfers, $4-21B volume)",
+      "Daily cap utilization low at 27-30% with ample wallet balance (297-353 USDC) preserving capacity",
+      "100% execution success rate across all runs with zero errors or skips"
+    ],
+    "strategyAdjustment": "Continue current disciplined approach: maintain base DCA at user_schedule levels in this tight consolidation phase, keep ignoring Arc pricing artifacts until real market shows >5% drawdown from ATH, and preserve capacity for genuine volatility spikes above 2-3%. Monitor for breakout from 0.6% ATH range or volatility expansion as signal to reassess regime. No changes needed - strategy performing exactly as designed for ranging/low-vol conditions.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "946.869368",
+    "dayNumber": 33,
+    "walletBalance": "347.74529366365918392",
+    "tags": [
+      "pacing",
+      "market-timing",
+      "ranging-market",
+      "low-volatility",
+      "signal-quality",
+      "false-dip-filtering",
+      "capacity-preservation",
+      "risk-management"
+    ]
   }
 ]
