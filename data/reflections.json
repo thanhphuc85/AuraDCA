@@ -4502,5 +4502,34 @@
       "false-positive-handling",
       "budget-management"
     ]
+  },
+  {
+    "id": "ref-1786190536193",
+    "date": "2026-08-08",
+    "timestamp": "2026-08-08T12:02:16.193Z",
+    "runStatus": "success",
+    "insight": "Day 33 continues flawless execution with 8/8 successful scheduled buys at base amounts ($1.28-$1.73 USDC) while BTC consolidates <0.5% off ATH. Strategy correctly ignores persistent Arc pricing artifacts showing false -10% to -29% drawdowns, preserving 88% daily capacity ($329 balance) for genuine dip opportunities that haven't materialized in ultra-low volatility regime.",
+    "patterns": [
+      "Consistently bounded by user_schedule across all 8 runs with zero clamping interventions",
+      "Arc route pricing artifacts persist showing false -10% to -29% drawdowns while real cirBTC trades within 0.5% of ATH",
+      "Ultra-low volatility regime (0.01-0.03% intraday, 1.1-7.3% regime volatility) with no genuine dip tier activations",
+      "Ranging market regime (48-71% confidence) with no directional edge across all runs",
+      "Risk profile stable and low (22-36/100) despite 74-75% concentration, driven by zero error streaks",
+      "Daily cap utilization remains disciplined at 7-9%, preserving capacity for volatility expansion",
+      "Fear & Greed index locked at 30 (bearish) across entire day despite BTC near ATH"
+    ],
+    "strategyAdjustment": "Maintain current disciplined base-DCA approach with no changes required. The strategy is performing exactly as designed: (1) executing scheduled buys in tight consolidation, (2) correctly filtering false Arc pricing signals through cirBTC cross-validation, (3) preserving 88%+ capacity for genuine 5%+ dips when volatility expands above 2-3%. If volatility remains <1% intraday for 3+ more days, consider research into whether dip ladder thresholds need recalibration for this specific ultra-low-vol regime, but do not act prematurely—current drawdown preservation is the correct strategic posture near ATH.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "963.294368",
+    "dayNumber": 33,
+    "walletBalance": "329.01696598408528304",
+    "tags": [
+      "pacing",
+      "consolidation",
+      "artifact-filtering",
+      "capacity-preservation",
+      "low-volatility",
+      "discipline"
+    ]
   }
 ]
