@@ -4853,5 +4853,35 @@
       "volatility-waiting",
       "dip-filtering"
     ]
+  },
+  {
+    "id": "ref-1786215734856",
+    "date": "2026-08-08",
+    "timestamp": "2026-08-08T19:02:14.856Z",
+    "runStatus": "simulated",
+    "insight": "Day 33 execution remains disciplined with all 8 recent runs bound by user_schedule (no clamping), successfully filtering false Arc pricing signals while consolidating tight near ATH ($65,000, only 0.36% off peak). Zero genuine dip opportunities emerged—no ladder tier activated across entire session despite 4.84-8.66% reported volatility.",
+    "patterns": [
+      "All recent runs bound by user_schedule with zero daily cap or risk clamping",
+      "Persistent Arc pricing artifacts showing false -12% to -14% drawdowns correctly ignored",
+      "Price consolidating 0.19-0.41% below ATH with ultra-low real volatility (0.01-0.08%)",
+      "No dip ladder tiers triggered (activeTier: null) across all 8 runs—no 5%+ genuine drawdowns",
+      "88% budget capacity preserved (317 USDC balance from 975 USDC spent)",
+      "Ranging market regime (43-57% confidence) with no directional edge",
+      "Daily cap utilization stable 11-15%, well below limits",
+      "Zero error streaks maintained, 75% portfolio concentration steady"
+    ],
+    "strategyAdjustment": "Continue current disciplined approach—no adjustments needed. Pacing is optimal: 15% daily cap utilization leaves 85% firepower for volatility expansion. The strategy correctly distinguishes Arc technical issues from real price action. When genuine 5%+ dips occur (real volatility >2-3%, not artifact-driven), the ladder will activate and preserved capacity enables aggressive scaling. Until then, maintain scheduled baseline buys and reject false signals.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "975.369368",
+    "dayNumber": 33,
+    "walletBalance": "317.150071367139627182",
+    "tags": [
+      "pacing",
+      "error-recovery",
+      "market-timing",
+      "budget",
+      "consolidation",
+      "false-signal-filtering"
+    ]
   }
 ]

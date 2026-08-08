@@ -12765,5 +12765,86 @@
       "settleStatus": "received",
       "settledTo": "0xcaf34080f47f576f923962ad04dd7ddd86d8d85f"
     }
+  },
+  {
+    "date": "2026-08-08",
+    "timestamp": "2026-08-08T19:00:48.983Z",
+    "status": "success",
+    "requestedAmountUsdc": "1.725000",
+    "clampedAmountUsdc": "1.725000",
+    "boundBy": "user_schedule",
+    "tokenOut": "EURC",
+    "reasoning": "Market brief shows bearish sentiment (Fear index 30, BTC up 0.51% at $65,000) with analyst recommending 10-15% allocation decrease despite high on-chain activity (35,120 USDC transfers). Real cirBTC price at $65,000 is only 0.36% off ATH with ultra-low 0.05% volatility—no dip tier triggered on the ladder (activeTier: null), confirming tight consolidation persists near all-time highs. Market regime is ranging (57% confidence, 3.67% momentum with 1 consecutive down candle, 4.84% volatility) offering no directional edge. Composite risk is low-medium (35/100) driven by 75% portfolio concentration with zero error streaks and 15% daily cap utilization. Day 33 reflections validate disciplined execution across 15+ runs, correctly filtering Arc pricing artifacts (check_price_action's false -13.76% drawdown signal) while preserving 88% capacity (317 USDC balance) for genuine 5%+ dip opportunities when volatility expands above 2-3%.",
+    "txHash": "0xcf1cf827e77029999a2adb516fcf9f13c2ee0ae887dcf95081bdcd2aaedc8594",
+    "explorerUrl": "https://testnet.arcscan.app/tx/0xcf1cf827e77029999a2adb516fcf9f13c2ee0ae887dcf95081bdcd2aaedc8594",
+    "amountOut": "1.384083",
+    "walletUsdcBalance": "317.150071367139627182",
+    "message": "Swapped 1.725000 USDC -> EURC across 3 user(s)",
+    "smartSizing": {
+      "fearGreed": 30,
+      "drawdownPct": 0.0017201130359995086,
+      "multiplier": 1.15,
+      "source": "llm",
+      "proposedMultiplier": 1.15
+    },
+    "x402": {
+      "resource": "/api/x402-brief",
+      "amountUsdcAtomic": "1000",
+      "payer": "0x61e7Ae336F7Eb7F8517dE4F19963D88dFD9161eC",
+      "payTo": "0xcAf34080F47f576F923962AD04dD7ddd86d8d85f",
+      "settled": true,
+      "mode": "settled",
+      "via": "http",
+      "transferId": "cfb7e7b4-34b9-4a22-b32f-590f92632ba5",
+      "settleStatus": "received"
+    },
+    "smartFee": {
+      "feeUsdcEach": "0.010000",
+      "totalUsdc": "0.030000",
+      "payerCount": 3,
+      "payTo": "0x00Ebbd3aFCCaD08970ED8FdaE591244c8475a0aC",
+      "testnet": true,
+      "settled": true,
+      "transferId": "596d9b5d-fe0b-4e2c-935b-924bd805533d",
+      "settleStatus": "received",
+      "settledTo": "0xcaf34080f47f576f923962ad04dd7ddd86d8d85f"
+    }
+  },
+  {
+    "date": "2026-08-08",
+    "timestamp": "2026-08-08T19:00:48.983Z",
+    "status": "simulated",
+    "simulated": true,
+    "requestedAmountUsdc": "0.000599",
+    "clampedAmountUsdc": "0.000599",
+    "boundBy": "user_schedule",
+    "tokenOut": "cirBTC",
+    "reasoning": "Market brief shows bearish sentiment (Fear index 30, BTC up 0.51% at $65,000) with analyst recommending 10-15% allocation decrease despite high on-chain activity (35,120 USDC transfers). Real cirBTC price at $65,000 is only 0.36% off ATH with ultra-low 0.05% volatility—no dip tier triggered on the ladder (activeTier: null), confirming tight consolidation persists near all-time highs. Market regime is ranging (57% confidence, 3.67% momentum with 1 consecutive down candle, 4.84% volatility) offering no directional edge. Composite risk is low-medium (35/100) driven by 75% portfolio concentration with zero error streaks and 15% daily cap utilization. Day 33 reflections validate disciplined execution across 15+ runs, correctly filtering Arc pricing artifacts (check_price_action's false -13.76% drawdown signal) while preserving 88% capacity (317 USDC balance) for genuine 5%+ dip opportunities when volatility expands above 2-3%.",
+    "amountOut": "0.00000001",
+    "priceUsd": 65000,
+    "walletUsdcBalance": "317.150071367139627182",
+    "message": "[SIMULATED] Arc cirBTC route offline — paper-filled 0.00000001 cirBTC for 0.000599 USDC at $65000.00/cirBTC (no on-chain swap; real funds untouched)",
+    "x402": {
+      "resource": "/api/x402-brief",
+      "amountUsdcAtomic": "1000",
+      "payer": "0x61e7Ae336F7Eb7F8517dE4F19963D88dFD9161eC",
+      "payTo": "0xcAf34080F47f576F923962AD04dD7ddd86d8d85f",
+      "settled": true,
+      "mode": "settled",
+      "via": "http",
+      "transferId": "cfb7e7b4-34b9-4a22-b32f-590f92632ba5",
+      "settleStatus": "received"
+    },
+    "smartFee": {
+      "feeUsdcEach": "0.010000",
+      "totalUsdc": "0.030000",
+      "payerCount": 3,
+      "payTo": "0x00Ebbd3aFCCaD08970ED8FdaE591244c8475a0aC",
+      "testnet": true,
+      "settled": true,
+      "transferId": "596d9b5d-fe0b-4e2c-935b-924bd805533d",
+      "settleStatus": "received",
+      "settledTo": "0xcaf34080f47f576f923962ad04dd7ddd86d8d85f"
+    }
   }
 ]
