@@ -4531,5 +4531,35 @@
       "low-volatility",
       "discipline"
     ]
+  },
+  {
+    "id": "ref-1786194122016",
+    "date": "2026-08-08",
+    "timestamp": "2026-08-08T13:02:02.016Z",
+    "runStatus": "simulated",
+    "insight": "Day 33 shows exemplary discipline: 8 consecutive runs correctly ignored false Arc cirBTC pricing artifacts (showing -10% to -29% drawdowns) while real price stayed within 0.5% of ATH. Strategy successfully preserved 88% budget capacity (327 USDC) for genuine dip opportunities.",
+    "patterns": [
+      "consistently filtering false Arc cirBTC pricing signals across 10+ runs",
+      "real cirBTC price ranging 0.41-0.48% off ATH with ultra-low volatility (0.01-0.04%)",
+      "no dip tier activation (activeTier: null) despite check_price_action showing moderate/deep dips",
+      "ranging market regime (43-71% confidence) with no directional edge",
+      "composite risk low-medium (25-38/100) driven primarily by 75% portfolio concentration",
+      "daily cap utilization staying under 10% - well-paced execution",
+      "zero error streaks maintained across all runs"
+    ],
+    "strategyAdjustment": "Continue current approach with no changes. The dip ladder + real price verification is working perfectly to filter the known Arc route pricing bug. Maintain base DCA schedule while preserving capacity for genuine 5%+ drawdowns when volatility expands above 2-3%. Only consider deploying reserved capital if real cirBTC price (from market brief) drops 5%+ from recent highs or volatility regime shifts from ranging to trending down.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "965.319368",
+    "dayNumber": 33,
+    "walletBalance": "327.644680950246899582",
+    "tags": [
+      "pacing",
+      "signal-filtering",
+      "false-positive-handling",
+      "budget-preservation",
+      "ranging-market",
+      "near-ath",
+      "arc-pricing-artifact"
+    ]
   }
 ]
