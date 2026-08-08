@@ -4618,5 +4618,34 @@
       "ranging-market",
       "concentration-risk"
     ]
+  },
+  {
+    "id": "ref-1786195897231",
+    "date": "2026-08-08",
+    "timestamp": "2026-08-08T13:31:37.231Z",
+    "runStatus": "simulated",
+    "insight": "Day 33 shows perfect execution discipline: 11% daily cap utilization with 88% capacity (325 USDC) preserved during tight consolidation 0.40% off ATH. Agent successfully filtered persistent Arc pricing artifacts across all 8 runs while maintaining scheduled DCA in a ranging market with no genuine dip signals.",
+    "patterns": [
+      "Consistently bound by user_schedule with no dip tier activations (activeTier: null across all runs)",
+      "Arc cirBTC pricing artifacts persist showing false -10% to -29% drawdowns while real price remains within 0.50% of ATH",
+      "Ultra-low volatility regime: 0.01-0.04% actual volatility vs 1.51-8.67% regime volatility indicates tight consolidation",
+      "Ranging market regime (43-69% confidence) with no directional edge for 8 consecutive runs",
+      "Composite risk stable at 27-39/100 driven by 74-75% concentration, 60% success rate, zero error streaks",
+      "Mix of real (4 success) and simulated (4 simulated) executions testing micro-amounts ($0.000005-$0.000623) alongside standard DCA ($1.35-$2.03)",
+      "Daily cap utilization holding at 9-11% preserving capacity for genuine opportunities"
+    ],
+    "strategyAdjustment": "Continue current disciplined approach: (1) Maintain scheduled DCA in tight consolidation near ATH without chasing false Arc signals, (2) Keep 85%+ capacity reserved since no genuine 5%+ dip has materialized despite bearish sentiment (Fear index 30), (3) Monitor for volatility expansion above 2-3% as leading indicator for genuine dip opportunities, (4) If BTC breaks below $61,700 (5% dip tier threshold from $64,950 reference), validate with real price data before escalating allocation to avoid Arc artifacts.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "965.319368",
+    "dayNumber": 33,
+    "walletBalance": "325.595060769925415982",
+    "tags": [
+      "pacing",
+      "consolidation",
+      "artifact-filtering",
+      "capacity-preservation",
+      "ranging-market",
+      "discipline"
+    ]
   }
 ]
