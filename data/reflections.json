@@ -4824,5 +4824,34 @@
       "volatility-regime",
       "concentration-risk"
     ]
+  },
+  {
+    "id": "ref-1786212127154",
+    "date": "2026-08-08",
+    "timestamp": "2026-08-08T18:02:07.154Z",
+    "runStatus": "success",
+    "insight": "Day 33 shows disciplined execution in tight consolidation: 8 runs all clamped by user_schedule (not guardrails), BTC hovering 0.19-0.41% off ATH with 0.01-0.08% volatility, no dip tiers triggered. Strategy correctly preserves 88% capacity (318 USDC) for genuine opportunities.",
+    "patterns": [
+      "Consistent user_schedule binding across all 8 runs - no guardrail clamping",
+      "Tight ranging regime (43-46% confidence, 7-9% volatility) persists with BTC near ATH ($64,967-$65,112)",
+      "No dip ladder activation despite Arc pricing artifacts flagged in reasoning",
+      "Zero error streaks maintained with 40-60% success rate",
+      "Low daily cap utilization (11-14%) preserving capital",
+      "Smart sizing applying 0.85x multiplier consistently (Fear index 30, bearish sentiment)",
+      "75% portfolio concentration risk remains elevated but stable"
+    ],
+    "strategyAdjustment": "Continue current approach: preserve capital in tight consolidation near ATH, wait for volatility expansion above 2-3% or genuine 5%+ dip before increasing size. Monitor for regime shift signals (volatility breakout, momentum acceleration, or drawdown beyond noise threshold). If ranging persists beyond Day 35-40, consider micro-adjustments to base schedule to maintain engagement without exhausting budget prematurely.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "973.644368",
+    "dayNumber": 33,
+    "walletBalance": "318.449062448474402414",
+    "tags": [
+      "pacing",
+      "ranging-market",
+      "capital-preservation",
+      "no-clamping",
+      "volatility-waiting",
+      "dip-filtering"
+    ]
   }
 ]
