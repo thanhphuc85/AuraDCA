@@ -4883,5 +4883,32 @@
       "consolidation",
       "false-signal-filtering"
     ]
+  },
+  {
+    "id": "ref-1786216591216",
+    "date": "2026-08-08",
+    "timestamp": "2026-08-08T19:16:31.216Z",
+    "runStatus": "simulated",
+    "insight": "Day 33 continues ultra-tight consolidation near ATH ($64,980-$65,112 range, 0.19-0.41% off peak) with no genuine dip signals triggering—all 8 recent runs bound by user_schedule at 11-16% daily cap utilization, correctly filtering Arc pricing artifacts while preserving 88% capital ($313.66 balance) for real opportunities.",
+    "patterns": [
+      "No dip tier activations across 15+ runs despite 0.01-0.08% volatility—ranging regime (43-68% confidence) prevents ladder triggers",
+      "Arc pricing artifacts persist (false -13.76% drawdown signals) but strategy correctly ignores them—no erroneous buys",
+      "Daily cap utilization stable 11-16% with user_schedule binding—pacing preserves capacity without over-deploying in tight range",
+      "75-76% portfolio concentration stable with 40-60% success rate—risk metrics in acceptable bands",
+      "Zero error streaks maintained—operational reliability high"
+    ],
+    "strategyAdjustment": "Maintain current disciplined stance—ranging market with <0.1% volatility and <0.5% distance from ATH offers no edge. Continue user_schedule pacing at 11-16% daily cap to preserve the 88% reserve ($313 USDC) for volatility expansion events (target: >2-3% volatility + >5% dip from ATH). If BTC breaks above $65,300 (new ATH) or drops below $61,700 (5% dip), reassess dip ladder thresholds. Monitor for false breakout/breakdown given 8.5% regime volatility with negative momentum.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "975.369368",
+    "dayNumber": 33,
+    "walletBalance": "313.657790730246143182",
+    "tags": [
+      "pacing",
+      "ranging-market",
+      "no-dip-signal",
+      "capital-preservation",
+      "arc-artifact-filtering",
+      "user-schedule-bound"
+    ]
   }
 ]
