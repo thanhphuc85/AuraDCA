@@ -4297,5 +4297,34 @@
       "signal-quality",
       "route-reliability"
     ]
+  },
+  {
+    "id": "ref-1786173402239",
+    "date": "2026-08-08",
+    "timestamp": "2026-08-08T07:16:42.239Z",
+    "runStatus": "simulated",
+    "insight": "Day 33 shows successful discipline maintaining base DCA at $64,963 (0.42% off ATH) in ranging market with 1.12% volatility. Strategy correctly preserving 88% budget capacity (336 USDC remaining) for genuine dip opportunities in persistent tight consolidation.",
+    "patterns": [
+      "Consistent base-only DCA across 10+ consecutive runs with no dip tier triggers",
+      "BTC ranging near ATH ($64,885-$64,983) with ultra-low volatility (0.01-1.31%) and no genuine dips",
+      "Successful filtering of Arc cirBTC pricing artifacts showing false -13-14% drawdowns contradicted by real feed",
+      "Stable 22-25 composite risk driven primarily by 73-74% portfolio concentration, minimal volatility contribution",
+      "6 consecutive up candles with positive 1.44% momentum yet remaining in ranging regime (71% confidence)",
+      "Schedule-bound execution with simulated micro-transactions (0.000014-0.000595 USDC) alongside normal 1.275-1.800 USDC buys"
+    ],
+    "strategyAdjustment": "Maintain current conservative stance: continue base DCA only until volatility exceeds 2-3% threshold or genuine 5%+ dip materializes. With 88% budget preserved and 27 days remaining, pacing is appropriate. Monitor for regime shift from ranging to trending—6 consecutive up candles with 1.44% momentum may signal breakout attempt, but 1.12% volatility remains too low to confirm. If volatility spikes above 2% while maintaining ranging regime, reassess dip ladder sensitivity.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "955.944368",
+    "dayNumber": 33,
+    "walletBalance": "336.795238860705290448",
+    "tags": [
+      "pacing",
+      "ranging-market",
+      "consolidation",
+      "budget-preservation",
+      "dip-discipline",
+      "signal-filtering",
+      "low-volatility"
+    ]
   }
 ]
