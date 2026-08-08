@@ -4151,5 +4151,35 @@
       "artifact-detection",
       "capacity-preservation"
     ]
+  },
+  {
+    "id": "ref-1786158127904",
+    "date": "2026-08-08",
+    "timestamp": "2026-08-08T03:02:07.904Z",
+    "runStatus": "success",
+    "insight": "Day 33 continues flawless base DCA execution in ultra-tight range near ATH ($64,889, 0.53% off peak). All 8 recent runs correctly ignored false Arc cirBTC dip signals (-11% to -14% route artifacts) while market volatility remains sub-1.5%, preserving 88% capacity for genuine dip opportunities.",
+    "patterns": [
+      "Zero clamping across 8 consecutive runs - consistently bound by user_schedule, not guardrails",
+      "Market locked in ultra-low volatility regime (0.79%-1.31%) for 8+ runs with BTC consolidating 0.47%-0.60% off ATH",
+      "Persistent false dip signals from Arc cirBTC pricing artifacts showing -11% to -14% drawdowns contradicted by real feed",
+      "Fear index stable at 29-30 (bearish) despite price near ATH - sentiment/price divergence",
+      "Composite risk consistently low (24-30/100) driven by 73-76% concentration but minimal volatility",
+      "Smart sizing applying 0.85x multiplier due to Fear 30, slightly reducing base amounts",
+      "Spending pace stable at 27-30% daily cap utilization with 344-353 USDC balance remaining"
+    ],
+    "strategyAdjustment": "Continue base DCA discipline in current ranging regime - volatility must exceed 2-3% before considering dip ladder activation. If BTC breaks above $65,226 ATH or drops below $61,500 (-5% true dip), reassess regime classification. Monitor Arc cirBTC feed reliability - if false dip signals persist beyond 10 runs, escalate data quality concern. Maintain current 88% capacity preservation; only deploy ladder if real feed confirms ≥5% drawdown with volatility spike above 3%.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "949.869368",
+    "dayNumber": 33,
+    "walletBalance": "344.25534174632886554",
+    "tags": [
+      "pacing",
+      "market-regime",
+      "data-quality",
+      "false-signals",
+      "ranging-market",
+      "capacity-preservation",
+      "volatility-monitoring"
+    ]
   }
 ]
