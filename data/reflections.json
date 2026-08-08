@@ -4590,5 +4590,33 @@
       "risk-management",
       "concentration-risk"
     ]
+  },
+  {
+    "id": "ref-1786194993023",
+    "date": "2026-08-08",
+    "timestamp": "2026-08-08T13:16:33.023Z",
+    "runStatus": "simulated",
+    "insight": "Day 33 continues executing disciplined base-DCA near ATH ($64,967, only 0.41% off peak) with 11% daily cap utilization while successfully filtering persistent Arc cirBTC pricing artifacts that falsely signal 10-29% drawdowns when real volatility remains ultra-low at 0.04%.",
+    "patterns": [
+      "Arc cirBTC route pricing artifacts persist across all 8 runs showing false drawdowns (-10% to -29%) while real price hovers 0.41-0.47% off ATH",
+      "Ultra-low volatility environment (0.01-0.04%) with no genuine dip tier activations throughout the day",
+      "Ranging market regime (43-70% confidence) with no directional edge across all runs",
+      "Conservative daily cap utilization (7-11%) preserving 88% capacity (325 USDC) for genuine opportunities",
+      "Medium composite risk (27-39/100) driven primarily by 75% portfolio concentration, not market volatility",
+      "Zero error streaks maintained across all runs with 60% overall success rate"
+    ],
+    "strategyAdjustment": "Continue current disciplined approach: execute scheduled base-DCA amounts while filtering Arc cirBTC false signals, maintain 88%+ capacity preservation for genuine 5%+ dips when volatility expands above 2-3%, and monitor for regime shift signals (volatility spike, Fear index drop below 25, or legitimate dip tier activation on the ladder) that would warrant increased allocation. Consider diversification strategy if concentration risk persists above 70% beyond Day 35.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "965.319368",
+    "dayNumber": 33,
+    "walletBalance": "325.596116198994113582",
+    "tags": [
+      "pacing",
+      "consolidation",
+      "artifact-filtering",
+      "capacity-preservation",
+      "ranging-market",
+      "concentration-risk"
+    ]
   }
 ]
