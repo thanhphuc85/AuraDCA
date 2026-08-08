@@ -4382,5 +4382,36 @@
       "simulation-mode",
       "capacity-management"
     ]
+  },
+  {
+    "id": "ref-1786176131185",
+    "date": "2026-08-08",
+    "timestamp": "2026-08-08T08:02:11.185Z",
+    "runStatus": "success",
+    "insight": "Consistent base-only DCA execution across 8 runs on Day 33 with perfect discipline: no false dip triggers despite Arc pricing artifacts showing -13.5% drawdowns, maintaining 88% dry powder (336 USDC) for genuine opportunities in ultra-low volatility ranging market (1.12% vol, 0.41-0.48% off ATH).",
+    "patterns": [
+      "Zero clamping interventions across all 8 runs - user_schedule bounds working perfectly",
+      "Persistent Arc cirBTC pricing artifact (-13.5% false drawdown) correctly ignored across 10+ runs using real feed validation",
+      "Ultra-low volatility regime locked in: 0.01-0.03% intraday, 1.09-1.31% market vol, 6 consecutive up candles",
+      "Fear index stuck at 30 (bearish) despite BTC consolidating 0.4-0.5% off ATH at $64,900-$65,000 range",
+      "Smart sizing applying 0.85x multiplier consistently due to Fear 30, minimal impact on base amounts",
+      "74% portfolio concentration risk stable but offset by low composite risk (20-27/100)",
+      "Ranging market regime at 70-71% confidence with near-zero momentum (-2.58% to +1.44%)",
+      "High on-chain activity (27-30K USDC transfers) contradicting bearish sentiment signal"
+    ],
+    "strategyAdjustment": "Continue base DCA discipline with current thresholds - the strategy is performing exactly as designed in this tight consolidation. Do NOT lower dip thresholds despite lack of triggers; 5%+ genuine dip threshold is appropriate for this low-volatility environment. Monitor for volatility expansion above 2-3% as leading indicator for dip opportunities. If BTC breaks above $65,200 ATH or drops below $61,700 (-5%), reassess regime classification. Consider the Fear/Greed signal quality: Fear 30 with high on-chain activity near ATH suggests potential indicator divergence worth tracking.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "957.219368",
+    "dayNumber": 33,
+    "walletBalance": "336.838447464179585136",
+    "tags": [
+      "pacing",
+      "discipline",
+      "ranging-market",
+      "low-volatility",
+      "false-signals",
+      "dry-powder-preservation",
+      "data-quality"
+    ]
   }
 ]
