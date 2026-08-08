@@ -4444,5 +4444,35 @@
       "fear-greed-lag",
       "arc-pricing-artifact"
     ]
+  },
+  {
+    "id": "ref-1786183329336",
+    "date": "2026-08-08",
+    "timestamp": "2026-08-08T10:02:09.336Z",
+    "runStatus": "success",
+    "insight": "Successfully maintained disciplined base DCA across 8 runs on Day 33, correctly ignoring persistent Arc cirBTC pricing artifacts (false -10% drawdown signals) while actual price remains 0.43% off ATH with 0.02% volatility—no genuine dip opportunities materialized in tight ranging regime.",
+    "patterns": [
+      "All 8 runs bound by user_schedule with zero clamping events",
+      "Consistent false dip signals from Arc route pricing artifact ignored across all runs",
+      "Ranging market regime persistent (69-71% confidence, <3% momentum, <2% volatility)",
+      "Ultra-low real volatility (0.01-0.03%) with price <0.5% off ATH throughout day",
+      "Composite risk stable and low (20-27/100) with 74% concentration but zero error streaks",
+      "Fear & Greed index stable at 30 (bearish sentiment) across all runs",
+      "88% budget capacity preserved (332 USDC remaining from ~380 USDC daily allocation)"
+    ],
+    "strategyAdjustment": "Continue current strategy: execute base DCA amounts on schedule while ignoring Arc pricing artifacts. The 88% capacity preservation is working perfectly—no genuine 5%+ dips occurred despite false signals, validating the decision to wait for real volatility expansion (>2-3%) or confirmed dip ladder activation. Monitor for regime shift: if volatility breaks above 2% sustainably or Fear & Greed drops below 25, reassess dip thresholds. Current pacing (cumulative 960.59 USDC over 33 days = 29.1 USDC/day average) is sustainable and leaves ample dry powder.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "960.594368",
+    "dayNumber": 33,
+    "walletBalance": "332.1353902186972375",
+    "tags": [
+      "pacing",
+      "signal-quality",
+      "false-positives",
+      "ranging-market",
+      "capacity-preservation",
+      "error-free",
+      "discipline"
+    ]
   }
 ]
