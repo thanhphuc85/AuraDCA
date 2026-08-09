@@ -5394,5 +5394,32 @@
       "capacity-preservation",
       "simulation-mode"
     ]
+  },
+  {
+    "id": "ref-1786261626792",
+    "date": "2026-08-09",
+    "timestamp": "2026-08-09T07:47:06.792Z",
+    "runStatus": "simulated",
+    "insight": "Day 34 shows extreme position sizing inconsistency: 3 successful real buys totaling 4.875 USDC (1.725, 1.275, 1.875) followed by 5 simulated micro-buys (0.001335, 0.000029, 0.000031, 0.000020, 0.000010 USDC). The agent is executing the correct capital preservation strategy (only 6% daily cap utilized, 88% capacity preserved at 395 USDC) but the simulated dust trades suggest routing/execution issues, not intentional strategy.",
+    "patterns": [
+      "Persistent tight consolidation: BTC ranging 64,742-64,813 (0.11% range) with 0.01-0.04% volatility, 0.65-0.76% off ATH for entire Day 34",
+      "No dip signals triggered: activeTier null across all 8 runs confirms ladder correctly inactive in non-dip environment",
+      "Execution bifurcation: first 3 runs succeeded with normal sizing, last 5 runs simulated with 100-400x smaller amounts",
+      "Capital discipline maintained: 11.82 USDC spent represents appropriate minimal deployment in ranging market",
+      "Risk metrics stable: composite risk 18-28/100, 71% concentration, zero error streaks, 60-100% success rate variance"
+    ],
+    "strategyAdjustment": "Investigate why Arc cirBTC routing failed on last 5 runs—this appears to be infrastructure issue, not strategy problem. The capital preservation approach is correct: in a 0.11% price range with sub-0.05% volatility and no dip tier activation, minimal 6% daily cap usage is appropriate. Continue this disciplined pacing until genuine 5%+ dip materializes or volatility expands above 3%. Do not increase position sizes in this tight range—preserve the 395 USDC (88% capacity) for actual opportunity. If routing issues persist, flag for technical review rather than compensating with larger buys.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "992.934368",
+    "dayNumber": 34,
+    "walletBalance": "395.796422381874347889",
+    "tags": [
+      "pacing",
+      "execution-issues",
+      "capital-preservation",
+      "ranging-market",
+      "routing-failure",
+      "Day-34"
+    ]
   }
 ]
