@@ -5739,5 +5739,33 @@
       "volatility-regime",
       "no-false-triggers"
     ]
+  },
+  {
+    "id": "ref-1786287727680",
+    "date": "2026-08-09",
+    "timestamp": "2026-08-09T15:02:07.680Z",
+    "runStatus": "success",
+    "insight": "Day 34 continues disciplined execution in ultra-tight consolidation: BTC ranging 0.06-0.51% off ATH with 0.03-0.16% volatility. No dip tiers activated across all 8 runs today, preserving 87% capacity (384 USDC) for genuine 5%+ opportunities when volatility expands above 3%.",
+    "patterns": [
+      "Persistent ranging regime for 34 days: 61-63% confidence, negative momentum, 3.27-3.65% volatility",
+      "Zero clamping by daily cap: all executions bound by user_schedule at 10-11% daily cap utilization (22.92 USDC of ~210 USDC cap)",
+      "No dip ladder activation: activeTier null across all runs despite Fear index 31, price 0.06-0.51% off ATH",
+      "High portfolio concentration risk stable at 72%, zero error streaks maintained",
+      "Smart sizing applying 0.85x multiplier due to Fear index 31 and bearish sentiment",
+      "Cumulative spend tracking well: 1005 USDC spent over 34 days averages 29.6 USDC/day"
+    ],
+    "strategyAdjustment": "Maintain current conservative posture through this ATH consolidation phase. Continue preserving 87% capacity for volatility expansion. If BTC breaks below 5% from ATH ($61,838) or volatility spikes above 5%, be ready to deploy 2-3x daily allocation. Monitor for regime shift signals: 4+ consecutive momentum candles in same direction or volatility sustainably above 4% would indicate breakout/breakdown requiring strategy reassessment.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "1005.309368",
+    "dayNumber": 34,
+    "walletBalance": "384.542685726857121887",
+    "tags": [
+      "pacing",
+      "ranging-market",
+      "capacity-preservation",
+      "no-clamping",
+      "consolidation",
+      "ATH-behavior"
+    ]
   }
 ]
