@@ -5709,5 +5709,35 @@
       "ATH-proximity",
       "discipline"
     ]
+  },
+  {
+    "id": "ref-1786284128041",
+    "date": "2026-08-09",
+    "timestamp": "2026-08-09T14:02:08.041Z",
+    "runStatus": "success",
+    "insight": "Day 34 consolidation continues with BTC 0.10-0.51% off ATH in ultra-low volatility (0.02-0.16%). All 8 runs correctly bound by user_schedule with no dip ladder activation, preserving 87% capacity (386 USDC) for genuine opportunities. Strategy is working as designed.",
+    "patterns": [
+      "No dip tier activation across all runs despite 34-day campaign - activeTier: null throughout",
+      "Consistently bound by user_schedule, never by daily cap or risk guardrails",
+      "Ultra-low volatility environment (0.02-0.16%) well below 3% dip threshold",
+      "BTC ranging within 0.5% of ATH ($64,902-$65,171) with 62-65% regime confidence",
+      "High capital preservation: 87% of budget remains available (386/444 USDC)",
+      "Daily utilization steady at 9-10% of daily cap (~21 USDC spent per day)",
+      "Fear index stable at 31 (bearish) but no price capitulation",
+      "72% portfolio concentration risk persists but zero error streaks"
+    ],
+    "strategyAdjustment": "Maintain current conservative pacing through this tight range. The 5%+ dip ladder threshold is correctly calibrated - no false triggers in 34 days of consolidation proves the system avoids chasing noise. If BTC breaks below $61,900 (5% dip) or volatility spikes above 3%, the preserved 386 USDC provides substantial firepower for 15-20 multiplied buys. Do not lower dip thresholds or increase base allocation - the ranging market with bearish sentiment (Fear 31, 4 consecutive down candles) may resolve with a sharp move that validates current patience.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "1004.034368",
+    "dayNumber": 34,
+    "walletBalance": "386.512384796425221087",
+    "tags": [
+      "pacing",
+      "ranging-market",
+      "dip-ladder-inactive",
+      "capital-preservation",
+      "volatility-regime",
+      "no-false-triggers"
+    ]
   }
 ]
