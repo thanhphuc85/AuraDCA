@@ -6275,5 +6275,35 @@
       "baseline-adjustment",
       "risk-masking"
     ]
+  },
+  {
+    "id": "ref-1786341730631",
+    "date": "2026-08-10",
+    "timestamp": "2026-08-10T06:02:10.631Z",
+    "runStatus": "success",
+    "insight": "Concentration risk has become critical: 74% portfolio deployed (89/100 concentration score) with only 360 USDC remaining after 35 days of tight consolidation near ATH. The dip ladder correctly avoided false triggers (0 activations), but baseline deployment is eroding dry powder without the volatility expansion needed to justify it.",
+    "patterns": [
+      "35 consecutive days of ranging market (73-74% confidence) with no dip tier activations",
+      "Ultra-low volatility regime persists: 0.06-0.17% range, well below 3% threshold for increased deployment",
+      "Concentration climbing steadily: 73% → 88% → 89% over recent runs despite warnings",
+      "Daily spend averaging 1.35-2.03 USDC with 100% bound by user_schedule, no clamping",
+      "Fear & Greed index stable at 30-31 (bearish) throughout entire consolidation",
+      "BTC price range $64,827-$65,088 showing only 0.13-0.63% drawdowns from ATH",
+      "Zero error streaks and consistent successful execution across all 8 recent runs",
+      "Composite risk consistently low (19-28/100) masking the structural concentration issue"
+    ],
+    "strategyAdjustment": "Immediately reduce baseline deployment amounts by 50% (from current 1.27-2.03 USDC range down to 0.64-1.02 USDC) to extend runway and preserve remaining 360 USDC capacity. Current burn rate of ~29.3 USDC/day means only 12 days of capacity left at this pace. A 50% reduction extends this to 24+ days, buying time for the inevitable volatility expansion above 3% or genuine 5%+ drawdown that will justify aggressive deployment. The dip ladder is correctly calibrated—don't touch it. The issue is baseline pacing in an unprecedented 35-day ATH consolidation that may continue another 2-4 weeks.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "1027.059368",
+    "dayNumber": 35,
+    "walletBalance": "360.65545300137322062",
+    "tags": [
+      "concentration",
+      "pacing",
+      "budget",
+      "ranging-market",
+      "baseline-reduction",
+      "risk-management"
+    ]
   }
 ]
