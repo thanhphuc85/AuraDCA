@@ -6525,5 +6525,31 @@
       "ranging-market",
       "schedule-override-needed"
     ]
+  },
+  {
+    "id": "ref-1786363347083",
+    "date": "2026-08-10",
+    "timestamp": "2026-08-10T12:02:27.083Z",
+    "runStatus": "success",
+    "insight": "Day 35: Agent recommendations to reduce baseline 60-80% are being completely ignored—user schedule continues to deploy 1.3-1.6 USDC daily despite concentration at 86/100 (72% deployed, only 411 USDC remaining). Past strategy adjustments have had zero impact on execution.",
+    "patterns": [
+      "Consistently bound by user_schedule—agent recommendations have no effect on execution amounts",
+      "35-day ATH consolidation continues: 0.34% drawdown, 0.06% volatility, no dip tiers triggered",
+      "Concentration risk escalating: 86/100, down to 411 USDC buffer (28% remaining capacity)",
+      "Ranging regime persists: 69-70% confidence, near-zero momentum, sub-2% volatility",
+      "Zero errors, low composite risk (27/100), but capacity depletion is the dominant risk factor"
+    ],
+    "strategyAdjustment": "Stop recommending baseline reductions in reasoning—the user schedule overrides all agent suggestions. Instead, shift focus to: (1) clearly documenting that capacity depletion is intentional per user schedule, (2) calculating precise runway (at ~1.4 USDC/day, ~293 days remaining), (3) explicitly stating that if a genuine 5%+ dip occurs, available response will be limited to 411 USDC (28% of original budget), and (4) monitoring for any sign the user schedule will adapt to market regime changes.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "1035.209368",
+    "dayNumber": 35,
+    "walletBalance": "411.144959181865187848",
+    "tags": [
+      "pacing",
+      "concentration",
+      "user-override",
+      "ranging-market",
+      "strategy-ineffective"
+    ]
   }
 ]
