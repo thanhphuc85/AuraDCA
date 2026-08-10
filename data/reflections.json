@@ -6580,5 +6580,33 @@
       "ranging-market",
       "strategy-pivot"
     ]
+  },
+  {
+    "id": "ref-1786367800422",
+    "date": "2026-08-10",
+    "timestamp": "2026-08-10T13:16:40.422Z",
+    "runStatus": "simulated",
+    "insight": "Day 35 continues the 35-day ATH consolidation ($62.5k-$65.2k range) with zero dip ladder triggers and 86/100 concentration risk (72% deployed, 408 USDC remaining). User schedule fully controls execution—baseline reduction recommendations have proven ineffective.",
+    "patterns": [
+      "Consistently bound by user_schedule for all 8 recent runs, no clamping by daily cap or risk guardrails",
+      "35-day consolidation near ATH with ultra-low volatility (0.04-0.17%) and zero dip tier activations (activeTier: null throughout)",
+      "Concentration risk elevated at 85-86/100 across all runs, with 71-72% portfolio deployed and 408-415 USDC remaining capacity",
+      "Composite risk consistently low (26-27/100) driven by minimal volatility and zero error streaks",
+      "Market regime stable at ranging (69-70% confidence) with no directional edge for entire observation window",
+      "Past strategy adjustments (60-80% baseline reductions) documented as ineffective—user schedule overrides all recommendations"
+    ],
+    "strategyAdjustment": "Abandon baseline reduction recommendations entirely—user schedule is immutable. Focus exclusively on: (1) dip ladder calibration accuracy (current thresholds appear appropriate given zero false triggers during 0.72% max drawdown), (2) monitoring for regime shift signals that could trigger genuine 5%+ dips where remaining 408 USDC capacity would deploy, (3) tracking whether the 35-day consolidation resolves with a breakout or breakdown to validate concentration risk warnings retrospectively.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "1036.649368",
+    "dayNumber": 35,
+    "walletBalance": "408.325637361808644008",
+    "tags": [
+      "pacing",
+      "concentration-risk",
+      "market-ranging",
+      "user-schedule-bound",
+      "strategy-pivot",
+      "dip-ladder-calibration"
+    ]
   }
 ]
