@@ -6168,5 +6168,31 @@
       "capacity-preservation",
       "dip-ladder-calibration"
     ]
+  },
+  {
+    "id": "ref-1786327344847",
+    "date": "2026-08-10",
+    "timestamp": "2026-08-10T02:02:24.847Z",
+    "runStatus": "success",
+    "insight": "Day 35 execution remains disciplined in extended consolidation: no dip tiers triggered across 8 consecutive runs, Fear & Greed at 30, and BTC ranging $62.5K-$65.2K with 0.13% drawdown and 0.14% volatility. Portfolio concentration has climbed to 88/100 from sustained baseline deployment while preserving 87% capacity (367 USDC) for genuine opportunities.",
+    "patterns": [
+      "No dip tier activation in 35 days despite bearish sentiment - dip ladder thresholds may be set too conservatively for this tight consolidation regime",
+      "Portfolio concentration rising to 88/100 from consistent scheduled buys without meaningful drawdowns - concentration risk building as intended opportunity cost",
+      "Ultra-low volatility (0.14%) and tight drawdowns (<1%) persisting - market regime correctly identified as ranging with 74% confidence",
+      "Bearish sentiment (Fear 30-31) disconnected from price action - high on-chain activity but no volatility expansion above 3% threshold",
+      "Daily cap utilization minimal (1-17%) - guardrails not binding, strategy operating within risk limits"
+    ],
+    "strategyAdjustment": "Consider the opportunity cost of 88/100 concentration after 35 days without a 5%+ dip: either (1) recalibrate dip ladder to trigger at 2-3% drawdowns in this low-volatility regime, or (2) temporarily reduce baseline scheduled buys by 20-30% to slow concentration buildup and extend runway. The current 5%+ threshold appears mis-calibrated for a market that has consolidated for 35 days with <1% drawdowns - the \"genuine opportunity\" may not materialize before capacity is exhausted at baseline pace.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "1021.284368",
+    "dayNumber": 35,
+    "walletBalance": "366.592307516087248892",
+    "tags": [
+      "pacing",
+      "concentration-risk",
+      "market-timing",
+      "dip-calibration",
+      "regime-ranging"
+    ]
   }
 ]
