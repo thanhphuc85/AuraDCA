@@ -6415,5 +6415,34 @@
       "concentration-risk",
       "strategy-validation"
     ]
+  },
+  {
+    "id": "ref-1786348966296",
+    "date": "2026-08-10",
+    "timestamp": "2026-08-10T08:02:46.296Z",
+    "runStatus": "success",
+    "insight": "Despite past reflections consistently recommending 30-50% baseline reductions due to concentration risk, executed amounts have swung wildly today — from micro-baseline simulations (~$0.000042) to full-sized executions ($1.875) — indicating the strategy adjustment recommendations are not being consistently applied across runs, and the concentration problem (85-89/100, ~71-74% deployed) is not improving.",
+    "patterns": [
+      "Concentration score stuck at 85-89/100 for multiple consecutive runs — no meaningful improvement despite repeated reflections flagging this as the primary risk",
+      "Executed amounts are highly inconsistent today: $0.000042, $0.000042, $0.000042 (simulated), then $1.050, $1.275, $1.875, $1.425 (live) — no stable reduced baseline has been adopted",
+      "35-day ATH consolidation continues with zero dip ladder activations (activeTier: null every run) — Fear & Greed stuck at 30 with ultra-low volatility (0.06-0.12%)",
+      "Simulated runs are intermixed with live runs on the same date, suggesting test/dev execution alongside production — amounts executed in simulation are negligible and do not represent the real strategy",
+      "No genuine 5%+ drawdown opportunity has materialized in 35 days; every run confirms ranging regime (70-74% confidence) with no directional edge",
+      "Wallet balance ~417 USDC remaining out of original budget — cumulative spend of 1029.53 USDC suggests roughly 71% of capital has been deployed"
+    ],
+    "strategyAdjustment": "Immediately and durably cap live baseline execution at 0.75 USDC per run (roughly 47% reduction from today's 1.425 average) until either: (a) drawdown exceeds 3% on the real cirBTC feed, or (b) Fear & Greed rises above 50, or (c) volatility expands above 1.5%. With ~417 USDC remaining and no dip ladder activations in 35 days, the priority is preserving at least 300 USDC in reserve for genuine dip deployment. At the current burn rate of ~1.4 USDC/run and assuming ~8 runs/day, the reserve will be exhausted in under 40 runs without a reduction — before any material dip can be capitalized on.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "1029.534368",
+    "dayNumber": 35,
+    "walletBalance": "416.99697356388056686",
+    "tags": [
+      "concentration",
+      "pacing",
+      "budget",
+      "clamping",
+      "market-timing",
+      "ranging-regime",
+      "strategy-drift"
+    ]
   }
 ]
