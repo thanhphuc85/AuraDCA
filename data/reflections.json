@@ -6220,5 +6220,32 @@
       "capacity-preservation",
       "risk-management"
     ]
+  },
+  {
+    "id": "ref-1786334523649",
+    "date": "2026-08-10",
+    "timestamp": "2026-08-10T04:02:03.649Z",
+    "runStatus": "success",
+    "insight": "35-day consolidation at ATH with zero dip triggers has resulted in 74% portfolio concentration (89/100 risk score) while preserving 87% cash capacity—the dip ladder is correctly calibrated but concentration risk is becoming the dominant threat as baseline buys accumulate without volatility expansion.",
+    "patterns": [
+      "No dip tier activated in 35 consecutive days despite ranging market regime",
+      "Concentration risk climbed from 73/100 to 89/100 over past 8 runs while volatility stayed sub-0.5%",
+      "All recent runs clamped by user_schedule at baseline amounts (1.275-2.025 USDC)",
+      "Market regime stuck at 74% ranging confidence with negative momentum (-0.13% to -0.75%) but no breakout",
+      "Fear & Greed index stable at 30-31 (fear) for multiple days without triggering material drawdown",
+      "Composite risk remains low (22-28/100) driven entirely by ultra-low volatility, masking concentration buildup"
+    ],
+    "strategyAdjustment": "Reduce baseline scheduled buy amounts by 30-40% immediately to slow concentration growth while volatility remains sub-1% and no dip tiers activate. The current 1.275-2.025 USDC baseline is appropriate for normal markets but is building concentration risk in this unprecedented 35-day tight consolidation. Reserve the preserved 363 USDC capacity for when volatility expands above 3% or a genuine 5%+ drawdown materializes. If concentration hits 95/100 or portfolio weight exceeds 80%, skip baseline buys entirely until a dip tier triggers.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "1023.909368",
+    "dayNumber": 35,
+    "walletBalance": "363.850092144295520892",
+    "tags": [
+      "concentration-risk",
+      "pacing",
+      "ranging-market",
+      "risk-management",
+      "baseline-adjustment"
+    ]
   }
 ]
