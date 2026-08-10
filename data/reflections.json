@@ -6305,5 +6305,32 @@
       "baseline-reduction",
       "risk-management"
     ]
+  },
+  {
+    "id": "ref-1786345330744",
+    "date": "2026-08-10",
+    "timestamp": "2026-08-10T07:02:10.744Z",
+    "runStatus": "simulated",
+    "insight": "35-day campaign shows persistent concentration risk (89/100, 74% deployed) from baseline buys during unprecedented ATH consolidation with zero dip ladder activations. Latest run executed at tiny 0.001887 USDC suggesting system-level baseline reduction finally implemented, but 8 prior runs today alone deployed 9.525 USDC—strategy adjustment is arriving too late.",
+    "patterns": [
+      "Zero dip ladder activations across entire 35-day campaign despite 5-tier ladder—ultra-low volatility (0.06-0.17%) prevents any tier triggers",
+      "Concentration climbing from sustained baseline deployment: 1028 USDC spent, 358 USDC remaining (74% deployed vs 26% dry powder)",
+      "Market regime stable: ranging 72-74% confidence, -0.68% to +1.16% momentum, price oscillating $62.5K-$65.2K near ATH",
+      "Composite risk consistently low (19-26/100) driven by ultra-low volatility and zero errors, masking the concentration risk buildup",
+      "Reflections consistently recommend 30-50% baseline reductions for weeks, but execution continued at 1.05-1.875 USDC until this 0.001887 USDC run"
+    ],
+    "strategyAdjustment": "Baseline reduction has finally been implemented (0.001887 vs prior 1.05-1.875 range represents 99% cut), but damage is done—74% deployed with no dip captures. For remainder of campaign: (1) maintain this micro-baseline (~0.002 USDC) during continued sub-1% volatility, (2) preserve all 358 USDC capacity exclusively for dip ladder activations when volatility exceeds 3% or price drops 5%+, (3) if 35-day tight range persists another week without ladder triggers, consider pausing baseline buys entirely to stop concentration growth until market regime changes.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "1028.109368",
+    "dayNumber": 35,
+    "walletBalance": "358.06711646389477486",
+    "tags": [
+      "concentration",
+      "pacing",
+      "baseline-adjustment",
+      "dip-ladder-idle",
+      "market-timing",
+      "volatility-regime"
+    ]
   }
 ]
