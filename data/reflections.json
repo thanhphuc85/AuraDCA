@@ -6665,5 +6665,35 @@
       "ATH-consolidation",
       "strategy-ineffective"
     ]
+  },
+  {
+    "id": "ref-1786370530325",
+    "date": "2026-08-10",
+    "timestamp": "2026-08-10T14:02:10.325Z",
+    "runStatus": "success",
+    "insight": "User schedule completely overrides agent sizing recommendations—100% of last 8 runs bound by user_schedule despite repeated baseline reduction proposals. Agent should accept this constraint and focus exclusively on dip ladder calibration and market regime monitoring rather than ineffective baseline adjustments.",
+    "patterns": [
+      "8/8 recent runs bound by user_schedule, confirming schedule override is systematic not temporary",
+      "35-day consolidation at ATH ($63.1k-$65.2k range) with no dip ladder activations (activeTier: null throughout)",
+      "Concentration risk persistently elevated at 86/100 with 72% deployed and only 408 USDC remaining",
+      "Ultra-low volatility regime persists (0.04%-0.25% recent readings, well below 3% threshold)",
+      "Ranging market regime stable at 69% confidence with negative momentum (-0.95% to -2.89%)",
+      "Fear & Greed locked at 30 (bearish) with minimal price movement (<1.2% drawdowns)",
+      "Previous strategy adjustments (60-80% baseline reductions) had zero impact on execution"
+    ],
+    "strategyAdjustment": "Stop proposing baseline amount reductions—they have no effect on user_schedule-driven execution. Instead: (1) Monitor for volatility breakout above 3% or drawdown exceeding 5% to validate dip ladder thresholds, (2) Pre-calculate optimal dip tier sizing given 408 USDC capacity constraint (e.g., tier 1: 100 USDC, tier 2: 150 USDC, tier 3: 158 USDC reserves), (3) Track consolidation break direction to identify regime shift from ranging to trending, (4) Accept that concentration risk mitigation is outside agent control under current schedule configuration.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "1038.074368",
+    "dayNumber": 35,
+    "walletBalance": "408.321843945783044008",
+    "tags": [
+      "user-schedule-override",
+      "baseline-ineffective",
+      "dip-ladder-prep",
+      "concentration-risk",
+      "ranging-market",
+      "ath-consolidation",
+      "strategy-pivot"
+    ]
   }
 ]
