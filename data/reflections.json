@@ -6608,5 +6608,32 @@
       "strategy-pivot",
       "dip-ladder-calibration"
     ]
+  },
+  {
+    "id": "ref-1786368709454",
+    "date": "2026-08-10",
+    "timestamp": "2026-08-10T13:31:49.454Z",
+    "runStatus": "simulated",
+    "insight": "Day 35 shows continued user_schedule override pattern with microscopic test amounts (0.000042 USDC) following regular DCA buys ($1.35-1.58), all executing in persistent ranging market at ATH consolidation with zero dip activations and 86/100 concentration risk.",
+    "patterns": [
+      "Consistently bound by user_schedule across all 8 runs with zero daily cap or dip tier activations",
+      "35-day ATH consolidation continues with 0.64-0.72% drawdowns and ultra-low 0.04-0.17% volatility preventing any dip ladder engagement",
+      "Concentration risk locked at 85-86/100 (72% deployed, 408 USDC remaining) as baseline DCA continues depleting reserves without dip opportunities",
+      "Market regime stable at ranging (69% confidence) with bearish sentiment (Fear & Greed 30) but no directional edge materializing",
+      "Past strategy adjustments (baseline reduction recommendations) confirmed ineffective—user schedule completely controls execution amounts regardless of agent reasoning"
+    ],
+    "strategyAdjustment": "Stop generating baseline reduction recommendations in reasoning—they have zero impact on user_schedule-controlled execution. Instead, focus reasoning exclusively on: (1) documenting current market state and dip ladder status, (2) tracking concentration risk metrics passively, and (3) preparing tactical analysis for IF/WHEN volatility exceeds 3% or genuine 5%+ dips trigger ladder tiers. Accept that pacing is externally controlled and optimize for accurate signal detection rather than allocation advocacy.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "1036.649368",
+    "dayNumber": 35,
+    "walletBalance": "408.324431710256644008",
+    "tags": [
+      "user-schedule-override",
+      "concentration-risk",
+      "ranging-market",
+      "dip-ladder-dormant",
+      "strategy-pivot",
+      "pacing"
+    ]
   }
 ]
