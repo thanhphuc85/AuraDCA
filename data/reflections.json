@@ -6806,5 +6806,33 @@
       "dip-ladder-inactive",
       "runway-tracking"
     ]
+  },
+  {
+    "id": "ref-1786388543149",
+    "date": "2026-08-10",
+    "timestamp": "2026-08-10T19:02:23.149Z",
+    "runStatus": "simulated",
+    "insight": "35 days into campaign with 100% user_schedule binding and zero dip ladder activations despite 2.19% drawdowns. Market stuck in ultra-low volatility regime (0.08-0.29%) preventing any dip tier triggers—dip ladder strategy remains completely untested and dormant.",
+    "patterns": [
+      "100% user_schedule bound across all 8 recent runs with no clamping by risk or budget guardrails",
+      "35-day consolidation ($63.4k-$65.2k range) with ultra-low volatility (0.08-0.29%) preventing dip ladder activation",
+      "Drawdowns maxing at 2.19% stay well below 5% tier-1 threshold—no dip signals triggered in entire campaign",
+      "Concentration risk elevated and stable at 86-87/100 (72% deployed, ~400 USDC remaining)",
+      "Composite risk consistently low (25-27/100) due to zero volatility and zero error streaks",
+      "Ranging market regime (69-74% confidence) with no directional edge for 35 consecutive days"
+    ],
+    "strategyAdjustment": "Dip ladder thresholds calibrated for 5%+ volatility events are mismatched to this 35-day sub-0.3% volatility regime. Consider either: (1) recalibrating tier-1 from 5% drawdown to 3% to capture 2%+ moves that actually occur in this market, or (2) accept current ladder is designed for real drawdowns and remain patient. Given 72% portfolio already deployed with only 400 USDC buffer, bias toward patience—wait for genuine volatility expansion above 1% before adjusting thresholds. Monitor for breakout from $63-65k range as trigger for regime change.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "1045.599368",
+    "dayNumber": 35,
+    "walletBalance": "400.613281484107805107",
+    "tags": [
+      "pacing",
+      "dip-ladder-dormant",
+      "ranging-market",
+      "ultra-low-volatility",
+      "concentration-risk",
+      "threshold-calibration"
+    ]
   }
 ]
