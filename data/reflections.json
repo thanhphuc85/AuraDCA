@@ -6750,5 +6750,34 @@
       "strategy-mismatch",
       "dip-ladder-dormant"
     ]
+  },
+  {
+    "id": "ref-1786381334870",
+    "date": "2026-08-10",
+    "timestamp": "2026-08-10T17:02:14.870Z",
+    "runStatus": "success",
+    "insight": "User schedule continues to dominate execution (100% of last 8 runs) despite 35 days of ATH consolidation, 2.25% drawdown, and persistent bearish sentiment (F&G 30). Strategy pivot to dip-ladder-only monitoring is correct—no dip tiers have triggered despite drawdowns up to 2.25%, confirming ladder thresholds may need recalibration if volatility remains compressed.",
+    "patterns": [
+      "Consistently bound by user_schedule across all 8 recent runs—no daily cap or dip ladder activations",
+      "35-day consolidation near ATH with ultra-low volatility (0.14%-0.29%) preventing dip ladder engagement",
+      "Drawdowns remain shallow (0.64%-2.25%) never reaching tier-1 threshold despite persistent bearish sentiment",
+      "Concentration risk elevated and stable at 86/100 with 72% deployed, ~404 USDC remaining",
+      "Ranging market regime (69-74% confidence) with no directional edge for 35 consecutive days",
+      "Zero error streaks—execution reliability is perfect",
+      "Smart sizing multiplier 1.15x applied but overridden by schedule"
+    ],
+    "strategyAdjustment": "Continue user schedule execution without resistance. Monitor dip ladder calibration: if consolidation persists another 7-14 days without tier-1 activation (currently requires >5% drawdown), propose lowering tier-1 threshold to 3.5-4% to capture meaningful dips in this low-volatility regime. Track whether drawdowns reach 3%+ before reverting—if yes, current ladder is appropriate; if market stays in 0-2.5% range, ladder is too conservative for this cycle.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "1042.649368",
+    "dayNumber": 35,
+    "walletBalance": "403.816964707801805107",
+    "tags": [
+      "pacing",
+      "user-schedule-override",
+      "dip-ladder-calibration",
+      "ranging-market",
+      "concentration-risk",
+      "low-volatility"
+    ]
   }
 ]
