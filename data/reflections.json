@@ -6194,5 +6194,31 @@
       "dip-calibration",
       "regime-ranging"
     ]
+  },
+  {
+    "id": "ref-1786330966850",
+    "date": "2026-08-10",
+    "timestamp": "2026-08-10T03:02:46.850Z",
+    "runStatus": "success",
+    "insight": "35-day ATH consolidation continues with zero dip ladder activations—concentration has climbed to 88/100 (73% portfolio weight) while preserving 365 USDC (87% capacity) for dips that haven't materialized. Strategy is correctly avoiding false triggers but facing rising concentration risk from baseline deployment.",
+    "patterns": [
+      "All 8 recent runs bound by user_schedule with zero dip tier activations—dip ladder correctly calibrated for this 0.14-0.42% volatility regime",
+      "Concentration risk steadily climbing from 73/100 to 88/100 as baseline buys accumulate without offsetting dip opportunities",
+      "Price oscillating 0.12-0.63% from ATH across 35 days—ranging regime (74% confidence) with no breakout catalyst",
+      "Fear & Greed stuck at 30-31 (bearish) but BTC holding $62.5k-$65.2k range with high on-chain activity suggesting defensive accumulation",
+      "Smart sizing consistently applying 0.9x multiplier due to Fear index <35, reducing baseline from 1.5 to 1.35 USDC"
+    ],
+    "strategyAdjustment": "Maintain current dip ladder calibration (5%+ threshold correct for this regime) but consider tactical pause in baseline deployment if concentration exceeds 90/100 or portfolio weight hits 75%. If ranging regime persists beyond Day 40 with concentration >90, evaluate reducing baseline multiplier to 0.8x or skipping alternating buys to preserve capacity—rising concentration without dip deployment opportunities is the primary risk vector now, not missed entries.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "1022.634368",
+    "dayNumber": 35,
+    "walletBalance": "365.220974884303747548",
+    "tags": [
+      "concentration-risk",
+      "ranging-market",
+      "dip-ladder-calibration",
+      "capacity-preservation",
+      "risk-management"
+    ]
   }
 ]
