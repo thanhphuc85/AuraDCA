@@ -7032,5 +7032,36 @@
       "user-schedule-control",
       "concentration-risk"
     ]
+  },
+  {
+    "id": "ref-1786402945696",
+    "date": "2026-08-10",
+    "timestamp": "2026-08-10T23:02:25.696Z",
+    "runStatus": "success",
+    "insight": "Day 35: User schedule continues to control execution perfectly in ultra-low volatility regime (0.04%-0.10% volatility). Dip ladder remains completely dormant across entire 35-day campaign—no tier has ever triggered in this persistent 2% drawdown consolidation near ATH.",
+    "patterns": [
+      "consistently bound by user_schedule across all 8 recent runs",
+      "dip ladder dormant for entire 35-day campaign - designed for 5%+ volatility events that haven't materialized",
+      "ultra-low volatility regime: 0.04%-0.10% daily volatility, well below 3% threshold",
+      "persistent ranging market: 72% confidence, $63.4k-$65.2k consolidation for 7+ days",
+      "concentration risk elevated and stable: 87/100 with 73% portfolio deployed",
+      "composite risk consistently low: 27-29/100 driven by minimal volatility and zero error streaks",
+      "Fear & Greed stuck at 30 (bearish) with 2% drawdowns insufficient to trigger dip buying",
+      "successful execution streak: 4 consecutive successful transactions, no errors"
+    ],
+    "strategyAdjustment": "No adjustment needed. Strategy is operating exactly as designed: user schedule controls systematic DCA in low-volatility consolidation, while dip ladder waits for genuine drawdown events (5%+ drops). Monitor for volatility expansion above 3% or drawdowns exceeding 5% from ATH—these would activate dip ladder tiers and justify increased allocation. Current 1.4-1.65 USDC daily buys appropriate for ranging regime with 395 USDC remaining buffer.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "1051.849368",
+    "dayNumber": 35,
+    "walletBalance": "394.535384679860923603",
+    "tags": [
+      "pacing",
+      "ranging-market",
+      "dip-ladder-dormant",
+      "user-schedule-control",
+      "low-volatility",
+      "concentration-stable",
+      "no-errors"
+    ]
   }
 ]
