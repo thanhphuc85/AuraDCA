@@ -6973,5 +6973,35 @@
       "ranging-market",
       "concentration-tracking"
     ]
+  },
+  {
+    "id": "ref-1786395748011",
+    "date": "2026-08-10",
+    "timestamp": "2026-08-10T21:02:28.011Z",
+    "runStatus": "success",
+    "insight": "Day 35 shows perfect execution consistency: 100% user_schedule bound across all runs with zero clamping or errors. The dip ladder remains completely dormant through 35 days of sub-1% volatility (0.09% current), confirming it's correctly calibrated for genuine drawdown events (5%+) that haven't occurred in this tight $63.4k-$65.2k ranging regime.",
+    "patterns": [
+      "consistently bound by user_schedule across 100% of recent runs",
+      "dip ladder dormant for entire 35-day campaign (activeTier: null throughout)",
+      "ultra-low volatility regime persists: 0.08-0.10% daily volatility, no 5%+ drawdowns",
+      "ranging market at 72% confidence with BTC consolidating $63.4k-$65.2k near ATH",
+      "concentration risk elevated at 87/100 with 72% portfolio deployed, 397 USDC remaining",
+      "composite risk consistently low (26-28/100) driven by minimal volatility and zero error streaks",
+      "smart sizing applying 0.85x multiplier consistently due to Fear & Greed 30 (bearish sentiment)"
+    ],
+    "strategyAdjustment": "Maintain current strategy with no changes. The dip ladder is functioning as designed—dormant in low-volatility environments and reserved for genuine volatility expansion events. User schedule is controlling systematic accumulation effectively with 1048 USDC deployed over 574 runs. Monitor for volatility regime shift above 3% daily or drawdowns exceeding 5% from ATH where dip ladder should activate. Accept that concentration risk (87/100) is natural outcome of 35-day accumulation with limited remaining capital (397 USDC). Continue current pacing.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "1048.624368",
+    "dayNumber": 35,
+    "walletBalance": "397.587932092447987507",
+    "tags": [
+      "pacing",
+      "user-schedule-bound",
+      "dip-ladder-dormant",
+      "low-volatility-regime",
+      "ranging-market",
+      "concentration-risk",
+      "steady-execution"
+    ]
   }
 ]
