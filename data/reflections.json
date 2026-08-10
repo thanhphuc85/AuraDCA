@@ -6945,5 +6945,33 @@
       "user-schedule-bound",
       "dip-ladder-dormant"
     ]
+  },
+  {
+    "id": "ref-1786392159367",
+    "date": "2026-08-10",
+    "timestamp": "2026-08-10T20:02:39.367Z",
+    "runStatus": "success",
+    "insight": "Day 35 shows perfect execution consistency with 100% user_schedule binding across all 8 runs. The 35-day campaign has deployed 72% of capital (1047 USDC spent, 399 remaining) in a persistent sub-1% volatility regime where the dip ladder has never activated—strategy is effectively running pure DCA with dormant opportunistic buying.",
+    "patterns": [
+      "100% user_schedule bounded: no daily cap or risk clamp interference across entire day",
+      "Dip ladder completely dormant for 35 consecutive days: designed for 5%+ drawdowns but market volatility consistently <1%",
+      "Market regime locked in tight range: BTC consolidating $63.4k-$65.2k with 0.08-0.13% volatility, 2% drawdowns insufficient to trigger ladder",
+      "Concentration risk elevated but stable: 87/100 risk score, 72% deployed, linear deployment pace on track",
+      "Smart sizing functioning: 1.2x multiplier applied during Fear & Greed 30 bearish conditions",
+      "Zero error streaks: 35-day clean execution record with no technical failures"
+    ],
+    "strategyAdjustment": "Continue current approach—user schedule is correctly controlling pacing and dip ladder design is sound for its intended purpose (genuine volatility events). With 72% deployed on day 35, linear pacing suggests ~48-day full deployment at current rate. Monitor for: (1) volatility expansion above 3% that would activate ladder tiers, (2) concentration risk if deployment accelerates past 80% before day 40, (3) budget exhaustion timing to ensure capital lasts through campaign end. No adjustment needed unless market regime shifts to volatile or concentration exceeds 90/100.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "1047.199368",
+    "dayNumber": 35,
+    "walletBalance": "399.214744573582205107",
+    "tags": [
+      "pacing",
+      "market-timing",
+      "dip-ladder-dormant",
+      "budget",
+      "ranging-market",
+      "concentration-tracking"
+    ]
   }
 ]
