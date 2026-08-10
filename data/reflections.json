@@ -6917,5 +6917,33 @@
       "low-volatility",
       "buffer-depletion"
     ]
+  },
+  {
+    "id": "ref-1786391207023",
+    "date": "2026-08-10",
+    "timestamp": "2026-08-10T19:46:47.023Z",
+    "runStatus": "simulated",
+    "insight": "Day 35 shows continuation of ultra-low volatility regime (0.08%) with user schedule fully controlling execution. Dip ladder designed for 5%+ drawdowns remains completely dormant across entire 35-day campaign as BTC consolidates in tight $63.4k-$65.2k range with only 2.08% drawdown from ATH.",
+    "patterns": [
+      "Consistently bound by user_schedule across all 8 recent runs with zero dip ladder activations",
+      "Ultra-low volatility regime persisting: 0.08-0.23% range over multiple days, well below 3% threshold for dip ladder relevance",
+      "Ranging market regime at 72-73% confidence with near-zero momentum (-0.38% to +0.27%)",
+      "Concentration risk elevated and stable at 86-87/100 with 72% portfolio deployed and ~399-404 USDC remaining",
+      "Composite risk consistently low at 26-27/100 driven by minimal volatility and zero error streaks",
+      "BTC price oscillating in narrow $63.8k-$63.9k band within 7-day $63.4k-$65.2k consolidation, 2% below ATH"
+    ],
+    "strategyAdjustment": "No strategy changes needed. Current configuration is performing as designed: user schedule executes systematic accumulation while dip ladder remains correctly dormant in this low-volatility environment. If volatility expands above 3% or drawdown exceeds 5%, the ladder will activate as intended. With 72% portfolio deployed and 399 USDC remaining after 35 days (1045.60 USDC spent), continue monitoring for regime change from ranging to trending or volatility expansion that would justify dip ladder engagement.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "1045.599368",
+    "dayNumber": 35,
+    "walletBalance": "399.216094071438205107",
+    "tags": [
+      "pacing",
+      "ranging-market",
+      "low-volatility",
+      "concentration",
+      "user-schedule-bound",
+      "dip-ladder-dormant"
+    ]
   }
 ]
