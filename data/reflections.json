@@ -6834,5 +6834,33 @@
       "concentration-risk",
       "threshold-calibration"
     ]
+  },
+  {
+    "id": "ref-1786389403686",
+    "date": "2026-08-10",
+    "timestamp": "2026-08-10T19:16:43.686Z",
+    "runStatus": "simulated",
+    "insight": "User schedule fully controls execution with highly variable amounts ($0.000042 to $1.575 USDC) while market remains locked in 35-day consolidation near ATH ($63.4k-$65.2k range). No dip ladder activations despite 2.18% drawdown—thresholds correctly calibrated for this low-volatility regime.",
+    "patterns": [
+      "All 8 runs bound by user_schedule with zero guardrail intervention",
+      "Market stuck in 35-day ranging consolidation (72-74% confidence) with ultra-low volatility (0.08-0.29%)",
+      "Concentration risk consistently elevated at 86-87/100 with 72% portfolio deployed, only 399 USDC remaining",
+      "No dip ladder activations across entire history despite 2%+ drawdowns—ladder thresholds require 5%+ genuine dips",
+      "Composite risk stable at low 25-27/100 driven by zero error streaks and minimal volatility",
+      "Fear & Greed Index pinned at 30 (bearish) across all runs with analyst repeatedly recommending 10-15% allocation decrease"
+    ],
+    "strategyAdjustment": "Continue current stance: accept user schedule control, monitor dip ladder for activation only when volatility expands above 3% or drawdowns exceed 5%. With 399 USDC remaining and 72% portfolio deployed after 1045.6 USDC spent over 35 days, prepare for potential regime shift—if consolidation breaks down below $63k or volatility spikes above 3%, dip ladder should activate tier-appropriate buys. No action needed in current ranging environment.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "1045.599368",
+    "dayNumber": 35,
+    "walletBalance": "399.219714579031005107",
+    "tags": [
+      "user-schedule",
+      "ranging-market",
+      "concentration-risk",
+      "low-volatility",
+      "dip-ladder-inactive",
+      "consolidation"
+    ]
   }
 ]
