@@ -6444,5 +6444,31 @@
       "ranging-regime",
       "strategy-drift"
     ]
+  },
+  {
+    "id": "ref-1786352535476",
+    "date": "2026-08-10",
+    "timestamp": "2026-08-10T09:02:15.476Z",
+    "runStatus": "success",
+    "insight": "Day 35 shows persistent concentration risk (85/100, 71% deployed) with only 415 USDC remaining. Despite past reflections recommending 30-50% baseline reductions, recent history reveals the strategy flip-flopped: runs oscillated between micro-baselines ($0.000042) and full baselines ($1.05-$1.43), with the latest run reverting to $1.35 baseline despite zero dip opportunities in 35 days of ATH consolidation.",
+    "patterns": [
+      "Consistently bound by user_schedule with no daily cap or dip ladder triggers across all 8 recent runs",
+      "Market regime locked in ranging mode (70-73% confidence) for 35 consecutive days with ultra-low volatility (0.07-0.12%)",
+      "Concentration risk elevated at 85-89/100 across all runs, driven by sustained baseline deployment without dip activations",
+      "Strategy inconsistency: micro-baseline experiments ($0.000042) abandoned in favor of returning to $1.05-$1.43 baselines despite concentration warnings",
+      "Zero dip tier activations (activeTier: null) for entire 35-day period with BTC consolidating $62.5k-$65.2k near ATH"
+    ],
+    "strategyAdjustment": "Enforce aggressive baseline reduction to $0.40-$0.50 (down 60-65% from current $1.35) immediately. The micro-baseline experiments were directionally correct but abandoned too quickly. With 71% deployed and no genuine dips in 35 days, preserve remaining 415 USDC capacity strictly for 5%+ drawdowns or volatility expansion above 3%. Current pacing depletes reserves in ~15 runs without dip opportunities, creating asymmetric risk exposure when volatility regime finally shifts.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "1030.884368",
+    "dayNumber": 35,
+    "walletBalance": "415.55021092558847086",
+    "tags": [
+      "concentration-risk",
+      "pacing",
+      "baseline-strategy",
+      "ranging-market",
+      "capital-preservation"
+    ]
   }
 ]
