@@ -7003,5 +7003,34 @@
       "concentration-risk",
       "steady-execution"
     ]
+  },
+  {
+    "id": "ref-1786399335184",
+    "date": "2026-08-10",
+    "timestamp": "2026-08-10T22:02:15.184Z",
+    "runStatus": "success",
+    "insight": "35-day campaign executing flawlessly in ultra-low volatility regime (0.08-0.10%) with user schedule controlling 100% of executions—dip ladder designed for 5%+ volatility events remains correctly dormant with zero false triggers despite 575+ runs.",
+    "patterns": [
+      "Zero clamping by guardrails across 575 runs—user schedule is sole binding constraint",
+      "Dip ladder dormant entire 35-day campaign with volatility consistently sub-1% vs 5%+ threshold design",
+      "Market regime locked in tight range (72-73% confidence) near ATH with BTC $63.8k-$64.1k consolidation",
+      "Concentration risk elevated and stable at 87/100 with 73% portfolio deployed, 396 USDC remaining",
+      "Fear & Greed index anchored at 30 for extended period signaling sustained bearish sentiment",
+      "Smart sizing multiplier 1.15x applied correctly to base schedule amounts",
+      "Zero error streaks maintained—composite risk consistently low 26-29/100"
+    ],
+    "strategyAdjustment": "Continue current approach with no adjustments needed—user schedule + dip ladder architecture is functioning exactly as designed for this market regime. Monitor for volatility expansion above 3% or genuine 5%+ drawdowns that would activate dip ladder tiers. If volatility regime persists below 1% for another 10-15 days and concentration exceeds 80% deployed, consider whether dip ladder thresholds should be recalibrated to 3%/4%/5% tiers to capture smaller opportunity windows, but only if user intent supports more aggressive dip-buying in ranging markets.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "1050.199368",
+    "dayNumber": 35,
+    "walletBalance": "396.136735477666787507",
+    "tags": [
+      "pacing",
+      "market-timing",
+      "volatility-regime",
+      "dip-ladder-dormant",
+      "user-schedule-control",
+      "concentration-risk"
+    ]
   }
 ]
