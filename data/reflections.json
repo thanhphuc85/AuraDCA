@@ -6723,5 +6723,32 @@
       "strategy-acceptance",
       "ladder-monitoring"
     ]
+  },
+  {
+    "id": "ref-1786377735892",
+    "date": "2026-08-10",
+    "timestamp": "2026-08-10T16:02:15.892Z",
+    "runStatus": "success",
+    "insight": "Day 35 continues the locked pattern: user_schedule drives 100% of executions (8/8 runs), analyst bearish recommendations ignored, no dip tiers activated despite 35-day consolidation. Concentration at 86/100 with 72% deployed and only 405 USDC remaining—nearing capacity exhaustion with zero tactical opportunities captured.",
+    "patterns": [
+      "User schedule override: 100% of recent runs bound by user_schedule, zero baseline reductions despite persistent analyst recommendations for 10-15% decreases",
+      "Dip ladder dormant: 35 consecutive days with activeTier: null, drawdowns never exceed 1.63%, volatility locked under 0.3% (latest: 0.29%)",
+      "Concentration ceiling approaching: 86/100 concentration risk, 405 USDC remaining out of 1446 USDC starting budget (72% deployed), ~13 days of runway at 1.5 USDC/day",
+      "Ranging market persistence: 69-74% confidence ranging regime for entire observable history, zero directional edge, Fear & Greed stuck at 30",
+      "Strategy-reality mismatch: Past reflections pivoted to 'dip ladder monitoring' but ladder design never triggers in 0.6-1.6% drawdowns with sub-0.3% volatility"
+    ],
+    "strategyAdjustment": "Accept that DCA strategy is pure schedule-based deployment with no tactical element—dip ladder is miscalibrated for this market regime (needs 3%+ vol or 5%+ drawdown thresholds lowered). With only 405 USDC and 13 days runway remaining, stop generating unused baseline reduction logic. Focus reasoning on: (1) tracking remaining capacity/days, (2) flagging if volatility regime finally changes >1%, (3) monitoring for concentration risk breaching 90/100. If user wants tactical buying, ladder must be recalibrated to trigger at 3-5% drawdowns, not current settings.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "1041.074368",
+    "dayNumber": 35,
+    "walletBalance": "405.416463855369401027",
+    "tags": [
+      "pacing",
+      "concentration",
+      "budget",
+      "ranging-market",
+      "strategy-mismatch",
+      "dip-ladder-dormant"
+    ]
   }
 ]
