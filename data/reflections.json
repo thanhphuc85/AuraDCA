@@ -6551,5 +6551,34 @@
       "ranging-market",
       "strategy-ineffective"
     ]
+  },
+  {
+    "id": "ref-1786366930837",
+    "date": "2026-08-10",
+    "timestamp": "2026-08-10T13:02:10.837Z",
+    "runStatus": "simulated",
+    "insight": "Day 35 shows user schedule fully controls execution; past baseline reduction recommendations (60-80% cuts) have had zero impact. Strategy adjustment pivot required: stop recommending baseline changes and instead focus on dip ladder calibration and tactical signals.",
+    "patterns": [
+      "Consistently bound by user_schedule across all 8 recent runs with no daily cap interference",
+      "35-day ATH consolidation ($62.5k-$65.2k) with ultra-low volatility (0.04-0.16%) preventing dip tier activation",
+      "Concentration risk persistent at 86/100 with only 409 USDC remaining (72% deployed)",
+      "activeTier: null across entire recent history — dip ladder never triggered during ranging market",
+      "Multiple reflections recommended 60-80% baseline reductions with zero effect on execution amounts",
+      "Composite risk consistently low (24-27/100) driven by minimal volatility and zero error streaks",
+      "Market regime stable at ranging (69-70% confidence) with no directional edge for 35 days"
+    ],
+    "strategyAdjustment": "Accept that user schedule is immutable and stop wasting reasoning tokens on baseline reduction recommendations. Instead: (1) recalibrate dip ladder thresholds — current 5%+ requirement too strict for 0.67% drawdowns in ranging markets; consider 2-3% tiers to capture meaningful pullbacks, (2) focus tactical signals on timing within scheduled amounts (execution hour optimization during intraday weakness), (3) explicitly document concentration ceiling reached and recommend pausing schedule when USDC balance drops below 200 USDC reserve threshold.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "1036.649368",
+    "dayNumber": 35,
+    "walletBalance": "409.786955072545802744",
+    "tags": [
+      "pacing",
+      "user-schedule-override",
+      "concentration-risk",
+      "dip-ladder-calibration",
+      "ranging-market",
+      "strategy-pivot"
+    ]
   }
 ]
