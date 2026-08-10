@@ -6142,5 +6142,31 @@
       "low-volatility",
       "consolidation"
     ]
+  },
+  {
+    "id": "ref-1786323729441",
+    "date": "2026-08-10",
+    "timestamp": "2026-08-10T01:02:09.441Z",
+    "runStatus": "success",
+    "insight": "Day 35 shows perfect discipline: no dip ladder activation despite 35-day consolidation near ATH, consistent 0.9x smart sizing in Fear 30 regime, and 87% capacity preserved (367 USDC) for genuine 5%+ opportunities that haven't materialized.",
+    "patterns": [
+      "Zero dip tier activations across 35 consecutive days despite monitoring—ladder thresholds correctly calibrated above noise floor",
+      "Consistent ranging regime detection (73-74% confidence) with sub-1% drawdowns and ultra-low volatility (0.01-0.42%)",
+      "Daily cap utilization running minimal (1-17%) with user_schedule binding all executions—no risk of premature depletion",
+      "Smart sizing consistently applying 0.9x multiplier in Fear 30-31 environment, appropriately conservative",
+      "Portfolio concentration stable at 73% across all recent runs—no concentration creep from small buys"
+    ],
+    "strategyAdjustment": "Continue current execution with no changes. The 35-day pattern confirms: (1) dip ladder is correctly calibrated to avoid false triggers in tight ranges, (2) capacity preservation strategy is working as designed with 87% reserves intact, (3) ranging regime detection is accurate, and (4) smart sizing appropriately reduces allocation in fearful conditions. When volatility eventually expands above 3% and genuine 5%+ dips occur, the system has ample capacity to respond with 2-4x multipliers.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "1019.934368",
+    "dayNumber": 35,
+    "walletBalance": "367.969061607586761804",
+    "tags": [
+      "pacing",
+      "discipline",
+      "ranging-market",
+      "capacity-preservation",
+      "dip-ladder-calibration"
+    ]
   }
 ]

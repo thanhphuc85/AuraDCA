@@ -1,17 +1,17 @@
 {
   "version": 1,
-  "lastScannedBlock": 56196282,
+  "lastScannedBlock": 56197983,
   "users": {
     "0x615a9b4d30e81cc6658d6b94e9b9609a34dc97b5": {
       "address": "0x615a9b4d30e81cc6658d6b94e9b9609a34dc97b5",
-      "usdcBalance": "125.686281",
+      "usdcBalance": "125.226281",
       "cirBtcBalance": "0",
       "totalDeposited": "319.000000",
-      "totalSwapped": "186.393719",
+      "totalSwapped": "186.843719",
       "totalWithdrawnCirBtc": "0",
       "totalWithdrawnUsdc": "5.000000",
       "firstSeen": "2026-07-09T22:59:39.139Z",
-      "lastActivity": "2026-08-10T00:00:53.098Z",
+      "lastActivity": "2026-08-10T01:00:45.485Z",
       "dcaRatePerDay": "0.500000",
       "dcaPaused": false,
       "dcaRateIsCustom": true,
@@ -22,27 +22,27 @@
       "dcaAmountPerRun": "0.500000",
       "dcaDailyCapUsdc": "20.000000",
       "tokenBalances": {
-        "EURC": "146.572337"
+        "EURC": "146.972828"
       },
-      "dcaSpentDayUsdc": "0.675000",
+      "dcaSpentDayUsdc": "1.125000",
       "dcaSpentDayDate": "2026-08-10",
-      "dcaSpentWeekUsdc": "0.675000",
+      "dcaSpentWeekUsdc": "1.125000",
       "dcaSpentWeekStart": "2026-08-10",
-      "lastChargedAt": "2026-08-10T00:00:53.098Z",
+      "lastChargedAt": "2026-08-10T01:00:45.485Z",
       "dcaSmartFearBelow": 35,
       "dcaSmartSensitivity": 1,
-      "totalSmartFeesPaidUsdc": "1.920000"
+      "totalSmartFeesPaidUsdc": "1.930000"
     },
     "0xdd6045a634ef2c61d6070552b556aae40099e84b": {
       "address": "0xdd6045a634ef2c61d6070552b556aae40099e84b",
-      "usdcBalance": "143.834423",
+      "usdcBalance": "143.374423",
       "cirBtcBalance": "0",
       "totalDeposited": "395.000000",
-      "totalSwapped": "223.505577",
+      "totalSwapped": "223.955577",
       "totalWithdrawnCirBtc": "0",
       "totalWithdrawnUsdc": "25.800000",
       "firstSeen": "2026-07-10T16:07:29.490Z",
-      "lastActivity": "2026-08-10T00:00:53.098Z",
+      "lastActivity": "2026-08-10T01:00:45.485Z",
       "dcaRatePerDay": "0.500000",
       "dcaPaused": false,
       "dcaRateIsCustom": true,
@@ -55,31 +55,31 @@
       "dcaDailyCapUsdc": "20.000000",
       "dcaTokenOut": "EURC",
       "tokenBalances": {
-        "EURC": "65.396439"
+        "EURC": "65.796931"
       },
-      "dcaSpentDayUsdc": "0.675000",
+      "dcaSpentDayUsdc": "1.125000",
       "dcaSpentDayDate": "2026-08-10",
-      "dcaSpentWeekUsdc": "0.675000",
+      "dcaSpentWeekUsdc": "1.125000",
       "dcaSpentWeekStart": "2026-08-10",
-      "lastChargedAt": "2026-08-10T00:00:53.098Z",
+      "lastChargedAt": "2026-08-10T01:00:45.485Z",
       "dcaWeeklyCapUsdc": "1000.000000",
       "totalWithdrawn": {
         "EURC": "109.281252"
       },
       "dcaSmartFearBelow": 40,
       "dcaSmartSensitivity": 1,
-      "totalSmartFeesPaidUsdc": "1.860000"
+      "totalSmartFeesPaidUsdc": "1.870000"
     },
     "0xfc337ba1f00e8092fe2d073fed0072a0a43d2219": {
       "address": "0xfc337ba1f00e8092fe2d073fed0072a0a43d2219",
-      "usdcBalance": "103.134928",
+      "usdcBalance": "102.674928",
       "cirBtcBalance": "0",
       "totalDeposited": "349.000000",
-      "totalSwapped": "188.435072",
+      "totalSwapped": "188.885072",
       "totalWithdrawnCirBtc": "0",
       "totalWithdrawnUsdc": "56.000000",
       "firstSeen": "2026-07-23T20:43:41.414Z",
-      "lastActivity": "2026-08-10T00:00:53.098Z",
+      "lastActivity": "2026-08-10T01:00:45.485Z",
       "dcaRatePerDay": "0.500000",
       "dcaRateIsCustom": true,
       "dcaPaused": false,
@@ -90,16 +90,16 @@
       "dcaAmountPerRun": "0.500000",
       "dcaDailyCapUsdc": "20.000000",
       "tokenBalances": {
-        "EURC": "147.580707"
+        "EURC": "147.981199"
       },
-      "dcaSpentDayUsdc": "0.675000",
+      "dcaSpentDayUsdc": "1.125000",
       "dcaSpentDayDate": "2026-08-10",
-      "dcaSpentWeekUsdc": "0.675000",
+      "dcaSpentWeekUsdc": "1.125000",
       "dcaSpentWeekStart": "2026-08-10",
-      "lastChargedAt": "2026-08-10T00:00:53.098Z",
+      "lastChargedAt": "2026-08-10T01:00:45.485Z",
       "dcaSmartFearBelow": 40,
       "dcaSmartSensitivity": 1,
-      "totalSmartFeesPaidUsdc": "1.430000"
+      "totalSmartFeesPaidUsdc": "1.440000"
     },
     "0xc90468daf085a616d2137e8e3ae4525f232a340a": {
       "address": "0xc90468daf085a616d2137e8e3ae4525f232a340a",
@@ -1046,45 +1046,6 @@
     }
   ],
   "distributions": [
-    {
-      "runTimestamp": "2026-08-01T15:00:46.259Z",
-      "tokenOut": "EURC",
-      "totalUsdcSwapped": "2.500000",
-      "totalCirBtcReceived": "1.902777",
-      "allocations": [
-        {
-          "address": "0x615a9b4d30e81cc6658d6b94e9b9609a34dc97b5",
-          "usdcShare": "0.500000",
-          "cirBtcShare": "0.380557",
-          "poolFraction": "0.20000000"
-        },
-        {
-          "address": "0xdd6045a634ef2c61d6070552b556aae40099e84b",
-          "usdcShare": "0.500000",
-          "cirBtcShare": "0.380555",
-          "poolFraction": "0.20000000"
-        },
-        {
-          "address": "0xfc337ba1f00e8092fe2d073fed0072a0a43d2219",
-          "usdcShare": "0.500000",
-          "cirBtcShare": "0.380555",
-          "poolFraction": "0.20000000"
-        },
-        {
-          "address": "0xc90468daf085a616d2137e8e3ae4525f232a340a",
-          "usdcShare": "0.500000",
-          "cirBtcShare": "0.380555",
-          "poolFraction": "0.20000000"
-        },
-        {
-          "address": "0x7416e15c01dbda60b4cf0ffc6b1e8ed811af3d15",
-          "usdcShare": "0.500000",
-          "cirBtcShare": "0.380555",
-          "poolFraction": "0.20000000"
-        }
-      ],
-      "timestamp": "2026-08-01T15:01:09.231Z"
-    },
     {
       "runTimestamp": "2026-08-01T16:00:53.973Z",
       "tokenOut": "EURC",
@@ -8899,6 +8860,33 @@
         }
       ],
       "timestamp": "2026-08-10T00:01:47.361Z"
+    },
+    {
+      "runTimestamp": "2026-08-10T01:00:45.485Z",
+      "tokenOut": "EURC",
+      "totalUsdcSwapped": "1.350000",
+      "totalCirBtcReceived": "1.201475",
+      "allocations": [
+        {
+          "address": "0x615a9b4d30e81cc6658d6b94e9b9609a34dc97b5",
+          "usdcShare": "0.450000",
+          "cirBtcShare": "0.400491",
+          "poolFraction": "0.33333333"
+        },
+        {
+          "address": "0xdd6045a634ef2c61d6070552b556aae40099e84b",
+          "usdcShare": "0.450000",
+          "cirBtcShare": "0.400492",
+          "poolFraction": "0.33333333"
+        },
+        {
+          "address": "0xfc337ba1f00e8092fe2d073fed0072a0a43d2219",
+          "usdcShare": "0.450000",
+          "cirBtcShare": "0.400492",
+          "poolFraction": "0.33333333"
+        }
+      ],
+      "timestamp": "2026-08-10T01:01:41.316Z"
     }
   ],
   "withdrawals": [
