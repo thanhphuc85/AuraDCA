@@ -6862,5 +6862,32 @@
       "dip-ladder-inactive",
       "consolidation"
     ]
+  },
+  {
+    "id": "ref-1786389545469",
+    "date": "2026-08-10",
+    "timestamp": "2026-08-10T19:19:05.469Z",
+    "runStatus": "simulated",
+    "insight": "Day 35 shows user schedule completely controls execution with micro-buys (0.000006 USDC) in simulated mode. The 35-day campaign has spent 1045.60 USDC (72% deployed) entirely through scheduled purchases during a historically tight 0.08-0.29% volatility regime where the dip ladder has never activated—confirming the ladder is correctly calibrated for genuine 5%+ volatility events that haven't occurred.",
+    "patterns": [
+      "100% user_schedule binding across all 8 recent runs—no dip tiers activated despite 2.17% drawdown (ladder requires 5%+ for tier 1)",
+      "Volatility compressed to 0.08-0.29% range throughout entire 35-day campaign—far below the 3%+ threshold where dip ladder would add value",
+      "Concentration stable at 87/100 (72% deployed, 399 USDC remaining) with risk consistently low at 26-27/100",
+      "Market regime locked in ranging state (72-74% confidence) for entire visible history—no trending breakout",
+      "Simulated mode micro-transactions (0.000006 USDC) suggest testing or end-of-campaign activity",
+      "BTC price locked in $63.4k-$65.2k range (7-day) within 35-day consolidation near ATH—analyst bearish recommendations ignored by schedule"
+    ],
+    "strategyAdjustment": "Campaign appears to be in testing/wind-down phase with micro-simulated buys. No strategy adjustment needed—the dip ladder calibration is validated as correct (dormant during sub-1% volatility is expected behavior). If campaign continues, maintain current ladder thresholds (5%/8%/12%) and acknowledge that 35 days of tight consolidation is an edge case where DCA schedule outperforms opportunistic buying. If new campaign starts, consider market regime: in sustained low-volatility ranges, pure time-based DCA may be optimal vs. dip-buying strategies.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "1045.599368",
+    "dayNumber": 35,
+    "walletBalance": "399.218058467988605107",
+    "tags": [
+      "pacing",
+      "market-timing",
+      "volatility-regime",
+      "campaign-end",
+      "dip-ladder-validation"
+    ]
   }
 ]
