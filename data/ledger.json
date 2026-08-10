@@ -42,12 +42,12 @@
       "totalWithdrawnCirBtc": "0",
       "totalWithdrawnUsdc": "25.800000",
       "firstSeen": "2026-07-10T16:07:29.490Z",
-      "lastActivity": "2026-08-10T07:00:44.504Z",
+      "lastActivity": "2026-08-10T07:18:35.228Z",
       "dcaRatePerDay": "0.500000",
       "dcaPaused": false,
       "dcaRateIsCustom": true,
       "lastRunNowAt": "2026-07-16T00:50:03.124Z",
-      "dcaMode": "smart",
+      "dcaMode": "auto",
       "dcaRunsPerDay": 1,
       "dcaFrequency": "hours",
       "dcaEveryHours": 1,
@@ -66,8 +66,6 @@
       "totalWithdrawn": {
         "EURC": "109.281252"
       },
-      "dcaSmartFearBelow": 40,
-      "dcaSmartSensitivity": 1,
       "totalSmartFeesPaidUsdc": "1.930000"
     },
     "0xfc337ba1f00e8092fe2d073fed0072a0a43d2219": {
