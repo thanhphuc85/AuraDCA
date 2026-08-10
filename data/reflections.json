@@ -6635,5 +6635,35 @@
       "strategy-pivot",
       "pacing"
     ]
+  },
+  {
+    "id": "ref-1786369602717",
+    "date": "2026-08-10",
+    "timestamp": "2026-08-10T13:46:42.717Z",
+    "runStatus": "simulated",
+    "insight": "Day 35 shows extended ATH consolidation continues with no dip ladder activation despite 35 days of deployment. User schedule fully controls execution (all runs boundBy: user_schedule), making baseline reduction recommendations ineffective—strategy must focus on dip ladder calibration for when volatility finally breaks out.",
+    "patterns": [
+      "35 consecutive days of tight consolidation near ATH with 0.20-1.06% drawdowns",
+      "100% of runs bound by user_schedule override, not risk guardrails",
+      "No dip tier activations despite bearish sentiment (Fear & Greed 30)",
+      "Concentration risk persists at 86/100 with 72% portfolio deployed, only 408 USDC remaining",
+      "Ultra-low volatility regime (0.04-0.20%) prevents any dip ladder triggering",
+      "Baseline reduction recommendations consistently ineffective due to user schedule control",
+      "Market regime stable at 69% confidence ranging with no directional edge for 35 days"
+    ],
+    "strategyAdjustment": "Stop recommending baseline reductions—user schedule overrides all allocation logic. Instead, refine dip ladder thresholds to trigger earlier in this low-volatility regime: consider activating first tier at 2-3% drawdown rather than 5%, or incorporate momentum/sentiment signals (Fear & Greed <25, consecutive down candles >3) to identify tactical entry windows within tight consolidation. Current ladder calibrated for high-volatility environments is missing all opportunities in this 35-day 0.2% avg volatility regime.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "1036.649368",
+    "dayNumber": 35,
+    "walletBalance": "408.323218119511044008",
+    "tags": [
+      "pacing",
+      "user-schedule-override",
+      "dip-ladder-calibration",
+      "concentration-risk",
+      "low-volatility-regime",
+      "ATH-consolidation",
+      "strategy-ineffective"
+    ]
   }
 ]
