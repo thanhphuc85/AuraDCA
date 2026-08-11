@@ -8059,5 +8059,33 @@
       "flawless-execution",
       "campaign-day-36"
     ]
+  },
+  {
+    "id": "ref-1786485742632",
+    "date": "2026-08-11",
+    "timestamp": "2026-08-11T22:02:22.632Z",
+    "runStatus": "success",
+    "insight": "Day 36 shows flawless execution with user_schedule driving all real transactions (1.575 USDC each) in a persistent low-volatility ranging market (0.04-0.18% volatility, BTC $63.2k-$65.3k). Dip ladder remains appropriately dormant with no tier activations across the entire 36-day campaign—designed for 5%+ volatility events that haven't occurred in this sub-2% regime.",
+    "patterns": [
+      "user_schedule dominates: 8/8 recent runs bound by user_schedule, zero dip activations across 36 days",
+      "ultra-low volatility regime: 0.04-1.43% volatility, tight $63.2k-$65.3k range for 36 days straight",
+      "ranging market: 70-72% confidence, no directional edge, 6 consecutive up candles but minimal momentum",
+      "elevated concentration: 86-87/100 concentration risk with 72% portfolio deployed, 1087.44 USDC cumulative spent",
+      "zero error streaks: composite risk consistently low at 27-29/100, flawless transaction execution"
+    ],
+    "strategyAdjustment": "Continue current strategy unchanged. User schedule is executing precisely as designed with consistent 1.575 USDC purchases. Dip ladder correctly remains dormant—it's calibrated for genuine 5%+ drawdowns, not the 2.5-3% micro-moves in this consolidation. Monitor for breakout above $65.3k or breakdown below $63.2k which would signal regime change requiring reassessment. Concentration at 72% deployed is elevated but acceptable given low volatility and zero execution errors.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "1087.439368",
+    "dayNumber": 36,
+    "walletBalance": "418.337600556291650504",
+    "tags": [
+      "pacing",
+      "user-schedule-dominant",
+      "ranging-market",
+      "dip-ladder-dormant",
+      "low-volatility",
+      "concentration-elevated",
+      "flawless-execution"
+    ]
   }
 ]
