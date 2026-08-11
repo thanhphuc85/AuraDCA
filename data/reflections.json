@@ -7871,5 +7871,35 @@
       "zero-errors",
       "campaign-day-36"
     ]
+  },
+  {
+    "id": "ref-1786474948250",
+    "date": "2026-08-11",
+    "timestamp": "2026-08-11T19:02:28.250Z",
+    "runStatus": "simulated",
+    "insight": "Day 36: User schedule continues flawless execution with zero clamping across 8 consecutive runs. Dip ladder remains appropriately dormant—no false triggers despite 3.02% drawdown, as volatility stays ultra-low at 0.18-0.29% (design threshold is 5%+).",
+    "patterns": [
+      "36 consecutive days of user_schedule binding with zeroDaily/Weekly cap interference",
+      "Dip ladder dormant throughout entire campaign—activeTier: null across all runs in ranging market",
+      "Ultra-low volatility regime persists: 0.05-0.29% intraday, 1.24-1.51% regime volatility, well below 5% dip trigger threshold",
+      "Drawdowns remain shallow: 1.67-3.02% range with BTC consolidating in tight $63.3k-$65.2k corridor",
+      "Concentration risk stable at 86/100 with 71-72% portfolio deployed—no acceleration despite low composite risk (27-29/100)",
+      "Fear & Greed index locked at 29 (bearish) across all 8 runs with consistent analyst recommendations for 10-15% allocation decrease"
+    ],
+    "strategyAdjustment": "No adjustments needed—system is performing exactly as designed. User schedule is the dominant pacing mechanism in low-volatility regimes, and dip ladder correctly remains inactive (3.02% drawdown << 5% tier-1 threshold). Continue current strategy: let user schedule drive base accumulation, preserve dip ladder for genuine volatility events (5%+ moves), and monitor for regime shift out of 36-day consolidation range. If BTC breaks $65.2k resistance or $63.3k support with volatility expansion above 3%, dip ladder will organically activate.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "1082.714368",
+    "dayNumber": 36,
+    "walletBalance": "423.14058000806318174",
+    "tags": [
+      "pacing",
+      "user-schedule-dominant",
+      "dip-ladder-dormant",
+      "ranging-market",
+      "low-volatility",
+      "concentration-stable",
+      "no-clamping",
+      "campaign-day-36"
+    ]
   }
 ]
