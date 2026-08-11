@@ -7274,5 +7274,33 @@
       "ranging-market",
       "low-volatility"
     ]
+  },
+  {
+    "id": "ref-1786431726404",
+    "date": "2026-08-11",
+    "timestamp": "2026-08-11T07:02:06.404Z",
+    "runStatus": "simulated",
+    "insight": "Day 36 shows persistent ranging market (74% confidence, 0.08% volatility) with Fear & Greed at 29. User schedule consistently binding all executions—dip ladder correctly dormant for entire 36-day campaign as designed 5%+ volatility threshold never triggered in this sub-1% regime.",
+    "patterns": [
+      "User schedule bound 100% of recent runs with no clamping—system operating as designed",
+      "36-day campaign shows zero dip ladder activations despite 2.13% drawdown—thresholds appropriately calibrated for genuine volatility events",
+      "Ultra-low volatility regime persists (0.03-0.08% daily) in tight $63.5k-$65.2k consolidation range",
+      "Concentration risk elevated at 85/100 with 71% portfolio deployed after cumulative 1064 USDC spent",
+      "Composite risk remains exceptionally low (18-25/100) driven by zero error streaks and minimal volatility",
+      "Ranging market regime (73-74% confidence) with no directional edge for 36 consecutive days"
+    ],
+    "strategyAdjustment": "Continue user schedule execution without adjustment. Dip ladder design is validated—remaining dormant correctly in sub-1% volatility environment and will activate appropriately when genuine 5%+ drawdown events materialize. Monitor concentration risk as portfolio approaches 75% deployed, but no action needed given low composite risk and zero error streaks. Maintain current systematic accumulation approach.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "1064.049368",
+    "dayNumber": 36,
+    "walletBalance": "442.120276307511683483",
+    "tags": [
+      "pacing",
+      "market-regime",
+      "ranging",
+      "concentration-risk",
+      "dip-ladder-validation",
+      "user-schedule"
+    ]
   }
 ]
