@@ -7573,5 +7573,34 @@
       "zero-clamping",
       "healthy-execution"
     ]
+  },
+  {
+    "id": "ref-1786453324834",
+    "date": "2026-08-11",
+    "timestamp": "2026-08-11T13:02:04.834Z",
+    "runStatus": "simulated",
+    "insight": "Day 36 shows perfect DCA execution with user schedule fully controlling allocation—no clamping, no errors, 100% success rate across 8 runs. Dip ladder remains correctly dormant in a 36-day ranging regime with 0.06-0.10% volatility, far below the 5%+ threshold it's designed for.",
+    "patterns": [
+      "Zero clamping events—user_schedule is sole bound across all 8 runs",
+      "Ultra-low volatility regime persists: 0.03-0.10% intraday, 36 days of tight $63.5k-$65.2k consolidation",
+      "Dip ladder appropriately inactive throughout campaign (activeTier: null in all runs)",
+      "Concentration risk stable at 85/100 with 71% portfolio deployed—unchanged across history",
+      "Fear & Greed at 29 (extreme fear) contrasts with price stability near all-time highs",
+      "Composite risk consistently low (25-28/100) driven by minimal volatility and zero error streaks"
+    ],
+    "strategyAdjustment": "Continue current strategy unchanged. User schedule is executing flawlessly as designed—systematic accumulation proceeds without guardrail interference. Dip ladder is correctly calibrated for volatility events (5%+ drawdown) that haven't occurred; do not lower thresholds in response to ranging conditions. Monitor for regime shift: if volatility expands above 2% or drawdown exceeds 5%, dip ladder will appropriately activate. Current 71% deployment with 85/100 concentration is acceptable given zero execution errors and stable market conditions.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "1073.264368",
+    "dayNumber": 36,
+    "walletBalance": "432.744666358998560856",
+    "tags": [
+      "pacing",
+      "ranging-market",
+      "user-schedule-bound",
+      "dip-ladder-dormant",
+      "zero-errors",
+      "concentration-stable",
+      "volatility-suppressed"
+    ]
   }
 ]
