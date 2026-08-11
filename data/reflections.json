@@ -7780,5 +7780,35 @@
       "volatility-regime",
       "smart-sizing"
     ]
+  },
+  {
+    "id": "ref-1786464128640",
+    "date": "2026-08-11",
+    "timestamp": "2026-08-11T16:02:08.640Z",
+    "runStatus": "success",
+    "insight": "Day 36: User schedule continues flawless execution at $1.575 with zero clamping issues. Market remains in ultra-tight 36-day consolidation ($63.5k-$65.2k range, 0.25% volatility) where dip ladder has correctly stayed dormant—no false triggers despite 2.67% drawdown failing to hit 5%+ threshold.",
+    "patterns": [
+      "36 consecutive days bound by user_schedule with perfect execution",
+      "Dip ladder (5%+ threshold) appropriately dormant throughout campaign in sub-2% volatility regime",
+      "Concentration stable at 86/100 with 72% portfolio deployed—no adverse drift",
+      "Ultra-low volatility regime persists: 0.25%-1.5% range with tight $63.5k-$65.2k consolidation",
+      "Smart sizing multipliers (1.15x) active but amounts still bound by schedule caps",
+      "Fear & Greed stuck at 29 (extreme fear) for extended period with ranging market (70% confidence)",
+      "Composite risk consistently low (27-29/100) driven by minimal volatility and zero error streaks"
+    ],
+    "strategyAdjustment": "Maintain current approach: user schedule is the correct binding constraint for systematic accumulation in this regime. Dip ladder design (5%+ threshold) is appropriately calibrated—tighter thresholds would trigger false signals in sub-2% noise. If market breaks consolidation range with genuine volatility spike (>5% drawdown), ladder will activate as designed. No adjustment needed; system is operating exactly as intended for 36-day low-volatility campaign.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "1078.114368",
+    "dayNumber": 36,
+    "walletBalance": "427.81093938508953094",
+    "tags": [
+      "pacing",
+      "user-schedule",
+      "ranging-market",
+      "low-volatility",
+      "dip-ladder-dormant",
+      "concentration-stable",
+      "campaign-day-36"
+    ]
   }
 ]
