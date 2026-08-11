@@ -7246,5 +7246,33 @@
       "error-free-streak",
       "user-schedule-control"
     ]
+  },
+  {
+    "id": "ref-1786428122054",
+    "date": "2026-08-11",
+    "timestamp": "2026-08-11T06:02:02.054Z",
+    "runStatus": "success",
+    "insight": "36-day campaign executing flawlessly in ultra-low volatility regime: zero clamping events, zero errors, user schedule binding 100% of executions. Dip ladder appropriately dormant as designed—no volatility event has triggered the 5%+ thresholds in entire campaign.",
+    "patterns": [
+      "user_schedule bound 8/8 recent runs with zero daily cap or risk clamping",
+      "dip ladder dormant entire 36-day campaign (activeTier: null throughout) - volatility consistently 0.02-0.08%, far below 5%+ trigger thresholds",
+      "ranging market regime sustained 36 days (72-74% confidence, ±0.5% momentum, 0.3-0.7% volatility)",
+      "concentration elevated but stable at 84-87/100 with 70-73% portfolio deployed",
+      "composite risk exceptionally low 18-29/100 driven by sub-1% volatility and zero error streaks",
+      "Fear & Greed index stable at 29-30 (fear territory) with BTC consolidating $63.5k-$65.2k"
+    ],
+    "strategyAdjustment": "No adjustment needed. Current strategy is performing exactly as designed: user schedule controlling systematic DCA in calm markets, dip ladder reserved for genuine volatility events (5%+ drawdowns). With 443 USDC remaining and 1062 USDC deployed over 36 days, maintain current pacing. If volatility finally materializes, dip ladder will activate automatically. Continue monitoring concentration risk as it approaches 90/100 threshold.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "1062.449368",
+    "dayNumber": 36,
+    "walletBalance": "443.714702925338900711",
+    "tags": [
+      "pacing",
+      "market-timing",
+      "risk-management",
+      "dip-ladder-dormant",
+      "ranging-market",
+      "low-volatility"
+    ]
   }
 ]
