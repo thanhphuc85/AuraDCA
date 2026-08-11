@@ -7721,5 +7721,35 @@
       "36-day-campaign",
       "strategy-validation"
     ]
+  },
+  {
+    "id": "ref-1786456933406",
+    "date": "2026-08-11",
+    "timestamp": "2026-08-11T14:02:13.406Z",
+    "runStatus": "success",
+    "insight": "Day 36 shows flawless execution in ultra-low volatility regime: user schedule consistently executing $1.575-1.60 USDC buys with zero clamping, dip ladder appropriately dormant across entire 36-day campaign as BTC consolidates in tight $63.6k-$65.2k range with sub-2% volatility where no 5%+ dip tiers trigger.",
+    "patterns": [
+      "Consistent user_schedule binding across all 8 recent runs with no daily_cap or risk clamping",
+      "Dip ladder dormant for entire 36-day campaign (activeTier: null) - correctly designed for 5%+ volatility events",
+      "Ultra-low volatility regime persists: 0.06-0.12% intraday, 1.51% overall - well below dip activation thresholds",
+      "BTC price range-bound $63.6k-$65.2k with drawdowns only 1.44-1.73% from recent peak",
+      "Fear & Greed stable at 29 (fear territory) throughout recent runs",
+      "High concentration risk (85-86/100) with 71% portfolio deployed, but low composite risk (27-29/100)",
+      "Zero error streaks maintained - perfect execution reliability",
+      "Market regime consistently ranging (69-73% confidence) with negative momentum"
+    ],
+    "strategyAdjustment": "Maintain current approach - user schedule is optimal for this regime. Dip ladder design is validated: it should remain dormant in sub-2% volatility environments and activate only for genuine 5%+ drawdown events. Monitor for regime shift to trending or volatile conditions where dip ladder would add value. Consider reviewing concentration risk at 71% deployed if campaign extends significantly beyond planned duration.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "1074.864368",
+    "dayNumber": 36,
+    "walletBalance": "431.14318567191506748",
+    "tags": [
+      "pacing",
+      "market-timing",
+      "dip-ladder-validation",
+      "low-volatility-regime",
+      "concentration-risk",
+      "flawless-execution"
+    ]
   }
 ]
