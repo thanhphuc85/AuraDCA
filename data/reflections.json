@@ -7333,5 +7333,34 @@
       "user-schedule-control",
       "campaign-maturity"
     ]
+  },
+  {
+    "id": "ref-1786433498918",
+    "date": "2026-08-11",
+    "timestamp": "2026-08-11T07:31:38.918Z",
+    "runStatus": "simulated",
+    "insight": "36-day campaign in extreme low-volatility regime (0.03-0.08% daily) with dip ladder correctly dormant throughout—no false triggers, user_schedule executing systematic accumulation as designed with 71% portfolio deployed ($1064 spent, $440 remaining).",
+    "patterns": [
+      "user_schedule bound 100% of recent runs with zero clamping—guardrails working as intended",
+      "dip ladder dormant entire 36-day campaign (activeTier: null throughout)—designed 5%+ threshold never met in sub-1% volatility regime",
+      "ranging market regime persistent (73-74% confidence) with -2% to +0.7% momentum and 0.29-0.39% volatility—no directional edge emerging",
+      "Fear & Greed index stable at 29 (extreme fear) with BTC consolidating $63.5k-$65.2k near all-time highs",
+      "concentration risk elevated (84-85/100) but appropriate for 36-day systematic accumulation with 71% deployed",
+      "composite risk exceptionally low (18-22/100)—zero error streaks, minimal volatility, stable execution"
+    ],
+    "strategyAdjustment": "Continue current approach—user schedule is correctly controlling pacing in this ultra-low volatility environment, and dip ladder design is appropriate (5%+ threshold prevents false triggers in 0.03-0.08% daily moves). No adjustment needed; system architecture validated over 36 days. If volatility regime shifts to >1% daily moves, dip ladder will activate as designed. Monitor for breakout from $63.5k-$65.2k range that could signal regime change.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "1064.049368",
+    "dayNumber": 36,
+    "walletBalance": "440.504306811414379807",
+    "tags": [
+      "pacing",
+      "ranging-market",
+      "low-volatility",
+      "dip-ladder-dormant",
+      "concentration",
+      "user-schedule-control",
+      "regime-stability"
+    ]
   }
 ]
