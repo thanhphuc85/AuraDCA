@@ -7632,5 +7632,35 @@
       "zero-errors",
       "campaign-day-36"
     ]
+  },
+  {
+    "id": "ref-1786455101048",
+    "date": "2026-08-11",
+    "timestamp": "2026-08-11T13:31:41.048Z",
+    "runStatus": "simulated",
+    "insight": "User schedule continues flawless execution on day 36 with zero clamping incidents across 8 consecutive runs. Dip ladder remains correctly dormant in ultra-low volatility regime (0.03-0.09% realized vol) where BTC consolidates in tight $63.6k-$65.2k range with max 1.85% drawdown—well below 5% tier-1 threshold.",
+    "patterns": [
+      "Consistently bound by user_schedule across all 8 runs with no daily cap or risk clamping",
+      "Dip ladder inactive (activeTier: null) throughout entire 36-day campaign - no false triggers",
+      "Ultra-low volatility regime persists: 0.03-0.09% realized vol, sub-2% drawdowns, tight range-bound price action",
+      "Concentration risk elevated but stable at 85-86/100 with 71% portfolio deployed",
+      "Zero error streaks maintained - system reliability at 100%",
+      "Composite risk consistently low at 26-28/100 driven by minimal volatility"
+    ],
+    "strategyAdjustment": "No adjustments needed. User schedule is the correct primary driver in this ranging market with no genuine dip opportunities. Dip ladder design (5%+ tier-1 threshold) is appropriately calibrated to avoid false triggers in sub-2% volatility noise. Continue current strategy: let user schedule control systematic accumulation, keep dip ladder armed for genuine 5%+ drawdown events, monitor concentration risk at 71% deployment but accept it as campaign progresses toward completion.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "1073.264368",
+    "dayNumber": 36,
+    "walletBalance": "431.146548040923772056",
+    "tags": [
+      "pacing",
+      "user-schedule",
+      "dip-ladder-dormant",
+      "ranging-market",
+      "low-volatility",
+      "concentration-stable",
+      "error-free",
+      "campaign-maturity"
+    ]
   }
 ]
