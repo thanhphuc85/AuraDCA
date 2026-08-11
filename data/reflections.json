@@ -7302,5 +7302,36 @@
       "dip-ladder-validation",
       "user-schedule"
     ]
+  },
+  {
+    "id": "ref-1786432593730",
+    "date": "2026-08-11",
+    "timestamp": "2026-08-11T07:16:33.730Z",
+    "runStatus": "simulated",
+    "insight": "36-day campaign shows perfect execution discipline: user_schedule consistently controls all buys ($1.44-1.60 range, now testing micro amounts $0.000041), dip ladder correctly dormant across entire period as 0.03-0.08% volatility regime never triggered 5%+ thresholds, and zero execution errors maintained.",
+    "patterns": [
+      "All 8 recent runs bound by user_schedule with zero clamping events",
+      "Dip ladder dormant throughout 36-day campaign (activeTier: null consistently)",
+      "Ultra-low volatility regime persistent: 0.03-0.08% across all runs vs 5%+ ladder trigger threshold",
+      "Ranging market regime at 73-74% confidence with -0.62% to +0.73% momentum",
+      "Concentration risk elevated and stable at 84-85/100 with 70-71% portfolio deployed",
+      "Composite risk exceptionally low at 18-24/100 driven by minimal volatility",
+      "Price consolidating in tight $63.5k-$65.2k range near all-time highs",
+      "Recent amounts decreasing dramatically from $1.44-1.60 to micro $0.000041 tests"
+    ],
+    "strategyAdjustment": "Maintain current approach—user_schedule is functioning as designed for systematic accumulation, and dip ladder correctly stays inactive in sub-1% volatility environment. The dramatic shift to micro amounts ($0.000041) suggests testing phase or campaign wind-down; continue honoring user_schedule exactly. Monitor for volatility regime shift: if BTC breaks out of 36-day consolidation with 5%+ moves, dip ladder should activate appropriately. No strategy changes needed—system is operating correctly for current low-volatility ranging market.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "1064.049368",
+    "dayNumber": 36,
+    "walletBalance": "440.505520938425850943",
+    "tags": [
+      "pacing",
+      "ranging-market",
+      "low-volatility",
+      "concentration",
+      "dip-ladder-dormant",
+      "user-schedule-control",
+      "campaign-maturity"
+    ]
   }
 ]
