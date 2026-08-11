@@ -7542,5 +7542,36 @@
       "ranging-market",
       "user-schedule-dominant"
     ]
+  },
+  {
+    "id": "ref-1786449732596",
+    "date": "2026-08-11",
+    "timestamp": "2026-08-11T12:02:12.596Z",
+    "runStatus": "success",
+    "insight": "36-day campaign shows perfect execution with zero guardrail binding—every single run bounded by user_schedule, not safety limits. Dip ladder has remained appropriately dormant throughout ultra-low volatility regime (0.03-0.10% volatility, sub-2% drawdowns), designed for 5%+ events that never materialized.",
+    "patterns": [
+      "100% user_schedule binding across all 8 recent runs—no daily cap, error, or risk clamps",
+      "Ultra-low volatility regime persistent: 0.03-0.10% volatility with 1.44-2.17% drawdowns for 36 consecutive days",
+      "Dip ladder activeTier: null throughout entire campaign—ladder correctly designed for 5%+ volatility events",
+      "Ranging market regime stable at 73-74% confidence with minimal momentum (-0.62% to +1.07%)",
+      "Composite risk consistently low (22-27/100) with zero error streaks",
+      "Concentration elevated at 85/100 with 71% portfolio deployed—expected for mature DCA campaign",
+      "Fear & Greed index locked at 29 (extreme fear) despite BTC consolidating near $64k",
+      "Smart sizing multipliers applying 1.15x based on fear/greed sentiment"
+    ],
+    "strategyAdjustment": "No adjustment needed—system is performing exactly as designed. User schedule controls systematic accumulation perfectly with 1071.69 USDC deployed over 36 days ($29.77/day average). Dip ladder thresholds are correctly calibrated for genuine volatility events (5%+ drawdowns), not this tight consolidation regime. If campaign goals evolve to capture smaller dips in ranging markets, consider adding intermediate ladder tiers at 2.5% and 3.5% drawdowns—but current dormant behavior is appropriate given design intent for significant dip events only.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "1071.689368",
+    "dayNumber": 36,
+    "walletBalance": "434.342155740143470856",
+    "tags": [
+      "pacing",
+      "user-schedule-dominant",
+      "ranging-market",
+      "ultra-low-volatility",
+      "dip-ladder-dormant",
+      "zero-clamping",
+      "healthy-execution"
+    ]
   }
 ]
