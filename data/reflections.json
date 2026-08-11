@@ -7512,5 +7512,35 @@
       "zero-errors",
       "sentiment-divergence"
     ]
+  },
+  {
+    "id": "ref-1786446132417",
+    "date": "2026-08-11",
+    "timestamp": "2026-08-11T11:02:12.417Z",
+    "runStatus": "success",
+    "insight": "Day 36 shows flawless execution in ultra-low volatility regime: user_schedule consistently controls all buys (100% of last 8 runs), dip ladder appropriately dormant for entire 36-day campaign as designed for 5%+ volatility events that haven't occurred in this 0.03-0.10% volatility range.",
+    "patterns": [
+      "All 8 recent runs bound by user_schedule with zero clamping by daily cap or dip ladder",
+      "Ultra-low volatility regime persists: 0.03-0.10% volatility across all runs, far below 5% dip ladder activation threshold",
+      "BTC consolidating in tight $63.8k-$64.2k range with 1.64-2.17% drawdowns from recent highs",
+      "Ranging market regime at 73-74% confidence with no directional edge for 36 consecutive days",
+      "Fear & Greed index locked at 29 (extreme fear) despite stable price action",
+      "Concentration risk elevated at 85/100 with 71% portfolio deployed after $1,070 cumulative spend",
+      "Zero error streaks maintained, composite risk low at 20-27/100 across all runs",
+      "Smart sizing multipliers applied (1.15x) but amounts still controlled by schedule, not market signals"
+    ],
+    "strategyAdjustment": "Continue current approach unchanged—user schedule is performing exactly as designed for systematic accumulation. Dip ladder should remain dormant until genuine volatility spike (5%+ drawdown). Monitor for regime shift: if volatility expands above 2% or BTC breaks $63.5k support/$65.2k resistance, reassess whether ranging assumption still holds. Consider flagging if concentration exceeds 90/100 (approaching 75% deployed) to ensure adequate dry powder for future volatility events.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "1070.114368",
+    "dayNumber": 36,
+    "walletBalance": "435.948155980238054856",
+    "tags": [
+      "pacing",
+      "market-timing",
+      "volatility-regime",
+      "concentration-risk",
+      "ranging-market",
+      "user-schedule-dominant"
+    ]
   }
 ]
