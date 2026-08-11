@@ -8087,5 +8087,34 @@
       "concentration-elevated",
       "flawless-execution"
     ]
+  },
+  {
+    "id": "ref-1786489335790",
+    "date": "2026-08-11",
+    "timestamp": "2026-08-11T23:02:15.790Z",
+    "runStatus": "success",
+    "insight": "Day 36 execution continues flawless user_schedule pacing with zero dip ladder activations across entire campaign. Dip ladder design (5%+ thresholds) is correctly calibrated for genuine volatility events—this 36-day sub-2% consolidation regime ($63.2k-$65.3k range) confirms it's working as intended by staying dormant.",
+    "patterns": [
+      "36 consecutive days bound by user_schedule with zero guardrail conflicts",
+      "Dip ladder dormant across entire campaign (activeTier: null) - no false triggers in 0.04%-0.20% volatility regime",
+      "Ranging market regime 70-73% confidence throughout Day 36 with no directional edge",
+      "Concentration risk stable at 86-87/100 with 72% portfolio deployed - predictable and controlled",
+      "Composite risk consistently low at 27/100 driven by zero error streaks and minimal volatility",
+      "Smart sizing multiplier 1.15x applied based on Fear & Greed 29 - modest adjustment for bearish sentiment"
+    ],
+    "strategyAdjustment": "Continue current execution model with no changes needed. User schedule pacing is optimal for this low-volatility regime (1089 USDC deployed over 36 days = ~$30/day average). Dip ladder thresholds (5%+ for mild, 10%+ for moderate) are correctly positioned above noise floor—do not lower thresholds as this would trigger false signals in normal 2-3% intraday moves. Monitor for regime shift: if volatility expands to 5%+ drawdowns, dip ladder will activate automatically and provide additional buying power at better entries. Current 72% deployment with 416 USDC remaining provides adequate dry powder for potential volatility events in final campaign days.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "1089.014368",
+    "dayNumber": 36,
+    "walletBalance": "416.737009811952450504",
+    "tags": [
+      "pacing",
+      "user-schedule-dominant",
+      "dip-ladder-dormant",
+      "ranging-market",
+      "concentration-stable",
+      "low-volatility-regime",
+      "campaign-day-36"
+    ]
   }
 ]
