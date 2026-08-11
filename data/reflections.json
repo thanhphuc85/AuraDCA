@@ -7810,5 +7810,33 @@
       "concentration-stable",
       "campaign-day-36"
     ]
+  },
+  {
+    "id": "ref-1786467730216",
+    "date": "2026-08-11",
+    "timestamp": "2026-08-11T17:02:10.216Z",
+    "runStatus": "success",
+    "insight": "User schedule executing perfectly on Day 36 with 1079.69 USDC deployed (72% portfolio). Dip ladder remains correctly dormant through entire 36-day campaign as BTC consolidates in tight $63.5k-$65.2k range with sub-2% volatility—no 5%+ dip events have occurred to trigger ladder.",
+    "patterns": [
+      "100% user_schedule bound across all 8 recent runs with zero clamping by daily caps or risk limits",
+      "36-day ranging regime persists: 69-70% confidence, sub-2% volatility, no dip tier activations",
+      "Concentration elevated at 86/100 (72% deployed) but appropriate for steady DCA schedule nearing completion",
+      "Zero error streaks maintained, composite risk stable at 27-29/100",
+      "Smart sizing multipliers (1.15x) applied but bounded by schedule—no practical impact on execution"
+    ],
+    "strategyAdjustment": "Continue current approach—user schedule is performing exactly as designed. Dip ladder correctly stays dormant in low-volatility regime. Monitor for campaign completion (nearing end with 72% deployed). If genuine 5%+ volatility emerges, dip ladder will appropriately activate. No changes needed to pacing, risk limits, or ladder thresholds.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "1079.689368",
+    "dayNumber": 36,
+    "walletBalance": "426.21428154648753094",
+    "tags": [
+      "pacing",
+      "user-schedule",
+      "ranging-market",
+      "low-volatility",
+      "concentration",
+      "dip-ladder-dormant",
+      "campaign-tracking"
+    ]
   }
 ]
