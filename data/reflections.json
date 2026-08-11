@@ -7690,5 +7690,36 @@
       "low-volatility",
       "user-schedule-binding"
     ]
+  },
+  {
+    "id": "ref-1786455991248",
+    "date": "2026-08-11",
+    "timestamp": "2026-08-11T13:46:31.248Z",
+    "runStatus": "simulated",
+    "insight": "36-day campaign executing perfectly in ultra-low volatility regime: user schedule consistently controls all buys with dip ladder correctly dormant (0% activation rate) as designed for 5%+ volatility events that never materialized in this sub-2% volatility environment.",
+    "patterns": [
+      "consistently bound by user_schedule across all 8 recent runs",
+      "dip ladder never activated (activeTier: null) throughout entire 36-day campaign",
+      "ultra-low volatility regime persistent: 0.03%-0.12% intraday, ~1.5% realized volatility",
+      "tight consolidation range $63.6k-$65.2k maintained for 36 days",
+      "concentration risk elevated and stable at 85-86/100 with 71% portfolio deployed",
+      "composite risk consistently low at 27-28/100 due to minimal volatility and zero errors",
+      "market regime: ranging with 69-73% confidence, no directional edge"
+    ],
+    "strategyAdjustment": "Continue current approach unchanged: user schedule is optimal for this low-volatility ranging market. Dip ladder design (5%+ volatility triggers) is appropriately calibrated and should remain dormant until genuine volatility expansion occurs. Monitor for regime change to trending/volatile conditions where dip ladder would activate. Accept elevated concentration (71% deployed) as intentional consequence of steady 36-day accumulation in stable range.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "1073.264368",
+    "dayNumber": 36,
+    "walletBalance": "431.144216836195452056",
+    "tags": [
+      "pacing",
+      "user-schedule-optimal",
+      "dip-ladder-dormant",
+      "low-volatility-regime",
+      "ranging-market",
+      "concentration-accepted",
+      "36-day-campaign",
+      "strategy-validation"
+    ]
   }
 ]
