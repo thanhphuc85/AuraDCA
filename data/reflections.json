@@ -7095,5 +7095,33 @@
       "concentration-risk",
       "smart-sizing"
     ]
+  },
+  {
+    "id": "ref-1786410125251",
+    "date": "2026-08-11",
+    "timestamp": "2026-08-11T01:02:05.251Z",
+    "runStatus": "success",
+    "insight": "Day 36 shows perfect execution stability: 8 consecutive successful runs with zero clamping by guardrails, all bound by user_schedule at requested amounts ($1.43-$1.65 range). The dip ladder remains completely dormant across 36 days of sub-1% volatility, confirming it's correctly calibrated for genuine volatility events (5%+) that haven't occurred.",
+    "patterns": [
+      "Zero guardrail interference: 8/8 runs bound by user_schedule, no daily cap or risk clamping",
+      "Dip ladder dormancy: activeTier null across entire 36-day campaign in 0.02-0.10% volatility regime",
+      "Ranging market persistence: 72-74% confidence ranging regime, tight $63.4k-$65.2k consolidation near ATH",
+      "Concentration plateaued: stable 87/100 risk score with 73% portfolio deployed, 411 USDC remaining",
+      "Ultra-low composite risk: 25-29/100 driven by minimal volatility and zero error streaks",
+      "Smart sizing active: 1.15x multiplier applied based on Fear & Greed 29-30 (bearish sentiment)"
+    ],
+    "strategyAdjustment": "No adjustments needed. Current configuration is operating as designed: user schedule controls systematic accumulation (~$1.50/run average), dip ladder correctly remains inactive in low-volatility environment, and risk metrics are healthy despite high concentration. Continue monitoring for volatility regime shift that would activate dip tiers, but maintain current pacing and guardrail settings which are appropriately calibrated for the 36-day ranging market.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "1054.849368",
+    "dayNumber": 36,
+    "walletBalance": "411.416178230744803603",
+    "tags": [
+      "pacing",
+      "ranging-market",
+      "dip-ladder-dormant",
+      "concentration",
+      "execution-stability",
+      "low-volatility"
+    ]
   }
 ]
