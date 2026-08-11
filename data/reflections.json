@@ -7063,5 +7063,37 @@
       "concentration-stable",
       "no-errors"
     ]
+  },
+  {
+    "id": "ref-1786406526201",
+    "date": "2026-08-11",
+    "timestamp": "2026-08-11T00:02:06.201Z",
+    "runStatus": "success",
+    "insight": "Day 36 continues the 35-day pattern of ultra-low volatility ranging market: dip ladder remains completely dormant (0 activations), user_schedule controls 100% of execution, BTC consolidating in tight $63.4k-$65.2k range with sub-0.1% volatility despite 2.10% drawdown.",
+    "patterns": [
+      "User schedule has bound every single execution across 36 days—no daily cap or dip ladder interference",
+      "Dip ladder designed for 5%+ volatility events has seen zero activations in 36-day campaign despite sub-1% volatility regime",
+      "BTC consolidating near ATH for 35+ days in $63.4k-$65.2k range with volatility consistently under 0.1-0.3%",
+      "Concentration risk stable at 87/100 with 73% portfolio deployed (~392 USDC remaining)",
+      "Fear & Greed hovering at 29-30 (bearish) for multiple days with -1.4% to -2.0% BTC price action",
+      "Smart sizing applying 0.85x multiplier consistently due to low fear & greed (29) and minimal drawdown (2.10%)",
+      "Composite risk remains low (25-29/100) driven by zero error streaks and minimal volatility",
+      "Pacing at 1,053 USDC spent over ~578 runs with no campaign budget constraint"
+    ],
+    "strategyAdjustment": "Continue current systematic accumulation via user_schedule—it's working as designed for this low-volatility ranging regime. Dip ladder correctly remains dormant (no false signals in tight consolidation). Monitor for potential regime shift: if volatility expands beyond 1% and BTC breaks below $63.4k support, dip ladder may finally activate. With 392 USDC remaining and 87/100 concentration risk, maintain current pace rather than forcing accelerated deployment. If consolidation persists another 10-15 days without volatility expansion, consider whether dip ladder thresholds need recalibration for this specific market regime (though current design appears appropriate for avoiding false signals in tight ranges).",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "1053.274368",
+    "dayNumber": 36,
+    "walletBalance": "392.862829571206803603",
+    "tags": [
+      "pacing",
+      "market-timing",
+      "ranging-market",
+      "dip-ladder-dormant",
+      "user-schedule-control",
+      "low-volatility",
+      "concentration-risk",
+      "smart-sizing"
+    ]
   }
 ]
