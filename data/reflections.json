@@ -7996,5 +7996,36 @@
       "ranging-market",
       "fear-greed"
     ]
+  },
+  {
+    "id": "ref-1786478542587",
+    "date": "2026-08-11",
+    "timestamp": "2026-08-11T20:02:22.587Z",
+    "runStatus": "success",
+    "insight": "Day 36 continues flawless execution with the user schedule as the sole binding constraint — BTC has been locked in a $63.2k–$65.3k consolidation range for the entire campaign with sub-2% volatility, meaning the dip ladder has never once activated and the 1.15x Fear & Greed multiplier (F&G=29) is the only market-responsive lever being applied.",
+    "patterns": [
+      "user_schedule is boundBy for all real (non-simulated) runs — zero daily cap clamps on production trades across all 36 days",
+      "Dip ladder (activeTier: null) has been dormant for the entire 36-day campaign — drawdown has never breached the 5% mild-dip threshold, peaking around 3.16% today",
+      "Fear & Greed stuck at 29 (fear territory) all of Day 36 — persistent bearish sentiment but no price capitulation to match",
+      "Concentration risk consistently elevated at 86/100 with 72% portfolio deployed — this metric is not changing and has not triggered any action",
+      "BTC volatility ultra-low: 0.05%–0.20% intraday, 1.13%–1.43% regime-level — well below any meaningful threshold",
+      "Simulated runs appearing in history with near-zero amounts ($0.000041–$0.000885) — likely test/debug runs, not meaningful for campaign analysis",
+      "Smart sizing multiplier locked at 1.15x throughout — F&G in fear zone consistently applying modest boost without escalation"
+    ],
+    "strategyAdjustment": "No mechanical adjustment needed — the strategy is executing correctly for the prevailing regime. However, with 36 days of sub-3.2% max drawdown and 1,084 USDC deployed, proactively review whether the dip ladder thresholds (5% mild, higher tiers above) are appropriately calibrated for what is clearly a prolonged low-volatility consolidation. If BTC remains in $63k–$65k for another week with no breakout, consider whether the 1.15x multiplier from F&G=29 is actually adding alpha or just minor noise — the market brief's 10-15% decrease recommendation is being systematically ignored in favor of the schedule, which is correct, but should be explicitly noted as a known tension. Watch for concentration risk (86/100, 72% deployed) as a potential future constraint if the portfolio continues accumulating without rebalancing.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "1084.289368",
+    "dayNumber": 36,
+    "walletBalance": "421.538755717008539252",
+    "tags": [
+      "pacing",
+      "market-timing",
+      "concentration-risk",
+      "dip-ladder-dormant",
+      "ranging-market",
+      "fear-greed",
+      "budget",
+      "low-volatility"
+    ]
   }
 ]
