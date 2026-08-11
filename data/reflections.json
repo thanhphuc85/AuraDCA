@@ -7123,5 +7123,36 @@
       "execution-stability",
       "low-volatility"
     ]
+  },
+  {
+    "id": "ref-1786413728049",
+    "date": "2026-08-11",
+    "timestamp": "2026-08-11T02:02:08.049Z",
+    "runStatus": "success",
+    "insight": "Day 36: System executing flawlessly in ultra-low volatility regime. User schedule fully controlling all buys ($1.425-$1.650 range), dip ladder correctly dormant for entire 36-day campaign as designed—no false triggers despite 2% drawdowns, waiting for genuine 5%+ volatility events.",
+    "patterns": [
+      "100% user_schedule binding across all 8 recent runs - no clamping issues",
+      "Zero dip ladder activations throughout 36-day campaign despite persistent 2% drawdowns",
+      "Ultra-low volatility regime: 0.02-0.10% daily volatility, well below 5% dip trigger threshold",
+      "Ranging market: 74% confidence, BTC consolidating $63.4k-$65.2k for 36 days near ATH",
+      "Concentration stable at 84-87/100 with 70-73% portfolio deployed, ~450 USDC buffer remaining",
+      "Composite risk consistently low at 24-29/100 driven by minimal volatility and zero error streaks",
+      "Smart sizing active: 1.15x multiplier based on Fear & Greed 29-30 (bearish sentiment)",
+      "Cumulative spend: 1056 USDC over 36 days, pacing unrestricted by campaign budget"
+    ],
+    "strategyAdjustment": "No adjustments needed. Current configuration is optimal: (1) User schedule providing consistent systematic accumulation in tight range, (2) Dip ladder correctly calibrated—staying dormant in sub-1% volatility and preserving capital for genuine 5%+ drawdown opportunities, (3) Smart sizing responding appropriately to bearish sentiment with 1.15x multiplier, (4) Risk metrics healthy with adequate buffer. Continue monitoring for regime shift to higher volatility where dip ladder would activate.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "1056.424368",
+    "dayNumber": 36,
+    "walletBalance": "449.823679510638948867",
+    "tags": [
+      "pacing",
+      "market-timing",
+      "dip-ladder-calibration",
+      "ranging-market",
+      "low-volatility",
+      "user-schedule-control",
+      "healthy-risk-metrics"
+    ]
   }
 ]
