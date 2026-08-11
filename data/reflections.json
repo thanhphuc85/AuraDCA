@@ -7481,5 +7481,36 @@
       "extreme-fear-sentiment",
       "strategy-validation"
     ]
+  },
+  {
+    "id": "ref-1786442531978",
+    "date": "2026-08-11",
+    "timestamp": "2026-08-11T10:02:11.978Z",
+    "runStatus": "success",
+    "insight": "36-day campaign executing flawlessly with perfect user_schedule adherence (100% success rate on real txs, 0 errors). Dip ladder correctly dormant throughout—designed for 5%+ volatility events, none triggered in sub-1% regime (0.05-0.10% volatility observed).",
+    "patterns": [
+      "Consistently bound by user_schedule across all 8 runs with zero clamping by other guardrails",
+      "Ultra-low volatility regime persisting (0.05-0.10% observed vs 5%+ dip threshold) - dip ladder appropriately inactive for 36 consecutive days",
+      "Ranging market regime stable at 73-74% confidence with no directional edge, tight $63.5k-$65.2k consolidation",
+      "Fear & Greed at 29 (extreme fear) yet price remains near all-time highs - sentiment/price divergence",
+      "Concentration risk elevated and stable at 85/100 with 71% portfolio deployed - by design for DCA strategy",
+      "Zero error streaks maintained, composite risk consistently low (18-26/100)",
+      "Smart sizing multipliers applying bearish adjustments (0.88x) based on F&G sentiment"
+    ],
+    "strategyAdjustment": "Continue current strategy with no changes. User schedule is the correct primary control mechanism, dip ladder is functioning as designed (requires genuine 5%+ volatility to activate), and 36-day execution shows system reliability. Concentration at 71% is expected for a mature DCA campaign. Monitor for regime change to trending/volatile conditions where dip ladder would appropriately engage.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "1068.539368",
+    "dayNumber": 36,
+    "walletBalance": "437.410791490146054856",
+    "tags": [
+      "pacing",
+      "user-schedule-control",
+      "dip-ladder-dormant",
+      "ranging-market",
+      "low-volatility",
+      "concentration-by-design",
+      "zero-errors",
+      "sentiment-divergence"
+    ]
   }
 ]
