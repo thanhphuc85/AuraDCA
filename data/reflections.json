@@ -7215,5 +7215,36 @@
       "concentration",
       "no-clamping"
     ]
+  },
+  {
+    "id": "ref-1786424557796",
+    "date": "2026-08-11",
+    "timestamp": "2026-08-11T05:02:37.796Z",
+    "runStatus": "success",
+    "insight": "36 days into campaign with perfect execution streak: dip ladder correctly remains dormant in sub-1% volatility regime, user schedule controls systematic accumulation at ~$1.50/run average, and 70% portfolio deployment with 445 USDC remaining shows healthy pacing with no budget pressure.",
+    "patterns": [
+      "100% bound by user_schedule across all 8 recent runs - no clamping by daily caps or dip tiers",
+      "Dip ladder dormant for entire 36-day campaign - designed for 5%+ volatility events, current regime shows 0.02-0.08% volatility",
+      "Zero error streaks maintained - perfect operational reliability",
+      "Ranging market regime persistent (72-74% confidence) with ultra-low volatility (0.28-0.72%)",
+      "Concentration risk stable at 84-87/100 with 70-73% portfolio deployed",
+      "Composite risk consistently low (20-29/100) driven by minimal volatility",
+      "Smart sizing multipliers applying 0.88x reduction based on Fear & Greed 29 and 2% drawdown",
+      "BTC consolidating in tight $63.4k-$65.2k range near all-time highs for 36 days"
+    ],
+    "strategyAdjustment": "Continue current approach with no changes. User schedule is correctly controlling accumulation in this low-volatility consolidation regime. Dip ladder calibration is appropriate - it should remain dormant until genuine volatility spike (5%+ moves) occurs. Monitor for regime change: if volatility expands or consolidation breaks (up or down), the existing guardrails will respond appropriately. Current 70% deployment with 445 USDC remaining provides adequate runway for opportunistic dip buying if market shifts.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "1060.874368",
+    "dayNumber": 36,
+    "walletBalance": "445.172655171502564495",
+    "tags": [
+      "pacing",
+      "ranging-market",
+      "low-volatility",
+      "dip-ladder-dormant",
+      "concentration-stable",
+      "error-free-streak",
+      "user-schedule-control"
+    ]
   }
 ]
