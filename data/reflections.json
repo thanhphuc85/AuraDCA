@@ -7154,5 +7154,35 @@
       "user-schedule-control",
       "healthy-risk-metrics"
     ]
+  },
+  {
+    "id": "ref-1786417330111",
+    "date": "2026-08-11",
+    "timestamp": "2026-08-11T03:02:10.111Z",
+    "runStatus": "success",
+    "insight": "36-day campaign continues flawless execution in ultra-low volatility regime (0.02-0.10% daily vol), with dip ladder correctly remaining dormant as designed—no false triggers despite 2% drawdowns, confirming 5%+ threshold calibration is appropriate for this ranging market.",
+    "patterns": [
+      "Consistently bound by user_schedule across all 8 recent runs with zero clamping interventions",
+      "Ultra-low volatility regime persists (0.02-0.37% daily) for entire 36-day campaign with BTC consolidating $63.4k-$65.2k range",
+      "Dip ladder dormant throughout entire campaign (activeTier: null) - designed for 5%+ volatility events that haven't materialized",
+      "Concentration risk elevated and stable at 84-87/100 with 70-73% portfolio deployed, reflecting systematic accumulation progress",
+      "Composite risk consistently low (22-29/100) driven by minimal volatility and zero error streaks",
+      "Fear & Greed index stable in fear zone (29-30) while market remains range-bound with 72-74% regime confidence",
+      "Execution amounts varying 1.425-1.650 USDC per run based on smart sizing multipliers (0.87x in latest run responding to bearish sentiment)"
+    ],
+    "strategyAdjustment": "Maintain current approach—user schedule pacing is working correctly, dip ladder threshold appropriately calibrated for genuine volatility events, and smart sizing is responding appropriately to sentiment shifts (0.87x multiplier on Fear & Greed 29). Monitor for regime change: if volatility expands above 2% daily or BTC breaks $63.4k-$65.2k range, dip ladder should activate. With 448 USDC remaining (30% reserve), position sizing remains sustainable for continued systematic accumulation.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "1057.859368",
+    "dayNumber": 36,
+    "walletBalance": "448.221763988343655255",
+    "tags": [
+      "pacing",
+      "ranging-market",
+      "dip-ladder-dormant",
+      "volatility-regime",
+      "concentration-risk",
+      "smart-sizing",
+      "execution-quality"
+    ]
   }
 ]
