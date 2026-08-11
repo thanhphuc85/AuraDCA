@@ -7901,5 +7901,37 @@
       "no-clamping",
       "campaign-day-36"
     ]
+  },
+  {
+    "id": "ref-1786475798062",
+    "date": "2026-08-11",
+    "timestamp": "2026-08-11T19:16:38.062Z",
+    "runStatus": "simulated",
+    "insight": "Day 36: User schedule continues flawless execution with 100% fill rate. Dip ladder remains correctly dormant in ultra-low volatility regime (0.05-0.29% recent volatility, all <2%) despite 2.46-3.16% drawdowns—tier 1 requires ≥5% trigger threshold appropriately calibrated for this ranging market.",
+    "patterns": [
+      "Consistently bound by user_schedule across all 8 recent runs with zero clamping interventions",
+      "36-day campaign showing perfect adherence to predetermined schedule",
+      "Dip ladder dormant (activeTier: null) throughout entire campaign—zero false triggers in sub-2% volatility regime",
+      "Ranging market regime stable at 69-71% confidence with minimal 1.13-1.51% volatility",
+      "Concentration risk elevated and stable at 86/100 with 71-72% portfolio deployed",
+      "Composite risk consistently low (27-29/100) driven by minimal volatility and zero error streaks",
+      "BTC consolidating in tight $63.2k-$65.2k range with drawdowns 1.69-3.16% from local highs",
+      "Fear & Greed Index stable at 29 (bearish) with consistent analyst recommendations for 10-15% allocation decrease"
+    ],
+    "strategyAdjustment": "No adjustments needed—strategy is operating exactly as designed. User schedule executing perfectly with appropriate guardrails. Dip ladder calibration is correct: designed for genuine volatility events (≥5% dips), not the sub-2% noise in this 36-day ranging regime. Continue current approach: let user schedule pace the campaign while dip ladder remains ready for true volatility breakouts. Monitor for regime change that would justify ladder activation.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "1082.714368",
+    "dayNumber": 36,
+    "walletBalance": "421.54317508187725674",
+    "tags": [
+      "pacing",
+      "user-schedule",
+      "ranging-market",
+      "low-volatility",
+      "concentration-risk",
+      "dip-ladder-dormant",
+      "campaign-day-36",
+      "flawless-execution"
+    ]
   }
 ]
