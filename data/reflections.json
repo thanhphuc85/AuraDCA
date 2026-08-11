@@ -7662,5 +7662,33 @@
       "error-free",
       "campaign-maturity"
     ]
+  },
+  {
+    "id": "ref-1786455873441",
+    "date": "2026-08-11",
+    "timestamp": "2026-08-11T13:44:33.441Z",
+    "runStatus": "simulated",
+    "insight": "36-day campaign executing flawlessly with zero clamping issues—user schedule consistently binds with 100% execution accuracy across mix of real ($1.44-$1.575 USDC) and simulated ($0.000036-$0.000854 USDC) orders. Dip ladder correctly remains dormant as designed; 1.73% drawdown with 0.12% volatility nowhere near 5%+ thresholds.",
+    "patterns": [
+      "User schedule binding consistently across all 8 runs—no daily cap or dip tier overrides",
+      "Ranging market regime locked in for 36 days (69-73% confidence, sub-2% volatility, -1.67% to +1.07% momentum)",
+      "Dip ladder appropriately dormant throughout entire campaign—no activeTier triggers despite 1.44-1.73% drawdowns",
+      "Concentration risk elevated and stable at 85-86/100 with 71% portfolio deployed",
+      "Composite risk consistently low at 26-28/100 driven by minimal volatility and zero error streaks",
+      "Fear & Greed index stable at 29 (fear territory) across all recent runs"
+    ],
+    "strategyAdjustment": "Continue current strategy with zero changes—user schedule pacing is optimal for this low-volatility regime, dip ladder thresholds are correctly calibrated (designed for genuine 5%+ events), and risk metrics are healthy. Monitor for regime shift indicators: if volatility exceeds 3% or drawdown reaches 3.5%, dip ladder Tier 1 should activate; if concentration approaches 90/100, consider reducing user schedule by 10-20% to preserve capital for future opportunities.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "1073.264368",
+    "dayNumber": 36,
+    "walletBalance": "431.145301587528572056",
+    "tags": [
+      "pacing",
+      "ranging-market",
+      "dip-ladder-dormant",
+      "concentration-risk",
+      "low-volatility",
+      "user-schedule-binding"
+    ]
   }
 ]
