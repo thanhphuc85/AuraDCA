@@ -7449,5 +7449,37 @@
       "error-free",
       "user-schedule-bound"
     ]
+  },
+  {
+    "id": "ref-1786438942105",
+    "date": "2026-08-11",
+    "timestamp": "2026-08-11T09:02:22.105Z",
+    "runStatus": "success",
+    "insight": "36-day campaign executing flawlessly in ultra-low volatility regime: dip ladder correctly dormant throughout (0 activations despite 2% drawdowns), user schedule driving 100% of buys with consistent $1.43-$1.63 daily amounts, Fear & Greed at extreme fear (29) yet no meaningful dip signals warranted given sub-1% volatility environment.",
+    "patterns": [
+      "consistently bound by user_schedule across all 8 recent runs with 0% clamping",
+      "dip ladder dormant for entire 36-day campaign - activeTier: null despite 1.85-2.17% drawdowns",
+      "ultra-low volatility regime persisting: 0.05-0.10% realized volatility, well below 5% ladder activation threshold",
+      "ranging market at 73-74% confidence with near-zero momentum (-0.62% to 0.00%)",
+      "concentration elevated at 85/100 with 71% portfolio deployed, but risk composite low at 18-26/100",
+      "Fear & Greed stuck at 29 (extreme fear) across all runs, yet no panic selling or volatility expansion",
+      "BTC consolidating tightly in $63.5k-$65.2k range near all-time highs for 36 days",
+      "smart sizing multipliers active (1.25x) responding to fear levels appropriately"
+    ],
+    "strategyAdjustment": "Maintain current dual-strategy approach - user schedule is correctly providing steady accumulation base while dip ladder appropriately stays inactive in this compressed volatility environment. No changes needed. Dip ladder is designed for genuine 5%+ volatility events that simply haven't materialized. If volatility expands above 1% with actual drawdowns exceeding 3%, ladder will activate as intended. Current pacing of $1.43-$1.63 daily (cumulative $1,067 over 36 days = $29.64/day average) is sustainable and appropriate given low-risk regime.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "1067.099368",
+    "dayNumber": 36,
+    "walletBalance": "439.057301083904814856",
+    "tags": [
+      "pacing",
+      "dip-ladder-dormant",
+      "user-schedule-primary",
+      "low-volatility-regime",
+      "ranging-market",
+      "concentration-risk",
+      "extreme-fear-sentiment",
+      "strategy-validation"
+    ]
   }
 ]
