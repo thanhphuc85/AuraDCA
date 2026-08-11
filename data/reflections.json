@@ -7964,5 +7964,37 @@
       "simulated-runs",
       "route-outage"
     ]
+  },
+  {
+    "id": "ref-1786477615960",
+    "date": "2026-08-11",
+    "timestamp": "2026-08-11T19:46:55.960Z",
+    "runStatus": "simulated",
+    "insight": "Day 36 closes with the sim_daily_ceiling binding again ($0.000041 requested, $0.000040 executed), confirming the simulated route ceiling is the only active constraint in an otherwise smoothly-executing campaign — the real runs today all cleared user_schedule without clamping.",
+    "patterns": [
+      "sim_daily_ceiling clamping on micro-amount simulated runs (0.000041 → 0.000040) is a recurring artifact of the simulation layer, not a strategy or budget issue",
+      "Fear & Greed has been pinned at 29 (fear territory) for all 8 runs on Day 36 — sentiment has not shifted in any meaningful way across the day",
+      "BTC price tightly ranged between $63,220–$63,556 all day, a ~0.5% intraday band — 36-day consolidation range $63.2k–$65.3k remains intact",
+      "Dip ladder dormant for all 36 days: drawdown from high has never exceeded 3.16%, well below the 5% mild-dip threshold",
+      "Concentration risk elevated at 86/100 with 72% portfolio deployed and 1082.71 USDC cumulative spent — this figure has been flagged across multiple reflections with no structural change",
+      "Real runs executed flawlessly at user_schedule pace; 4 real buys today all executed exactly as requested",
+      "Market regime: ranging at 71% confidence, sub-2% volatility, 6 consecutive up candles — no directional edge for 36 days straight"
+    ],
+    "strategyAdjustment": "The sim_daily_ceiling clamping is cosmetic (1 atomic unit difference) and requires no action. The more substantive issue is concentration: at 1082.71 USDC spent with 72% portfolio deployed and Fear & Greed stuck at 29, consider whether the campaign's remaining budget should be staged more conservatively — specifically, if BTC breaks below $63,200 (the 36-day range floor), treat that as a potential regime-change signal warranting a pause or pace reduction rather than a dip-ladder activation, since a breakdown from a 36-day base can accelerate. Also reassess the 5% dip threshold: a 3% drawdown has persisted for multiple days without triggering any ladder tier, which means the ladder provides no tactical value in this sub-5% regime — consider lowering Tier 1 to 3% drawdown to capture the current price action if the goal is cost-basis improvement.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "1082.714368",
+    "dayNumber": 36,
+    "walletBalance": "421.540858082032651252",
+    "tags": [
+      "clamping",
+      "sim_daily_ceiling",
+      "pacing",
+      "market-timing",
+      "budget",
+      "concentration-risk",
+      "dip-ladder",
+      "ranging-market",
+      "fear-greed"
+    ]
   }
 ]
