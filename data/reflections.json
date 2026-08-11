@@ -7751,5 +7751,34 @@
       "concentration-risk",
       "flawless-execution"
     ]
+  },
+  {
+    "id": "ref-1786460535139",
+    "date": "2026-08-11",
+    "timestamp": "2026-08-11T15:02:15.139Z",
+    "runStatus": "success",
+    "insight": "Day 36 execution flawless: user_schedule consistently deploys $1.58-1.68 USDC with zero clamping across entire campaign. Dip ladder correctly dormant—36-day consolidation ($63.6k-$65.2k range) shows max 2.46% drawdown with sub-1% volatility, never triggering 5%+ thresholds designed for genuine volatility events.",
+    "patterns": [
+      "100% user_schedule bound across all 8 recent runs with zero daily_cap or dip ladder activations",
+      "Ultra-low volatility regime persisting: 0.06-0.29% intraday, 1.50% regime volatility over 36 days",
+      "Tight BTC consolidation range: $63.6k-$65.2k with max 2.46% drawdown insufficient to trigger dip tiers",
+      "Concentration risk elevated and stable: 85-86/100 with 71% portfolio deployed consistently",
+      "Fear & Greed anchored at 29 (fear territory) throughout recent window with ranging market (69-70% confidence)",
+      "Smart sizing multipliers functioning: 1.35x applied on latest run based on Fear & Greed 29 + 1.12% drawdown"
+    ],
+    "strategyAdjustment": "No changes needed—system performing exactly as designed. User schedule pacing is on target (1076.54 USDC deployed over 36 days ≈ $29.90/day average). Dip ladder appropriately idle awaiting genuine 5%+ volatility events. Continue current approach: let user_schedule control systematic accumulation, reserve dip ladder for actual market dislocations. Monitor for volatility regime shift that would activate tiered buying.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "1076.539368",
+    "dayNumber": 36,
+    "walletBalance": "429.51996336573729094",
+    "tags": [
+      "pacing",
+      "user-schedule",
+      "ranging-market",
+      "dip-ladder-dormant",
+      "concentration-risk",
+      "volatility-regime",
+      "smart-sizing"
+    ]
   }
 ]
