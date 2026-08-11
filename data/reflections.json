@@ -7602,5 +7602,35 @@
       "concentration-stable",
       "volatility-suppressed"
     ]
+  },
+  {
+    "id": "ref-1786454192709",
+    "date": "2026-08-11",
+    "timestamp": "2026-08-11T13:16:32.709Z",
+    "runStatus": "simulated",
+    "insight": "Day 36 shows flawless user_schedule execution with zero clamping across all 8 runs (amounts ranging from $0.000041 to $1.625 USDC). Dip ladder remains correctly dormant in sub-1% volatility regime where BTC consolidates tightly in $63.6k-$65.2k range.",
+    "patterns": [
+      "Consistently bound by user_schedule across 100% of runs with zero daily cap or error interventions",
+      "Dip ladder appropriately inactive for entire 36-day campaign - designed for 5%+ volatility events, current regime shows 0.06-0.10% intraday volatility",
+      "Ranging market regime stable at 69-74% confidence with minimal momentum (-1.67% to +1.07%) and sub-1% volatility for 36 consecutive days",
+      "Concentration risk elevated and stable at 85-86/100 with 71% portfolio deployed - expected for mature DCA campaign",
+      "Composite risk consistently low at 26-28/100 driven by zero error streaks and minimal volatility",
+      "Fear & Greed index locked at 29 (extreme fear) while price consolidates near all-time highs - sentiment/price divergence persisting"
+    ],
+    "strategyAdjustment": "No adjustments needed. User schedule is the sole active control mechanism and executing perfectly. Dip ladder correctly remains dormant - it's designed for genuine drawdown events (5%+ moves), not minor 1-2% oscillations. Current 1.51% drawdown with 0.06% volatility is noise, not signal. Continue systematic accumulation via user_schedule until either: (1) volatility regime shifts materially (3%+ intraday moves), or (2) price breaks out of 36-day $63.6k-$65.2k consolidation range. Monitor for regime change but do not force dip triggers in low-volatility environment.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "1073.264368",
+    "dayNumber": 36,
+    "walletBalance": "431.147614645967240856",
+    "tags": [
+      "pacing",
+      "user-schedule",
+      "dip-ladder-dormant",
+      "ranging-market",
+      "low-volatility",
+      "concentration-stable",
+      "zero-errors",
+      "campaign-day-36"
+    ]
   }
 ]
