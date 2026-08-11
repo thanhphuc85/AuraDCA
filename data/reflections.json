@@ -7184,5 +7184,36 @@
       "smart-sizing",
       "execution-quality"
     ]
+  },
+  {
+    "id": "ref-1786420943405",
+    "date": "2026-08-11",
+    "timestamp": "2026-08-11T04:02:23.405Z",
+    "runStatus": "success",
+    "insight": "36-day campaign with 100% user_schedule execution shows dip ladder remains completely dormant by design—ultra-low volatility regime (0.02-0.09% daily) never triggers 5%+ thresholds, confirming ladder is appropriately calibrated for genuine volatility events, not noise.",
+    "patterns": [
+      "100% bound by user_schedule across all 8 recent runs with zero clamping",
+      "Dip ladder activeTier: null for entire 36-day campaign—no false triggers in ranging market",
+      "Volatility consistently sub-0.1% daily vs 5%+ ladder thresholds—orders of magnitude gap",
+      "Drawdowns confined to 1.87-2.10% range, well below Tier 1 activation",
+      "Concentration stable at 84-87/100 with systematic 70-73% portfolio deployment",
+      "Fear & Greed locked at 29-30 for days—extreme sentiment stability",
+      "Risk scores consistently low (21-29/100) driven by zero volatility and error streaks",
+      "Ranging regime at 72-74% confidence for extended period—no breakout"
+    ],
+    "strategyAdjustment": "Continue current approach—user schedule is executing flawlessly at ~$1.43-1.65 per run with no clamping issues. Dip ladder calibration is correct: designed for 5%+ volatility events, it appropriately ignores sub-0.1% noise in this tight consolidation. No adjustment needed until market regime shifts to trending or volatility expands beyond 1% daily. Monitor for breakout from $63.4k-65.2k range that could finally activate ladder tiers.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "1059.434368",
+    "dayNumber": 36,
+    "walletBalance": "446.765376669717226935",
+    "tags": [
+      "pacing",
+      "ranging-market",
+      "dip-ladder-dormant",
+      "low-volatility",
+      "user-schedule",
+      "concentration",
+      "no-clamping"
+    ]
   }
 ]
