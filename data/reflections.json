@@ -7362,5 +7362,31 @@
       "user-schedule-control",
       "regime-stability"
     ]
+  },
+  {
+    "id": "ref-1786434389502",
+    "date": "2026-08-11",
+    "timestamp": "2026-08-11T07:46:29.502Z",
+    "runStatus": "simulated",
+    "insight": "36-day campaign shows perfect system alignment: user_schedule driving 100% of buys with dip ladder correctly dormant in sub-1% volatility regime that never triggered 5%+ thresholds—concentration at 85/100 (71% deployed) is by design, not a failure mode.",
+    "patterns": [
+      "Consistently bound by user_schedule across all 8 recent runs with zero dip ladder activations",
+      "Volatility compressed at 0.05-0.08% throughout entire 36-day campaign—well below 5% dip trigger thresholds",
+      "Price range-bound $63.5k-$65.2k with 74% ranging confidence and near-zero directional momentum",
+      "Risk metrics exceptionally low (18-23/100) driven by minimal volatility and zero error streaks",
+      "Concentration stable at 84-85/100 with 70-71% portfolio deployed—no budget exhaustion despite 1064 USDC cumulative spend"
+    ],
+    "strategyAdjustment": "Maintain current approach—no changes needed. User schedule is executing systematic accumulation as designed, dip ladder remains appropriately dormant for volatility events that haven't occurred, and concentration level reflects intentional deployment pace rather than risk mismanagement. If volatility regime shifts above 5% drawdowns, dip ladder will activate automatically. Continue monitoring for regime change signals (volatility spike, breakdown below $63k support, or Fear & Greed entering capitulation <20).",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "1064.049368",
+    "dayNumber": 36,
+    "walletBalance": "440.503245213152422031",
+    "tags": [
+      "pacing",
+      "market-timing",
+      "ranging-regime",
+      "low-volatility",
+      "user-schedule-primary"
+    ]
   }
 ]
