@@ -9033,5 +9033,35 @@
       "no-clamping",
       "low-volatility"
     ]
+  },
+  {
+    "id": "ref-1786568526636",
+    "date": "2026-08-12",
+    "timestamp": "2026-08-12T21:02:06.636Z",
+    "runStatus": "success",
+    "insight": "Day 37 shows flawless execution in an unprecedented ultra-low volatility regime: user schedule executing perfectly with dip ladder correctly dormant for 37 consecutive days as BTC consolidates in tight $63.2k-$65.3k range with sub-0.15% daily volatility.",
+    "patterns": [
+      "Zero clamping by guardrails across all 8 recent runs - user_schedule bound only",
+      "Dip ladder dormant for entire 37-day campaign (activeTier: null) - no false triggers despite 5%+ threshold design",
+      "Ultra-low volatility regime persisting: 0.04%-0.12% daily moves vs 5%+ ladder activation threshold",
+      "Ranging market regime stable at 75% confidence with negative momentum (-0.12% to -0.17%)",
+      "Concentration risk elevated and stable at 72% portfolio deployed with 1123.18 USDC cumulative spend",
+      "Zero error streaks maintained - perfect technical execution",
+      "Smart sizing applying 0.85x multiplier consistently due to Fear & Greed 27 bearish sentiment"
+    ],
+    "strategyAdjustment": "Continue current approach unchanged. The system is performing exactly as designed: (1) user schedule executes reliably without guardrail interference, (2) dip ladder remains appropriately inactive in sub-1% volatility environment calibrated for 5%+ moves, (3) smart sizing responds to sentiment (0.85x at F&G 27). Monitor for volatility regime shift - if BTC breaks consolidation range and volatility exceeds 5%, dip ladder should activate; if that fails to trigger, recalibrate thresholds. At 72% deployed with $442 remaining and day 37/unknown total, assess whether pace will exhaust budget prematurely.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "1123.179368",
+    "dayNumber": 37,
+    "walletBalance": "441.960490531257707441",
+    "tags": [
+      "pacing",
+      "ranging-market",
+      "volatility-regime",
+      "dip-ladder-dormant",
+      "user-schedule",
+      "concentration-risk",
+      "smart-sizing"
+    ]
   }
 ]
