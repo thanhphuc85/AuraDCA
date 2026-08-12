@@ -8645,5 +8645,36 @@
       "campaign-progress",
       "risk-stable"
     ]
+  },
+  {
+    "id": "ref-1786541511175",
+    "date": "2026-08-12",
+    "timestamp": "2026-08-12T13:31:51.175Z",
+    "runStatus": "simulated",
+    "insight": "Day 37 shows flawless user schedule execution in an ultra-low volatility regime (0.06-0.22% volatility, 1.7-2.4% drawdown) where the dip ladder has correctly remained dormant for 37 consecutive days. The strategy is performing exactly as designed: steady DCA during ranging conditions with 71% capital deployed and $453 remaining.",
+    "patterns": [
+      "consistently bound by user_schedule for 37 days straight",
+      "dip ladder dormant (activeTier: null) throughout entire campaign - designed for 5%+ volatility events",
+      "ultra-low volatility regime: 0.06-0.90% daily volatility vs 5%+ threshold",
+      "tight range consolidation: $63.2k-$65.3k for 37 days (3.3% range)",
+      "ranging market regime: 71-72% confidence sustained",
+      "zero error streaks maintained",
+      "stable execution amounts: $1.44-1.63 USDC for real buys, micro amounts for simulated runs",
+      "71% portfolio concentration stable - appropriate for day 37 of campaign"
+    ],
+    "strategyAdjustment": "No changes needed. The dual-mode strategy (user schedule + dip ladder) is executing perfectly: user schedule providing steady accumulation in low-volatility ranging market, while dip ladder appropriately waits for genuine volatility events (5%+ moves). With $453 USDC remaining and 71% deployed, the agent has adequate reserves for dip opportunities if market regime shifts to volatile. Continue current approach and monitor for volatility regime change that would activate dip ladder.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "1110.504368",
+    "dayNumber": 37,
+    "walletBalance": "453.344016183311976873",
+    "tags": [
+      "pacing",
+      "ranging-market",
+      "low-volatility",
+      "user-schedule-execution",
+      "dip-ladder-dormant",
+      "concentration",
+      "steady-accumulation"
+    ]
   }
 ]
