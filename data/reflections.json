@@ -8203,5 +8203,34 @@
       "perfect-execution",
       "concentration-stable"
     ]
+  },
+  {
+    "id": "ref-1786503716376",
+    "date": "2026-08-12",
+    "timestamp": "2026-08-12T03:01:56.376Z",
+    "runStatus": "success",
+    "insight": "Day 37 execution perfect at $1.65 USDC. The 37-day campaign continues flawless execution in an exceptionally stable regime: BTC locked in $63.2k-$65.3k range with sub-0.1% volatility (0.07%), 2.46% drawdown, and dip ladder correctly dormant throughout entire campaign.",
+    "patterns": [
+      "100% user_schedule binding across all 37 days and 8 recent runs with zero clamping by daily cap or risk guardrails",
+      "Dip ladder remains appropriately inactive for entire 37-day campaign—designed for 5%+ volatility events, current regime shows sub-2% drawdowns with 0.04-0.14% volatility",
+      "Ranging market regime highly persistent (71-75% confidence) with ultra-low volatility (0.09-1.13%) and no directional momentum edge",
+      "Composite risk consistently low (22-27/100) driven by zero error streaks and minimal volatility",
+      "Concentration elevated but stable at 70% portfolio deployed with $470.44 USDC remaining, cumulative spend $1,095.29",
+      "Fear & Greed index stable in fear territory (27-29) for multiple days with bearish sentiment but no actual volatility manifestation"
+    ],
+    "strategyAdjustment": "Continue current strategy unchanged. User schedule is optimal for this regime—dip ladder design is sound and should remain dormant until genuine 5%+ volatility events occur. Monitor for regime change: if volatility spikes above 2% or drawdown exceeds 5%, the dip ladder will activate appropriately. No adjustments needed to pacing, risk parameters, or guardrails. System is performing exactly as designed.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "1095.289368",
+    "dayNumber": 37,
+    "walletBalance": "470.438314158388657004",
+    "tags": [
+      "pacing",
+      "user-schedule",
+      "ranging-market",
+      "low-volatility",
+      "dip-ladder-dormant",
+      "flawless-execution",
+      "concentration-stable"
+    ]
   }
 ]
