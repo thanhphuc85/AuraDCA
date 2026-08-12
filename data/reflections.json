@@ -8497,5 +8497,33 @@
       "concentration-risk",
       "campaign-day-37"
     ]
+  },
+  {
+    "id": "ref-1786528925178",
+    "date": "2026-08-12",
+    "timestamp": "2026-08-12T10:02:05.178Z",
+    "runStatus": "success",
+    "insight": "Day 37 shows flawless execution with user schedule dominating in a persistent low-volatility regime (0.18% volatility, $63.2k-$65.3k range). Dip ladder remains correctly dormant with zero activations across 37 days—system is working as designed, waiting for genuine 5%+ drawdown events.",
+    "patterns": [
+      "Zero clamping events - all 8 recent runs bound by user_schedule with requested = executed",
+      "Ultra-low volatility persisting (0.06%-0.92% range) across entire 37-day campaign",
+      "Dip ladder dormant (activeTier: null) throughout - no false triggers in ranging market",
+      "Consistent 71% concentration risk as campaign progresses toward completion",
+      "Smart sizing multiplier 1.15x applied successfully based on Fear & Greed 27",
+      "Composite risk stable at 19-26/100 driven by minimal volatility and zero error streaks"
+    ],
+    "strategyAdjustment": "Maintain current approach - user schedule is executing perfectly with 1,105.86 USDC deployed over 37 days. The dip ladder's dormancy validates its 5%+ drawdown threshold design; it should remain untouched. Continue monitoring for regime shift indicators (volatility spike >2%, breakout from $63.2k-$65.3k range) that would activate opportunistic buying. No changes needed to guardrails or pacing.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "1105.864368",
+    "dayNumber": 37,
+    "walletBalance": "459.649232222340961743",
+    "tags": [
+      "pacing",
+      "ranging-market",
+      "dip-ladder-dormant",
+      "concentration",
+      "low-volatility",
+      "campaign-execution"
+    ]
   }
 ]
