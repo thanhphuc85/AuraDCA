@@ -8615,5 +8615,35 @@
       "concentration",
       "dip-ladder-dormant"
     ]
+  },
+  {
+    "id": "ref-1786540591725",
+    "date": "2026-08-12",
+    "timestamp": "2026-08-12T13:16:31.725Z",
+    "runStatus": "simulated",
+    "insight": "Day 37 campaign continues flawlessly with user_schedule executing micro-buys ($0.000041-$1.625 USDC range) while dip ladder remains appropriately dormant in ultra-low volatility regime (0.06-0.17% volatility, sub-1% range in $63.2k-$65.3k for 37 days straight).",
+    "patterns": [
+      "Consistently bound by user_schedule across all 8 recent runs with zero guardrail conflicts",
+      "Dip ladder activeTier: null for entire 37-day campaign—no false triggers despite 5%+ threshold design",
+      "Ultra-low volatility regime persisting (0.06-0.17% intraday) with BTC ranging $63.2k-$65.3k",
+      "Ranging market regime at 72% confidence with near-zero momentum (-1.37% to +0.99%)",
+      "Composite risk stable at 25-26/100 with zero error streaks throughout campaign",
+      "Concentration risk elevated at 70-71% portfolio deployed but stable",
+      "Fear & Greed index locked at 27 (fear) despite price stability"
+    ],
+    "strategyAdjustment": "Continue current strategy with zero changes—user_schedule pacing is working perfectly for the 37-day campaign objective, and dip ladder design (5%+ volatility threshold) is correctly avoiding false triggers in this sub-1% volatility environment. If volatility regime shifts above 3-5% with genuine drawdowns exceeding 5%, dip ladder will organically activate. No action needed unless market regime breaks out of $63.2k-$65.3k range with conviction.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "1110.504368",
+    "dayNumber": 37,
+    "walletBalance": "453.345585374830376873",
+    "tags": [
+      "pacing",
+      "user-schedule",
+      "ranging-market",
+      "low-volatility",
+      "dip-ladder-dormant",
+      "campaign-progress",
+      "risk-stable"
+    ]
   }
 ]
