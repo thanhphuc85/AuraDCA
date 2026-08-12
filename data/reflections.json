@@ -8976,5 +8976,35 @@
       "user-schedule",
       "low-volatility"
     ]
+  },
+  {
+    "id": "ref-1786564004957",
+    "date": "2026-08-12",
+    "timestamp": "2026-08-12T19:46:44.957Z",
+    "runStatus": "simulated",
+    "insight": "Day 37 shows flawless user_schedule execution in a persistent ultra-low volatility regime (0.04-0.11% volatility, $63.2k-$65.3k range). Dip ladder correctly dormant throughout 37-day campaign—no false triggers in sub-1% volatility environment it was designed to filter out.",
+    "patterns": [
+      "Consistently bound by user_schedule with zero clamping across all 8 recent runs",
+      "Ultra-low volatility regime persisting 37 days: 0.04-0.11% daily volatility, tight $63.2k-$65.3k consolidation",
+      "Dip ladder appropriately dormant (activeTier: null) throughout entire campaign—designed for 5%+ volatility events that haven't occurred",
+      "Ranging market regime stable at 72-75% confidence with negligible momentum (-0.12% to -1.25%)",
+      "Concentration risk elevated but stable at 71-72% portfolio deployed, $1,120 cumulative spent",
+      "Zero error streaks maintained, composite risk consistently low at 25-26/100",
+      "Bearish sentiment persistent (Fear & Greed 27) but not translating to meaningful price movement"
+    ],
+    "strategyAdjustment": "Continue current approach—user schedule is executing perfectly and dip ladder design is validated by zero false triggers in 37 days of sub-1% volatility. No adjustment needed until market regime shifts: if volatility expands to 5%+ drawdowns, dip ladder will activate as designed; if ranging persists, maintain steady user schedule accumulation. Monitor for regime change signals: sustained momentum beyond ±2%, volatility above 1%, or breakout from $63.2k-$65.3k range.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "1120.179368",
+    "dayNumber": 37,
+    "walletBalance": "443.560524000449140321",
+    "tags": [
+      "pacing",
+      "ranging-market",
+      "dip-ladder-dormant",
+      "low-volatility",
+      "concentration",
+      "user-schedule",
+      "regime-stability"
+    ]
   }
 ]
