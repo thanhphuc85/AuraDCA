@@ -8353,5 +8353,35 @@
       "concentration",
       "campaign-day-37"
     ]
+  },
+  {
+    "id": "ref-1786518998997",
+    "date": "2026-08-12",
+    "timestamp": "2026-08-12T07:16:38.997Z",
+    "runStatus": "simulated",
+    "insight": "Day 37 campaign execution remains flawless with zero clamping issues. The dip ladder has been correctly dormant for 37 consecutive days in a sub-1% volatility regime where BTC consolidates in a tight $63.2k-$65.3k range—no false signals, no inappropriate triggers.",
+    "patterns": [
+      "user_schedule bound for 37 consecutive days with 100% execution success",
+      "dip ladder inactive (activeTier: null) throughout entire 37-day campaign—designed threshold of 5%+ volatility never reached",
+      "ultra-low volatility regime persisting: 0.05%-0.85% daily volatility, far below dip trigger thresholds",
+      "ranging market regime at 72-75% confidence with no directional edge",
+      "concentration stable at 70% portfolio deployed, $1,101 cumulative spent",
+      "composite risk consistently low at 18-23/100 driven by minimal volatility and zero error streaks",
+      "Fear & Greed index stable at 27 (fear territory) with BTC oscillating ±0.5% daily around $63,700"
+    ],
+    "strategyAdjustment": "No adjustments needed. The dual-mode strategy (scheduled DCA + volatility-triggered dip ladder) is performing exactly as designed: user schedule executes reliably in low-volatility conditions while the dip ladder remains appropriately dormant, waiting for genuine 5%+ drawdown events. Continue current approach—this 37-day pattern validates that guardrails are correctly calibrated to avoid false positives in tight ranges while preserving capital for true volatility events.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "1101.139368",
+    "dayNumber": 37,
+    "walletBalance": "462.840937977341443068",
+    "tags": [
+      "pacing",
+      "low-volatility",
+      "ranging-market",
+      "dip-ladder-dormant",
+      "user-schedule-success",
+      "no-clamping",
+      "concentration-stable"
+    ]
   }
 ]
