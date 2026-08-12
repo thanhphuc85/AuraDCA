@@ -8324,5 +8324,34 @@
       "campaign-tracking",
       "regime-stability"
     ]
+  },
+  {
+    "id": "ref-1786518198852",
+    "date": "2026-08-12",
+    "timestamp": "2026-08-12T07:03:18.852Z",
+    "runStatus": "simulated",
+    "insight": "Day 37 shows flawless execution with user_schedule consistently binding at 100% (8/8 runs, $1.425-$1.65 range). Dip ladder remains correctly dormant throughout 37-day campaign as BTC consolidates in tight $63.2k-$65.3k range with sub-1% volatility—no false triggers despite 2.55% drawdown.",
+    "patterns": [
+      "User schedule binding 100% across all 8 recent runs - no clamping issues",
+      "Dip ladder dormant for entire 37-day campaign - designed 5%+ volatility threshold never breached",
+      "Market regime stable: ranging 72-75% confidence, 0.05-0.80% volatility, 37-day consolidation pattern",
+      "Composite risk consistently low (18-23/100) with zero error streaks",
+      "Concentration elevated at 70% portfolio deployed - $1,101.14 cumulative spent",
+      "BTC price range-bound $63,618-$63,802 with 2.27-2.55% drawdown from local high"
+    ],
+    "strategyAdjustment": "Maintain current approach - user schedule is executing perfectly and dip ladder calibration is appropriate (no false triggers in 37 days of sub-2% volatility). Monitor for volatility expansion beyond current 0.05-0.80% range that could activate dip tiers. If 70% concentration becomes concerning as campaign progresses, consider modest reduction in user schedule amounts, but current risk score (19/100) supports continuation.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "1101.139368",
+    "dayNumber": 37,
+    "walletBalance": "464.280652664261443068",
+    "tags": [
+      "pacing",
+      "user-schedule",
+      "dip-ladder-dormant",
+      "ranging-market",
+      "low-volatility",
+      "concentration",
+      "campaign-day-37"
+    ]
   }
 ]
