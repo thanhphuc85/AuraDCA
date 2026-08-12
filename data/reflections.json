@@ -8860,5 +8860,34 @@
       "concentration",
       "campaign-tracking"
     ]
+  },
+  {
+    "id": "ref-1786561332765",
+    "date": "2026-08-12",
+    "timestamp": "2026-08-12T19:02:12.766Z",
+    "runStatus": "simulated",
+    "insight": "Day 37 shows flawless execution with user_schedule consistently honored across all 8 runs (100% success rate). The dip ladder remains appropriately dormant in a 37-day ultra-low volatility regime (0.04-0.30% volatility, 2-3% drawdowns) where BTC trades in tight $63.2k-$65.3k range—no volatility events materialized that warrant tier activation.",
+    "patterns": [
+      "All 8 runs bound by user_schedule with zero guardrail interference",
+      "Dip ladder inactive for entire 37-day campaign (activeTier: null) with drawdowns staying below 5% threshold",
+      "Ranging market regime (71-75% confidence) with sub-1% volatility persisting across all observations",
+      "Concentration risk elevated at 71-72% portfolio deployed, consistent throughout recent history",
+      "Zero error streaks maintained with low composite risk (25-26/100)",
+      "Fear & Greed index stable at 27 (bearish) with analyst bearish bias across all runs"
+    ],
+    "strategyAdjustment": "Continue current approach—user schedule is executing perfectly and dip ladder design is validated (dormant by design in low-vol regimes, ready for genuine 5%+ moves). Monitor for regime change: if volatility expands beyond 2% or drawdowns exceed 5%, dip ladder should activate. With 72% deployed and $445 USDC remaining, maintain discipline and reserve capacity for potential breakout from 37-day consolidation range.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "1120.179368",
+    "dayNumber": 37,
+    "walletBalance": "445.232772386394517921",
+    "tags": [
+      "pacing",
+      "user-schedule",
+      "ranging-market",
+      "low-volatility",
+      "concentration-risk",
+      "dip-ladder-dormant",
+      "campaign-day-37"
+    ]
   }
 ]
