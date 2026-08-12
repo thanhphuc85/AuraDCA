@@ -8889,5 +8889,35 @@
       "dip-ladder-dormant",
       "campaign-day-37"
     ]
+  },
+  {
+    "id": "ref-1786562195950",
+    "date": "2026-08-12",
+    "timestamp": "2026-08-12T19:16:35.950Z",
+    "runStatus": "simulated",
+    "insight": "Day 37: User schedule continues flawless execution in extreme low-volatility regime. Dip ladder correctly dormant for entire 37-day campaign—no false triggers in 0.06-0.30% volatility environment where 5%+ drawdown tiers are appropriately designed.",
+    "patterns": [
+      "Consistently bound by user_schedule with zero clamping across all 8 recent runs",
+      "Ultra-low volatility regime persists: 0.04-0.30% intraday, far below 5% dip ladder thresholds",
+      "37-day consolidation range $63.2k-$65.3k with max 3% drawdown—ladder design validated",
+      "Ranging market regime (71-75% confidence) with near-zero momentum (-1.92% to +0.02%)",
+      "Concentration stable at 71-72% deployed, composite risk consistently low (25-26/100)",
+      "Zero error streaks throughout campaign—technical execution perfect",
+      "Simulated runs appearing (latest 2 runs) due to Arc cirBTC route offline, preserving capital"
+    ],
+    "strategyAdjustment": "Maintain current dual-strategy: (1) Continue user schedule unchanged—it's performing exactly as designed with $1,120.18 deployed over 37 days; (2) Keep dip ladder dormant until genuine 5%+ volatility events materialize; (3) Monitor concentration approaching 72%—if campaign extends beyond 45 days or wallet drops below $400 USDC, consider tapering user schedule amounts by 10-15% to preserve runway; (4) No changes to dip thresholds—sub-1% volatility regime confirms 5% minimum tier is correctly calibrated to avoid noise.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "1120.179368",
+    "dayNumber": 37,
+    "walletBalance": "443.564187282780517921",
+    "tags": [
+      "pacing",
+      "low-volatility",
+      "ranging-market",
+      "concentration",
+      "schedule-execution",
+      "dip-ladder-dormant",
+      "risk-management"
+    ]
   }
 ]
