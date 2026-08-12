@@ -8830,5 +8830,35 @@
       "low-volatility",
       "regime-persistence"
     ]
+  },
+  {
+    "id": "ref-1786557787505",
+    "date": "2026-08-12",
+    "timestamp": "2026-08-12T18:03:07.505Z",
+    "runStatus": "success",
+    "insight": "User schedule executing perfectly on day 37 with 100% consistency—zero clamping by daily cap or risk guardrails across all 8 recent runs. Dip ladder remains appropriately dormant in ultra-low volatility regime (0.04-0.30% volatility, 2-3% drawdowns) that has persisted throughout entire 37-day campaign.",
+    "patterns": [
+      "Consistently bound by user_schedule only—no daily cap or risk clamping across 37 days",
+      "Ultra-low volatility regime stable: 0.04-1.01% intraday, 2-3% drawdowns from peak",
+      "Dip ladder activeTier: null for entire campaign—correctly designed for 5%+ events that haven't occurred",
+      "Ranging market regime 71-73% confidence with negative momentum (-0.50% to -1.92%)",
+      "Concentration steady at 71% deployed, composite risk low at 26/100",
+      "Smart sizing multiplier 1.15x applied (Fear & Greed 27, 2.85% drawdown)",
+      "Zero error streaks maintained throughout campaign"
+    ],
+    "strategyAdjustment": "No adjustments needed—strategy is performing exactly as designed. User schedule pacing is flawless with 1118.53 USDC deployed over 37 days. Dip ladder threshold calibration is appropriate: designed for genuine volatility events (5%+ moves) that this sub-1% regime doesn't trigger. Continue monitoring for regime change—if volatility breaks above 2-3% intraday or drawdowns exceed 5%, dip ladder will activate as intended. Current 71% concentration with 446.84 USDC remaining provides adequate dry powder for final campaign days or potential volatility spike.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "1118.529368",
+    "dayNumber": 37,
+    "walletBalance": "446.835137047253598737",
+    "tags": [
+      "pacing",
+      "ranging-market",
+      "user-schedule",
+      "volatility-regime",
+      "dip-ladder-dormant",
+      "concentration",
+      "campaign-tracking"
+    ]
   }
 ]
