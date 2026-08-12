@@ -8383,5 +8383,33 @@
       "no-clamping",
       "concentration-stable"
     ]
+  },
+  {
+    "id": "ref-1786519898117",
+    "date": "2026-08-12",
+    "timestamp": "2026-08-12T07:31:38.117Z",
+    "runStatus": "simulated",
+    "insight": "Day 37 shows flawless user schedule execution in an exceptionally stable market regime—8/8 runs executed at requested amounts with zero clamping, zero errors, and the dip ladder correctly dormant throughout a 37-day sub-1% volatility consolidation ($63.2k-$65.3k range).",
+    "patterns": [
+      "Consistently bound by user_schedule with 100% execution rate across all 8 runs",
+      "Dip ladder appropriately inactive (activeTier: null) for entire 37-day campaign—no false signals in 0.05-0.85% volatility regime",
+      "Market regime stable: ranging with 72-75% confidence, minimal drawdowns (2.27-2.55%), Fear & Greed locked at 27",
+      "Concentration risk elevated at 70% portfolio deployed with $462.84 USDC remaining and $1101.14 cumulative spend",
+      "Mix of real ($1.425-1.650 USDC) and simulated ($0.000042-0.001897 USDC) runs indicating testing/validation alongside live execution"
+    ],
+    "strategyAdjustment": "Maintain current user schedule discipline—no adjustments needed. The dip ladder design (5%+ volatility threshold) is correctly calibrated for this ranging market and should remain dormant until genuine breakout/breakdown volatility materializes. Monitor concentration risk approaching 70% deployment; consider whether to preserve remaining $462 USDC for potential breakout above $65.3k resistance or breakdown below $63.2k support, as 37-day consolidations often precede significant moves.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "1101.139368",
+    "dayNumber": 37,
+    "walletBalance": "462.839951272573443068",
+    "tags": [
+      "pacing",
+      "consolidation",
+      "dip-ladder-dormant",
+      "user-schedule-flawless",
+      "ranging-market",
+      "concentration-risk",
+      "low-volatility"
+    ]
   }
 ]
