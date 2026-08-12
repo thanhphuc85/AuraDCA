@@ -8525,5 +8525,36 @@
       "low-volatility",
       "campaign-execution"
     ]
+  },
+  {
+    "id": "ref-1786532527755",
+    "date": "2026-08-12",
+    "timestamp": "2026-08-12T11:02:07.755Z",
+    "runStatus": "success",
+    "insight": "User schedule executing flawlessly on day 37 with zero clamping across all runs. Market remains in ultra-low volatility ranging regime (0.06-0.97% volatility, $63.2k-$65.3k range) where dip ladder correctly stays dormant—designed for 5%+ volatility events that haven't materialized.",
+    "patterns": [
+      "Consistently bound by user_schedule with no clamping across 8 consecutive runs",
+      "Ultra-low volatility regime persisting (0.06-0.18% range) for entire 37-day campaign",
+      "Dip ladder appropriately dormant (activeTier: null) throughout—no false triggers",
+      "Concentration stable at 70-71% portfolio deployed, tracking with cumulative spend of 1107.44 USDC",
+      "Composite risk consistently low (19-26/100) with zero error streaks",
+      "Ranging market regime (71-72% confidence) offering no directional edge",
+      "Fear & Greed index stable at 27 (bearish) with BTC prices oscillating in tight $63.6k-$64.1k intraday range"
+    ],
+    "strategyAdjustment": "Maintain current approach—no changes needed. User schedule is optimal for this regime: executing consistently without clamping, dip ladder correctly inactive (preventing overallocation in non-volatile conditions), and smart sizing applying modest 1.15x multipliers when appropriate. Continue monitoring for regime shift to trending/volatile conditions where dip ladder would activate, but current steady-state execution is exactly as designed.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "1107.439368",
+    "dayNumber": 37,
+    "walletBalance": "458.048261894737803007",
+    "tags": [
+      "pacing",
+      "user-schedule",
+      "ranging-market",
+      "low-volatility",
+      "dip-ladder-dormant",
+      "no-clamping",
+      "concentration-tracking",
+      "regime-appropriate"
+    ]
   }
 ]
