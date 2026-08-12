@@ -8799,5 +8799,36 @@
       "concentration",
       "regime-stability"
     ]
+  },
+  {
+    "id": "ref-1786554135838",
+    "date": "2026-08-12",
+    "timestamp": "2026-08-12T17:02:15.838Z",
+    "runStatus": "success",
+    "insight": "Day 37: User schedule continues flawless execution in persistent ranging regime. Dip ladder remains appropriately dormant with 0 activations across entire 37-day campaign as BTC consolidates in tight $63.2k-$65.3k range with sub-1% volatility—ladder design validated for genuine 5%+ drawdown events.",
+    "patterns": [
+      "100% user_schedule bound across all 8 recent runs with zero clamping by daily caps or risk limits",
+      "37-day ranging market regime (71-72% confidence, 0.07-1.01% volatility, -1.92% to +0.99% momentum) with no breakout",
+      "BTC price range locked in $63.2k-$65.3k zone with drawdowns only 1.87-2.99% from local highs—far below dip ladder thresholds",
+      "Fear & Greed index stable at 27 (bearish) across all runs showing consistent sentiment",
+      "Concentration risk elevated at 71% portfolio deployed but stable—no acceleration",
+      "Zero error streaks maintained with composite risk consistently low at 26/100",
+      "Dip ladder activeTier: null in 100% of runs—no tier 1 (5%) or deeper dips materialized",
+      "High on-chain activity sustained ($21.9-22.87B volume, 32.7k-36.5k USDC transfers) but price action muted"
+    ],
+    "strategyAdjustment": "Continue current approach with zero modifications. User schedule is delivering consistent execution (1116.95 USDC deployed over 37 days = ~30.2 USDC/day average). Dip ladder design is correctly calibrated—sub-3% drawdowns in ranging markets should not trigger opportunistic buys; ladder exists for genuine volatility events (5%+ dips) that warrant acceleration. Monitor for regime shift signals: breakout above $65.3k or breakdown below $63.2k, volatility spike above 2%, or Fear & Greed departure from 27 range would indicate potential ladder activation zone.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "1116.954368",
+    "dayNumber": 37,
+    "walletBalance": "448.392796308011647897",
+    "tags": [
+      "pacing",
+      "ranging-market",
+      "dip-ladder-dormant",
+      "user-schedule-execution",
+      "concentration-stable",
+      "low-volatility",
+      "regime-persistence"
+    ]
   }
 ]
