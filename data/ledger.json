@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "lastScannedBlock": 56644415,
+  "lastScannedBlock": 56645921,
   "users": {
     "0x615a9b4d30e81cc6658d6b94e9b9609a34dc97b5": {
       "address": "0x615a9b4d30e81cc6658d6b94e9b9609a34dc97b5",
@@ -477,6 +477,20 @@
       "dcaSpentWeekUsdc": "0.003287",
       "dcaSpentWeekStart": "2026-08-10",
       "lastChargedAt": "2026-08-12T13:45:33.736Z"
+    },
+    "0xaaca4f5a260393b46acf227e5b56c01495385bbe": {
+      "address": "0xaaca4f5a260393b46acf227e5b56c01495385bbe",
+      "usdcBalance": "0.041443",
+      "cirBtcBalance": "0",
+      "totalDeposited": "0.041443",
+      "totalSwapped": "0",
+      "totalWithdrawnCirBtc": "0",
+      "totalWithdrawnUsdc": "0",
+      "firstSeen": "2026-08-12T17:13:40.222Z",
+      "lastActivity": "2026-08-12T17:13:40.222Z",
+      "dcaRatePerDay": "0.001381",
+      "dcaRateIsCustom": false,
+      "dcaPaused": false
     }
   },
   "deposits": [
@@ -1111,6 +1125,14 @@
       "amount": "20.000000",
       "blockNumber": 56523743,
       "recordedAt": "2026-08-12T00:00:45.096Z"
+    },
+    {
+      "id": "0xa15dadea1612a77d00a2d2fa990af9503da4858faac2fad66e8b31be5823188d-17",
+      "txHash": "0xa15dadea1612a77d00a2d2fa990af9503da4858faac2fad66e8b31be5823188d",
+      "from": "0xaaca4f5a260393b46acf227e5b56c01495385bbe",
+      "amount": "0.041443",
+      "blockNumber": 56644523,
+      "recordedAt": "2026-08-12T17:13:40.222Z"
     }
   ],
   "distributions": [
