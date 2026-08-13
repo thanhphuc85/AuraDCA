@@ -10029,5 +10029,35 @@
       "market-timing",
       "ranging-regime"
     ]
+  },
+  {
+    "id": "ref-1786623414871",
+    "date": "2026-08-13",
+    "timestamp": "2026-08-13T12:16:54.871Z",
+    "runStatus": "error_swap_failed",
+    "insight": "EURC routing has been completely broken for 20+ consecutive runs across 1 full calendar day with a 0% success rate — this is a confirmed, unresolved infrastructure outage that no strategy adjustment can fix; operator intervention on the routing layer is the only path forward.",
+    "patterns": [
+      "20 consecutive error_swap_failed runs with 0% success rate, all on 2026-08-13",
+      "Error count has incremented monotonically from run 1 (outageConsecutiveRuns=1) to run 20 with zero recovery events",
+      "All runs are clamped by user_schedule, not by daily cap or risk guardrails — the DCA sizing logic is functioning correctly",
+      "Market conditions are consistently benign: Fear & Greed stable at 29, BTC ranging $63,364–$63,589 (38-day consolidation $63.2k–$65.3k), drawdown 2.6–2.9%, volatility 0.08–0.19% — no dip tiers triggered",
+      "Composite risk score locked at 53/100 entirely due to the infrastructure outage component, not market or strategy factors",
+      "Past reflections have correctly diagnosed and escalated this issue since run 1 of the outage — the diagnosis is accurate and stable",
+      "No burst catch-up has been proposed across any of the 20 failed runs — pacing discipline is intact",
+      "Cumulative spend is 1138.68 USDC on day 38; with ~$484.73 USDC balance remaining, the campaign still has ample runway once routing recovers"
+    ],
+    "strategyAdjustment": "Do not adjust DCA strategy parameters — the outage is infrastructure-only. The agent should: (1) Continue logging each failed run for operator visibility but stop escalating urgency in reasoning text since the diagnosis has been confirmed for 20 runs and is not changing. (2) On routing recovery, resume at the normal scheduled amount with NO burst catch-up — the 20 missed runs represent approximately $31.50 USDC in unmade purchases, which is within acceptable slippage for a 38-day campaign. (3) If the outage extends beyond 48 hours (>~40 consecutive runs), consider whether a fallback token (e.g., USDC-to-BTC direct route) should be attempted to test whether the issue is EURC-specific routing or the broader swap infrastructure. (4) Once recovered, monitor the first 3 successful runs closely to confirm routing stability before treating the outage as fully resolved.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "1138.679368",
+    "dayNumber": 38,
+    "walletBalance": "484.728990447236122302",
+    "tags": [
+      "error-recovery",
+      "infrastructure-outage",
+      "eurc-routing",
+      "pacing",
+      "no-burst-catchup",
+      "operator-intervention-required"
+    ]
   }
 ]
