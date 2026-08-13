@@ -10147,5 +10147,34 @@
       "pacing",
       "infrastructure"
     ]
+  },
+  {
+    "id": "ref-1786627962947",
+    "date": "2026-08-13",
+    "timestamp": "2026-08-13T13:32:42.947Z",
+    "runStatus": "simulated",
+    "insight": "The latest run is another simulated fill (Arc cirBTC route offline) — this is now the 3rd consecutive simulated run following the resolved EURC outage, meaning the cirBTC route has become the new recurring execution blocker despite error streak showing 0. The system is paper-filling rather than deploying real capital.",
+    "patterns": [
+      "Arc cirBTC route offline producing simulated fills: 3 consecutive simulated runs (0.000055, 0.000057, 0.000057 USDC) — effectively zero real capital deployed in recent history",
+      "EURC routing outage (21 consecutive errors) self-recovered, but cirBTC route is now independently offline — a second distinct routing layer is failing",
+      "Dip ladder has been untriggered for the entire 38-day campaign: all 4 tiers dormant, nearest threshold at 5.0% with current drawdown only 2.71%",
+      "Market locked in tight $63.2k–$65.3k consolidation range for 38 days at 74% confidence — regime has been stable but directionally uninformative throughout",
+      "Fear & Greed persistently at 29 (fear zone) for multiple consecutive days with no sign of sentiment shift",
+      "Requested amounts are extremely small in recent simulated runs ($0.000055–$0.000057 USDC) — orders of magnitude smaller than the $1.425–$1.650 USDC real fills earlier today, suggesting a sizing anomaly or misconfiguration post-outage recovery"
+    ],
+    "strategyAdjustment": "1. Investigate Arc cirBTC route status immediately — 3 consecutive simulated fills means real capital has not been deployed recently despite outageConsecutiveRuns=0. The error streak counter may only track EURC errors, masking the cirBTC outage as a separate failure mode. 2. Flag the extreme sizing discrepancy: earlier runs requested $1.425–$1.650 USDC, but the last 3 simulated runs requested $0.000055–$0.001187 USDC. This 1000x difference needs investigation — is the schedule misconfigured, or is a fallback path producing near-zero amounts? 3. Do not treat outageConsecutiveRuns=0 as a clean bill of health — route availability must be verified per token (EURC and cirBTC are independent). Add per-route health tracking. 4. If cirBTC route remains offline, consider pausing simulation mode and queuing missed capital for deployment on route restoration (while still avoiding burst catch-up beyond 1 normal interval).",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "1141.729368",
+    "dayNumber": 38,
+    "walletBalance": "481.633330569020008462",
+    "tags": [
+      "error-recovery",
+      "simulation",
+      "routing-outage",
+      "sizing-anomaly",
+      "market-timing",
+      "pacing",
+      "cirBTC"
+    ]
   }
 ]

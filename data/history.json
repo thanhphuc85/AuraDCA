@@ -20136,5 +20136,31 @@
       "transferId": "3218fc13-76cf-4e7b-b2c6-b35c7f3062ff",
       "settleStatus": "received"
     }
+  },
+  {
+    "date": "2026-08-13",
+    "timestamp": "2026-08-13T13:30:38.182Z",
+    "status": "simulated",
+    "simulated": true,
+    "requestedAmountUsdc": "0.000057",
+    "clampedAmountUsdc": "0.000057",
+    "boundBy": "user_schedule",
+    "tokenOut": "cirBTC",
+    "reasoning": "Market brief shows sustained bearish sentiment (Fear & Greed 29, BTC -0.59% at $63,520) with high on-chain stablecoin activity (33.7k USDC transfers, $14.1M volume) signaling continued defensive positioning within the persistent 38-day $63.2k–$65.3k consolidation range. Real cirBTC price is $63,520 with only a 2.71% drawdown from its high and ultra-low 0.13% volatility — all four dip ladder tiers remain untriggered (activeTier: null, nearest mild threshold at 5.0%), the market regime is ranging at 74% confidence with near-flat momentum (-0.15%), and composite risk is low at 30/100 with the error streak fully cleared (outageConsecutiveRuns=0, outageDurationDays=0). Past reflections confirm the prior EURC routing outage self-recovered, normal cadence has resumed with no burst catch-up warranted, and recent history shows two consecutive simulated fills — the DCA schedule, sizing logic, and dip ladder calibration all remain sound.",
+    "amountOut": "0.00000000",
+    "priceUsd": 63520,
+    "walletUsdcBalance": "481.633330569020008462",
+    "message": "[SIMULATED] Arc cirBTC route offline — paper-filled 0.00000000 cirBTC for 0.000057 USDC at $63520.00/cirBTC (no on-chain swap; real funds untouched)",
+    "x402": {
+      "resource": "/api/x402-brief",
+      "amountUsdcAtomic": "1000",
+      "payer": "0x61e7Ae336F7Eb7F8517dE4F19963D88dFD9161eC",
+      "payTo": "0xcAf34080F47f576F923962AD04dD7ddd86d8d85f",
+      "settled": true,
+      "mode": "settled",
+      "via": "http",
+      "transferId": "9b986514-dcc7-4a05-9074-c97fd409a705",
+      "settleStatus": "received"
+    }
   }
 ]
