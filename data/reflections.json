@@ -9562,5 +9562,34 @@
       "ranging-market",
       "pacing"
     ]
+  },
+  {
+    "id": "ref-1786610815086",
+    "date": "2026-08-13",
+    "timestamp": "2026-08-13T08:46:55.086Z",
+    "runStatus": "error_swap_failed",
+    "insight": "5 consecutive EURC routing failures (20% success rate) represent an infrastructure outage, not a strategy failure. The DCA schedule is attempting to execute correctly at ~$1.50-1.72 USDC per run, but swap routing is broken for EURC token.",
+    "patterns": [
+      "consistently bound by user_schedule with no clamping issues",
+      "5 consecutive error_swap_failed status with identical 'no_route' error for EURC",
+      "success rate degraded from 100% to 20% in single day due to routing outage",
+      "composite risk escalating (20→50/100) purely from error streak, not market conditions",
+      "dip ladder remains dormant (activeTier: null) throughout 38-day campaign in 0.06-0.19% volatility regime",
+      "market regime stable: 38 days of range-bound consolidation ($63.2k-$65.3k) with 74% ranging confidence",
+      "requested amounts increasing slightly ($1.45→$1.72) following normal schedule progression"
+    ],
+    "strategyAdjustment": "Switch tokenOut from EURC to an alternative stablecoin (USDC→BTC direct or USDC→USDT→BTC) to bypass the EURC routing infrastructure failure. If EURC is a hard requirement, implement exponential backoff retry logic (wait 1hr, 4hr, 12hr) rather than attempting every run during the outage. The schedule pacing and sizing are working correctly—only execution layer is failing.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "1138.679368",
+    "dayNumber": 38,
+    "walletBalance": "484.750378692138002698",
+    "tags": [
+      "error-recovery",
+      "infrastructure-failure",
+      "routing-issue",
+      "execution-layer",
+      "token-routing",
+      "eurc-outage"
+    ]
   }
 ]

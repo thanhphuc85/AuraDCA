@@ -19477,5 +19477,35 @@
       "transferId": "9031ffed-fc8f-4898-9b96-eef69ba5c1cf",
       "settleStatus": "received"
     }
+  },
+  {
+    "date": "2026-08-13",
+    "timestamp": "2026-08-13T08:45:40.797Z",
+    "status": "error_swap_failed",
+    "requestedAmountUsdc": "1.720880",
+    "clampedAmountUsdc": "1.720880",
+    "boundBy": "user_schedule",
+    "tokenOut": "EURC",
+    "reasoning": "Market brief unavailable but real cirBTC price at $63,738 shows minimal 2.37% drawdown with ultra-low 0.06% volatility—no dip tier triggered on ladder as the 38-day consolidation in $63.2k-$65.3k range continues. Market regime remains ranging (74% confidence, 0.19% volatility, negative momentum) offering no directional edge. Composite risk moderate (50/100) elevated by 4 consecutive EURC routing infrastructure errors (1-day outage per outageDurationDays field) and degraded 20% success rate, though underlying market volatility remains at historic lows. Past reflections confirm this is a temporary swap execution issue, not a strategy problem—user schedule has executed flawlessly throughout the 38-day campaign when routing succeeds, with dip ladder appropriately dormant in this sub-1% volatility regime.",
+    "walletUsdcBalance": "484.750378692138002698",
+    "message": "Swap failed [EURC/no_route]: Swap failed [no_route]: Stablecoin Service createSwap failed: Route or resource not found. Details: No route available",
+    "smartSizing": {
+      "fearGreed": 29,
+      "drawdownPct": 0.0021760571097578156,
+      "multiplier": 1.441760571097578,
+      "source": "formula",
+      "proposedMultiplier": null
+    },
+    "x402": {
+      "resource": "/api/x402-brief",
+      "amountUsdcAtomic": "1000",
+      "payer": "0x61e7Ae336F7Eb7F8517dE4F19963D88dFD9161eC",
+      "payTo": "0xcAf34080F47f576F923962AD04dD7ddd86d8d85f",
+      "settled": true,
+      "mode": "settled",
+      "via": "http",
+      "transferId": "99cc9d58-1c6c-4518-b035-677bd5176d7f",
+      "settleStatus": "received"
+    }
   }
 ]
