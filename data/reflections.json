@@ -9970,5 +9970,32 @@
       "pacing",
       "budget"
     ]
+  },
+  {
+    "id": "ref-1786621617645",
+    "date": "2026-08-13",
+    "timestamp": "2026-08-13T11:46:57.645Z",
+    "runStatus": "error_swap_failed",
+    "insight": "All 8 recent runs (and counting — now 18+ consecutive failures) are pure EURC routing infrastructure outages with 0% success rate; the DCA strategy, sizing logic, and market conditions are all sound and irrelevant until the route is restored.",
+    "patterns": [
+      "EURC routing outage persisting across 18+ consecutive runs on 2026-08-13 with 0% success rate — confirmed infrastructure blocker, not a strategy issue",
+      "Market conditions remain stable and benign throughout the outage: Fear & Greed stuck at 29, BTC ranging in $63.2k–$65.3k for 38 days, drawdown only ~2.9%, volatility ultra-low at 0.13–0.15%",
+      "No dip ladder tiers triggered across all 8 runs — activeTier consistently null, nearest threshold (mild) at 5.0% remains far from current 2.9% drawdown",
+      "Smart sizing multiplier held at 1.3x due to Fear & Greed 29, but multiplier is irrelevant while routing is broken",
+      "Past reflections have unanimously escalated this — the agent is correctly diagnosing the issue each run but automated retries continue firing regardless, accumulating zero executed volume",
+      "Requested amounts vary between $1.30–$1.75 per run due to schedule logic, but none execute — ~$28+ USDC in scheduled buys missed today across 18 failed runs"
+    ],
+    "strategyAdjustment": "This is run 18 of a confirmed infrastructure outage — continued automated retries are generating noise without value. The agent should: (1) immediately surface a hard stop or operator alert after 5 consecutive identical routing failures rather than continuing indefinitely; (2) avoid any burst catch-up when routing recovers — resume at normal cadence; (3) consider logging total missed USDC volume during outage (est. ~$28+ today) so the operator can decide whether to compensate manually; (4) once routing is restored, verify with a single low-value test swap before resuming full schedule amounts.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "1138.679368",
+    "dayNumber": 38,
+    "walletBalance": "484.732052552192637502",
+    "tags": [
+      "error-recovery",
+      "infrastructure-outage",
+      "eurc-routing",
+      "pacing",
+      "operator-escalation"
+    ]
   }
 ]
