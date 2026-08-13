@@ -9646,5 +9646,33 @@
       "swap-execution",
       "zero-success-rate"
     ]
+  },
+  {
+    "id": "ref-1786613506769",
+    "date": "2026-08-13",
+    "timestamp": "2026-08-13T09:31:46.769Z",
+    "runStatus": "error_swap_failed",
+    "insight": "Complete EURC routing infrastructure failure: 7+ consecutive swap errors over 1 calendar day (Aug 13) with 0% success rate, while market conditions remain stable with BTC consolidating at $63,613 (2.56% drawdown, 0.13% volatility). This is purely a technical execution issue, not a strategy failure.",
+    "patterns": [
+      "EURC token routing has failed for 7+ consecutive runs spanning 1 full day",
+      "All runs bound by user_schedule ($1.45-$1.72 range) with no clamping by daily caps",
+      "Market remains in 38-day ranging regime: $63.2k-$65.3k consolidation with sub-1% volatility",
+      "Dip ladder correctly dormant throughout entire outage (activeTier: null) - no false triggers during 2-3% drawdowns",
+      "Composite risk elevated to 53/100 solely due to error streak, not market factors (volatility at historic lows)",
+      "User schedule executing as designed; requested amounts are appropriate for regime"
+    ],
+    "strategyAdjustment": "Immediate action required: Escalate EURC routing failure to infrastructure team - this is a sustained 1-day outage blocking all swaps despite healthy market conditions and correct strategy logic. If EURC remains unavailable, consider emergency fallback to alternative stablecoin routes (USDT, DAI) to maintain DCA continuity, as the 38-day campaign strategy itself is sound. Once routing is restored, resume normal user_schedule execution - no changes needed to sizing, dip ladder thresholds, or pacing logic.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "1138.679368",
+    "dayNumber": 38,
+    "walletBalance": "484.747011734836265642",
+    "tags": [
+      "error-recovery",
+      "infrastructure-failure",
+      "routing-outage",
+      "eurc-unavailable",
+      "execution-blocked",
+      "strategy-intact"
+    ]
   }
 ]
