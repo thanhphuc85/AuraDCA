@@ -10119,5 +10119,33 @@
       "pacing",
       "budget"
     ]
+  },
+  {
+    "id": "ref-1786627008914",
+    "date": "2026-08-13",
+    "timestamp": "2026-08-13T13:16:48.914Z",
+    "runStatus": "simulated",
+    "insight": "The cirBTC route is now offline (paper-filled at $0.00000000 out), mirroring the prior EURC routing outage pattern — this is a second execution-layer infrastructure failure in the same campaign day, not a strategy issue.",
+    "patterns": [
+      "Recurring route outages: EURC routing failed for 20+ consecutive runs earlier today before self-recovering; now cirBTC route is offline — same infrastructure fragility pattern repeating on day 38",
+      "All 8 recent runs are bounded by user_schedule, never by risk guardrails or daily cap — sizing logic is clean and uncontested",
+      "38-day consolidation range $63.2k–$65.3k holds with ultra-low volatility (0.11–0.19%): dip ladder untriggered for entire visible history (activeTier: null, nearest threshold at 5.0%)",
+      "Fear & Greed stuck at 29 (fear) all day with high stablecoin transfer activity (~28k–32k USDC transfers/3h) — defensive market regime with 74% confidence, no directional edge",
+      "Simulated fills produce amountOut=0.00000000 — paper-fills are not accumulating real cirBTC; each simulated run is a missed DCA interval",
+      "BTC drifted from $63,684 → $63,364 → back to $63,684 intraday — range-bound, no breakout signal"
+    ],
+    "strategyAdjustment": "Flag the cirBTC route offline to the operator immediately — two distinct route outages (EURC, then cirBTC) in the same day signals systemic routing infrastructure instability. Do not apply burst catch-up for simulated runs once route recovers; resume normal cadence at the scheduled amount. If simulated runs continue beyond 3 consecutive fills, escalate as a critical blocker in the next reflection. The dip ladder thresholds (nearest at 5.0%) remain appropriate for this low-volatility ranging regime — no adjustment needed. With 1141.73 USDC spent over 38 days (~$30.05/day average), pacing is on track assuming no budget cap.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "1141.729368",
+    "dayNumber": 38,
+    "walletBalance": "481.634418601666408462",
+    "tags": [
+      "error-recovery",
+      "route-outage",
+      "simulated",
+      "ranging",
+      "pacing",
+      "infrastructure"
+    ]
   }
 ]
