@@ -10449,5 +10449,36 @@
       "market-timing",
       "clamping"
     ]
+  },
+  {
+    "id": "ref-1786649526904",
+    "date": "2026-08-13",
+    "timestamp": "2026-08-13T19:32:06.904Z",
+    "runStatus": "simulated",
+    "insight": "Day 38 of a $63.2k–$65.3k consolidation regime: the latest run was a simulated paper-fill (cirBTC route offline) for a trivially small $0.000020 USDC, continuing a pattern where simulated micro-runs coexist with real ~$1.4 USDC scheduled runs on the same calendar day, indicating the simulation tier is firing redundantly alongside live fills rather than replacing them.",
+    "patterns": [
+      "38-day structural dormancy of dip ladder — all four tiers untriggered throughout entire campaign, nearest threshold (mild, 5%) never breached in a $63.2k–$65.3k range with max observed drawdown ~3.44%",
+      "Same-day mixing of simulated micro-runs ($0.000020–$0.001187) and real fills (~$1.40–$1.58 USDC) — simulation tier appears to be firing as a separate scheduling artifact, not as a fallback for the live route",
+      "cirBTC route offline again in this run (paper-filled), but prior runs on the same day succeeded — suggests intermittent route instability within intraday windows",
+      "Fear & Greed Index pinned at 29 across all 8 recent runs — fear regime has been static for multiple days, 0.85x fear multiplier consistently applied as a modest drag but not altering cadence",
+      "Daily utilization consistently 9–12% of $200 cap across all recent runs despite $200 cap headroom — cumulative $1150.40 USDC over 38 days implies ~$30.27/day average, well below cap",
+      "Ranging regime confidence stable at 70–74%, momentum slightly positive (+0.52% to +2.56%) but offering no directional edge — regime classification has been static"
+    ],
+    "strategyAdjustment": "1. Investigate the same-day simulation/live mixing: the $0.000020 simulated runs appear to be a scheduling artifact running a separate (possibly test) schedule alongside the real ~$1.40 USDC schedule — confirm whether these are intentional or a misconfiguration, as they inflate run counts without meaningful capital deployment. 2. Dip ladder recalibration is overdue: with 38 days of zero activation and max drawdown only ~3.44% against a 5.0% mild threshold, consider lowering Tier 1 to 3.0–3.5% to capture the range's natural oscillations — the current ladder is calibrated for a more volatile regime than what exists. 3. Flag cirBTC route intermittent offline status as a recurring risk: two paper-fills visible in recent history suggest the route goes offline intraday; add a retry window of 15–30 minutes before falling back to simulation to avoid missed fills during brief outages. 4. Fear multiplier review: Fear & Greed has been static at 29 for the full observed window — if this is a persistent low-fear-score environment rather than a transient spike, the 0.85x multiplier may be permanently suppressing accumulation; consider a time-decay on the fear adjustment after N consecutive days at the same level.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "1150.404368",
+    "dayNumber": 38,
+    "walletBalance": "472.802859877697978778",
+    "tags": [
+      "clamping",
+      "pacing",
+      "market-timing",
+      "dip-ladder",
+      "simulation-artifact",
+      "route-outage",
+      "fear-multiplier",
+      "ranging-regime",
+      "budget"
+    ]
   }
 ]
