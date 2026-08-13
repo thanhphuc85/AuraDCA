@@ -9449,5 +9449,34 @@
       "ranging-market",
       "budget-on-track"
     ]
+  },
+  {
+    "id": "ref-1786608112513",
+    "date": "2026-08-13",
+    "timestamp": "2026-08-13T08:01:52.513Z",
+    "runStatus": "error_swap_failed",
+    "insight": "Critical infrastructure failure: two consecutive swap errors with EURC routing failures (\"no_route\") despite successful trades moments before. This is a swap execution issue, not a strategy problem—routing infrastructure for EURC appears unstable or unavailable.",
+    "patterns": [
+      "error_swap_failed on EURC tokenOut with 'no_route' error - second occurrence in recent history",
+      "user_schedule execution continues flawlessly when swaps succeed - 38-day campaign shows perfect adherence",
+      "dip ladder remains dormant throughout 38-day campaign in ultra-low volatility regime (0.08-0.19% daily volatility)",
+      "ranging market persists for 38 days with BTC in $63.2k-$65.3k consolidation range",
+      "composite risk at historic lows (18-24/100) driven by sub-1% volatility and zero concentration issues",
+      "70% portfolio deployed with declining concentration risk",
+      "Fear & Greed consistently at 29 (bearish) with minimal price movement"
+    ],
+    "strategyAdjustment": "Implement token routing fallback: if EURC swap fails with 'no_route' error, immediately retry with alternative stablecoin (USDT or DAI) to maintain DCA schedule consistency. Add routing health check before tokenOut selection—if EURC routes unavailable, default to most liquid alternative. This is an execution layer fix, not a strategy change. The 38-day user schedule adherence proves pacing is correct; dip ladder design is sound but appropriately unused in this low-volatility regime. Focus on swap reliability, not allocation logic.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "1138.679368",
+    "dayNumber": 38,
+    "walletBalance": "484.754693749205202698",
+    "tags": [
+      "error-recovery",
+      "infrastructure",
+      "routing-failure",
+      "eurc",
+      "swap-execution",
+      "fallback-strategy"
+    ]
   }
 ]
