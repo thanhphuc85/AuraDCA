@@ -9881,5 +9881,33 @@
       "pacing",
       "budget"
     ]
+  },
+  {
+    "id": "ref-1786619811459",
+    "date": "2026-08-13",
+    "timestamp": "2026-08-13T11:16:51.459Z",
+    "runStatus": "error_swap_failed",
+    "insight": "All 8 recent runs (and now 16 consecutive total) have failed with the same EURC no_route error — this is a confirmed, persistent infrastructure outage, not a transient glitch. Continuing automated retries is wasting x402 payment fees (~$0.001/run) and generating noise with zero execution value.",
+    "patterns": [
+      "16 consecutive error_swap_failed runs, all with identical error: EURC/no_route — 100% failure rate across 1+ calendar day",
+      "Every run is paying x402 fees for market briefs (~$0.001 USDC settled) despite guaranteed swap failure — cumulative wasted fees accumulating",
+      "Smart sizing multiplier locked at 0.6 due to Fear & Greed=29 for the entire error window — no upward pressure on sizing",
+      "BTC price stable in $63,500–$63,730 range throughout outage — no dip events, no ladder triggers, market regime unchanged at 74% ranging confidence",
+      "Reasoning text correctly identifies the blocker each run but automated retries continue regardless — reflection→action feedback loop is broken",
+      "Sizing amounts vary run-to-run ($1.30–$1.65) suggesting schedule variance, but all clamped to user_schedule bound — no daily cap or risk cap clamping"
+    ],
+    "strategyAdjustment": "Halt automated swap execution immediately until EURC routing is confirmed restored via a test swap or provider status check. Do not resume retries on a timer alone — require a positive routing confirmation signal. When resuming, start with a single test swap at minimum size before returning to normal schedule. Do not attempt burst catch-up for the ~16 missed runs; resume at normal cadence. Consider adding a circuit-breaker rule: after 5 consecutive identical routing errors, suppress further swap attempts and skip x402 brief payments until a manual reset or routing health check passes — this would have saved ~11 unnecessary x402 payments in this outage window.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "1138.679368",
+    "dayNumber": 38,
+    "walletBalance": "484.735582409025693502",
+    "tags": [
+      "error-recovery",
+      "infrastructure-outage",
+      "circuit-breaker",
+      "eurc-routing",
+      "wasted-fees",
+      "halted-execution"
+    ]
   }
 ]
