@@ -10480,5 +10480,34 @@
       "ranging-regime",
       "budget"
     ]
+  },
+  {
+    "id": "ref-1786650420373",
+    "date": "2026-08-13",
+    "timestamp": "2026-08-13T19:47:00.373Z",
+    "runStatus": "simulated",
+    "insight": "The sim_daily_ceiling clamped 0.000057 → 0.000054 USDC, a trivially small clip on an already negligible simulated amount — the real story is that day 38 of a $63.2k–$65.3k consolidation regime continues unchanged, with the dip ladder structurally dormant (nearest tier still 2+ percentage points away at 5.0% vs. current 2.95% drawdown) and daily cap utilization stuck at ~12% of the $200 ceiling.",
+    "patterns": [
+      "Dip ladder has been dormant for all 38 days — no tier has ever triggered in this campaign; the 5.0% mild threshold requires a move to ~$60,200 from current $63,362",
+      "Daily cap utilization consistently at 10–12% (~$22–24 USDC/day actual spend vs. $200 cap), suggesting the cap is not a binding real constraint on live runs",
+      "sim_daily_ceiling binding on simulated runs while live runs clear unclamped — the clamping pattern is isolated to simulation mode and irrelevant to actual DCA execution",
+      "Fear & Greed stuck at 29 (Fear) for the entire observed history; 0.85x fear multiplier is a persistent modest drag on sizing",
+      "BTC price oscillating tightly: $63,039–$63,363 range across all 8 runs today, confirming sub-0.5% intraday volatility and a locked ranging regime at 70% confidence",
+      "Cumulative spend of 1150.40 USDC over 38 days = ~$30.27/day average, well under the $200 daily cap — pacing is conservative and deliberate"
+    ],
+    "strategyAdjustment": "No changes warranted to live execution. The dip ladder thresholds remain correctly calibrated — do not lower the mild tier below 5.0% just because 38 days have passed without a trigger; a shallow 2.95% drawdown in a ranging regime does not justify catching a falling knife. If BTC breaks below $60,200 (5% from current), verify the ladder fires promptly. Monitor for a range breakout: a sustained move above $65,300 or below $63,200 would signal regime change and may require re-evaluating the ranging confidence weight. The fear multiplier (0.85x) is working as designed — do not override it until Fear & Greed recovers above 45.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "1150.404368",
+    "dayNumber": 38,
+    "walletBalance": "472.801541051257978778",
+    "tags": [
+      "clamping",
+      "pacing",
+      "market-timing",
+      "dip-ladder",
+      "ranging-regime",
+      "budget",
+      "simulation"
+    ]
   }
 ]
