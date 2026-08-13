@@ -9701,5 +9701,35 @@
       "low-volatility",
       "user-schedule"
     ]
+  },
+  {
+    "id": "ref-1786614414857",
+    "date": "2026-08-13",
+    "timestamp": "2026-08-13T09:46:54.857Z",
+    "runStatus": "error_swap_failed",
+    "insight": "All 9 consecutive runs today (100% of day 38) have failed with EURC no_route errors, meaning zero BTC was accumulated today despite ~$14.60 USDC being allocated across those attempts. This is no longer a \"transient\" issue — a 9-run, full-day outage requires escalation beyond passive monitoring.",
+    "patterns": [
+      "9 consecutive error_swap_failed runs on 2026-08-13, all citing EURC routing infrastructure failure (no_route) — 0% success rate for the entire day",
+      "BTC price has been pinned in a tight $63,601–$63,802 range all day (~0.3% intraday spread), confirming 38-day consolidation in $63.2k–$65.3k persists",
+      "Fear & Greed stuck at 29 (Fear) throughout all runs — sentiment has not shifted",
+      "activeTier: null across all runs — dip ladder has been dormant the entire 38-day campaign, no tier has ever triggered",
+      "Requested amounts vary run-to-run ($1.55–$1.72) but all bound by user_schedule, no clamping by daily cap — budget utilization is not the constraint",
+      "Composite risk score consistently 53/100, elevated solely by outage metrics, not by market volatility (which sits at historic lows ~0.06–0.13%)",
+      "Past reflections have labeled this 'transient' since run 1 of the outage — that framing is now stale given 9 failures spanning a full calendar day"
+    ],
+    "strategyAdjustment": "Stop accepting the 'transient outage' framing passively. After 9 consecutive failures spanning a full day, the agent should: (1) Flag this as a critical execution blocker in the reflection rather than continuing to retry silently — the ~$14.60 USDC of missed DCA today is real cost compounding; (2) If an alternative routing path or fallback token (e.g., USDC→BTC directly, bypassing EURC) is available in the system, evaluate switching to it rather than continuing to fail; (3) Track cumulative missed-purchase cost: at ~$1.62 avg per run × 9 failed runs = ~$14.58 USDC not deployed, representing 1.28% of the $1,138 campaign total lost to the outage; (4) On recovery, do NOT attempt to make up missed runs in a burst — the schedule should resume at the normal cadence to avoid concentration risk; (5) If a 10th consecutive failure occurs, explicitly note in reasoning that the fallback/escalation path has not been actioned, rather than repeating the 'transient' label.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "1138.679368",
+    "dayNumber": 38,
+    "walletBalance": "484.745041514182185642",
+    "tags": [
+      "error-recovery",
+      "outage",
+      "eurc-routing",
+      "execution-blocker",
+      "pacing",
+      "missed-purchases",
+      "escalation"
+    ]
   }
 ]

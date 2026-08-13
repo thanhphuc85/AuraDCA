@@ -19627,5 +19627,35 @@
       "transferId": "528418a5-b2ab-4fcb-9650-67dc10121d49",
       "settleStatus": "received"
     }
+  },
+  {
+    "date": "2026-08-13",
+    "timestamp": "2026-08-13T09:45:34.141Z",
+    "status": "error_swap_failed",
+    "requestedAmountUsdc": "1.625000",
+    "clampedAmountUsdc": "1.625000",
+    "boundBy": "user_schedule",
+    "tokenOut": "EURC",
+    "reasoning": "Market brief shows bearish sentiment (Fear & Greed 29, BTC -0.55% at $63,629) with analyst recommending 10-15% allocation decrease amid high on-chain activity and sustained consolidation pressure. Real cirBTC price at $63,629 shows only 2.54% drawdown with ultra-low 0.09% volatility — no dip tier triggered on the ladder (activeTier: null), as the 38-day tight consolidation in the $63.2k–$65.3k range continues with the ranging regime confirmed at 74% confidence and slightly negative momentum (-0.23%). Composite risk is moderate at 53/100, elevated entirely by 9 consecutive EURC routing infrastructure errors spanning 1 calendar day (outageDurationDays=1, outageConsecutiveRuns=9) and 0% current success rate, while underlying price volatility remains at historic lows; past reflections consistently confirm this is a transient execution-layer outage, not a strategy failure, and the DCA schedule and dip ladder calibration remain sound.",
+    "walletUsdcBalance": "484.745041514182185642",
+    "message": "Swap failed [EURC/no_route]: Swap failed [no_route]: Stablecoin Service createSwap failed: Route or resource not found. Details: No route available",
+    "smartSizing": {
+      "fearGreed": 29,
+      "drawdownPct": 0.003882461605898837,
+      "multiplier": 1.25,
+      "source": "llm",
+      "proposedMultiplier": 1.25
+    },
+    "x402": {
+      "resource": "/api/x402-brief",
+      "amountUsdcAtomic": "1000",
+      "payer": "0x61e7Ae336F7Eb7F8517dE4F19963D88dFD9161eC",
+      "payTo": "0xcAf34080F47f576F923962AD04dD7ddd86d8d85f",
+      "settled": true,
+      "mode": "settled",
+      "via": "http",
+      "transferId": "40bd925c-789b-4c6a-9c14-a276f34442c9",
+      "settleStatus": "received"
+    }
   }
 ]
