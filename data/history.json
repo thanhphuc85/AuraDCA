@@ -20188,5 +20188,49 @@
       "transferId": "97de27d4-d910-4967-8df4-118baa1bcfb3",
       "settleStatus": "received"
     }
+  },
+  {
+    "date": "2026-08-13",
+    "timestamp": "2026-08-13T14:00:43.555Z",
+    "status": "success",
+    "requestedAmountUsdc": "1.425000",
+    "clampedAmountUsdc": "1.425000",
+    "boundBy": "user_schedule",
+    "tokenOut": "EURC",
+    "reasoning": "Market brief shows sustained bearish sentiment (Fear & Greed 29, BTC -0.16% at $63,681) with high on-chain activity (35.5k USDC transfers) signaling continued defensive positioning within the persistent 38-day $63.2k–$65.3k consolidation range; real cirBTC price is $63,681 with only a 2.46% drawdown from its high and ultra-low 0.17% volatility — all four dip ladder tiers remain untriggered (activeTier: null, nearest mild threshold at 5.0%), and the market regime is ranging at 74% confidence with near-flat momentum (-0.15%), offering no directional edge. Composite risk is low at 30/100 with the error streak fully cleared (outageConsecutiveRuns=0, outageDurationDays=0), daily utilization is only 8% of the cap with no campaign budget configured, and the proposed 1.425000 USDC passes all guardrails unclamped (binding constraint: proposed_amount). Past reflections confirm the prior EURC routing outage self-recovered and the DCA schedule, sizing logic, and dip ladder calibration all remain sound — normal cadence with no burst catch-up is the appropriate posture.",
+    "txHash": "0x5ad210d8552ce01d2f3fac2084836333cced27b96d6965f28f033fe5ffbccee2",
+    "explorerUrl": "https://testnet.arcscan.app/tx/0x5ad210d8552ce01d2f3fac2084836333cced27b96d6965f28f033fe5ffbccee2",
+    "amountOut": "1.26791",
+    "walletUsdcBalance": "481.630506172012008462",
+    "message": "Swapped 1.425000 USDC -> EURC across 3 user(s)",
+    "smartSizing": {
+      "fearGreed": 29,
+      "drawdownPct": 0.00258434357673151,
+      "multiplier": 0.85,
+      "source": "llm",
+      "proposedMultiplier": 0.85
+    },
+    "x402": {
+      "resource": "/api/x402-brief",
+      "amountUsdcAtomic": "1000",
+      "payer": "0x61e7Ae336F7Eb7F8517dE4F19963D88dFD9161eC",
+      "payTo": "0xcAf34080F47f576F923962AD04dD7ddd86d8d85f",
+      "settled": true,
+      "mode": "settled",
+      "via": "http",
+      "transferId": "a06c9372-d006-4308-b09b-4706a8e3771b",
+      "settleStatus": "received"
+    },
+    "smartFee": {
+      "feeUsdcEach": "0.010000",
+      "totalUsdc": "0.010000",
+      "payerCount": 1,
+      "payTo": "0x00Ebbd3aFCCaD08970ED8FdaE591244c8475a0aC",
+      "testnet": true,
+      "settled": true,
+      "transferId": "80c57ef2-852b-4261-a832-76f1f3c2cdbb",
+      "settleStatus": "received",
+      "settledTo": "0xcaf34080f47f576f923962ad04dd7ddd86d8d85f"
+    }
   }
 ]

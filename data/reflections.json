@@ -10206,5 +10206,35 @@
       "ranging-market",
       "configuration"
     ]
+  },
+  {
+    "id": "ref-1786629747736",
+    "date": "2026-08-13",
+    "timestamp": "2026-08-13T14:02:27.736Z",
+    "runStatus": "success",
+    "insight": "Day 38 of a persistent $63.2k–$65.3k consolidation range with Fear & Greed pinned at 29 and BTC drawdown only 2.46% — the dip ladder remains entirely dormant (nearest tier at 5.0%) and the 0.85x smart-sizing multiplier is correctly applying a modest bear-sentiment discount, but no meaningful buying opportunity has materialized in over a month of ranging.",
+    "patterns": [
+      "38 consecutive days in the same $63.2k–$65.3k range — regime confidence stuck at 74% ranging with no breakout signal",
+      "Dip ladder has not triggered once across all tracked history; all four tiers remain dormant with nearest threshold at 5.0% while actual drawdowns stay 2.3–2.8%",
+      "Smart-sizing multiplier locked at 0.85x due to Fear & Greed=29 bear sentiment; no variation observed across recent runs",
+      "EURC routing outage (21 consecutive errors) self-resolved without operator intervention — prior reflections correctly diagnosed infrastructure vs. strategy failure",
+      "Mix of simulated fills (very small amounts: ~$0.000055–$0.001187) and real fills ($1.425–$1.625) in history suggests multi-user schedule with heterogeneous sizing; simulated runs are negligible noise",
+      "No guardrail clamping at all — boundBy=user_schedule consistently, daily utilization at 8% cap, budget unconstrained",
+      "Cumulative spend $1,143.15 over 38 days implies ~$30.08/day average, consistent with the $1.425–$1.625 per-run amounts at expected cadence"
+    ],
+    "strategyAdjustment": "The dip ladder thresholds may be miscalibrated for this market regime: 38 days of ranging between $63.2k–$65.3k means a 5% dip would require a drop below ~$60.5k, which has not occurred once. Consider whether the mild tier threshold (currently 5.0%) should be lowered to 3.0–3.5% to capture intra-range dips given sustained low volatility (0.11–0.17%). Additionally, with Fear & Greed pinned at 29 for an extended period, evaluate whether the 0.85x multiplier discount is still appropriate or if it is systematically under-deploying during what may be a prolonged accumulation phase. If the range holds past day 45, flag for operator review of range boundaries and dip tier calibration.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "1143.154368",
+    "dayNumber": 38,
+    "walletBalance": "481.630506172012008462",
+    "tags": [
+      "market-timing",
+      "pacing",
+      "dip-ladder",
+      "ranging-regime",
+      "error-recovery",
+      "smart-sizing",
+      "budget"
+    ]
   }
 ]
