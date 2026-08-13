@@ -9534,5 +9534,33 @@
       "strategy-sound",
       "execution-blocked"
     ]
+  },
+  {
+    "id": "ref-1786609908625",
+    "date": "2026-08-13",
+    "timestamp": "2026-08-13T08:31:48.625Z",
+    "runStatus": "error_swap_failed",
+    "insight": "Day 38 hit 4th consecutive swap error due to EURC routing infrastructure failure, not strategy issues. Core DCA strategy remains sound: dip ladder correctly dormant in 38-day ultra-low volatility regime (0.06-0.19%), user schedule executing as designed with $1.625 buys when routing works.",
+    "patterns": [
+      "4 consecutive EURC routing failures (error_swap_failed) with 'no_route' errors - clear 1-day infrastructure outage",
+      "Success rate collapsed from 100% to 30% in last 8 runs entirely due to EURC token routing, not strategy",
+      "Dip ladder appropriately dormant for entire 38-day campaign - designed for 5%+ drawdowns, actual volatility 0.04-0.19%",
+      "Market regime stable: 38 days of ranging consolidation ($63.2k-$65.3k), 74% confidence, minimal 2.37% drawdown from ATH",
+      "User schedule consistently bound at $1.45-1.625 USDC per run - pacing stable and predictable",
+      "Composite risk artificially elevated (44/100) by infrastructure errors, not genuine market or strategy risk"
+    ],
+    "strategyAdjustment": "Wait out EURC routing infrastructure outage - do not change strategy or token selection based on temporary routing issues. If errors persist beyond 24 hours, consider fallback to different stablecoin (USDT/DAI) for output token to maintain DCA continuity. Do not adjust user schedule sizing or dip ladder thresholds - current parameters are correct for this market regime.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "1138.679368",
+    "dayNumber": 38,
+    "walletBalance": "484.751478336474002698",
+    "tags": [
+      "error-recovery",
+      "infrastructure-failure",
+      "routing-outage",
+      "dip-ladder-dormant",
+      "ranging-market",
+      "pacing"
+    ]
   }
 ]
