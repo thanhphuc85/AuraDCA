@@ -10267,5 +10267,35 @@
       "error-recovery",
       "budget"
     ]
+  },
+  {
+    "id": "ref-1786636939246",
+    "date": "2026-08-13",
+    "timestamp": "2026-08-13T16:02:19.246Z",
+    "runStatus": "success",
+    "insight": "Day 38 of a tight $63.2k–$65.3k consolidation range with BTC at $63,517 and Fear & Greed at 29 — the market is grinding sideways with bearish sentiment but no meaningful dip signal (drawdown only 2.71%, all four ladder tiers untriggered). The DCA cadence is executing cleanly with zero clamping pressure and a healthy wallet balance of ~$478.7 USDC.",
+    "patterns": [
+      "Consolidation range persistence: BTC has held $63.2k–$65.3k for 38 days with no breakout, ranging regime at 74% confidence with near-flat momentum consistently near 0%.",
+      "Dip ladder dormancy: All four tiers remain untriggered across every run in recent history — the 5% mild threshold has not been approached, making the ladder a passive safety net rather than an active sizing tool.",
+      "Fear & Greed locked at 29: Sentiment has stayed in fear territory every run today without improvement, indicating persistent defensive market posture but not panic.",
+      "Smart sizing consistently applying 0.8x multiplier: The bearish sentiment is mechanically reducing each fill by 20% — this is the only active sizing lever, and it's been firing every run.",
+      "Simulated fill cluster mid-day: Runs 3–5 in history show very small simulated amounts (sub-$0.01), likely test or calibration runs, not real capital deployment — these are noise in the history and can be ignored for pacing analysis.",
+      "Real fills today: Three real fills at $1.400, $1.425, $1.425, $1.625, $1.400 USDC — all unclamped, all bound by user_schedule, cumulative daily spend well within the ~9% daily cap utilization."
+    ],
+    "strategyAdjustment": "The 0.8x smart sizing multiplier has been consistently applied for the entire session due to Fear & Greed sitting at 29. With 38 days of consolidation and cumulative spend at ~$1,146 USDC, consider whether the dip ladder thresholds are still well-calibrated: a 5% mild tier entry at ~$60,100 (from ~$63,200 range floor) is reasonable, but if BTC breaks below $63,200 support, the 5% tier would trigger from the range high (~$65.3k), not the current price — verify the drawdown anchor is the ATH or rolling high, not range boundary, to ensure the ladder activates appropriately on a real breakdown. No burst catch-up is needed. Continue normal cadence. If consolidation extends past day 45 without a breakout, revisit whether the ranging regime confidence threshold should be reassessed.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "1145.979368",
+    "dayNumber": 38,
+    "walletBalance": "478.725233799650051874",
+    "tags": [
+      "pacing",
+      "market-timing",
+      "ranging",
+      "dip-ladder",
+      "smart-sizing",
+      "budget",
+      "fear-greed",
+      "consolidation"
+    ]
   }
 ]
