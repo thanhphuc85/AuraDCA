@@ -9478,5 +9478,33 @@
       "swap-execution",
       "fallback-strategy"
     ]
+  },
+  {
+    "id": "ref-1786608479170",
+    "date": "2026-08-13",
+    "timestamp": "2026-08-13T08:07:59.170Z",
+    "runStatus": "error_swap_failed",
+    "insight": "Experiencing consecutive swap failures (3 errors in last 8 runs, 50% success rate) due to routing issues with EURC token, not market conditions. This is an infrastructure problem requiring token destination change, not a strategy issue.",
+    "patterns": [
+      "Consecutive swap failures with 'no_route' errors for EURC token",
+      "User schedule execution working perfectly - all amounts correctly calculated and clamped",
+      "38-day ranging market regime (74% confidence) with sub-1% volatility continues unbroken",
+      "Dip ladder remains appropriately dormant - no 5%+ volatility events have occurred",
+      "Composite risk artificially elevated (31/100) due to technical errors, not market risk",
+      "Market remains in tight $63.2k-$65.3k consolidation range with 2.2% drawdown"
+    ],
+    "strategyAdjustment": "Switch tokenOut from EURC to a different token with reliable routing (likely back to WBTC or ETH). The swap failures are caused by exchange routing infrastructure, not DCA strategy or market timing. Verify token routing availability before next run. Once routing is fixed, continue user_schedule execution as market regime assessment and pacing remain sound.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "1138.679368",
+    "dayNumber": 38,
+    "walletBalance": "484.753737914035602698",
+    "tags": [
+      "error-recovery",
+      "routing-failure",
+      "infrastructure",
+      "token-selection",
+      "ranging-market",
+      "user-schedule"
+    ]
   }
 ]
