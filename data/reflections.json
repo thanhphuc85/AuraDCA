@@ -10386,5 +10386,38 @@
       "budget",
       "ranging-regime"
     ]
+  },
+  {
+    "id": "ref-1786648609056",
+    "date": "2026-08-13",
+    "timestamp": "2026-08-13T19:16:49.056Z",
+    "runStatus": "simulated",
+    "insight": "The cirBTC Arc route went offline again mid-session (paper-fill of 0.000055 USDC), mirroring the earlier EURC routing outage pattern — route instability is a recurring infrastructure risk even when market and risk conditions are fully nominal.",
+    "patterns": [
+      "Arc cirBTC route offline triggered a second simulated/paper-fill run today (0.000055 USDC), consistent with the earlier EURC routing outage that also self-recovered",
+      "Dip ladder structurally dormant for all 38 days of the $63.2k–$65.3k consolidation range — nearest tier threshold (5.0%) has never been breached",
+      "Fear & Greed index locked at 29 across every run today — sentiment signal is static and providing no incremental information",
+      "All successful runs bound by user_schedule with zero clamping — daily cap ($200) barely utilized at 11–12% (~$22–24 USDC/day vs $200 cap)",
+      "Ranging regime confidence stable at 70–74% across all 8 runs — no regime shift signal",
+      "Composite risk consistently low at 26–30/100 with zero error streak throughout",
+      "BTC price oscillating within a tight $63,039–$63,813 band across all runs today (~1.2% intraday range), confirming the macro consolidation thesis",
+      "Cumulative spend of 1150.40 USDC over 38 days implies ~$30.27/day average — well below the $200 daily cap, suggesting the schedule is conservatively sized"
+    ],
+    "strategyAdjustment": "1. Route monitoring: The cirBTC Arc route has now failed at least twice. Flag consecutive simulated runs (≥2 in a session) as a route health alert and consider whether an alternate routing path or fallback token should be configured for intraday reliability. 2. Dip ladder recalibration: After 38 days with the nearest tier at 5.0% unbreached and max intraday drawdown around 3.4%, consider whether the mild tier threshold should be tightened to 3.5–4.0% to capture entries within the actual consolidation volatility range — the current ladder is effectively disabled in this regime. 3. Fear multiplier review: The 0.85x fear multiplier at F&G=29 has been a persistent drag for 38 days. Since BTC is ranging (not in a confirmed downtrend), evaluate whether the fear discount is warranted or is just systematically underbuying during a flat regime. 4. Daily utilization: At 11–12% daily cap utilization, the schedule has significant headroom — if route health improves and a dip signal ever triggers, there is ample budget for burst buys without guardrail friction.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "1150.404368",
+    "dayNumber": 38,
+    "walletBalance": "472.805777134186374698",
+    "tags": [
+      "error-recovery",
+      "route-outage",
+      "clamping",
+      "pacing",
+      "dip-ladder",
+      "market-timing",
+      "budget",
+      "fear-multiplier",
+      "ranging-regime"
+    ]
   }
 ]
