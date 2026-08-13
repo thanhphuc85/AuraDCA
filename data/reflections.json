@@ -9852,5 +9852,34 @@
       "budget",
       "critical-blocker"
     ]
+  },
+  {
+    "id": "ref-1786618934252",
+    "date": "2026-08-13",
+    "timestamp": "2026-08-13T11:02:14.252Z",
+    "runStatus": "error_swap_failed",
+    "insight": "All 8 runs today (runs 7–14 of a confirmed EURC routing outage) failed with 0% success rate — this is a sustained infrastructure-layer blockage, not transient noise, and the DCA campaign has now missed an entire calendar day of execution with ~$13 USDC undeployed today.",
+    "patterns": [
+      "14 consecutive error_swap_failed runs across 1 calendar day — 100% failure rate, zero recovery signals",
+      "Error message is consistent: 'no_route' / 'Route or resource not found' — routing infrastructure has not recovered at all",
+      "Market conditions are stable and benign throughout the outage: BTC ranging $63.5k–$63.7k, Fear & Greed 29, drawdown <3%, volatility 0.08–0.13% — outage is purely execution-layer",
+      "Sizing is unaffected: amounts vary normally ($1.575–$1.650 USDC), no clamping, boundBy user_schedule throughout",
+      "Dip ladder dormant for entire 38-day campaign — no tier ever triggered, nearest threshold (mild 5%) remains far above current 2.6% drawdown",
+      "Past reflections correctly escalated framing from 'transient' to 'confirmed critical blocker' by run 10, but no actionable divergence has emerged since — the outage simply continues"
+    ],
+    "strategyAdjustment": "The routing infrastructure for EURC has been down for the entire calendar day with no recovery. Future self should: (1) On the next run, if outageConsecutiveRuns >= 15, treat this as requiring operator/infrastructure escalation — flag prominently in reasoning that automated retries are not productive and human intervention is needed to check EURC swap route availability. (2) Do NOT implement burst catch-up when routing recovers — resume at normal cadence as already established. (3) The ~8 missed runs today represent roughly $13 USDC undeployed; do not attempt to compensate by increasing sizing post-recovery. (4) If a fallback token route exists (e.g., routing via a different DEX path or intermediate token), surface that as an option in the next reasoning pass rather than continuing to retry the same failed route.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "1138.679368",
+    "dayNumber": 38,
+    "walletBalance": "484.73697210640165225",
+    "tags": [
+      "error-recovery",
+      "infrastructure-outage",
+      "eurc-routing",
+      "no-route",
+      "execution-blocker",
+      "pacing",
+      "budget"
+    ]
   }
 ]
