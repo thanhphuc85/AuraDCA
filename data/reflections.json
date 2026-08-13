@@ -10090,5 +10090,34 @@
       "dip-ladder",
       "self-recovery"
     ]
+  },
+  {
+    "id": "ref-1786626150295",
+    "date": "2026-08-13",
+    "timestamp": "2026-08-13T13:02:30.295Z",
+    "runStatus": "simulated",
+    "insight": "The cirBTC swap route went offline mid-session, forcing a paper-fill simulation for 0.001187 USDC — a negligible amount — while the prior EURC routing outage (21 consecutive failures) has self-recovered and the campaign is running normal cadence. The route instability pattern is recurring: EURC routing failed for ~21 runs, recovered, and now cirBTC routing has gone offline within the same day.",
+    "patterns": [
+      "Route instability is a recurring execution-layer pattern: EURC routing failed for 21 consecutive runs earlier today, and now the cirBTC route has gone offline in the same session — two distinct swap route failures on day 38",
+      "Simulated fills are landing at $0.001187 USDC (near-zero amounts) vs. the normal ~$1.50–$1.75 USDC range, indicating the simulation mode produces a drastically different (and essentially meaningless) fill size",
+      "Market regime has been locked in the $63.2k–$65.3k consolidation range for the full 38-day campaign with no dip tier ever triggering — all four tiers remain untriggered with the nearest at 5.0% drawdown",
+      "Fear & Greed has been pinned at 29 (Fear) throughout today's runs with BTC fluctuating only between $63,364 and $63,633 — extremely tight intraday range of ~$270 (~0.4%)",
+      "Composite risk risk dropped from 53/100 during the EURC outage to 32/100 after recovery, confirming the risk score is heavily driven by outage streak counters rather than market conditions",
+      "Budget utilization: 1141.73 USDC spent over 38 days; normal run sizes of $1.50–$1.75 USDC suggest roughly 30 successful runs per day target, but today's EURC outage ate 20+ failed runs"
+    ],
+    "strategyAdjustment": "Flag the cirBTC route outage immediately — this is the second distinct route failure today. Do not count simulated fills toward daily budget consumption; the $0.001187 paper-fill is not real capital deployment. On the next run, check whether the cirBTC route has recovered before sizing: if still offline, log as route-offline and skip rather than simulate, to avoid accumulating misleading paper-fill history. The dip ladder thresholds remain appropriate — BTC has not breached 5% drawdown in 38 days, so no recalibration is warranted. Continue normal cadence, no burst catch-up, and keep monitoring for whether route failures are becoming more frequent (2 distinct routes failing on the same day is a yellow flag for infrastructure health).",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "1141.729368",
+    "dayNumber": 38,
+    "walletBalance": "483.275592118258408462",
+    "tags": [
+      "error-recovery",
+      "simulated-fill",
+      "route-outage",
+      "market-timing",
+      "ranging",
+      "pacing",
+      "budget"
+    ]
   }
 ]
