@@ -10176,5 +10176,35 @@
       "pacing",
       "cirBTC"
     ]
+  },
+  {
+    "id": "ref-1786628824529",
+    "date": "2026-08-13",
+    "timestamp": "2026-08-13T13:47:04.529Z",
+    "runStatus": "simulated",
+    "insight": "The cirBTC route is now offline (simulated fills for 4 consecutive runs) immediately after the EURC routing outage self-recovered — two distinct routes have failed within the same day, suggesting a systemic infrastructure problem rather than isolated per-route issues. Separately, requested sizes dropped from ~$1.425–$1.650 USDC to ~$0.000055–$0.000057 USDC (a ~29,000x difference), which likely indicates a schedule or tier configuration change that warrants operator verification.",
+    "patterns": [
+      "Recurring route offline cycles: EURC outage (20+ consecutive errors, self-recovered) → cirBTC route now offline → 4 consecutive simulated fills on same calendar day",
+      "Two different swap routes (EURC and cirBTC) have failed within hours of each other, pointing to a shared infrastructure dependency rather than independent failures",
+      "Requested amount collapsed from ~$1.5 USDC to ~$0.000057 USDC across recent runs — a ~29,000x drop with no documented reasoning, suggesting a schedule tier or configuration change occurred",
+      "Market regime has been locked in ranging state for 38 days ($63.2k–$65.3k), Fear & Greed stuck at 29, all four dip ladder tiers untriggered — price/strategy conditions are completely stable",
+      "Dip ladder calibration appears miscalibrated for current market: 38 days in consolidation range with drawdown only 2.32% from high, yet nearest tier threshold is 5.0% — dip ladder has never fired"
+    ],
+    "strategyAdjustment": "1) Flag cirBTC route offline to operator immediately — do not continue accumulating simulated fills; real capital is not being deployed. 2) Investigate whether EURC and cirBTC share a common dependency (same liquidity provider, bridge, or relayer) — if so, both routes failing together is expected and the fallback strategy needs a third independent route. 3) Audit the requested amount drop from ~$1.5 USDC to ~$0.000057 USDC — confirm this is intentional schedule behavior and not a misconfiguration; document the tier logic that produces such extreme size variance. 4) Reconsider dip ladder thresholds: with BTC in a tight 38-day range and max drawdown only ~2.9% from high, the 5% mild threshold will never trigger in this regime — consider lowering the mild tier to 3.0–3.5% to capture meaningful dips within the current consolidation band.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "1141.729368",
+    "dayNumber": 38,
+    "walletBalance": "481.631762124380008462",
+    "tags": [
+      "error-recovery",
+      "route-offline",
+      "simulated-fill",
+      "infrastructure",
+      "sizing-anomaly",
+      "dip-ladder",
+      "market-timing",
+      "ranging-market",
+      "configuration"
+    ]
   }
 ]
