@@ -9731,5 +9731,34 @@
       "missed-purchases",
       "escalation"
     ]
+  },
+  {
+    "id": "ref-1786615319754",
+    "date": "2026-08-13",
+    "timestamp": "2026-08-13T10:01:59.754Z",
+    "runStatus": "error_swap_failed",
+    "insight": "The EURC swap routing outage has now persisted for 10+ consecutive runs across 1 full calendar day with a 0% success rate — this is no longer a transient issue and requires external intervention (manual route check, alternative token out, or infrastructure escalation) before the next run.",
+    "patterns": [
+      "10 consecutive error_swap_failed runs on 2026-08-13, all with identical 'no_route' EURC routing failure — outage is systemic, not transient",
+      "0% success rate for the entire day of 2026-08-13; prior reflections labeled this 'transient' but the persistence invalidates that framing",
+      "Market conditions are stable and irrelevant to the failure — BTC ranging tightly in $63.2k–$65.3k for 38 days, drawdown ~2.4%, volatility 0.06–0.13%, Fear & Greed 29, no dip tiers triggered",
+      "Composite risk score stuck at 53/100 driven entirely by outage metrics (outageConsecutiveRuns, 0% success rate) — underlying market risk is actually very low",
+      "Sizing is bounded by user_schedule each run (~$1.575–$1.72), no clamping from budget or other guardrails — the only blocker is swap routing",
+      "Approximately $16.50+ USDC worth of DCA purchases have been missed on 2026-08-13 alone (10 runs × ~$1.65 avg) — budget is accumulating unspent at $484.74 USDC"
+    ],
+    "strategyAdjustment": "Do NOT continue retrying EURC swaps without first resolving the routing infrastructure issue. Concrete next steps: (1) Check whether the EURC swap route has been restored before the next run — if outageConsecutiveRuns >= 10 and success rate is still 0%, escalate or switch tokenOut to an alternative (e.g., USDC→BTC direct, or another supported stablecoin route). (2) On recovery, resume at normal cadence — do NOT attempt burst catch-up for the ~10 missed runs, as the market has been flat and missed entries at $63.6k–$63.7k are not materially different from future entries in the same range. (3) If the next run still returns no_route for EURC, the agent should surface a hard alert rather than logging another routine reflection — 11+ consecutive failures on the same error type signals the problem will not self-resolve.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "1138.679368",
+    "dayNumber": 38,
+    "walletBalance": "484.74392777668805225",
+    "tags": [
+      "error-recovery",
+      "outage",
+      "eurc-routing",
+      "no-route",
+      "execution-blocker",
+      "pacing",
+      "budget"
+    ]
   }
 ]
