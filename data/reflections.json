@@ -10328,5 +10328,33 @@
       "budget",
       "signal-quality"
     ]
+  },
+  {
+    "id": "ref-1786644163271",
+    "date": "2026-08-13",
+    "timestamp": "2026-08-13T18:02:43.271Z",
+    "runStatus": "success",
+    "insight": "Day 38 of a persistent $63.2k–$65.3k consolidation range with Fear & Greed stuck at 29 and sub-0.2% daily volatility — the dip ladder's 5% mild threshold remains structurally unreachable in this low-volatility regime, making dip multipliers irrelevant for the foreseeable future.",
+    "patterns": [
+      "All 8 recent runs bound by user_schedule with zero clamping — daily utilization consistently 8–11% of the $200 cap, leaving ~$178+ headroom unused every day",
+      "BTC has traded in a tight $63,039–$63,813 range across all 8 runs (spread <$775, <1.3%) — 38-day consolidation shows no sign of resolution",
+      "Fear & Greed Index locked at 29 for all 8 runs — sentiment has not moved at all, signaling persistent but stable bearish positioning",
+      "Smart sizing multiplier held at 0.85 (drawdown 1.2–3.4%, never reaching the tier thresholds) — effectively a constant downward sizing adjustment with no dip upside being captured",
+      "3 simulated fills appeared mid-session alongside 5 real executions on 2026-08-13 — likely test/simulation runs interleaved with live runs, not an operational concern",
+      "Zero error streak across all 8 runs — system health is excellent, EURC route fully recovered"
+    ],
+    "strategyAdjustment": "The dip ladder is calibrated for 5%+ drawdowns, but the current regime has produced only 1.2–3.4% drawdowns across 38 days. Consider whether the mild tier threshold should be lowered to ~3% to actually engage the ladder in this low-volatility environment — at the current 5% floor, the ladder adds no value and the 0.85 smart sizing multiplier is a permanent drag on accumulation rate. Also, with daily utilization at only 8–11% of a $200 cap, either the cap is significantly oversized for the actual schedule, or there is an opportunity to review whether the schedule frequency/amount should be increased to make better use of the budget headroom. At $1,148.83 spent over 38 days, average daily spend is ~$30.23 — the $200 cap is ~6.6x the actual run rate and provides no meaningful risk guardrail at this utilization level.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "1148.829368",
+    "dayNumber": 38,
+    "walletBalance": "475.854072619226199446",
+    "tags": [
+      "pacing",
+      "market-timing",
+      "dip-ladder",
+      "budget",
+      "ranging-regime",
+      "smart-sizing"
+    ]
   }
 ]
