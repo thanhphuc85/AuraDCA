@@ -10564,5 +10564,33 @@
       "allocation-strategy",
       "threshold-calibration"
     ]
+  },
+  {
+    "id": "ref-1786658537745",
+    "date": "2026-08-13",
+    "timestamp": "2026-08-13T22:02:17.745Z",
+    "runStatus": "success",
+    "insight": "Successfully executed $1.425 USDC buy with 0.85x fear multiplier on day 38 of consolidation. Dip ladder remains structurally dormant across entire 38-day range—no tier has triggered despite persistent sub-30 Fear & Greed, suggesting thresholds may be too conservative for ranging markets.",
+    "patterns": [
+      "Dip ladder dormant for 38 consecutive days in $63.2k-$65.3k BTC range",
+      "Fear & Greed locked at 29 with 0.85x multiplier reducing buys by 15%",
+      "Daily utilization consistently low at 11-14% of $200 cap ($172-178 headroom)",
+      "Zero error streak maintained (outageConsecutiveRuns=0)",
+      "Ranging regime at 70-71% confidence with ultra-low volatility (0.03-0.17%)",
+      "Drawdown never exceeding 3.08% from high—well below 5% mild dip threshold"
+    ],
+    "strategyAdjustment": "Consider lowering dip ladder thresholds: the 5% mild tier has never triggered in 38 days despite sustained fear sentiment, meaning the ladder is not fulfilling its purpose to buy dips. Test reducing mild tier to 3% and moderate tier to 6% to capture actual fear-driven opportunities in ranging markets. Alternatively, add a \"persistent fear\" override that increases allocation when Fear & Greed stays below 30 for 7+ consecutive days in low-volatility regimes.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "1154.979368",
+    "dayNumber": 38,
+    "walletBalance": "469.59463535353102097",
+    "tags": [
+      "dip-ladder-dormant",
+      "ranging-market",
+      "fear-multiplier",
+      "threshold-tuning",
+      "low-utilization",
+      "consolidation-regime"
+    ]
   }
 ]
