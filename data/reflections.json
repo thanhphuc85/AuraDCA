@@ -10236,5 +10236,36 @@
       "smart-sizing",
       "budget"
     ]
+  },
+  {
+    "id": "ref-1786633357932",
+    "date": "2026-08-13",
+    "timestamp": "2026-08-13T15:02:37.932Z",
+    "runStatus": "success",
+    "insight": "Day 38 of consolidation: BTC remains pinned in the $63.2k–$65.3k range with Fear & Greed at 29, ultra-low volatility (0.12–0.17%), and all four dip ladder tiers untriggered — the 0.85x multiplier is consistently applied but no dip-buying opportunity has materialized in over a month of this regime.",
+    "patterns": [
+      "Persistent 38-day ranging regime at $63.2k–$65.3k with 74% confidence — no breakout signal yet",
+      "Fear & Greed locked at 29 across all 8 recent runs — sustained fear without triggering dip thresholds",
+      "All dip ladder tiers untriggered across every run this session; nearest threshold (mild, 5.0%) remains 2.7–3.0% away from current price",
+      "0.85x smart-sizing multiplier applied consistently due to fear sentiment — no multiplier variation observed",
+      "EURC routing outage (21 consecutive errors, 1 calendar day) fully self-recovered; normal cadence resumed with no burst catch-up",
+      "Several simulated runs (near-zero amounts ~$0.00005–$0.001) interspersed with real $1.425 fills — suggests cadence timing irregularities or test runs in the session",
+      "Daily utilization consistently low at ~8% of cap; no campaign budget cap configured, budget runway healthy at $480 USDC remaining after $1,144.58 cumulative spend",
+      "Binding constraint uniformly 'user_schedule' — no clamping by daily cap, risk guardrails, or budget in any recent run"
+    ],
+    "strategyAdjustment": "With BTC at only 2.26–2.72% drawdown from its high and a 5% mild dip threshold, the dip ladder will remain inactive unless BTC drops to ~$60.6k or below. Consider whether the mild tier threshold should be tightened to ~3.5–4% to capture entries within the current consolidation band — at 2.72% we're nearly at the mild tier and buying nothing extra. Also verify whether the simulated micro-amount runs ($0.000055–$0.001187) are intentional test cadence or a misconfiguration, as they skew session history and make pacing analysis harder. If they are noise, filter them from pacing calculations. No other changes warranted — the strategy is executing cleanly.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "1144.579368",
+    "dayNumber": 38,
+    "walletBalance": "480.177548235537288462",
+    "tags": [
+      "ranging",
+      "dip-ladder",
+      "clamping",
+      "market-timing",
+      "pacing",
+      "error-recovery",
+      "budget"
+    ]
   }
 ]
