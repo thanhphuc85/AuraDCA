@@ -10509,5 +10509,34 @@
       "budget",
       "simulation"
     ]
+  },
+  {
+    "id": "ref-1786651347117",
+    "date": "2026-08-13",
+    "timestamp": "2026-08-13T20:02:27.117Z",
+    "runStatus": "success",
+    "insight": "The agent is executing cleanly at normal cadence inside a now 39-day $63.2k–$65.3k consolidation range, but the recent history reveals a serious data anomaly: six of the eight recorded runs show requested amounts of $0.000020–$0.001187 USDC (simulated micro-amounts), which are not consistent with the ~$1.50 scheduled buys — suggesting either a simulation harness bug or a misconfigured run mode that is intermittently producing near-zero amounts before recovering to normal.",
+    "patterns": [
+      "Dip ladder structurally dormant for all 38+ days — all four tiers remain untriggered with the nearest threshold at 5.0% drawdown while actual drawdown sits at ~3.0%, meaning the ladder calibration is misaligned with current market depth",
+      "Six of eight recent runs show near-zero requested amounts ($0.000020–$0.001187) in 'simulated' status — these are orders of magnitude below the scheduled ~$1.50, indicating a recurring simulation/scheduling anomaly rather than intentional sizing",
+      "Fear & Greed has been pinned at exactly 29 for multiple consecutive readings — either sentiment is genuinely flat or the data feed has stalled and is returning stale values",
+      "1.15x smart-sizing multiplier applied despite Fear & Greed of 29 (fear territory) — this is inconsistent; fear typically triggers a reduction multiplier, not an increase, and this warrants review of the multiplier logic",
+      "Daily utilization consistently low at ~11–12% of the $200 cap across all runs — the $200 daily cap is essentially irrelevant at current cadence and provides no binding constraint",
+      "BTC price range extremely tight ($63,109–$63,363 across all 8 runs, a 0.4% range) confirming micro-consolidation within the already narrow 38-day band"
+    ],
+    "strategyAdjustment": "Three concrete actions needed: (1) Investigate the six simulated near-zero runs — determine why the scheduler is firing in simulation mode with fractional-cent amounts on the same calendar date as live runs; if this is a test harness leak into production logs, filter them from history to avoid polluting pacing calculations. (2) Audit the Fear & Greed multiplier logic — a reading of 29 should produce a multiplier below 1.0 (more cautious), not 1.15 (more aggressive); if the 1.15x is intentional as a 'buy more during fear' contrarian signal, document it explicitly so future reflections don't flag it as inconsistent. (3) Recalibrate the dip ladder downward — after 38 days of consolidation with a persistent ~3% drawdown and a 5% nearest threshold, consider lowering mild tier to 3.5–4% so the ladder can actually activate within the current regime rather than remaining permanently dormant.",
+    "confidenceLevel": "medium",
+    "cumulativeSpentUsdc": "1151.979368",
+    "dayNumber": 38,
+    "walletBalance": "472.800474913289978778",
+    "tags": [
+      "simulation-anomaly",
+      "dip-ladder-calibration",
+      "multiplier-logic",
+      "market-timing",
+      "pacing",
+      "data-quality",
+      "consolidation-regime"
+    ]
   }
 ]
