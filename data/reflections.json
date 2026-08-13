@@ -10356,5 +10356,35 @@
       "ranging-regime",
       "smart-sizing"
     ]
+  },
+  {
+    "id": "ref-1786647744355",
+    "date": "2026-08-13",
+    "timestamp": "2026-08-13T19:02:24.355Z",
+    "runStatus": "simulated",
+    "insight": "Day 38 of a structurally dormant consolidation regime: BTC has held the $63.2k–$65.3k range the entire campaign with max drawdown never breaching 3.44%, keeping all four dip ladder tiers untriggered throughout. This run was a simulated fill (Arc cirBTC route offline) for only 0.001187 USDC — a near-zero amount — while the same session also produced a successful 1.575 USDC fill, suggesting intermittent route instability on a single day.",
+    "patterns": [
+      "Dip ladder structurally dormant for all 38 days — nearest threshold (mild, 5.0%) has never been reached; max observed drawdown is ~3.44%",
+      "0.85x fear multiplier active persistently due to Fear & Greed stuck at 29 for multiple consecutive runs — consistent modest drag on every fill",
+      "Daily utilization consistently low at 8–11% of the $200 cap across today's 8 runs, suggesting the schedule emits many small sub-$2 orders throughout the day",
+      "cirBTC route intermittently going offline (simulated fills appearing mid-session) — today shows at least 2 simulated runs sandwiching successful ones",
+      "Market regime ranging at 70–74% confidence with near-zero volatility (0.09–0.39%) and BTC oscillating in a tight ~$700 band ($63,039–$63,813) intraday",
+      "No error streaks — outageConsecutiveRuns=0 across all 8 recent runs, route outages are transient and self-recovering",
+      "Cumulative spend of 1,150.40 USDC over 38 days implies ~$30.27/day average, consistent with schedule-bound execution without dip bursts"
+    ],
+    "strategyAdjustment": "Two concrete adjustments warranted: (1) Dip ladder recalibration — after 38 days with max drawdown of 3.44% and mild threshold at 5.0%, the consolidation range is demonstrably tight. Consider lowering the mild tier threshold to 3.5–4.0% to capture the actual price action within this regime rather than waiting for a breakout that has not materialized. (2) Route fallback monitoring — today's session shows the cirBTC Arc route goes offline intermittently within the same calendar day. Track the ratio of simulated-to-successful fills per day; if it exceeds 25% on any given day, flag for manual route inspection rather than silently paper-filling. The 0.85x fear multiplier is not worth adjusting — Fear & Greed at 29 is a real signal, not noise, and the modest sizing reduction is appropriate given sustained bearish sentiment.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "1150.404368",
+    "dayNumber": 38,
+    "walletBalance": "474.405762922647548966",
+    "tags": [
+      "dip-ladder",
+      "clamping",
+      "market-timing",
+      "pacing",
+      "error-recovery",
+      "budget",
+      "ranging-regime"
+    ]
   }
 ]
