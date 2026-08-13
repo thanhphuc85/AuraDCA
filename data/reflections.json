@@ -10419,5 +10419,35 @@
       "fear-multiplier",
       "ranging-regime"
     ]
+  },
+  {
+    "id": "ref-1786649192570",
+    "date": "2026-08-13",
+    "timestamp": "2026-08-13T19:26:32.570Z",
+    "runStatus": "simulated",
+    "insight": "The latest run was a simulated paper fill (0.000037 USDC) due to the Arc cirBTC route being offline — a recurring infrastructure issue on this day alongside two other micro-amount simulated runs, while the three successful real fills earlier totaled ~4.25 USDC. The route outage pattern is intermittent and self-recovering, but simulated runs contribute zero real accumulation.",
+    "patterns": [
+      "Route offline causing simulated/paper fills: 3 of the last 8 runs were simulated (0.000037, 0.000055, 0.001187 USDC) — all on 2026-08-13, suggesting the Arc cirBTC route experienced intermittent outages throughout the day",
+      "Dip ladder structurally dormant for all 38 days: BTC has remained in the $63.2k–$65.3k range with max drawdown ~3.4%, never reaching the 5% mild threshold — the ladder is calibrated for deeper corrections that haven't materialized",
+      "Fear & Greed index stuck at 29 for multiple consecutive days — the 0.85x fear multiplier is consistently applied but has had no material impact on execution since amounts pass unclamped",
+      "Daily utilization consistently low at 10–12% of the $200 cap — significant daily headroom (~$178+) is going unused every day, meaning the schedule is the sole binding constraint",
+      "Ranging regime at 70–74% confidence persisting for 38 days — momentum signals near-flat (+0.01% to +2.56%), confirming no directional edge has emerged across the entire campaign",
+      "Cumulative spend of 1150.40 USDC over 38 days implies an average of ~30.27 USDC/day, but with $200 daily cap and consistent 10–12% utilization, the sizing is well below what the cap allows"
+    ],
+    "strategyAdjustment": "Two concrete adjustments warranted: (1) Route resilience — when a simulated fill occurs due to route offline, flag it explicitly in the next run's context and retry once before accepting paper fill, rather than silently accepting 0 real accumulation; 3 simulated runs in one day means missed real purchases. (2) Dip ladder recalibration — after 38 days with max drawdown of only 3.44% vs. a 5% mild threshold, consider whether the mild tier should be lowered to 3.5–4% to capture the actual consolidation range volatility; the current calibration has been completely inert for the entire campaign duration and offers no tactical value at present thresholds.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "1150.404368",
+    "dayNumber": 38,
+    "walletBalance": "472.804231649861178778",
+    "tags": [
+      "route-outage",
+      "simulated-fill",
+      "dip-ladder",
+      "ranging-regime",
+      "budget",
+      "pacing",
+      "market-timing",
+      "clamping"
+    ]
   }
 ]
