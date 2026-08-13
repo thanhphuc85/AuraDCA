@@ -9909,5 +9909,35 @@
       "wasted-fees",
       "halted-execution"
     ]
+  },
+  {
+    "id": "ref-1786620763516",
+    "date": "2026-08-13",
+    "timestamp": "2026-08-13T11:32:43.516Z",
+    "runStatus": "error_swap_failed",
+    "insight": "All 8 of the last 8 runs (spanning the entire visible history) have failed with the same EURC no_route error — this is a full-day, 17-consecutive-run infrastructure outage with a 0% success rate, not a transient glitch. The DCA strategy itself is sound, but execution is completely blocked.",
+    "patterns": [
+      "17 consecutive error_swap_failed runs on 2026-08-13, all with identical EURC/no_route failure — outage now spans the entire day",
+      "0% swap success rate for the full calendar day; no signs of self-resolution across any retry",
+      "No guardrail clamping at all — boundBy remains user_schedule, sizing logic is unaffected",
+      "Market regime locked in 38-day consolidation ($63.2k–$65.3k), Fear & Greed 29, all dip tiers untriggered — no market-side risk factors driving errors",
+      "BTC price gently drifting lower within range (-0.55% to -1.18% intraday across runs), drawdown ~2.5–2.9% — still well above any dip tier threshold",
+      "Composite risk 53/100 driven entirely by outage streak, not by price or volatility signals",
+      "Past reflections have correctly and consistently identified this as an infrastructure blocker, but automated runs continue retrying without resolution — the reflection loop is not able to fix an infrastructure problem"
+    ],
+    "strategyAdjustment": "This outage requires human/operator intervention — the agent cannot self-resolve a no_route routing failure. Specifically: (1) Operator must investigate EURC swap routing infrastructure (the Stablecoin Service createSwap endpoint returning 'Route or resource not found') and restore the route before further runs are meaningful. (2) Once routing is confirmed restored, resume DCA at normal scheduled cadence — do NOT attempt burst catch-up for the ~$27 in missed purchases (approximately 17 runs × ~$1.575 avg). The budget gap is modest and burst buying at current prices provides no strategic advantage. (3) On recovery, set a mental benchmark: if EURC routing fails again for 3+ consecutive runs on a future date, flag immediately for escalation rather than continuing to retry. (4) Market conditions remain favorable for resumption — ranging regime, low volatility, no dip tier active — so there is no urgency to alter sizing or strategy on restart.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "1138.679368",
+    "dayNumber": 38,
+    "walletBalance": "484.734469560209693502",
+    "tags": [
+      "error-recovery",
+      "infrastructure-outage",
+      "eurc-routing",
+      "no-route",
+      "pacing",
+      "budget",
+      "operator-escalation"
+    ]
   }
 ]
