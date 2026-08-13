@@ -10297,5 +10297,36 @@
       "fear-greed",
       "consolidation"
     ]
+  },
+  {
+    "id": "ref-1786640547968",
+    "date": "2026-08-13",
+    "timestamp": "2026-08-13T17:02:27.968Z",
+    "runStatus": "success",
+    "insight": "Day 38 of a persistent $63.2k–$65.3k consolidation range; all 8 recent runs executed at exactly the scheduled amount with zero clamping, confirming the dip ladder is structurally idle and the 0.85x fear multiplier is the only active sizing adjustment. The range has now lasted long enough that a breakout — in either direction — is overdue and should be the primary risk to monitor.",
+    "patterns": [
+      "38-day consolidation with BTC stuck in $63.2k–$65.3k — range duration itself is now a risk factor",
+      "All 4 dip ladder tiers continuously untriggered; nearest threshold (mild, 5.0%) has never been reached across any recent run",
+      "Fear & Greed locked at 29 for the entire visible history — sentiment has not moved despite price stability",
+      "Smart sizing multiplier held at 0.85 throughout; no run has triggered a higher multiplier",
+      "Daily cap utilization consistently 8–10%, leaving 90%+ of daily budget unused — cap is not binding",
+      "4 of 8 recent runs were simulated (tiny amounts: ~0.000055–0.001187 USDC), suggesting a parallel test or simulation track is interleaved with live runs",
+      "Zero error streak across all 8 runs; EURC routing outage fully resolved",
+      "Executed amounts alternate between ~1.40–1.425 USDC (live) and sub-penny (simulated) — two distinct execution tracks running simultaneously"
+    ],
+    "strategyAdjustment": "1. Breakout preparation: After 38 days in range, the probability of a range break is elevated. Pre-define the response: if BTC closes above $65.3k, resume neutral multiplier (1.0x); if BTC breaks below $63.2k, the mild dip tier at 5.0% drawdown will likely trigger — confirm the ladder sizing is still appropriate for the current USDC balance ($477.30). 2. Dip ladder calibration review: With 38 days of ranging and drawdown never exceeding ~3.44% from the high, the mild threshold at 5.0% may be too conservative to ever fire during this regime. Consider whether lowering the mild tier to 3.5–4.0% would capture meaningful dips or just add noise — evaluate against historical intra-range swings. 3. Simulated vs. live interleaving: Four of eight recent history entries are sub-penny simulated runs. Verify this is intentional test infrastructure and not a misconfiguration causing real schedule slots to be consumed by simulations. 4. Fear & Greed at 29 for 38+ days: Sentiment appears sticky/stale. If the data source is not refreshing meaningfully, the 0.85x multiplier may be a permanent fixture rather than a dynamic signal — check whether F&G is actually updating or stuck on a cached value.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "1147.404368",
+    "dayNumber": 38,
+    "walletBalance": "477.300666108947074818",
+    "tags": [
+      "ranging",
+      "dip-ladder",
+      "market-timing",
+      "pacing",
+      "clamping",
+      "budget",
+      "signal-quality"
+    ]
   }
 ]
