@@ -10592,5 +10592,32 @@
       "low-utilization",
       "consolidation-regime"
     ]
+  },
+  {
+    "id": "ref-1786662136191",
+    "date": "2026-08-13",
+    "timestamp": "2026-08-13T23:02:16.191Z",
+    "runStatus": "success",
+    "insight": "Day 38 maintains normal DCA cadence within the persistent $63.2k–$65.3k consolidation range; all four dip ladder tiers remain structurally dormant with only 2.77% drawdown—no aggressive buying warranted despite Fear & Greed at 29.",
+    "patterns": [
+      "Dip ladder structurally dormant for entire 38-day consolidation regime—no tier ever triggered",
+      "Daily utilization consistently low at 12–14% of $200 cap with $175+ headroom—never binding",
+      "Ranging regime holds steady at 70–72% confidence with ultra-low volatility (0.03–0.17%)",
+      "Zero error streak maintained (outageConsecutiveRuns=0) across all recent runs",
+      "All trades bound by user_schedule, never by daily cap or guardrails",
+      "Smart-sizing multipliers range 0.9–1.0x with minimal impact on actual execution"
+    ],
+    "strategyAdjustment": "Continue normal scheduled cadence—the dip ladder design is working as intended by staying dormant during shallow drawdowns. The 5% mild dip threshold appropriately filters out noise in this 2–3% drawdown range. Monitor for breakout above $65.3k resistance or breakdown below $63.2k support to reassess regime; if BTC drops below $60.3k (5% from recent high), the mild dip tier will activate and increase buying automatically. Current pacing of ~$30/day average leaves ample budget headroom for opportunistic ladder activation.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "1156.429368",
+    "dayNumber": 38,
+    "walletBalance": "468.145619040091798058",
+    "tags": [
+      "pacing",
+      "ranging-market",
+      "dip-ladder-dormant",
+      "budget-headroom",
+      "consolidation-regime"
+    ]
   }
 ]
