@@ -10538,5 +10538,31 @@
       "data-quality",
       "consolidation-regime"
     ]
+  },
+  {
+    "id": "ref-1786654923218",
+    "date": "2026-08-13",
+    "timestamp": "2026-08-13T21:02:03.218Z",
+    "runStatus": "success",
+    "insight": "38-day consolidation regime continues with BTC range-bound $63.2k-$65.3k; dip ladder remains structurally dormant with 0% activation across entire period. Smart sizing LLM multiplier (1.15x) now contradicts market brief analyst recommendation to decrease allocation 10-15%, creating strategic misalignment.",
+    "patterns": [
+      "Dip ladder untriggered for 38 consecutive days - all tiers (5%, 10%, 15%, 20%) never activated in ranging regime",
+      "Daily cap utilization consistently low at 11-13% with $174-177 daily headroom remaining",
+      "Fear & Greed index stable at 29 (fear zone) with ultra-low volatility (0.03-0.17%) and minimal drawdown (~3%)",
+      "Zero error streak maintained (outageConsecutiveRuns=0) with composite risk consistently low at 26-28/100",
+      "Smart sizing LLM applying 1.15x multiplier while market brief analyst recommends 10-15% allocation decrease - directional conflict"
+    ],
+    "strategyAdjustment": "Reconcile smart sizing conflict: market brief analyst recommends decreasing allocation 10-15% due to defensive positioning and ranging regime, but LLM multiplier applies 1.15x increase. Either disable LLM multiplier in favor of analyst guidance during ranging regimes, or investigate why LLM contradicts analyst. Consider dip ladder recalibration: 5% mild threshold has never triggered in 38 days despite 3% drawdowns - thresholds may be too conservative for this market regime. Validate if tighter thresholds (3%/7%/12%/17%) would provide better entry timing in tight ranges.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "1153.554368",
+    "dayNumber": 38,
+    "walletBalance": "471.193679920177338442",
+    "tags": [
+      "smart-sizing-conflict",
+      "dip-ladder-dormant",
+      "ranging-regime",
+      "allocation-strategy",
+      "threshold-calibration"
+    ]
   }
 ]
