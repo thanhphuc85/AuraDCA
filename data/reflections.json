@@ -10059,5 +10059,36 @@
       "no-burst-catchup",
       "operator-intervention-required"
     ]
+  },
+  {
+    "id": "ref-1786624359347",
+    "date": "2026-08-13",
+    "timestamp": "2026-08-13T12:32:39.347Z",
+    "runStatus": "success",
+    "insight": "The 21-run EURC routing outage that began 2026-08-12 resolved on its own — the latest run succeeded after 20 consecutive failures, confirming self-recovery without operator intervention. Infrastructure is now restored; normal DCA cadence should continue with no catch-up.",
+    "patterns": [
+      "EURC routing outage lasted exactly 21 consecutive runs (~1 calendar day) before self-resolving — no manual intervention was ultimately required",
+      "All 8 runs in the window were bound by user_schedule with no guardrail clamping, confirming clean pacing and no budget pressure",
+      "BTC price remained pinned in the $63,364–$63,589 range across all 8 runs — 38-day consolidation band ($63.2k–$65.3k) holding firmly",
+      "Fear & Greed stable at 29 (fear) throughout the outage period — no sentiment deterioration or spike",
+      "Smart sizing multiplier held at 0.85 (fear discount) across all runs — drawdown consistently 2.6–2.9%, well below the 5% mild dip threshold",
+      "All four dip ladder tiers remain untriggered for the entire 38-day campaign; ranging regime at 74% confidence with -0.23% momentum unchanged",
+      "Cumulative spend at day 38: 1,140.10 USDC — on pace for roughly ~1,622 USDC/month equivalent at current run frequency"
+    ],
+    "strategyAdjustment": "Infrastructure has self-recovered — resume normal DCA cadence with no burst catch-up for the ~20 missed runs. The 0.85 multiplier remains appropriate given Fear & Greed at 29 and BTC sitting near the bottom of the consolidation range. Monitor whether BTC breaks below $63,200 (bottom of 38-day range): if it does, expect dip ladder tier 1 (5% threshold) to activate, which would warrant a multiplier increase. If the ranging regime breaks to the upside above $65,300, consider tightening the fear discount. No changes to sizing logic or dip thresholds needed — all calibration is sound.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "1140.104368",
+    "dayNumber": 38,
+    "walletBalance": "484.727928304853608462",
+    "tags": [
+      "error-recovery",
+      "infrastructure-outage",
+      "eurc-routing",
+      "market-timing",
+      "ranging-market",
+      "pacing",
+      "dip-ladder",
+      "self-recovery"
+    ]
   }
 ]

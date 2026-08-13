@@ -19985,5 +19985,49 @@
       "transferId": "38e3f122-6508-4dc5-a6b5-3160d50a5a9b",
       "settleStatus": "received"
     }
+  },
+  {
+    "date": "2026-08-13",
+    "timestamp": "2026-08-13T12:30:42.416Z",
+    "status": "success",
+    "requestedAmountUsdc": "1.425000",
+    "clampedAmountUsdc": "1.425000",
+    "boundBy": "user_schedule",
+    "tokenOut": "EURC",
+    "reasoning": "Market brief shows sustained bearish sentiment (Fear & Greed 29, BTC -1.23% at $63,513) with high on-chain stablecoin activity (~31,952 USDC transfers) signaling continued defensive positioning within the 38-day $63.2k–$65.3k consolidation range; real cirBTC price is $63,513 with only a 2.72% drawdown from its high and ultra-low 0.11% volatility — all four dip ladder tiers remain untriggered (activeTier: null, nearest mild threshold at 5.0%), and the market regime is ranging at 74% confidence with slightly negative momentum (-0.23%), offering no directional edge. Composite risk is moderate at 53/100, elevated entirely by 21 consecutive EURC routing infrastructure errors spanning 1 calendar day (outageDurationDays=1, outageConsecutiveRuns=21) with a 0% success rate, while underlying price and volatility conditions remain completely benign with no guardrail clamping; past reflections unanimously confirm this is a critical infrastructure outage requiring operator intervention — not a strategy failure — and firmly advise normal cadence resumption with no burst catch-up once EURC routing is restored.",
+    "txHash": "0xc7105b0067d591d0d798df8a4b37091edd2f8e0e2b9d9b888a9ecc72711e131c",
+    "explorerUrl": "https://testnet.arcscan.app/tx/0xc7105b0067d591d0d798df8a4b37091edd2f8e0e2b9d9b888a9ecc72711e131c",
+    "amountOut": "1.26422",
+    "walletUsdcBalance": "484.727928304853608462",
+    "message": "Swapped 1.425000 USDC -> EURC across 3 user(s)",
+    "smartSizing": {
+      "fearGreed": 29,
+      "drawdownPct": 0.005558339074340828,
+      "multiplier": 0.85,
+      "source": "llm",
+      "proposedMultiplier": 0.85
+    },
+    "x402": {
+      "resource": "/api/x402-brief",
+      "amountUsdcAtomic": "1000",
+      "payer": "0x61e7Ae336F7Eb7F8517dE4F19963D88dFD9161eC",
+      "payTo": "0xcAf34080F47f576F923962AD04dD7ddd86d8d85f",
+      "settled": true,
+      "mode": "settled",
+      "via": "http",
+      "transferId": "8fc63cef-32b2-4e1c-aa8c-9fe8480e7e92",
+      "settleStatus": "received"
+    },
+    "smartFee": {
+      "feeUsdcEach": "0.010000",
+      "totalUsdc": "0.010000",
+      "payerCount": 1,
+      "payTo": "0x00Ebbd3aFCCaD08970ED8FdaE591244c8475a0aC",
+      "testnet": true,
+      "settled": true,
+      "transferId": "59ad75f0-d514-413f-9697-39dfbfe6fdea",
+      "settleStatus": "received",
+      "settledTo": "0xcaf34080f47f576f923962ad04dd7ddd86d8d85f"
+    }
   }
 ]
