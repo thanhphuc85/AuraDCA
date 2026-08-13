@@ -95,7 +95,10 @@
       "lastChargedAt": "2026-08-13T02:00:46.057Z",
       "dcaSmartFearBelow": 40,
       "dcaSmartSensitivity": 1,
-      "totalSmartFeesPaidUsdc": "2.170000"
+      "totalSmartFeesPaidUsdc": "2.170000",
+      "totalWithdrawn": {
+        "EURC": "182.000000"
+      }
     },
     "0xc90468daf085a616d2137e8e3ae4525f232a340a": {
       "address": "0xc90468daf085a616d2137e8e3ae4525f232a340a",
@@ -7650,8 +7653,11 @@
       "address": "0xfc337ba1f00e8092fe2d073fed0072a0a43d2219",
       "token": "EURC",
       "amount": "182.000000",
-      "status": "processing",
-      "requestedAt": "2026-08-13T02:08:24.483Z"
+      "status": "completed",
+      "requestedAt": "2026-08-13T02:08:24.483Z",
+      "txHash": "0x8229e91d2a4d646482ef20271319257ab744463c26af6fa6021854304bb8e160",
+      "processedAt": "2026-08-13T02:08:26.774Z",
+      "circleTxId": "98038050-f792-5423-acf6-914fcbfd09e8"
     }
   ]
 }
