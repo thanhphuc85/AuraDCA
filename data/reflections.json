@@ -9618,5 +9618,33 @@
       "pacing",
       "ranging-market"
     ]
+  },
+  {
+    "id": "ref-1786612611257",
+    "date": "2026-08-13",
+    "timestamp": "2026-08-13T09:16:51.257Z",
+    "runStatus": "error_swap_failed",
+    "insight": "Day 38 hit a complete infrastructure wall: 7 consecutive EURC routing failures with 0% success rate over 1 calendar day. This is pure execution infrastructure breakdown, not strategy failure—the DCA logic, sizing, and dip ladder remain sound.",
+    "patterns": [
+      "EURC routing infrastructure outage causing 7 consecutive swap failures on 2026-08-13",
+      "User schedule consistently executing correct amounts ($1.45-$1.72 USDC) but all swaps failing at routing layer",
+      "Market remains in 38-day tight consolidation ($63.2k-$65.3k, 0.04-0.12% volatility) with no dip tiers triggered",
+      "Dip ladder appropriately dormant—designed for 5%+ drawdowns that haven't materialized in this sub-1% volatility regime",
+      "Composite risk elevated to 53/100 purely from error streak, not from market conditions (drawdown only 2.58%, volatility 0.12%)",
+      "Campaign cumulative spend tracking correctly at 1138.68 USDC over 38 days despite today's outage"
+    ],
+    "strategyAdjustment": "Immediately investigate EURC token routing/liquidity on the swap infrastructure. Consider fallback token routing (try alternative stablecoins like USDC->WETH->BTC if EURC routes are blocked) or temporarily pause EURC-specific swaps until routing recovers. If infrastructure team confirms extended EURC outage, switch tokenOut to a more liquid pair. Do NOT change DCA amounts, timing, or dip ladder logic—those are working correctly. Focus 100% on fixing the swap execution layer.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "1138.679368",
+    "dayNumber": 38,
+    "walletBalance": "484.747974323550802698",
+    "tags": [
+      "error-recovery",
+      "infrastructure-failure",
+      "routing-outage",
+      "EURC-specific",
+      "swap-execution",
+      "zero-success-rate"
+    ]
   }
 ]
