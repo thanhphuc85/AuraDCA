@@ -10647,5 +10647,35 @@
       "low-volatility",
       "budget"
     ]
+  },
+  {
+    "id": "ref-1786669330554",
+    "date": "2026-08-14",
+    "timestamp": "2026-08-14T01:02:10.554Z",
+    "runStatus": "success",
+    "insight": "39-day consolidation regime ($63.2k-$65.3k) continues with perfect execution health: zero clamping, zero errors, and structural dormancy across all four dip ladder tiers (nearest trigger at 5% vs. actual 2.77% drawdown). Current pacing at ~$1.45/run is appropriate given ultra-low volatility (0.05%) and ranging market with no directional edge.",
+    "patterns": [
+      "All 8 recent runs bound by user_schedule with zero clamping - guardrails never restrictive",
+      "Dip ladder structurally dormant for entire 39-day campaign - no tier has ever triggered (nearest: 5.0% mild threshold)",
+      "Consistent ranging regime at 70-72% confidence with drawdowns oscillating 2.77-2.98% - well below any dip threshold",
+      "Fear & Greed index stable at 29 across all recent runs - persistent bearish sentiment without capitulation",
+      "Ultra-low volatility (0.03-0.17%) and near-zero momentum (-1.41% to +2.56%) confirming tight consolidation",
+      "Daily utilization consistently 12-14% of $200 cap - massive budget headroom unused",
+      "Perfect operational health: zero error streaks, 100% success rate across recent history"
+    ],
+    "strategyAdjustment": "Maintain current $1.40-1.58 base sizing through consolidation. If BTC breaks below $63,000 (would trigger 5% mild dip tier), increase to 1.3x multiplier immediately. If Fear & Greed drops below 25 (extreme fear), consider modest 10% size increase even without dip signal. Monitor for breakout above $65,300 resistance - if confirmed with volume, reduce size by 15% as consolidation exit removes mean-reversion edge. Current strategy is optimal for ranging regime; no adjustment needed until regime change.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "1159.354368",
+    "dayNumber": 39,
+    "walletBalance": "465.193204276391944542",
+    "tags": [
+      "ranging-market",
+      "dip-ladder-dormant",
+      "perfect-execution",
+      "consolidation-regime",
+      "low-volatility",
+      "budget-headroom",
+      "pacing"
+    ]
   }
 ]
