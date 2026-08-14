@@ -11199,5 +11199,34 @@
       "ranging-regime",
       "threshold-calibration"
     ]
+  },
+  {
+    "id": "ref-1786737542828",
+    "date": "2026-08-14",
+    "timestamp": "2026-08-14T19:59:02.828Z",
+    "runStatus": "skipped_guardrail_clamped",
+    "insight": "The current run was clamped to zero by `no_live_spend` (0 active live spend against 5 active users), mirroring the pattern at the start of today's run sequence — this is a structural guardrail behavior, not a market or strategy signal. The two real live executions today (1.440 + 1.625 USDC) were clean and unclamped, confirming normal cadence is functioning correctly when live spend is present.",
+    "patterns": [
+      "no_live_spend clamping bookends the day — appears at start and end of the run sequence when no live scheduled spend exists, a recurring structural skip not a strategy failure",
+      "dip ladder structurally dormant for all 39 campaign days: activeTier=null every run, nearest mild threshold at 5.0% vs actual drawdown of ~3.6-3.8% in sub-0.15% volatility regime — threshold is persistently miscalibrated",
+      "market regime locked in tight ranging band ($62,556–$65,286) for 39 days with Fear & Greed at 29 (bearish), ultra-low volatility (0.08–0.12%), and slightly negative momentum (~-0.5% to -1.8%)",
+      "simulated micro-allocations (0.000054–0.001187 USDC) appear repeatedly in history — these are negligible in dollar terms and reflect user-side schedule fragments, not agent decisions",
+      "capital concentration risk steady at ~70-71% (composite risk 26-27/100) — this is the dominant risk factor and has not changed across the campaign",
+      "cumulative spend at 1187.47 USDC on day 39 with 493.48 USDC wallet balance remaining — no budget constraint active, pacing unrestricted"
+    ],
+    "strategyAdjustment": "1) Do not flag `no_live_spend` skips as anomalies — log them as expected structural behavior and keep reflection brief for these events. 2) The dip ladder mild threshold of 5.0% is definitively miscalibrated for this sub-0.15% volatility regime where BTC's 39-day drawdown has never exceeded ~4%; if threshold reconfiguration is within scope, recommend lowering mild tier to ~3.5% to actually activate in this regime. 3) Continue ignoring the swap-history fallback stale drawdown artifact (22-24%) per established protocol. 4) With $493 USDC remaining and no daily cap constraint, normal scheduled cadence is appropriate — no pacing adjustment needed.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "1187.469368",
+    "dayNumber": 39,
+    "walletBalance": "493.482397030895645535",
+    "tags": [
+      "clamping",
+      "no_live_spend",
+      "dip-ladder",
+      "market-timing",
+      "pacing",
+      "budget",
+      "regime-ranging"
+    ]
   }
 ]

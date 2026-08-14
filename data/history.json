@@ -22000,5 +22000,16 @@
       "transferId": "d30d10fb-8364-4061-9bd7-b610be2c0a6e",
       "settleStatus": "received"
     }
+  },
+  {
+    "date": "2026-08-14",
+    "timestamp": "2026-08-14T19:58:13.300Z",
+    "status": "skipped_guardrail_clamped",
+    "requestedAmountUsdc": "0.000000",
+    "clampedAmountUsdc": "0",
+    "boundBy": "no_live_spend",
+    "tokenOut": "cirBTC",
+    "walletUsdcBalance": "493.482397030895645535",
+    "message": "No buy this run: 5 active user(s), live scheduled 0.000000 USDC, clamped to 0.000000 by no_live_spend (min swap 0.1)"
   }
 ]
