@@ -21326,5 +21326,49 @@
       "settleStatus": "received",
       "settledTo": "0xcaf34080f47f576f923962ad04dd7ddd86d8d85f"
     }
+  },
+  {
+    "date": "2026-08-14",
+    "timestamp": "2026-08-14T10:00:42.589Z",
+    "status": "success",
+    "requestedAmountUsdc": "1.675000",
+    "clampedAmountUsdc": "1.675000",
+    "boundBy": "user_schedule",
+    "tokenOut": "EURC",
+    "reasoning": "Market brief shows bearish sentiment (Fear & Greed 29, BTC -1.55% to $62,736) with high on-chain activity and a standard allocation bias, as BTC sits near the lower bound of its 7-day range in a persistent 39-day $62.7k-$65.3k consolidation. The real cirBTC feed confirms only a 3.91% drawdown from high with ultra-low 0.08% volatility, so all four dip ladder tiers remain untriggered (activeTier: null, nearest mild threshold at 5.0%) — no dip signal present despite the swap-history fallback flagging a stale \"strong\" dip artifact that is disregarded per established protocol. The regime is ranging at 72% confidence with negligible momentum, and composite risk is low (25/100, driven mainly by capital concentration) with zero error streak. Past reflections consistently confirm the dip ladder has been structurally dormant for the entire 39-day campaign due to overly wide thresholds for this low-volatility regime, supporting normal scheduled cadence for this user-determined allocation.",
+    "txHash": "0x3edd857ea2143ffcb1f31f52ed7f768a6a08b327208baeb81a7e7e7a98cc7d10",
+    "explorerUrl": "https://testnet.arcscan.app/tx/0x3edd857ea2143ffcb1f31f52ed7f768a6a08b327208baeb81a7e7e7a98cc7d10",
+    "amountOut": "1.412653",
+    "walletUsdcBalance": "510.986714821338366507",
+    "message": "Swapped 1.675000 USDC -> EURC across 3 user(s)",
+    "smartSizing": {
+      "fearGreed": 29,
+      "drawdownPct": 0.010129698002461421,
+      "multiplier": 1.35,
+      "source": "llm",
+      "proposedMultiplier": 1.35
+    },
+    "x402": {
+      "resource": "/api/x402-brief",
+      "amountUsdcAtomic": "1000",
+      "payer": "0x61e7Ae336F7Eb7F8517dE4F19963D88dFD9161eC",
+      "payTo": "0xcAf34080F47f576F923962AD04dD7ddd86d8d85f",
+      "settled": true,
+      "mode": "settled",
+      "via": "http",
+      "transferId": "ba84677a-2c9b-434b-911d-8c231184b974",
+      "settleStatus": "received"
+    },
+    "smartFee": {
+      "feeUsdcEach": "0.010000",
+      "totalUsdc": "0.010000",
+      "payerCount": 1,
+      "payTo": "0x00Ebbd3aFCCaD08970ED8FdaE591244c8475a0aC",
+      "testnet": true,
+      "settled": true,
+      "transferId": "cf4c7c3a-781d-40b0-9cb1-ba805574c468",
+      "settleStatus": "received",
+      "settledTo": "0xcaf34080f47f576f923962ad04dd7ddd86d8d85f"
+    }
   }
 ]
