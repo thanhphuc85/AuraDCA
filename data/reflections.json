@@ -10913,5 +10913,35 @@
       "threshold-miscalibration",
       "simulation-contamination"
     ]
+  },
+  {
+    "id": "ref-1786694552026",
+    "date": "2026-08-14",
+    "timestamp": "2026-08-14T08:02:32.026Z",
+    "runStatus": "success",
+    "insight": "Day 39 confirms the dip ladder has been structurally inert for the entire campaign — BTC's maximum drawdown of ~3.68% has never breached the 5.0% mild threshold, meaning zero dip-enhanced entries have occurred across 39 days in a $62.9k–$65.2k consolidation regime with sub-0.2% daily volatility.",
+    "patterns": [
+      "Dip ladder completely dormant for all 39 days — 5.0% mild threshold is too wide for a regime where realized volatility has consistently been 0.05%–0.20% and drawdowns peak at ~3.7%",
+      "Fear & Greed has been stuck at 29 (Fear) for multiple consecutive runs with no change, suggesting this metric is stale or the regime is exceptionally persistent — it provides no actionable edge in current conditions",
+      "Swap-history fallback continues to surface a ~23% drawdown artifact that must be manually disregarded every run — this is a recurring reliability issue requiring a code-level fix, not a protocol workaround",
+      "Smart-sizing multiplier oscillates between 1.15 (increase) and decrease-bias signals within the same day, reflecting intraday noise rather than a clear directional signal — multiplier adjustments are canceling out across runs",
+      "All real executions are cleanly bound by user_schedule with no clamping; daily utilization remains very low (~5% of $200 cap per real run), indicating substantial unused daily headroom",
+      "Simulated runs with near-zero amounts (0.000055–0.002544 USDC) appearing in history suggest test/simulation artifacts are mixing with live run history, which obscures true pacing analysis"
+    ],
+    "strategyAdjustment": "Three concrete actions for the next run: (1) Recalibrate the dip ladder — lower the mild threshold from 5.0% to 2.5% given the regime's consistent sub-4% drawdowns and sub-0.2% volatility; this would have triggered enhanced buys on multiple runs where BTC touched 3.5%–3.7% drawdown near the consolidation lower bound. (2) File a fix for the swap-history fallback 23.41% drawdown artifact — it has been manually disregarded for 39 consecutive days and should be excluded at the data layer, not the reasoning layer. (3) Since Fear & Greed has been flat at 29 for many consecutive runs, de-weight it as a signal until it moves; instead, lean harder on the cirBTC real drawdown percentage relative to the recalibrated dip thresholds as the primary sizing trigger.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "1170.329368",
+    "dayNumber": 39,
+    "walletBalance": "494.174618247233955342",
+    "tags": [
+      "dip-ladder",
+      "threshold-calibration",
+      "market-timing",
+      "pacing",
+      "data-quality",
+      "signal-quality",
+      "ranging-regime",
+      "budget"
+    ]
   }
 ]
