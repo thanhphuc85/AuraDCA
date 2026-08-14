@@ -10705,5 +10705,31 @@
       "low-volatility",
       "threshold-mismatch"
     ]
+  },
+  {
+    "id": "ref-1786676744265",
+    "date": "2026-08-14",
+    "timestamp": "2026-08-14T03:05:44.265Z",
+    "runStatus": "success",
+    "insight": "Day 39 of consolidation: dip ladder has never triggered a single tier in the entire campaign (BTC pinned in $63.2k-$65.3k range, drawdown consistently 2.7-3.0%, volatility under 0.15%), so all execution has been pure scheduled-cadence buys with no dip-signal-driven entries to evaluate for quality.",
+    "patterns": [
+      "All 8 recent runs bound by 'user_schedule', not by dip triggers or budget caps - guardrails are not binding at all, they're simply irrelevant given the flat market",
+      "Requested amounts are drifting upward across runs on 2026-08-14 alone (1.450 -> 1.475 -> 1.500 -> 1.650), suggesting smart-sizing multiplier or rate-based logic is inflating position sizes intraday without a corresponding market justification",
+      "Fear & Greed has been stuck at 29 for the entire history shown, yet the analyst brief alternates between 'increase allocation 10-15%' and 'decrease allocation 10-15%' recommendations run to run with no underlying data change - this signal is noisy/unreliable and reasoning text sometimes contradicts itself (e.g. 8-13 run 3 flags analyst says decrease while multiplier increases)",
+      "Multiple runs on the same calendar date (2026-08-14 shows 4 separate executions) indicates either multi-user rate-based batching or increased run frequency - cumulative spend of 1162.50 USDC over 39 days averages ~29.8 USDC/day, higher than any single run amount would suggest, implying many small runs are stacking up"
+    ],
+    "strategyAdjustment": "Stop treating the Fear&Greed-based 'increase/decrease 10-15%' analyst recommendation as a meaningful input since it has flip-flopped at F&G=29 with no price action to justify either direction - it's adding noise to reasoning without changing outcomes. Instead, explicitly track cumulative days-since-last-dip-tier-trigger (now 39) and consider whether the mild tier threshold (5.0% drawdown) is calibrated correctly for this asset's realized volatility (max seen ~3%) - if the ladder is structurally dormant this long, flag to the user whether tier thresholds should be tightened (e.g. 3-4%) to ever capture a buyable dip in this regime. Also verify why multiple executions are landing on the same date with rising amounts (1.45->1.65) - confirm this is intended multi-user/rate-based batching and not duplicate/redundant runs.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "1162.504368",
+    "dayNumber": 39,
+    "walletBalance": "462.17192268632717283",
+    "tags": [
+      "dip-ladder-dormant",
+      "pacing-on-track",
+      "signal-quality-noisy",
+      "ranging-market",
+      "clamping-not-binding",
+      "multi-run-same-day"
+    ]
   }
 ]
