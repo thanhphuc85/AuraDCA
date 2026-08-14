@@ -11102,5 +11102,37 @@
       "market-timing",
       "threshold-recalibration"
     ]
+  },
+  {
+    "id": "ref-1786734975734",
+    "date": "2026-08-14",
+    "timestamp": "2026-08-14T19:16:15.734Z",
+    "runStatus": "simulated",
+    "insight": "Day 39 of a ranging, low-volatility BTC campaign: the dip ladder has been structurally dormant for the entire campaign because the mild threshold (5.0%) is ~60–100x wider than actual realized volatility (0.08–0.22%), making it functionally useless. All 8 recent runs executed at user_schedule cadence with zero clamping, confirming the strategy is running as a pure scheduled DCA with no adaptive dip-buying behavior whatsoever.",
+    "patterns": [
+      "Dip ladder has never triggered in 39 days — mild threshold at 5.0% is irreconcilable with sub-0.25% realized volatility; the ladder is decorative, not functional",
+      "All 8 recent runs bound by user_schedule with no clamping — guardrails are non-binding and execution is 100% pass-through",
+      "BTC locked in a tight $62,556–$65,286 consolidation range for 39 days; drawdown from high consistently 3.5–4.2%, never approaching the 5.0% mild tier",
+      "Fear & Greed stuck at 29 (fear) for the entire observable window — sentiment has not shifted despite the ranging price action",
+      "Mix of real executions and simulated runs (cirBTC route offline) — simulated amounts are micro (0.000054, 0.001187 USDC) vs real amounts of 1.4–1.6 USDC, suggesting route availability is intermittent",
+      "Cumulative spend of 1,187.47 USDC over 39 days implies ~30.4 USDC/day average — consistent with a scheduled cadence strategy",
+      "Capital concentration risk at 70–71% flagged every run but composite risk held low (26–27/100) — no action taken or needed"
+    ],
+    "strategyAdjustment": "Recalibrate the mild dip ladder threshold from 5.0% to 2.0–2.5% to match the actual regime volatility (0.08–0.25% daily, ~1.5–2.5% swing range within the consolidation band). At the current 3.5–4.2% drawdown from high, a 2.5% mild tier would have triggered repeatedly and provided actual dip-buying benefit. Until recalibration happens, acknowledge in reasoning that this is pure scheduled DCA with no dip overlay — stop noting the ladder as a feature when it cannot fire. Also investigate the intermittent cirBTC route availability: two of the last 8 runs were simulated due to route offline status; if this is a persistent issue, assess whether the micro-amounts in simulated runs represent a timing/retry gap that should be collapsed or skipped.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "1187.469368",
+    "dayNumber": 39,
+    "walletBalance": "493.487337974096049695",
+    "tags": [
+      "dip-ladder",
+      "miscalibration",
+      "volatility-regime",
+      "ranging-market",
+      "pacing",
+      "route-availability",
+      "simulation",
+      "threshold-recalibration",
+      "scheduled-dca"
+    ]
   }
 ]
