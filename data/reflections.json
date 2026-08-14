@@ -10790,5 +10790,34 @@
       "consolidation-regime",
       "smart-sizing-conflict"
     ]
+  },
+  {
+    "id": "ref-1786690946127",
+    "date": "2026-08-14",
+    "timestamp": "2026-08-14T07:02:26.127Z",
+    "runStatus": "simulated",
+    "insight": "On day 39, BTC has drifted to $62,967 — near the lower bound of the 39-day $63.2k–$65.3k consolidation range — yet the dip ladder's nearest tier (mild at 5.0%) remains untriggered with only a 3.55% drawdown, meaning the entire campaign has executed exclusively via scheduled cadence with zero dip-augmented buys. The dip ladder thresholds are structurally too wide for this low-volatility ranging regime.",
+    "patterns": [
+      "Dip ladder has been dormant for all 39 days — 0 of 4 tiers ever triggered despite BTC ranging $63.2k–$65.3k with drawdowns consistently 2.8%–3.6%",
+      "Fear & Greed stuck at 29 for multiple consecutive runs — persistent bearish sentiment with no recovery signal",
+      "Ultra-low volatility across all runs (0.05%–0.19%) — regime is tightly consolidating, not trending",
+      "All 8 recent runs bound by user_schedule with no clamping — daily cap ($200) is not a binding constraint at current run sizes (~$1.4–$1.7 USDC live, $0.002544 simulated)",
+      "BTC has slipped from ~$63.4k to $62,967 across the session — slow drift toward the lower consolidation bound without triggering any alert",
+      "Simulated run at $0.002544 mixed in with live runs at $1.4–$1.7 USDC — two very different scale users coexist in the same campaign"
+    ],
+    "strategyAdjustment": "Reassess the dip ladder thresholds for this regime: with 39 days of max drawdown around 3.5% and ultra-low volatility (sub-0.2%), the mild tier at 5.0% will likely never trigger in a tight consolidation. Consider lowering the mild tier to 3.0%–3.5% to capture the current price action at the lower consolidation bound ($62,967 is already a meaningful level). BTC is now 1.40% down on the day and near the range floor — if it breaks below $63.2k support, a 4%–5% drawdown from recent high becomes plausible and warrants a pre-staged response. Additionally, after 39 days of pure scheduled execution with cumulative spend of 1,168.75 USDC and no dip buys, evaluate whether the DCA is achieving its intended cost-averaging benefit or simply executing at a flat price band — average entry cost vs. current $62,967 should be reviewed to confirm the strategy is outperforming a lump-sum at campaign start.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "1168.754368",
+    "dayNumber": 39,
+    "walletBalance": "455.769417115014182078",
+    "tags": [
+      "dip-ladder",
+      "clamping",
+      "pacing",
+      "market-timing",
+      "ranging-regime",
+      "budget",
+      "threshold-calibration"
+    ]
   }
 ]
