@@ -11039,5 +11039,36 @@
       "budget",
       "threshold-recalibration"
     ]
+  },
+  {
+    "id": "ref-1786730551400",
+    "date": "2026-08-14",
+    "timestamp": "2026-08-14T18:02:31.400Z",
+    "runStatus": "success",
+    "insight": "The dip ladder has been structurally dormant for all 39 campaign days: with BTC volatility consistently sub-0.25% and drawdowns never exceeding ~4.2%, the mild tier threshold at 5.0% is fundamentally miscalibrated for this regime and will never trigger without a threshold adjustment.",
+    "patterns": [
+      "Dip ladder untriggered for all 39 days — activeTier: null every single run; mild threshold at 5.0% vs. actual drawdowns of 3.4–4.2%",
+      "BTC remains locked in a tight 39-day range ($62.6k–$65.3k), regime classified as ranging at 71–73% confidence consistently",
+      "Fear & Greed stuck at 29 (Fear zone) across all 8 recent runs — sentiment has not shifted despite stable price action",
+      "Real cirBTC volatility consistently sub-0.25% (often sub-0.12%), confirming ultra-low volatility regime",
+      "Swap-history fallback producing a stale ~21–23% drawdown artifact that must be manually disregarded each run — this is a persistent data quality issue",
+      "All runs bound by user_schedule, no clamping by daily cap or budget constraints; pacing is unconstrained with $496 USDC remaining",
+      "Zero error streak maintained across all 39 days — execution health is excellent",
+      "High on-chain activity (31k–35k USDC transfers in 3h window) recurring but not translating into dip signals or regime shifts"
+    ],
+    "strategyAdjustment": "Recalibrate the mild dip ladder tier from 5.0% to 2.5–3.0% to match actual BTC volatility in this regime. At sub-0.25% daily volatility, a 5.0% drawdown threshold would require an extraordinary multi-week selloff to trigger; resetting mild to 2.5% and moderate to ~4.0% would make the ladder functional within the current range. Additionally, the stale swap-history fallback producing a ~22% drawdown artifact should be investigated and corrected at the data layer — after 39 days this is not a transient issue. Until threshold recalibration is actioned by the user, continue normal scheduled cadence; the 1.25x multiplier from Fear & Greed=29 is appropriate and should be maintained.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "1185.844368",
+    "dayNumber": 39,
+    "walletBalance": "496.783709487948666347",
+    "tags": [
+      "clamping",
+      "pacing",
+      "market-timing",
+      "dip-ladder",
+      "volatility-regime",
+      "threshold-calibration",
+      "data-quality"
+    ]
   }
 ]
