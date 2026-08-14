@@ -10677,5 +10677,33 @@
       "budget-headroom",
       "pacing"
     ]
+  },
+  {
+    "id": "ref-1786673148856",
+    "date": "2026-08-14",
+    "timestamp": "2026-08-14T02:05:48.856Z",
+    "runStatus": "success",
+    "insight": "Day 39 of consolidation: BTC remains locked in the $63.2k–$65.3k range with Fear & Greed at 29, all four dip ladder tiers structurally dormant, and every run executing at exactly the scheduled amount — the DCA strategy is executing cleanly but the dip ladder has been completely inactive for the entire campaign duration.",
+    "patterns": [
+      "Dip ladder has triggered zero times across all 39 days — the 5.0% mild threshold has never been breached, suggesting thresholds may be too high for this low-volatility consolidation regime",
+      "All 8 recent runs bound by user_schedule, never by daily cap or dip logic — guardrails are not binding at all",
+      "Fear & Greed index has been stuck at 29 (Fear) for multiple consecutive days without producing a tradeable dip — sentiment is bearish but price is not confirming",
+      "Smart-sizing multiplier consistently returns 1x despite Fear & Greed at 29, indicating the drawdown component (only 2.87% from high) is suppressing any boost",
+      "Executed amounts vary slightly run-to-run (1.425–1.575 USDC) reflecting user schedule fluctuations across 3 active users, not agent decisions",
+      "Cumulative spend of 1160.85 USDC over 39 days = ~$29.76/day average, consistent with scheduled pacing"
+    ],
+    "strategyAdjustment": "The dip ladder is structurally misaligned with current market volatility: with BTC volatility at 0.03–0.17% daily and a 39-day range of only $2.1k (~3.3%), a 5.0% mild threshold will never trigger in this regime. Consider flagging for review: if the ladder threshold were lowered to 2.5–3.0%, it would have triggered multiple times during this consolidation. Also, the smart-sizing multiplier is anchored to drawdown-from-high rather than intra-range position — at the bottom of the $63.2k–$65.3k range (current price $63,413 ≈ bottom quartile), a range-aware signal would recommend a mild increase even without a large absolute drawdown. No action needed on pacing — execution is clean and on-budget — but surface the ladder threshold mismatch for user review.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "1160.854368",
+    "dayNumber": 39,
+    "walletBalance": "463.696348486557624542",
+    "tags": [
+      "pacing",
+      "dip-ladder-dormant",
+      "ranging-regime",
+      "smart-sizing",
+      "low-volatility",
+      "threshold-mismatch"
+    ]
   }
 ]
