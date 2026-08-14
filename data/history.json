@@ -21591,5 +21591,31 @@
       "transferId": "a7f01ebb-5840-484a-9a8b-31086a7753c9",
       "settleStatus": "received"
     }
+  },
+  {
+    "date": "2026-08-14",
+    "timestamp": "2026-08-14T13:45:38.801Z",
+    "status": "simulated",
+    "simulated": true,
+    "requestedAmountUsdc": "0.000056",
+    "clampedAmountUsdc": "0.000056",
+    "boundBy": "user_schedule",
+    "tokenOut": "cirBTC",
+    "reasoning": "Market brief remains bearish (Fear & Greed 29, BTC -1.76% to $62,633) with high on-chain activity and an increase 10-15% allocation bias, as BTC tests the lower bound of its 39-day $62.6k-$65.3k consolidation. The real cirBTC feed confirms only a 4.06% drawdown from high with ultra-low 0.11% volatility, so no dip ladder tier is triggered (activeTier: null, nearest mild threshold at 5.0%) — the swap-history fallback's stale \"strong\" 21.19% drawdown artifact is disregarded per established protocol. The regime is ranging at 71% confidence with slight positive momentum (+1.06%), composite risk is low (26/100, driven mainly by 70% capital concentration) with zero error streak, and past reflections consistently confirm the dip ladder has been structurally dormant for this low-volatility 39-day consolidation, supporting normal scheduled cadence for this user-determined micro-allocation.",
+    "amountOut": "0.00000000",
+    "priceUsd": 62633,
+    "walletUsdcBalance": "504.608230747169633451",
+    "message": "[SIMULATED] Arc cirBTC route offline — paper-filled 0.00000000 cirBTC for 0.000056 USDC at $62633.00/cirBTC (no on-chain swap; real funds untouched)",
+    "x402": {
+      "resource": "/api/x402-brief",
+      "amountUsdcAtomic": "1000",
+      "payer": "0x61e7Ae336F7Eb7F8517dE4F19963D88dFD9161eC",
+      "payTo": "0xcAf34080F47f576F923962AD04dD7ddd86d8d85f",
+      "settled": true,
+      "mode": "settled",
+      "via": "http",
+      "transferId": "3f0e715e-98f9-4a67-afa7-b871dbe434fa",
+      "settleStatus": "received"
+    }
   }
 ]
