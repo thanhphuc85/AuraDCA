@@ -10731,5 +10731,33 @@
       "clamping-not-binding",
       "multi-run-same-day"
     ]
+  },
+  {
+    "id": "ref-1786680314714",
+    "date": "2026-08-14",
+    "timestamp": "2026-08-14T04:05:14.714Z",
+    "runStatus": "success",
+    "insight": "Day 39 of a structurally static regime: BTC has been locked in the $63.2k–$65.3k range the entire campaign with Fear & Greed pinned at 29 and all four dip tiers dormant throughout. The system is executing correctly but the dip ladder has never activated once across 1,164 USDC deployed.",
+    "patterns": [
+      "Dip ladder structurally dormant for all 39 days — nearest tier (5.0% mild) has never been reached; drawdown consistently sits at 2.8–3.0%, well short of the threshold",
+      "Fear & Greed index frozen at 29 for multiple consecutive days — sentiment signal is stale and not differentiating between runs",
+      "Smart-sizing multiplier at 1.15x despite analyst recommendations to decrease 10-15% in several recent runs — internal conflict between multiplier logic and narrative recommendation remains unresolved",
+      "All 8 recent runs bound by user_schedule, no clamping by daily cap or campaign budget — pacing is conservative relative to available headroom",
+      "BTC price range extremely tight: $63,333–$63,475 across last 8 runs, volatility ultra-low (0.03–0.10%) — no regime shift signal",
+      "Execution amounts vary slightly (1.425–1.650 USDC) suggesting per-user rate variation rather than smart-sizing driving meaningful differentiation"
+    ],
+    "strategyAdjustment": "1) Flag the smart-sizing multiplier conflict explicitly: if the narrative recommends decreasing 10-15% but the multiplier is 1.15x, audit which signal should dominate and resolve the contradiction rather than ignoring it in reasoning. 2) Consider whether the 5.0% mild dip threshold is too conservative for a ranging regime — if BTC has traded in a 3.3% range for 39 days, a 5% drawdown may never occur within this consolidation. Evaluate lowering the mild tier to 3.5% or flagging this as a regime-specific calibration issue. 3) Fear & Greed at 29 for multiple days is likely stale/sticky — reduce its weight in sizing decisions until it shows meaningful movement. 4) With 460 USDC remaining and 39 days elapsed, assess campaign end-date pacing: if the campaign has a fixed duration, calculate whether current ~1.5 USDC/run rate will exhaust budget on schedule or leave residual.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "1164.079368",
+    "dayNumber": 39,
+    "walletBalance": "460.50237537770052899",
+    "tags": [
+      "pacing",
+      "dip-ladder-dormant",
+      "ranging-regime",
+      "smart-sizing-conflict",
+      "threshold-calibration",
+      "fear-greed-stale"
+    ]
   }
 ]
