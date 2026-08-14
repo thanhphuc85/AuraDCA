@@ -21705,5 +21705,49 @@
       "settleStatus": "received",
       "settledTo": "0xcaf34080f47f576f923962ad04dd7ddd86d8d85f"
     }
+  },
+  {
+    "date": "2026-08-14",
+    "timestamp": "2026-08-14T16:00:42.764Z",
+    "status": "success",
+    "requestedAmountUsdc": "1.575000",
+    "clampedAmountUsdc": "1.575000",
+    "boundBy": "user_schedule",
+    "tokenOut": "EURC",
+    "reasoning": "Market brief is bearish (Fear & Greed 29, BTC -0.72% at $62,947) with high on-chain activity and a decrease 10-15% allocation bias, as BTC continues trading near the lower bound of its 39-day consolidation range ($62,575–$65,235). The real cirBTC feed confirms a 3.58% drawdown from high with ultra-low 0.22% volatility — all four dip ladder tiers remain untriggered (activeTier: null, nearest mild threshold at 5.0%), so no dip signal overrides scheduled cadence; the swap-history fallback's stale 22.82% drawdown artifact is disregarded per established protocol. The regime is ranging at 72% confidence with slightly negative momentum (two consecutive down periods), composite risk is low (26/100, driven mainly by 70% capital concentration) with zero error streak (outageConsecutiveRuns=0, outageDurationDays=0), and no campaign budget is configured so pacing presents no constraint. Past reflections unanimously confirm the dip ladder has been structurally dormant for all 39 campaign days due to the mild threshold being miscalibrated for this sub-0.25% volatility regime, supporting continued normal scheduled cadence.",
+    "txHash": "0x86dd8dcfd06aa7ced82df44e2b11da70dd3efa2309dd0e499bfc40ebff5d14b9",
+    "explorerUrl": "https://testnet.arcscan.app/tx/0x86dd8dcfd06aa7ced82df44e2b11da70dd3efa2309dd0e499bfc40ebff5d14b9",
+    "amountOut": "1.35254",
+    "walletUsdcBalance": "499.846376373984595979",
+    "message": "Swapped 1.575000 USDC -> EURC across 3 user(s)",
+    "smartSizing": {
+      "fearGreed": 29,
+      "drawdownPct": 0,
+      "multiplier": 1.15,
+      "source": "llm",
+      "proposedMultiplier": 1.15
+    },
+    "x402": {
+      "resource": "/api/x402-brief",
+      "amountUsdcAtomic": "1000",
+      "payer": "0x61e7Ae336F7Eb7F8517dE4F19963D88dFD9161eC",
+      "payTo": "0xcAf34080F47f576F923962AD04dD7ddd86d8d85f",
+      "settled": true,
+      "mode": "settled",
+      "via": "http",
+      "transferId": "4a7d8e1c-5240-4e11-a483-7a0732fac1db",
+      "settleStatus": "received"
+    },
+    "smartFee": {
+      "feeUsdcEach": "0.010000",
+      "totalUsdc": "0.010000",
+      "payerCount": 1,
+      "payTo": "0x00Ebbd3aFCCaD08970ED8FdaE591244c8475a0aC",
+      "testnet": true,
+      "settled": true,
+      "transferId": "72c7ce70-d0fd-4d10-af8e-8399e5359c64",
+      "settleStatus": "received",
+      "settledTo": "0xcaf34080f47f576f923962ad04dd7ddd86d8d85f"
+    }
   }
 ]

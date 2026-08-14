@@ -10975,5 +10975,36 @@
       "threshold-recalibration",
       "ranging-market"
     ]
+  },
+  {
+    "id": "ref-1786723347308",
+    "date": "2026-08-14",
+    "timestamp": "2026-08-14T16:02:27.308Z",
+    "runStatus": "success",
+    "insight": "The dip ladder has been structurally dormant for all 39 campaign days — the mild tier threshold at 5.0% has never been triggered in a regime where BTC daily volatility consistently runs below 0.25%, meaning the feature has provided zero value and every buy has executed at scheduled cadence regardless of market conditions.",
+    "patterns": [
+      "Dip ladder activeTier: null for all 39 consecutive days — mild threshold at 5.0% is fundamentally miscalibrated for sub-0.25% daily volatility regime",
+      "BTC consolidating in a tight $62,575–$65,235 range (~4.2% wide) for 39 days; actual drawdowns from high peak at ~4.2%, never reaching the 5.0% mild trigger",
+      "Fear & Greed stuck at 29 (Fear zone) for multiple consecutive runs with BTC -0.72% to -1.95% intraday — persistent bearish sentiment without a tradable dip signal",
+      "Swap-history fallback producing a stale ~21-23% drawdown artifact consistently disregarded — this data quality issue persists across all recent runs",
+      "All 8 recent runs bound by user_schedule, zero clamping by any other guardrail — budget, daily cap, and error streak are all non-binding",
+      "High on-chain activity (30k-34k USDC transfers in 3h windows) with mixed allocation bias signals (increase vs decrease) suggest market is noisy, not directionally clear",
+      "Cumulative spend of 1182.78 USDC over 39 days implies ~$30.33/day average — consistent with scheduled cadence only, no dip-amplified buys ever executed"
+    ],
+    "strategyAdjustment": "Recalibrate the mild dip ladder tier from 5.0% down to 2.5–3.0% to match actual volatility regime. With BTC consolidating in a 4.2%-wide range and daily vol below 0.25%, the current 5.0% threshold will never trigger unless there is a regime break. A 2.5% mild tier would have triggered on several of today's runs (drawdowns of 3.58–4.18%). Additionally, investigate and resolve the stale swap-history fallback artifact showing ~21-23% drawdown — after 39 days this persistent data quality issue should be corrected at the source rather than continuously patched in reasoning. If the dip ladder recalibration is not actionable by the operator, explicitly document that smart-sizing multiplier (currently 1.15x on Fear&Greed 29) is the only active market-responsiveness mechanism and it is working as designed.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "1182.779368",
+    "dayNumber": 39,
+    "walletBalance": "499.846376373984595979",
+    "tags": [
+      "dip-ladder",
+      "miscalibration",
+      "volatility-regime",
+      "ranging-market",
+      "pacing",
+      "data-quality",
+      "market-timing",
+      "budget"
+    ]
   }
 ]
