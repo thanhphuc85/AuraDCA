@@ -10759,5 +10759,36 @@
       "threshold-calibration",
       "fear-greed-stale"
     ]
+  },
+  {
+    "id": "ref-1786683776294",
+    "date": "2026-08-14",
+    "timestamp": "2026-08-14T05:02:56.294Z",
+    "runStatus": "success",
+    "insight": "Day 39 maintains stable execution within the 39-day $63.2k–$65.3k consolidation regime. Dip ladder remains structurally dormant (all tiers untriggered, nearest mild threshold at 5.0% vs actual 3.02% drawdown), confirming scheduled cadence is appropriate with no signal override warranted.",
+    "patterns": [
+      "Dip ladder structurally dormant for entire 39-day consolidation period—no tier has triggered",
+      "All recent runs bound by user_schedule with 100% execution (no clamping)",
+      "Ultra-low volatility regime persists (0.03%–0.10% across all runs)",
+      "Ranging market at 70-72% confidence with no directional edge",
+      "Fear & Greed locked at 29 across all 8 recent runs",
+      "Smart-sizing multipliers increasing (1.35x latest) despite analyst recommendation to decrease allocation 10-15%—directional conflict between quantitative signal and qualitative assessment",
+      "Composite risk consistently low (21-28/100) with zero error streaks",
+      "Daily utilization running 7-14% of $200 cap with ample headroom"
+    ],
+    "strategyAdjustment": "Continue scheduled cadence without override—dip ladder design is working as intended (preserving capital during shallow consolidation). Monitor for the eventual 5%+ drawdown that would activate mild tier and warrant first ladder response. Note the smart-sizing multiplier vs analyst recommendation conflict: if bearish positioning justifies decreased allocation, consider whether the multiplier formula needs recalibration or whether qualitative analyst calls should gate quantitative signals during low-conviction regimes.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "1165.754368",
+    "dayNumber": 39,
+    "walletBalance": "458.91013563326145955",
+    "tags": [
+      "pacing",
+      "ranging-market",
+      "dip-ladder-dormant",
+      "no-clamping",
+      "low-volatility",
+      "consolidation-regime",
+      "smart-sizing-conflict"
+    ]
   }
 ]
