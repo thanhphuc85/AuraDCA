@@ -11258,5 +11258,36 @@
       "error-recovery",
       "ranging-regime"
     ]
+  },
+  {
+    "id": "ref-1786741348560",
+    "date": "2026-08-14",
+    "timestamp": "2026-08-14T21:02:28.560Z",
+    "runStatus": "success",
+    "insight": "Day 39 confirms the dip ladder has been entirely inert for the full campaign duration — the 5.0% mild threshold is structurally miscalibrated for a regime where BTC volatility has consistently measured below 0.15%, meaning no dip signal has ever fired and the system is running purely on scheduled cadence with a 0.9x bearish multiplier.",
+    "patterns": [
+      "Dip ladder has been dormant for all 39 consecutive campaign days — activeTier: null every single run, nearest threshold (5.0% mild) has never been reached while actual drawdown hovers at ~3.7%",
+      "BTC volatility consistently sub-0.15% (today: 0.05%) — the market is in an unusually compressed ranging regime, making the 5% dip threshold structurally unreachable under current conditions",
+      "Fear & Greed stuck at 29 (extreme fear zone) for multiple consecutive days with BTC pinned in a tight $62,556–$65,286 range for 39 days — 72% ranging confidence, no breakout",
+      "Capital concentration risk remains the dominant risk driver at 71%, consistently pushing composite risk score to 27–33/100 despite all other factors being benign",
+      "Executed amounts vary significantly within the same day: $1.70, $1.625, $1.45 alongside a cluster of micro-simulated runs ($0.00005–$0.001) and one guardrail skip — suggests multiple sub-agents or schedule slots firing on the same calendar day",
+      "Multiplier locked at 0.9x for bearish conditions; no dip boost has ever been applied, so DCA is running at a consistent 10% reduction from base for the entire campaign",
+      "No budget cap constraints in 39 days — daily cap headroom remains large ($167+ remaining each run), so pacing is never a binding constraint"
+    ],
+    "strategyAdjustment": "The dip ladder threshold needs an immediate recalibration: with 39-day realized volatility below 0.15% and BTC ranging in a 4.4% band ($62,556–$65,286), a 5.0% mild threshold will never trigger unless the range breaks dramatically. Recommend lowering mild tier to 2.0–2.5% (currently at ~3.7% drawdown, so a 2.5% threshold would have fired), moderate to 3.5%, steep to 5.0%, and extreme to 7.0%. This would allow the dip ladder to actually function as designed and boost purchases when BTC tests the lower range bound (~$62,556). Additionally, with 39 days of extreme fear (FGI 29) and no recovery signal, consider whether the 0.9x multiplier should be held steady or whether sustained fear without capitulation warrants a slight accumulation bias increase rather than reduction — fear at this duration can signal value, not just risk.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "1190.619368",
+    "dayNumber": 39,
+    "walletBalance": "491.753988486796156735",
+    "tags": [
+      "dip-ladder",
+      "threshold-miscalibration",
+      "ranging-market",
+      "low-volatility",
+      "pacing",
+      "multiplier",
+      "concentration-risk",
+      "campaign-day-39"
+    ]
   }
 ]
