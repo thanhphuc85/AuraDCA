@@ -10619,5 +10619,33 @@
       "budget-headroom",
       "consolidation-regime"
     ]
+  },
+  {
+    "id": "ref-1786665745964",
+    "date": "2026-08-14",
+    "timestamp": "2026-08-14T00:02:25.964Z",
+    "runStatus": "success",
+    "insight": "Day 39 of the $63.2k–$65.3k consolidation regime continues with zero dip ladder activation across all 39 days; normal DCA cadence at ~$1.45 per run remains appropriate given structurally dormant volatility (0.06%), ranging conditions (72% confidence), and low composite risk (26/100).",
+    "patterns": [
+      "Dip ladder structurally dormant for entire 39-day consolidation regime—all four tiers untriggered with nearest mild threshold at 5.0% while actual drawdown remains below 3%",
+      "Ranging regime持续 at 70-72% confidence with ultra-low volatility (0.03-0.17%) and minimal momentum (-1.41% to +2.56%), offering no directional edge",
+      "Daily utilization consistently low at 12-14% of $200 cap with ample headroom ($172-$176 remaining), indicating conservative pacing relative to guardrails",
+      "All recent runs bound by user_schedule with zero clamping by daily cap or wallet balance—requested amounts executing unclamped",
+      "Composite risk stable and low (26-28/100) with zero error streak maintained across all runs",
+      "Fear & Greed index locked at 29 (sustained bearish sentiment) for entire recent history with BTC price oscillating tightly around $63,350-$63,475"
+    ],
+    "strategyAdjustment": "Maintain current normal DCA cadence at ~$1.40-$1.58 per run—no strategy change warranted. The dip ladder design is functioning as intended by remaining dormant during tight consolidation; volatility must exceed 5% drawdown to trigger even the mild tier, which is appropriate for this low-volatility ranging regime. Do not artificially inflate amounts or abandon the dip ladder framework simply due to extended dormancy—ranging markets are precisely when opportunistic ladders should remain inactive. Continue monitoring for regime change (breakout above $65.3k or breakdown below $63.2k) or volatility expansion that would organically activate ladder tiers.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "1157.879368",
+    "dayNumber": 39,
+    "walletBalance": "466.664572448051573342",
+    "tags": [
+      "pacing",
+      "ranging-regime",
+      "dip-ladder-dormant",
+      "consolidation",
+      "low-volatility",
+      "budget"
+    ]
   }
 ]
