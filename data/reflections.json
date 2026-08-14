@@ -11070,5 +11070,37 @@
       "threshold-calibration",
       "data-quality"
     ]
+  },
+  {
+    "id": "ref-1786734266655",
+    "date": "2026-08-14",
+    "timestamp": "2026-08-14T19:04:26.655Z",
+    "runStatus": "simulated",
+    "insight": "The dip ladder has been structurally dormant for all 39 campaign days because the mild threshold (5.0%) is fundamentally miscalibrated for a regime where realized volatility has consistently stayed below 0.25% — the ladder will never fire unless thresholds are recalibrated to ~2.5–3.0% for mild, with proportionally tighter aggressive tiers.",
+    "patterns": [
+      "Dip ladder activeTier: null for all 39 consecutive days — 0 triggers across the entire campaign",
+      "BTC volatility consistently sub-0.25% (today 0.08%), making the 5.0% mild threshold unreachable in the current ranging regime",
+      "BTC compressed in lower half of 39-day consolidation range ($62,556–$65,286), drawdown from high stuck at 3.5–4.2%, just below the 5.0% floor",
+      "Fear & Greed consistently at 29 (extreme fear) all day across all 8 recent runs — sentiment stale or market genuinely rangebound in fear",
+      "All 8 recent runs bound by user_schedule, never by daily cap or any other guardrail — daily cap ($170.59 remaining) is not a binding constraint",
+      "Alternating simulated/success status: simulated runs executing tiny amounts (~$0.001) vs real runs at $1.4–1.63, suggesting the scheduled amounts vary significantly by cadence slot",
+      "Capital concentration risk steady at 70–71%, composite risk low at 26–27/100, zero error streak maintained throughout",
+      "Cumulative spend at 1187.47 USDC on day 39 implies ~$30.45/day average — consistent with scheduled cadence, no pacing anomalies"
+    ],
+    "strategyAdjustment": "Recalibrate the dip ladder thresholds immediately: set mild tier to 2.5–3.0% (down from 5.0%), moderate to 4.0–5.0%, strong to 6.0–7.0%, and aggressive to 9.0–10.0%. At current sub-0.25% daily volatility, a 3.0% drawdown represents a meaningful multi-day move (~12x daily vol) and is a legitimate dip signal. Until recalibration occurs, the dip ladder provides zero value and the agent is purely executing flat scheduled DCA — defeating the purpose of having a dip-signal overlay. Additionally, investigate why simulated runs are executing at ~$0.001 vs real runs at $1.4–1.6; if this is intentional slot sizing, confirm it; if it is a routing fallback artifact, flag it for correction.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "1187.469368",
+    "dayNumber": 39,
+    "walletBalance": "495.135430043152049695",
+    "tags": [
+      "dip-ladder",
+      "miscalibration",
+      "volatility-regime",
+      "ranging",
+      "pacing",
+      "clamping",
+      "market-timing",
+      "threshold-recalibration"
+    ]
   }
 ]

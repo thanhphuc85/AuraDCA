@@ -21837,5 +21837,90 @@
       "settleStatus": "received",
       "settledTo": "0xcaf34080f47f576f923962ad04dd7ddd86d8d85f"
     }
+  },
+  {
+    "date": "2026-08-14",
+    "timestamp": "2026-08-14T19:00:48.648Z",
+    "status": "success",
+    "requestedAmountUsdc": "1.625000",
+    "clampedAmountUsdc": "1.625000",
+    "boundBy": "user_schedule",
+    "tokenOut": "EURC",
+    "reasoning": "Market brief is bearish (Fear & Greed 29, BTC -0.64% at $62,855) with high on-chain activity (32,356 USDC transfers in 3h) and a decrease 10-15% allocation bias, as BTC remains compressed in the lower half of its 39-day consolidation range ($62,556–$65,286). The real cirBTC feed confirms only a 3.72% drawdown from high with ultra-low 0.08% volatility — all four dip ladder tiers remain untriggered (activeTier: null, nearest mild threshold at 5.0%), so no dip signal overrides scheduled cadence; the regime is ranging at 71% confidence with slight negative momentum (-1.83%), composite risk is low at 27/100 (driven mainly by 71% capital concentration) with zero error streak, and no campaign budget is configured so pacing presents no constraint. Past reflections unanimously confirm the dip ladder has been structurally dormant for all 39 campaign days due to the mild threshold being miscalibrated for this sub-0.1% volatility regime, and the 1.626187 USDC amount passes guardrails unclamped (remaining daily cap: $170.59).",
+    "txHash": "0x6676cbb08f47e2a64fa8aa56e113cadaaaea69ecb1de5fecdd239eeef9dbdb2a",
+    "explorerUrl": "https://testnet.arcscan.app/tx/0x6676cbb08f47e2a64fa8aa56e113cadaaaea69ecb1de5fecdd239eeef9dbdb2a",
+    "amountOut": "1.415773",
+    "walletUsdcBalance": "495.135430043152049695",
+    "message": "Swapped 1.625000 USDC -> EURC across 3 user(s)",
+    "smartSizing": {
+      "fearGreed": 29,
+      "drawdownPct": 0.004466477659692415,
+      "multiplier": 1.25,
+      "source": "llm",
+      "proposedMultiplier": 1.25
+    },
+    "x402": {
+      "resource": "/api/x402-brief",
+      "amountUsdcAtomic": "1000",
+      "payer": "0x61e7Ae336F7Eb7F8517dE4F19963D88dFD9161eC",
+      "payTo": "0xcAf34080F47f576F923962AD04dD7ddd86d8d85f",
+      "settled": true,
+      "mode": "settled",
+      "via": "http",
+      "transferId": "a4cc5e00-0288-4d6a-af30-1cf6da30a6f8",
+      "settleStatus": "received"
+    },
+    "smartFee": {
+      "feeUsdcEach": "0.010000",
+      "totalUsdc": "0.010000",
+      "payerCount": 1,
+      "payTo": "0x00Ebbd3aFCCaD08970ED8FdaE591244c8475a0aC",
+      "testnet": true,
+      "settled": true,
+      "transferId": "977a07d6-459d-420c-9cab-a6c2183b2748",
+      "settleStatus": "completed",
+      "txHash": "0xd2ea9576c3f05de14b7e2862e5659744120cbed46af6193e3ef7cf61e2db3626",
+      "explorerUrl": "https://testnet.arcscan.app/tx/0xd2ea9576c3f05de14b7e2862e5659744120cbed46af6193e3ef7cf61e2db3626",
+      "settledTo": "0xcaf34080f47f576f923962ad04dd7ddd86d8d85f"
+    }
+  },
+  {
+    "date": "2026-08-14",
+    "timestamp": "2026-08-14T19:00:48.648Z",
+    "status": "simulated",
+    "simulated": true,
+    "requestedAmountUsdc": "0.001187",
+    "clampedAmountUsdc": "0.001187",
+    "boundBy": "user_schedule",
+    "tokenOut": "cirBTC",
+    "reasoning": "Market brief is bearish (Fear & Greed 29, BTC -0.64% at $62,855) with high on-chain activity (32,356 USDC transfers in 3h) and a decrease 10-15% allocation bias, as BTC remains compressed in the lower half of its 39-day consolidation range ($62,556–$65,286). The real cirBTC feed confirms only a 3.72% drawdown from high with ultra-low 0.08% volatility — all four dip ladder tiers remain untriggered (activeTier: null, nearest mild threshold at 5.0%), so no dip signal overrides scheduled cadence; the regime is ranging at 71% confidence with slight negative momentum (-1.83%), composite risk is low at 27/100 (driven mainly by 71% capital concentration) with zero error streak, and no campaign budget is configured so pacing presents no constraint. Past reflections unanimously confirm the dip ladder has been structurally dormant for all 39 campaign days due to the mild threshold being miscalibrated for this sub-0.1% volatility regime, and the 1.626187 USDC amount passes guardrails unclamped (remaining daily cap: $170.59).",
+    "amountOut": "0.00000002",
+    "priceUsd": 62855,
+    "walletUsdcBalance": "495.135430043152049695",
+    "message": "[SIMULATED] Arc cirBTC route offline — paper-filled 0.00000002 cirBTC for 0.001187 USDC at $62855.00/cirBTC (no on-chain swap; real funds untouched)",
+    "x402": {
+      "resource": "/api/x402-brief",
+      "amountUsdcAtomic": "1000",
+      "payer": "0x61e7Ae336F7Eb7F8517dE4F19963D88dFD9161eC",
+      "payTo": "0xcAf34080F47f576F923962AD04dD7ddd86d8d85f",
+      "settled": true,
+      "mode": "settled",
+      "via": "http",
+      "transferId": "a4cc5e00-0288-4d6a-af30-1cf6da30a6f8",
+      "settleStatus": "received"
+    },
+    "smartFee": {
+      "feeUsdcEach": "0.010000",
+      "totalUsdc": "0.010000",
+      "payerCount": 1,
+      "payTo": "0x00Ebbd3aFCCaD08970ED8FdaE591244c8475a0aC",
+      "testnet": true,
+      "settled": true,
+      "transferId": "977a07d6-459d-420c-9cab-a6c2183b2748",
+      "settleStatus": "completed",
+      "txHash": "0xd2ea9576c3f05de14b7e2862e5659744120cbed46af6193e3ef7cf61e2db3626",
+      "explorerUrl": "https://testnet.arcscan.app/tx/0xd2ea9576c3f05de14b7e2862e5659744120cbed46af6193e3ef7cf61e2db3626",
+      "settledTo": "0xcaf34080f47f576f923962ad04dd7ddd86d8d85f"
+    }
   }
 ]
