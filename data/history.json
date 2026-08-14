@@ -21974,5 +21974,31 @@
       "transferId": "4442dfbe-df54-4259-804d-378344fdda9a",
       "settleStatus": "received"
     }
+  },
+  {
+    "date": "2026-08-14",
+    "timestamp": "2026-08-14T19:45:37.113Z",
+    "status": "simulated",
+    "simulated": true,
+    "requestedAmountUsdc": "0.000056",
+    "clampedAmountUsdc": "0.000055",
+    "boundBy": "sim_daily_ceiling",
+    "tokenOut": "cirBTC",
+    "reasoning": "Market brief remains bearish (Fear & Greed 29, BTC -0.69% at $62,906) with high on-chain activity (35k+ USDC transfers, 269 cirBTC transfers in ~3h) and a decrease 10-15% allocation bias, as BTC continues trading near the lower bound of its 39-day consolidation range ($62,556–$65,286). The real cirBTC feed confirms a 3.65% drawdown from high with ultra-low 0.11% volatility — all four dip ladder tiers remain untriggered (activeTier: null, nearest mild threshold at 5.0%), so no dip signal overrides scheduled cadence; the swap-history fallback's stale 23.83% drawdown artifact is disregarded per established protocol. The regime is ranging at 71% confidence with slight negative momentum (-1.55%, two consecutive down periods), composite risk is low (27/100, driven mainly by 71% capital concentration) with zero error streak (outageConsecutiveRuns=0, outageDurationDays=0), no campaign budget is configured so pacing presents no constraint, and past reflections unanimously confirm the dip ladder has been structurally dormant for all 39 campaign days due to the mild threshold being miscalibrated for this sub-0.15% volatility regime — supporting continued normal scheduled cadence for this user-determined micro-allocation.",
+    "amountOut": "0.00000000",
+    "priceUsd": 62906,
+    "walletUsdcBalance": "493.483698961658479711",
+    "message": "[SIMULATED] Arc cirBTC route offline — paper-filled 0.00000000 cirBTC for 0.000055 USDC at $62906.00/cirBTC (no on-chain swap; real funds untouched)",
+    "x402": {
+      "resource": "/api/x402-brief",
+      "amountUsdcAtomic": "1000",
+      "payer": "0x61e7Ae336F7Eb7F8517dE4F19963D88dFD9161eC",
+      "payTo": "0xcAf34080F47f576F923962AD04dD7ddd86d8d85f",
+      "settled": true,
+      "mode": "settled",
+      "via": "http",
+      "transferId": "d30d10fb-8364-4061-9bd7-b610be2c0a6e",
+      "settleStatus": "received"
+    }
   }
 ]

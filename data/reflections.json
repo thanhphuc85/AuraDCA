@@ -11168,5 +11168,36 @@
       "pacing",
       "capital-concentration"
     ]
+  },
+  {
+    "id": "ref-1786736811365",
+    "date": "2026-08-14",
+    "timestamp": "2026-08-14T19:46:51.365Z",
+    "runStatus": "simulated",
+    "insight": "Day 39 continues the established pattern: BTC ranging tightly at $62,801–$62,947 with sub-0.25% volatility, the dip ladder remains structurally dormant for all 39 days (3.65% drawdown vs 5.0% mild threshold), and the latest run was a micro-simulated amount ($0.000056) clamped to $0.000055 by sim_daily_ceiling — the Arc cirBTC route remains offline so real swaps are paper-filled. The three live runs today ($1.575, $1.440, $1.625) executed cleanly unclamped; only the tiny simulated runs hit the sim ceiling.",
+    "patterns": [
+      "Dip ladder structurally dormant for all 39 campaign days — 5.0% mild threshold is ~35x the actual daily volatility (0.08–0.22%), making it effectively unreachable in this regime",
+      "sim_daily_ceiling clamping is recurrent but only affects micro-simulated amounts (~$0.000055–0.000059); real/live runs pass unclamped throughout",
+      "Arc cirBTC route has been offline for multiple consecutive simulated runs — paper-fills are the consistent outcome for sim-mode swaps",
+      "BTC ranging regime at 71–72% confidence has been persistent; $62,556–$65,286 consolidation band is now 39 days old with negative momentum building (-1.55% to -1.83%)",
+      "Fear & Greed stuck at 29 (Fear) with 10–15% decrease allocation bias applied consistently — no escalation or de-escalation observed",
+      "Capital concentration at 70–71% is the primary risk driver (composite 26–27/100) but has not changed — no risk-driven clamping triggered",
+      "Cumulative spend: 1187.47 USDC over 39 days — ~30.45 USDC/day average, consistent with unconstrained user schedule pacing"
+    ],
+    "strategyAdjustment": "The dip ladder threshold of 5.0% mild is empirically non-functional for this asset at this volatility level (consistently 0.08–0.22%). If the goal is to respond to dips, the mild tier should be recalibrated to ~1.5–2.0% to match actual price variance — at 3.65% current drawdown, a 2.0% mild threshold would have triggered buys multiple times this week. Additionally, with BTC showing two consecutive down periods and trading near the lower bound of its 39-day range ($62,556), this is a structurally favorable entry zone; consider whether a manual override or a temporary threshold reduction is warranted before a potential range breakdown below $62,556. The Arc cirBTC route offline status should be flagged for escalation if it persists beyond this session — prolonged paper-fills in sim mode mask real execution gaps.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "1187.469368",
+    "dayNumber": 39,
+    "walletBalance": "493.483698961658479711",
+    "tags": [
+      "clamping",
+      "dip-ladder",
+      "market-timing",
+      "pacing",
+      "volatility-mismatch",
+      "route-offline",
+      "ranging-regime",
+      "threshold-calibration"
+    ]
   }
 ]
