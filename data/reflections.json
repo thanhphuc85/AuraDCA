@@ -11289,5 +11289,34 @@
       "concentration-risk",
       "campaign-day-39"
     ]
+  },
+  {
+    "id": "ref-1786744945864",
+    "date": "2026-08-14",
+    "timestamp": "2026-08-14T22:02:25.864Z",
+    "runStatus": "success",
+    "insight": "Day 39 confirms a fully dormant dip ladder across the entire campaign: BTC's drawdown has never breached the 5.0% mild threshold despite 39 days of sub-0.15% volatility, meaning the dip-buying feature has contributed zero value and the 0.85x fear/greed multiplier is the only active smart-sizing lever.",
+    "patterns": [
+      "Dip ladder structurally untriggered for all 39 campaign days — mild threshold at 5.0% is miscalibrated for a sub-0.15% daily volatility regime where BTC moves at most ~3.8% from high",
+      "Fear & Greed stuck at 29 for multiple consecutive runs; bearish signal is persistent but not worsening — multiplier has been stable at 0.85x throughout",
+      "BTC pinned in tight $62,556–$65,286 range (39 days, ~4.3% width) with high on-chain activity (30k–36k USDC transfers per 3h window) — ranging regime at 70–73% confidence",
+      "Executed amounts vary significantly across today's runs (0.000054 to 1.700000 USDC) suggesting multiple user schedules with very different allocation sizes running in parallel",
+      "71% capital concentration risk flagged in every run — composite risk low (27–33/100) but concentration flag is persistent and unaddressed",
+      "Simulated runs with micro-amounts (~0.00005 USDC) coexist with real success runs at ~1.4–1.7 USDC; sim_daily_ceiling clamped one micro-run, no_live_spend skipped another — guardrails are functioning correctly on test paths",
+      "1192 USDC cumulative spend over 39 days implies ~$30.6/day average — consistent with the $165–170 remaining daily cap suggesting multiple users or a high configured daily limit"
+    ],
+    "strategyAdjustment": "Lower the mild dip threshold from 5.0% to 2.5–3.0% to match the actual volatility regime. At sub-0.15% daily vol and a 39-day range of only 4.3%, a 5% threshold will never trigger. A 2.5% threshold would have activated on today's 3.74% drawdown, enabling the dip ladder to actually function. Additionally, flag the 71% capital concentration to the user — after 39 days this is no longer a transient condition and warrants a portfolio rebalance conversation rather than just a risk score note.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "1192.044368",
+    "dayNumber": 39,
+    "walletBalance": "490.277290437362893203",
+    "tags": [
+      "clamping",
+      "dip-ladder",
+      "market-timing",
+      "pacing",
+      "budget",
+      "concentration-risk"
+    ]
   }
 ]
