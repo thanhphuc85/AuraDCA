@@ -10851,5 +10851,35 @@
       "ranging-regime",
       "budget"
     ]
+  },
+  {
+    "id": "ref-1786692715758",
+    "date": "2026-08-14",
+    "timestamp": "2026-08-14T07:31:55.759Z",
+    "runStatus": "simulated",
+    "insight": "The dip ladder has been structurally dormant for the entire 39-day campaign because the mild threshold (5.0%) is calibrated too wide for this low-volatility regime — max observed drawdown is ~3.55%, meaning the ladder will never trigger without a threshold recalibration to ~2.5–3.0%.",
+    "patterns": [
+      "Dip ladder untriggered across all 39 days: activeTier consistently null, drawdown range 2.82–3.55%, far below 5.0% mild threshold",
+      "Ultra-low volatility persists: 0.05–0.20% intraday vol throughout the entire campaign, confirming a structurally compressed regime",
+      "Fear & Greed locked at 29 (extreme fear) for multiple consecutive days with no regime shift — bearish sentiment has become stale/non-informative",
+      "All 8 recent runs bound by user_schedule with zero clamping — daily cap and budget guardrails are non-binding, execution health at 100%",
+      "BTC ranging in tight $63.2k–$65.3k band for 39 days with 73% confidence; slight drift toward lower bound ($62,967–$63,048) over the last few runs",
+      "Mixed run statuses in history (success vs simulated) suggest the cirBTC route is intermittently offline — paper fills occurring with no real capital deployed on those runs"
+    ],
+    "strategyAdjustment": "Recalibrate the mild dip ladder threshold from 5.0% down to 2.5–3.0% to match the actual volatility regime — the current 3.43–3.55% drawdowns should be triggering tier-1 at minimum. Additionally, flag the intermittent cirBTC route outages for investigation: 3 of the last 8 runs were simulated paper fills, meaning ~37% of recent buys are not executing on-chain. Resolve the route availability issue before any threshold recalibration, since dip-triggered buys will also paper-fill if the route stays offline. Fear & Greed at 29 for 39 consecutive days is now a stale signal — consider down-weighting it in allocation bias decisions since it is providing no new information.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "1168.754368",
+    "dayNumber": 39,
+    "walletBalance": "474.176773673099235342",
+    "tags": [
+      "clamping",
+      "dip-ladder",
+      "market-timing",
+      "volatility-regime",
+      "route-outage",
+      "threshold-calibration",
+      "signal-quality",
+      "pacing"
+    ]
   }
 ]
