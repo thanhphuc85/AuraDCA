@@ -10943,5 +10943,37 @@
       "ranging-regime",
       "budget"
     ]
+  },
+  {
+    "id": "ref-1786719753797",
+    "date": "2026-08-14",
+    "timestamp": "2026-08-14T15:02:33.797Z",
+    "runStatus": "success",
+    "insight": "The dip ladder has been structurally dormant for all 39 campaign days because the mild tier threshold (5.0%) is miscalibrated for this sub-0.2% volatility consolidation regime — BTC's drawdown has consistently hovered at ~4.0–4.2%, just below the trigger, meaning zero dip-enhanced entries have occurred across the entire campaign despite BTC trading near range lows.",
+    "patterns": [
+      "Dip ladder activeTier: null on every single run across all 39 campaign days — 0 dip signals fired in the entire campaign",
+      "BTC drawdown consistently ranging 3.8–4.2%, persistently just below the 5.0% mild tier threshold",
+      "Volatility locked sub-0.2% (readings of 0.04–0.12% across today's runs), confirming a structurally low-volatility regime incompatible with current ladder calibration",
+      "Fear & Greed Index held at 29 all day — sustained fear sentiment without triggering any defensive pacing action",
+      "All successful runs bound by user_schedule, no clamping by daily cap or budget constraints",
+      "Smart sizing multiplier consistently at 0.85 (bearish bias) due to F&G=29, but no ladder boost to counteract the downward sizing",
+      "Swap-history fallback 'strong' dip signal (21.4% drawdown artifact) consistently and correctly disregarded — protocol is sound",
+      "4 simulated runs mixed with 4 successful on-chain executions today — micro-allocations (0.000056–0.001187 USDC) are effectively noise"
+    ],
+    "strategyAdjustment": "Recalibrate the dip ladder mild tier threshold from 5.0% to 2.5–3.0% immediately. At current volatility (sub-0.2%), a 5.0% drawdown is statistically unreachable without a regime change. A 2.5% mild tier would have triggered repeatedly today (drawdown at ~4.0–4.2%) and throughout the campaign, delivering the dip-buying behavior the ladder was designed to provide. Additionally, the 0.85x smart sizing multiplier on every run is suppressing allocation during a period where BTC is at 39-day range lows — if the mild tier were active, the combined dip multiplier would offset this. Until recalibration is confirmed, accept that this campaign has executed as pure scheduled DCA with no tactical dip enhancement for its entire 39-day duration.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "1181.204368",
+    "dayNumber": 39,
+    "walletBalance": "501.294519642364874715",
+    "tags": [
+      "dip-ladder",
+      "miscalibration",
+      "volatility-regime",
+      "clamping",
+      "pacing",
+      "market-timing",
+      "threshold-recalibration",
+      "ranging-market"
+    ]
   }
 ]
