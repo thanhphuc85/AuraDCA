@@ -10819,5 +10819,37 @@
       "budget",
       "threshold-calibration"
     ]
+  },
+  {
+    "id": "ref-1786691808498",
+    "date": "2026-08-14",
+    "timestamp": "2026-08-14T07:16:48.498Z",
+    "runStatus": "simulated",
+    "insight": "The dip ladder has been structurally dormant for the entire 39-day campaign because the mild threshold (5.0%) is miscalibrated for this low-volatility regime — BTC's drawdown has only reached ~3.5% at its deepest, meaning dip-buying logic has never activated once across 39 days and ~1168 USDC deployed.",
+    "patterns": [
+      "Dip ladder never triggered across all 39 days of campaign — activeTier consistently null",
+      "Drawdown from high consistently ranging 2.8%–3.6%, well below the 5.0% mild threshold",
+      "Ultra-low volatility persists (0.05%–0.20% intraday), confirming a structurally compressed regime",
+      "Fear & Greed stuck at 29 for multiple consecutive runs — sustained bearish sentiment without capitulation",
+      "All executions clamped by user_schedule only — no budget or daily cap binding observed",
+      "BTC price drifting toward lower bound of $63.2k–$65.3k range, testing ~$62,967–$63,010",
+      "Ranging regime confidence holding at 70–73% across all recent runs — no regime transition",
+      "Mix of simulated and live runs (cirBTC route offline for paper fills) — no on-chain execution risk but signal quality unaffected"
+    ],
+    "strategyAdjustment": "Recalibrate the mild dip threshold from 5.0% down to 3.0%–3.5% to match the actual volatility regime. In a 39-day consolidation with max observed drawdown of ~3.5% and intraday volatility under 0.25%, a 5.0% threshold is functionally unreachable and renders the entire dip ladder inert. A 3.0% mild tier would have triggered several times this week near the $62,967 low, enabling better cost-basis improvement. Also consider adding a volatility-adjusted threshold: if 30-day realized vol drops below a set floor (e.g., 1.5% daily), scale all ladder tiers down proportionally. Continue normal scheduled cadence until threshold recalibration is confirmed.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "1168.754368",
+    "dayNumber": 39,
+    "walletBalance": "454.177798456067023342",
+    "tags": [
+      "clamping",
+      "dip-ladder",
+      "market-timing",
+      "pacing",
+      "volatility",
+      "threshold-calibration",
+      "ranging-regime",
+      "budget"
+    ]
   }
 ]

@@ -21158,5 +21158,33 @@
       "settleStatus": "received",
       "settledTo": "0xcaf34080f47f576f923962ad04dd7ddd86d8d85f"
     }
+  },
+  {
+    "date": "2026-08-14",
+    "timestamp": "2026-08-14T07:15:37.467Z",
+    "status": "simulated",
+    "simulated": true,
+    "requestedAmountUsdc": "0.000055",
+    "clampedAmountUsdc": "0.000055",
+    "boundBy": "user_schedule",
+    "tokenOut": "cirBTC",
+    "reasoning": "Market brief shows bearish sentiment (Fear & Greed 29, BTC -1.33% at $63,010) with high on-chain activity and a decrease-10-15% allocation bias, as BTC continues to test the lower bound of its 39-day $63.2k–$65.3k consolidation range. The real cirBTC feed confirms a 3.49% drawdown from high with ultra-low 0.20% volatility — all four dip ladder tiers remain untriggered (activeTier: null, nearest mild threshold at 5.0%), so no dip signal is present to override scheduled cadence. The ranging regime holds at 73% confidence with slightly negative momentum (-0.47%), composite risk is low at 21/100 with zero error streak (outageConsecutiveRuns=0, outageDurationDays=0), and past reflections confirm the dip ladder has been structurally dormant for the entire 39-day campaign with the mild threshold calibrated too wide for this low-volatility regime.",
+    "amountOut": "0.00000000",
+    "priceUsd": 63010,
+    "walletUsdcBalance": "454.177798456067023342",
+    "message": "[SIMULATED] Arc cirBTC route offline — paper-filled 0.00000000 cirBTC for 0.000055 USDC at $63010.00/cirBTC (no on-chain swap; real funds untouched)",
+    "x402": {
+      "resource": "/api/x402-brief",
+      "amountUsdcAtomic": "1000",
+      "payer": "0x61e7Ae336F7Eb7F8517dE4F19963D88dFD9161eC",
+      "payTo": "0xcAf34080F47f576F923962AD04dD7ddd86d8d85f",
+      "settled": true,
+      "mode": "settled",
+      "via": "http",
+      "transferId": "8ee40633-2616-4082-9b5f-61bfcdaea24e",
+      "settleStatus": "completed",
+      "txHash": "0x90c972867ee10ddd5f243e1306f973fcf576d6ac1f12cc4171f0ddc985596da8",
+      "explorerUrl": "https://testnet.arcscan.app/tx/0x90c972867ee10ddd5f243e1306f973fcf576d6ac1f12cc4171f0ddc985596da8"
+    }
   }
 ]
