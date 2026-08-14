@@ -21565,5 +21565,31 @@
       "transferId": "435f3e12-f720-4cca-a4ea-e544b8ec43e6",
       "settleStatus": "received"
     }
+  },
+  {
+    "date": "2026-08-14",
+    "timestamp": "2026-08-14T13:30:47.354Z",
+    "status": "simulated",
+    "simulated": true,
+    "requestedAmountUsdc": "0.000059",
+    "clampedAmountUsdc": "0.000059",
+    "boundBy": "user_schedule",
+    "tokenOut": "cirBTC",
+    "reasoning": "Market brief is bearish (Fear & Greed 29, BTC -1.30% at $62,698) with high on-chain activity and a decrease-10-15% allocation bias, as BTC lingers near the lower bound of its 39-day $62.9k-$65.3k consolidation. The real cirBTC feed shows only a 3.96% drawdown from high with ultra-low ~0.10% volatility, so all four dip ladder tiers remain untriggered (activeTier: null, nearest mild threshold at 5.0%) — no dip signal present, and the swap-history fallback's stale \"strong\" 21.19% drawdown artifact is disregarded per established protocol. The regime is ranging at 71% confidence with slight positive momentum, composite risk is low (26/100, driven mainly by capital concentration) with zero error streak, and pacing shows no fixed campaign budget (spending at daily cap with ample headroom). Past reflections consistently confirm the dip ladder has been structurally dormant for the entire low-volatility 39-day consolidation, supporting normal scheduled cadence for this user-determined micro-allocation.",
+    "amountOut": "0.00000000",
+    "priceUsd": 62698,
+    "walletUsdcBalance": "504.609971540317633451",
+    "message": "[SIMULATED] Arc cirBTC route offline — paper-filled 0.00000000 cirBTC for 0.000059 USDC at $62698.00/cirBTC (no on-chain swap; real funds untouched)",
+    "x402": {
+      "resource": "/api/x402-brief",
+      "amountUsdcAtomic": "1000",
+      "payer": "0x61e7Ae336F7Eb7F8517dE4F19963D88dFD9161eC",
+      "payTo": "0xcAf34080F47f576F923962AD04dD7ddd86d8d85f",
+      "settled": true,
+      "mode": "settled",
+      "via": "http",
+      "transferId": "a7f01ebb-5840-484a-9a8b-31086a7753c9",
+      "settleStatus": "received"
+    }
   }
 ]
