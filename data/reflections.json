@@ -11228,5 +11228,35 @@
       "budget",
       "regime-ranging"
     ]
+  },
+  {
+    "id": "ref-1786737749557",
+    "date": "2026-08-14",
+    "timestamp": "2026-08-14T20:02:29.557Z",
+    "runStatus": "success",
+    "insight": "Day 39 confirms the dip ladder is structurally dead for this campaign: BTC has never breached the 5% mild threshold despite 39 days of ranging, because intraday volatility (0.06–0.12%) is roughly 40–80x smaller than the ladder's calibration floor. The Fear & Greed index has been stuck at 29 all day while BTC holds a tight $62,556–$65,286 band — the market is not giving dip entries, and the system is correctly falling back to scheduled cadence every time.",
+    "patterns": [
+      "Dip ladder untriggered for all 39 campaign days — activeTier: null on every run, mild threshold at 5.0% is structurally miscalibrated for a sub-0.15% volatility regime",
+      "BTC ranging at 71–72% confidence for multiple consecutive days within a $2,730-wide band ($62,556–$65,286), two consecutive down periods with -1.55% momentum",
+      "Fear & Greed pinned at 29 (Fear) all day on 2026-08-14, yet drawdown from high is only 3.57–3.81% — sentiment and price action are decoupled",
+      "Today's run mix: 2 live successes at $1.625 and $1.70, 4 simulated micro-allocations ($0.000054–$0.001187), 1 skipped (no_live_spend guardrail), 1 sim_daily_ceiling clamp — simulation pipeline is generating near-zero dust runs that add noise without capital deployment",
+      "Cumulative spend $1,189.17 over 39 days = ~$30.49/day average; today's two live executions total $3.325, slightly below the daily average, consistent with bearish multiplier (1.4x applied but amounts still reflect the lower scheduled base)",
+      "Capital concentration at 71% flagged as primary risk driver — portfolio is concentrated and this has been the dominant risk signal for weeks",
+      "50% reliability rate contributed to medium composite risk (33/100) on the most recent run, a slight regression from low (26–27/100) seen earlier today"
+    ],
+    "strategyAdjustment": "Three concrete actions for next run: (1) Dip ladder recalibration is overdue — lower the mild threshold from 5.0% to 1.5–2.0% to match the actual volatility regime (sub-0.15% intraday, ~3.6–3.8% from ATH); at current volatility the 5% tier will never trigger in a ranging market. (2) Investigate the source of the micro-simulation dust runs (requested amounts of $0.000054–$0.001187) — these are cluttering history and making pattern analysis harder; if they are scheduling artifacts, suppress or consolidate them. (3) Monitor the reliability rate regression (50% on the last live run vs. stable low risk earlier today) — if it persists below 60% across the next 3 runs, treat it as an error-streak signal and reduce live spend by 10% as a precaution.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "1189.169368",
+    "dayNumber": 39,
+    "walletBalance": "493.481210979743645535",
+    "tags": [
+      "clamping",
+      "dip-ladder",
+      "market-timing",
+      "pacing",
+      "budget",
+      "error-recovery",
+      "ranging-regime"
+    ]
   }
 ]
