@@ -10881,5 +10881,37 @@
       "signal-quality",
       "pacing"
     ]
+  },
+  {
+    "id": "ref-1786693628708",
+    "date": "2026-08-14",
+    "timestamp": "2026-08-14T07:47:08.708Z",
+    "runStatus": "simulated",
+    "insight": "The dip ladder has been structurally inert for all 39 days of this campaign — with BTC drawdown consistently at 3–3.6% and the mild tier threshold set at 5.0%, the ladder will never trigger in this low-volatility ranging regime unless the threshold is recalibrated. The most actionable change is lowering the mild tier to ~2.5–3.0% to match observed volatility.",
+    "patterns": [
+      "Dip ladder 100% dormant across all 39 campaign days — activeTier consistently null, nearest trigger at 5.0% vs. actual drawdown of 3.0–3.6%",
+      "Ultra-low volatility regime: cirBTC volatility has ranged 0.05%–0.20% across recent runs, far below thresholds calibrated for a more volatile market",
+      "Fear & Greed stuck at 29 for multiple consecutive runs — persistent bearish sentiment with no capitulation or relief",
+      "BTC consolidating tightly in $63.2k–$65.3k range for 39 days with only mild -1.3% to -1.4% daily moves",
+      "Mixed run scale in history: 4 simulated micro-runs (0.000055–0.002544 USDC) alongside 4 live runs (1.425–1.675 USDC) — data integrity of history is fragmented by test/sim contamination",
+      "All 8 recent runs bound by user_schedule with zero clamping — guardrails not binding, budget headroom ample ($189+ remaining daily)",
+      "Zero error streak maintained across all 8 runs — execution health stable",
+      "Composite risk consistently low (19–23/100) driven mainly by concentration risk from 1168 USDC deployed capital"
+    ],
+    "strategyAdjustment": "Recalibrate the dip ladder mild tier threshold from 5.0% down to 2.5% to match the observed low-volatility regime where maximum drawdown has not exceeded 3.6% in 39 days. Without this change, the ladder will remain permanently dormant and provides zero value. Set moderate tier to ~4.5%, significant to ~7%, and severe to ~10% to maintain proportional spacing. Additionally, filter out simulated micro-runs (sub-$0.01) from history used in reflection analysis — they distort pattern recognition by mixing test artifacts with real execution data. With BTC at the lower bound of the 39-day range ($62,965 vs. $63.2k support), slightly increase allocation by 5–10% above base schedule to take advantage of the range-low positioning before a potential mean reversion to $65k.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "1168.754368",
+    "dayNumber": 39,
+    "walletBalance": "494.175728245532835342",
+    "tags": [
+      "dip-ladder",
+      "calibration",
+      "low-volatility",
+      "ranging",
+      "pacing",
+      "market-timing",
+      "threshold-miscalibration",
+      "simulation-contamination"
+    ]
   }
 ]
