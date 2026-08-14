@@ -11006,5 +11006,38 @@
       "market-timing",
       "budget"
     ]
+  },
+  {
+    "id": "ref-1786726948549",
+    "date": "2026-08-14",
+    "timestamp": "2026-08-14T17:02:28.549Z",
+    "runStatus": "success",
+    "insight": "The dip ladder has been structurally dormant for all 39 campaign days because the mild tier threshold (5.0%) is miscalibrated for BTC's current sub-0.2% daily volatility and sub-4.2% drawdown regime — it has never triggered once in the entire campaign and will not trigger unless BTC drops ~25% further from current levels.",
+    "patterns": [
+      "Dip ladder permanently dormant: activeTier=null for all 39 days, drawdown consistently 3.4–4.2%, far below the 5.0% mild threshold",
+      "BTC locked in tight 39-day consolidation range $62.6k–$65.2k with sub-0.2% daily volatility — ranging regime at 71–73% confidence consistently",
+      "Fear & Greed stuck at 29 (Fear) for multiple consecutive runs despite zero error streak and low composite risk (26/100)",
+      "All executions bound by user_schedule with no clamping — guardrails never binding over entire campaign",
+      "Smart sizing multiplier consistently at 0.88 (bearish discount) due to persistent Fear & Greed 29",
+      "Swap-history fallback stale artifact (21–23% drawdown) consistently disregarded per protocol — this stale data remains a recurring noise source",
+      "BTC testing lower bound of range today (~$62.6k), generating mixed signals: decrease-bias from market brief vs. accumulation-into-weakness interpretation from on-chain volume",
+      "High on-chain activity (31–34k transfers in 3h) recurring throughout the day, interpreted variously as liquidations or accumulation"
+    ],
+    "strategyAdjustment": "Recalibrate the mild dip ladder tier from 5.0% down to 2.5–3.0% to match the actual volatility regime. At sub-0.2% daily volatility and a 39-day range of only ~4.1% peak-to-trough, the current 5.0% threshold is unreachable without a regime break. A recalibrated mild tier at 2.5% would have triggered multiple times this campaign (drawdown touched ~4.2% today), enabling the intended dip-buying behavior. Additionally, the swap-history fallback stale drawdown artifact (21–23%) should be suppressed or flagged at the data-ingestion layer rather than requiring repeated runtime discard logic — this has been called out for 39 days without resolution. Monitor whether BTC's current lower-bound test (~$62.6k) resolves as range support or a breakdown; if BTC closes below $62.5k, reassess regime confidence and consider whether ranging classification should shift toward trending-down.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "1184.219368",
+    "dayNumber": 39,
+    "walletBalance": "498.248302267328202347",
+    "tags": [
+      "dip-ladder",
+      "miscalibration",
+      "ranging",
+      "market-timing",
+      "pacing",
+      "volatility",
+      "stale-data",
+      "budget",
+      "threshold-recalibration"
+    ]
   }
 ]
