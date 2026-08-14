@@ -11318,5 +11318,37 @@
       "budget",
       "concentration-risk"
     ]
+  },
+  {
+    "id": "ref-1786748518187",
+    "date": "2026-08-14",
+    "timestamp": "2026-08-14T23:01:58.187Z",
+    "runStatus": "success",
+    "insight": "Day 39 confirms the dip ladder is structurally broken for this regime: BTC has maintained sub-0.12% daily volatility throughout the entire campaign, making the 5.0% mild threshold unreachable — the ladder has never triggered once in 39 days. Scheduled DCA is executing cleanly but the dip-enhancement feature is dead weight.",
+    "patterns": [
+      "Dip ladder has been dormant for all 39 campaign days — activeTier always null, nearest threshold (5.0% mild) never approached in a sub-0.12% volatility regime",
+      "BTC price has been range-bound in a tight $62,556–$65,286 corridor (~4.4% width) for the entire 39-day campaign",
+      "Fear & Greed stuck at 29 (Fear) for multiple consecutive runs — sentiment has not recovered despite price stabilizing near range low",
+      "Smart sizing multiplier consistently at 0.85 (bearish reduction), meaning every execution is 15% below base allocation",
+      "Composite risk score stable at 27–33/100, dominated by 71% capital concentration — no error streaks or budget constraints",
+      "Daily cap never a binding constraint — remaining cap consistently $160–$170 USDC at time of execution",
+      "Mix of simulated micro-runs (sub-$0.001) and live runs ($1.425–$1.70) on same day suggests multi-user or multi-schedule setup with very different allocation sizes",
+      "Cumulative spend of $1,193.47 over 39 days averages ~$30.60/day, consistent with scheduled cadence without dip acceleration"
+    ],
+    "strategyAdjustment": "Recalibrate the dip ladder thresholds immediately — the mild tier should drop from 5.0% to ~1.5–2.0% drawdown given the persistent sub-0.15% daily volatility regime. With BTC ranging in a ~4.4% band, a 5% threshold will statistically never trigger. A 1.5% mild / 2.5% moderate / 3.5% significant / 4.5% severe ladder structure would be proportionate to current conditions. Additionally, consider whether the 0.85x smart sizing multiplier is appropriate for 39 straight days of Fear sentiment — if this is a known accumulation window, the reduction may be working against the strategy's intent. Review whether the capital concentration risk (71%) warrants a rebalancing action rather than continued USDC→EURC DCA.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "1193.469368",
+    "dayNumber": 39,
+    "walletBalance": "488.819447154359442019",
+    "tags": [
+      "dip-ladder",
+      "miscalibration",
+      "volatility-regime",
+      "ranging-market",
+      "smart-sizing",
+      "concentration-risk",
+      "pacing",
+      "threshold-recalibration"
+    ]
   }
 ]
