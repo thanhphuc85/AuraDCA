@@ -21948,5 +21948,31 @@
       "transferId": "37d75cbe-8d98-4fe2-93cd-f0b8e31d3078",
       "settleStatus": "received"
     }
+  },
+  {
+    "date": "2026-08-14",
+    "timestamp": "2026-08-14T19:30:45.394Z",
+    "status": "simulated",
+    "simulated": true,
+    "requestedAmountUsdc": "0.000059",
+    "clampedAmountUsdc": "0.000059",
+    "boundBy": "user_schedule",
+    "tokenOut": "cirBTC",
+    "reasoning": "Market brief remains bearish (Fear & Greed 29, BTC -0.80% at $62,849) with high on-chain activity (34,264 USDC transfers) and a decrease 10-15% allocation bias, as BTC continues trading near the lower bound of its 39-day consolidation range ($62,556–$65,286). The real cirBTC feed confirms a 3.73% drawdown from high with ultra-low 0.12% volatility — all four dip ladder tiers remain untriggered (activeTier: null, nearest mild threshold at 5.0%), so no dip signal overrides scheduled cadence; the regime is ranging at 71% confidence with slight negative momentum (-1.55%, two consecutive down periods), composite risk is low (27/100, driven mainly by 71% capital concentration) with zero error streak (outageConsecutiveRuns=0, outageDurationDays=0), and no campaign budget is configured so pacing presents no constraint. Past reflections unanimously confirm the dip ladder has been structurally dormant for all 39 campaign days due to the mild threshold being miscalibrated for this sub-0.15% volatility regime, supporting continued normal scheduled cadence for this user-determined micro-allocation.",
+    "amountOut": "0.00000000",
+    "priceUsd": 62849,
+    "walletUsdcBalance": "493.484710548618479711",
+    "message": "[SIMULATED] Arc cirBTC route offline — paper-filled 0.00000000 cirBTC for 0.000059 USDC at $62849.00/cirBTC (no on-chain swap; real funds untouched)",
+    "x402": {
+      "resource": "/api/x402-brief",
+      "amountUsdcAtomic": "1000",
+      "payer": "0x61e7Ae336F7Eb7F8517dE4F19963D88dFD9161eC",
+      "payTo": "0xcAf34080F47f576F923962AD04dD7ddd86d8d85f",
+      "settled": true,
+      "mode": "settled",
+      "via": "http",
+      "transferId": "4442dfbe-df54-4259-804d-378344fdda9a",
+      "settleStatus": "received"
+    }
   }
 ]

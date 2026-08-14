@@ -11134,5 +11134,39 @@
       "threshold-recalibration",
       "scheduled-dca"
     ]
+  },
+  {
+    "id": "ref-1786735910762",
+    "date": "2026-08-14",
+    "timestamp": "2026-08-14T19:31:50.762Z",
+    "runStatus": "simulated",
+    "insight": "The dip ladder has been structurally dormant for all 39 campaign days because the mild threshold (5.0%) is miscalibrated for a sub-0.25% volatility regime where actual drawdowns from high have only reached ~3.7–4.2% — the ladder will never trigger unless thresholds are recalibrated to ~2.5–3.0% for the mild tier.",
+    "patterns": [
+      "Dip ladder untriggered for all 39 campaign days — activeTier: null every single run",
+      "BTC drawdown from high consistently 3.4–4.2%, never breaching the 5.0% mild threshold",
+      "Ultra-low volatility regime persisting: daily price volatility 0.08–0.22%, far below the threshold calibration assumptions",
+      "BTC holding a tight 39-day consolidation range ($62,556–$65,286), currently pressing the lower bound",
+      "Fear & Greed index stuck at 29 (bearish) with persistent negative momentum (-1.5 to -1.8% over two consecutive periods)",
+      "Composite risk consistently low (26–27/100), dominated by 70–71% capital concentration — not a systemic risk signal",
+      "Mixed run types: real executions ($1.425–$1.625 USDC) alongside simulated micro-allocations ($0.000054–$0.000059 USDC) on the same day, suggesting route availability issues intermittently triggering simulation mode",
+      "Zero error streaks across all 8 recent runs — operational health is clean",
+      "No campaign budget configured, so pacing is unconstrained and not a factor in any decision"
+    ],
+    "strategyAdjustment": "Recalibrate the dip ladder mild tier threshold from 5.0% down to 2.5–3.0% to match the actual volatility regime (sub-0.25% daily, ~3.5–4.2% drawdown range). At 5.0%, the ladder provides zero differentiation and zero alpha — it is dead weight. A recalibrated 2.5% mild tier would have triggered on several of the recent runs (drawdown 3.4–4.2%), enabling the intended dip-buying behavior. Additionally, investigate why some runs are executing at micro-amounts ($0.000054–$0.000059 USDC) in simulated mode on the same day as normal $1.4–$1.6 USDC real executions — the Arc cirBTC route appears to go offline intermittently, and those micro-simulated runs are not providing meaningful DCA exposure.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "1187.469368",
+    "dayNumber": 39,
+    "walletBalance": "493.484710548618479711",
+    "tags": [
+      "dip-ladder",
+      "miscalibration",
+      "volatility-regime",
+      "threshold-recalibration",
+      "route-offline",
+      "simulation-mode",
+      "ranging-market",
+      "pacing",
+      "capital-concentration"
+    ]
   }
 ]
