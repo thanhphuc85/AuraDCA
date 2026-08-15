@@ -13730,5 +13730,35 @@
       "smart-sizing-working",
       "market-ranging"
     ]
+  },
+  {
+    "id": "ref-1786815418175",
+    "date": "2026-08-15",
+    "timestamp": "2026-08-15T17:36:58.175Z",
+    "runStatus": "error_swap_failed",
+    "insight": "85 consecutive runs blocked by cirBTC no-route infrastructure failure—DCA strategy is sound (smart sizing 0.85x responding correctly to bearish F&G 34, ranging regime), but execution has been completely halted for over 1 day by external routing issue requiring operator intervention.",
+    "patterns": [
+      "100% error streak across all 8 recent runs with identical 'no_route' failure",
+      "outageConsecutiveRuns escalating from 78→85, outageDurationDays stable at 1",
+      "smart sizing consistently applying 0.85-0.90x multiplier in response to bearish sentiment (F&G 34) and ranging market (72% confidence)",
+      "no dip ladder triggers despite 3.19-3.27% drawdown—all thresholds appropriately inactive (nearest at 5.0%)",
+      "requested amounts alternating $1.425-$1.575 based on LLM sizing logic, all bound by user_schedule with no clamping",
+      "BTC locked in tight $62.5K-$65.2K range for 40 days with ultra-low volatility (0.01-0.04%)",
+      "69% capital concentration risk persistent across all runs",
+      "x402 payments settling successfully—infrastructure for briefs working, swap execution blocked"
+    ],
+    "strategyAdjustment": "No strategy adjustment needed—the DCA logic, risk assessment, and sizing mechanisms are all functioning correctly. This is a hard infrastructure blocker (cirBTC routing) that cannot be solved by the agent. Operator must restore the EURC swap route or configure an alternative token output. Once routing is restored, resume normal operations with current smart sizing approach (0.85x multiplier is appropriate for current bearish/ranging conditions).",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "1193.469368",
+    "dayNumber": 40,
+    "walletBalance": "525.657426296643580894",
+    "tags": [
+      "error-recovery",
+      "infrastructure-outage",
+      "routing-failure",
+      "operator-intervention-required",
+      "smart-sizing-working",
+      "ranging-market"
+    ]
   }
 ]
