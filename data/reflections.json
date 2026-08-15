@@ -13760,5 +13760,33 @@
       "smart-sizing-working",
       "ranging-market"
     ]
+  },
+  {
+    "id": "ref-1786815997995",
+    "date": "2026-08-15",
+    "timestamp": "2026-08-15T17:46:37.995Z",
+    "runStatus": "error_swap_failed",
+    "insight": "86 consecutive runs blocked by cirBTC no-route infrastructure failure. DCA logic, sizing (0.85x multiplier for Fear & Greed 34), and market analysis are all functioning correctly—this is purely an external routing/operator issue requiring immediate intervention.",
+    "patterns": [
+      "100% error rate across all recent runs with identical 'no_route' failure for EURC swaps",
+      "Market regime consistently identified as ranging (72% confidence) with BTC in $62.5K-$65.2K consolidation for 40 days",
+      "Smart sizing responding appropriately to bearish sentiment (0.85x multiplier) but unable to execute",
+      "No dip ladder triggers despite 3.27% drawdown—all thresholds (5%, 10%, 20%, 30%) remain too conservative for current shallow drawdown",
+      "69% capital concentration risk persists but cannot be addressed while swaps are failing",
+      "outageConsecutiveRuns escalating from 80→86 with outageDurationDays: 1, confirming multi-day infrastructure outage"
+    ],
+    "strategyAdjustment": "No strategy adjustment needed—the DCA agent is performing all decision-making correctly. OPERATOR ACTION REQUIRED: Restore cirBTC routing infrastructure or switch to alternative liquidity source for EURC swaps. Once routing is restored, monitor first successful execution to confirm capital concentration begins declining from current 69% level. Consider lowering dip ladder mild threshold from 5% to 3% to capture entries in shallow ranging markets.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "1193.469368",
+    "dayNumber": 40,
+    "walletBalance": "525.655660816403580894",
+    "tags": [
+      "error-recovery",
+      "infrastructure-outage",
+      "operator-intervention-required",
+      "ranging-market",
+      "sizing-functional",
+      "routing-failure"
+    ]
   }
 ]
