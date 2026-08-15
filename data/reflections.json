@@ -13094,5 +13094,34 @@
       "pacing",
       "x402-cost"
     ]
+  },
+  {
+    "id": "ref-1786799807404",
+    "date": "2026-08-15",
+    "timestamp": "2026-08-15T13:16:47.404Z",
+    "runStatus": "simulated",
+    "insight": "The cirBTC route outage has now reached 63+ consecutive error runs (all 8 visible history entries are failures or simulated fills), with today's run again paper-filling at 0.001246 USDC — a near-zero simulated amount compared to the ~1.25–1.67 USDC scheduled amounts in the error runs. This is a pure infrastructure blockage: no real capital is being deployed into cirBTC despite a stable ranging market at $63,002.",
+    "patterns": [
+      "63+ consecutive error_swap_failed runs for cirBTC — persistent no-route infrastructure outage, not a market issue",
+      "Simulated fills are paper-only at ~0.001246 USDC while real scheduled amounts ranged 1.25–1.67 USDC — virtually zero real capital deployment for the asset",
+      "Market has been range-bound in $62,556–$65,286 for 40 days with Fear & Greed at 34 — bearish sentiment but no dip trigger (nearest threshold at 5.0%, current drawdown only 3.5%)",
+      "All four dip ladder tiers remain untriggered across all 8 recent runs — dip-buying logic is dormant, scheduled cadence is the only driver",
+      "Wallet balance stable at ~$525.70 USDC — no capital is being consumed by cirBTC buys, 1193.47 USDC cumulative spend is likely from other assets or prior periods",
+      "69% capital concentration in cirBTC persisting despite zero new real purchases — legacy position, not active accumulation",
+      "Risk score stuck at 53/100 medium — error streak is the dominant risk driver, not market conditions"
+    ],
+    "strategyAdjustment": "Operator intervention is urgent: the cirBTC route has been offline for 63+ consecutive runs (~1 full day of outage). Escalate route restoration immediately — at typical DCA cadence this represents roughly $80–105 USDC in missed real purchases (63 runs × ~$1.3–1.67 average). If route cannot be restored within the next few hours, consider whether capital should be temporarily redirected to an alternative BTC-correlated asset to avoid continued zero deployment. Do not adjust strategy parameters — the market regime (ranging, low volatility, no dip signal) is behaving normally and the DCA logic is sound. The only action needed is infrastructure: restore the cirBTC swap route.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "1193.469368",
+    "dayNumber": 40,
+    "walletBalance": "525.696008382549083614",
+    "tags": [
+      "error-recovery",
+      "infrastructure-outage",
+      "simulated",
+      "clamping",
+      "concentration-risk",
+      "operator-action-required"
+    ]
   }
 ]
