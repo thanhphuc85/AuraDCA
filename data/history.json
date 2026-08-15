@@ -22607,5 +22607,35 @@
       "transferId": "d5238b7f-0f0e-4af1-a29c-57d2cc9a1c13",
       "settleStatus": "received"
     }
+  },
+  {
+    "date": "2026-08-15",
+    "timestamp": "2026-08-15T03:05:39.164Z",
+    "status": "error_swap_failed",
+    "requestedAmountUsdc": "1.350000",
+    "clampedAmountUsdc": "1.350000",
+    "boundBy": "user_schedule",
+    "tokenOut": "EURC",
+    "reasoning": "Market brief is bearish (Fear & Greed 34, BTC -0.47% at $63,075) with a standard allocation bias and high on-chain activity (~22,250 USDC transfers), as BTC remains locked in its 40-day $62,552–$65,286 consolidation channel with 72% ranging-regime confidence and slight positive momentum (+0.10%, four consecutive up periods) — no directional edge. The real cirBTC feed (601 data points) confirms a 3.39% drawdown from high with ultra-low 0.07% volatility; all four dip ladder tiers remain untriggered (activeTier: null, nearest mild threshold at 5.0%), so no dip signal overrides scheduled cadence, and the regime recommendation is to stick close to the base amount. Composite risk is medium (53/100), driven by the 14-consecutive-run EURC no-route error streak (outageDurationDays: 1, outageConsecutiveRuns: 14), 71% capital concentration, and a 0% session success rate — past reflections unanimously confirm this is a persistent infrastructure outage requiring operator intervention, not a market-driven risk; no campaign budget is configured so pacing presents no constraint, and the 1.350000 USDC amount passes guardrails fully unclamped (daily cap $200 fully available, wallet balance $485.76).",
+    "walletUsdcBalance": "485.75760166717040537",
+    "message": "Swap failed [EURC/no_route]: Swap failed [no_route]: Stablecoin Service createSwap failed: Route or resource not found. Details: No route available",
+    "smartSizing": {
+      "fearGreed": 34,
+      "drawdownPct": 0,
+      "multiplier": 0.7,
+      "source": "llm",
+      "proposedMultiplier": 0.7
+    },
+    "x402": {
+      "resource": "/api/x402-brief",
+      "amountUsdcAtomic": "1000",
+      "payer": "0x61e7Ae336F7Eb7F8517dE4F19963D88dFD9161eC",
+      "payTo": "0xcAf34080F47f576F923962AD04dD7ddd86d8d85f",
+      "settled": true,
+      "mode": "settled",
+      "via": "http",
+      "transferId": "f6df7679-3e04-4dde-9f32-b1bee2700645",
+      "settleStatus": "received"
+    }
   }
 ]
