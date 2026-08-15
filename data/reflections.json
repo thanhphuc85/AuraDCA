@@ -14633,5 +14633,35 @@
       "x402-cost",
       "capital-deployment-failure"
     ]
+  },
+  {
+    "id": "ref-1786834814895",
+    "date": "2026-08-15",
+    "timestamp": "2026-08-15T23:00:14.895Z",
+    "runStatus": "error_swap_failed",
+    "insight": "The cirBTC no-route outage has now persisted for 115+ consecutive runs across at least 1 full day, making this the dominant operational reality — all DCA logic is functioning correctly but 100% of execution attempts are failing at the swap layer due to a structural infrastructure issue that only an operator can resolve.",
+    "patterns": [
+      "115+ consecutive error_swap_failed runs with zero successful executions — outage is not self-resolving",
+      "All 8 recent runs show identical failure mode: 'No route available' for EURC swap via cirBTC",
+      "Market conditions have been remarkably stable throughout the outage: BTC pinned at $63,076–$63,101, drawdown consistently ~2.0–2.06%, volatility near 0.01–0.05%",
+      "Smart sizing multiplier applied correctly (0.85x on Fear & Greed 34) but irrelevant while swap route is broken",
+      "Requested amounts vary run-to-run ($1.425–$1.660 USDC) suggesting sizing logic is active and adjusting, but all attempts fail before execution",
+      "USDC balance stable at ~$525.61 — no capital is being deployed or eroded by fees since swaps fail pre-execution",
+      "x402 micropayments ARE settling successfully (transferId confirmed, settleStatus: received) — cost is being incurred for market briefs even though no swaps execute"
+    ],
+    "strategyAdjustment": "No DCA strategy adjustment is warranted or useful at this stage. The single required action is operator intervention to restore the cirBTC/EURC swap route. Until the route is restored, the agent should consider whether to: (1) suspend x402 market brief purchases to avoid paying ~$0.001 USDC per run for data that cannot be acted upon — at the current run frequency this is accumulating non-trivially over 115+ runs; (2) reduce run frequency or implement a circuit-breaker that pauses scheduling after N consecutive identical no-route failures (e.g., 10) and alerts the operator, rather than continuing to poll indefinitely. Once the route is restored, resume normal DCA with no carry-over penalty — the market regime (ranging, BTC $62.5K–$65.2K, Fear & Greed 34) and sizing logic are both intact.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "1193.469368",
+    "dayNumber": 40,
+    "walletBalance": "525.608815994800922222",
+    "tags": [
+      "error-recovery",
+      "infrastructure-outage",
+      "no-route",
+      "circuit-breaker",
+      "operator-intervention",
+      "budget",
+      "pacing"
+    ]
   }
 ]
