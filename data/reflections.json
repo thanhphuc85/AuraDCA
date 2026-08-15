@@ -13616,5 +13616,31 @@
       "operator-intervention-required",
       "strategy-intact"
     ]
+  },
+  {
+    "id": "ref-1786812391140",
+    "date": "2026-08-15",
+    "timestamp": "2026-08-15T16:46:31.140Z",
+    "runStatus": "error_swap_failed",
+    "insight": "81 consecutive routing failures (100% error rate) confirm this is a structural infrastructure issue, not a strategy problem. DCA logic, smart sizing (0.85x–1.15x multipliers responding to F&G 34 and ranging regime), and risk assessment are all functioning correctly—execution is blocked by external cirBTC/EURC routing unavailability requiring operator intervention.",
+    "patterns": [
+      "Persistent no-route infrastructure outage spanning 81+ consecutive runs with 0% execution success",
+      "Smart sizing actively adjusting (1.15x multiplier for fear-driven accumulation vs 0.85x-0.90x decrease bias in prior runs) but blocked from executing",
+      "Market regime correctly identified as ranging (72% confidence, 40-day $62.5K-$65.2K consolidation) with no dip triggers (3.22% drawdown << 5.0% mild threshold)",
+      "69% capital concentration risk remains elevated due to inability to deploy capital",
+      "All requested amounts bound by user_schedule with no clamping or pacing constraints"
+    ],
+    "strategyAdjustment": "No strategy adjustment needed—the DCA agent is operating correctly. This requires operator action to restore cirBTC/EURC routing infrastructure. Once routing is restored, resume normal execution with current smart sizing logic (Fear & Greed and drawdown-based multipliers) and continue monitoring the 69% concentration risk, which should naturally decrease as buys execute. Consider fallback token pairs (e.g., USDC→WETH→cirBTC) if direct stablecoin routing remains unavailable.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "1193.469368",
+    "dayNumber": 40,
+    "walletBalance": "525.664811465206908894",
+    "tags": [
+      "error-recovery",
+      "infrastructure-outage",
+      "routing-failure",
+      "sizing-logic-healthy",
+      "operator-intervention-required"
+    ]
   }
 ]
