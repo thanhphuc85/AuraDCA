@@ -12016,5 +12016,35 @@
       "pacing",
       "x402-cost"
     ]
+  },
+  {
+    "id": "ref-1786768319999",
+    "date": "2026-08-15",
+    "timestamp": "2026-08-15T04:31:59.999Z",
+    "runStatus": "error_swap_failed",
+    "insight": "The EURC no-route outage has now reached 21 consecutive failed runs across a full day (2026-08-15) with 0% success rate — this is a confirmed, persistent infrastructure outage that no market-side adjustment can fix; operator intervention to switch token routes or pause the campaign is the only viable resolution.",
+    "patterns": [
+      "EURC no_route error streak now at 21 consecutive runs spanning the entire session of 2026-08-15, up from run 14 at the start of today's visible history — outage duration exceeding 24 hours",
+      "0% session success rate on day 40 despite $485.75 wallet balance fully available and daily cap untouched — capital is ready but routing is broken",
+      "BTC locked in 40-day $62,553–$65,286 consolidation channel for the entire run history; Fear & Greed stable at 34 (fear); no dip triggers firing (nearest threshold 5.0%, actual drawdown ~3.4%)",
+      "Requested amounts vary run-to-run ($1.35–$1.575) within a narrow band, all fully unclamped by user_schedule — pacing guardrails are not the constraint",
+      "Cumulative spend reached $1,193.47 USDC by day 40 but zero EURC acquired today — capital is being consumed in x402 brief fees ($0.001/run) while delivering no investment value",
+      "Past reflections have unanimously flagged this as infrastructure outage requiring operator intervention since at least run 14; no corrective action has been taken"
+    ],
+    "strategyAdjustment": "Immediately escalate to operator: the EURC/no_route outage is now 21+ runs old with no self-healing observed. The agent should not continue spending x402 brief fees on runs that cannot possibly succeed. Concrete actions required: (1) Operator must investigate the EURC swap route on-chain — check if the EURC liquidity pool or bridge has been disabled or rebalanced; (2) Consider temporarily switching tokenOut to an alternative (e.g., USDC-denominated BTC position or another available token) until the EURC route is restored; (3) If no alternative route exists, suspend scheduled runs to stop bleeding x402 brief fees; (4) Once route is restored, verify with a single test run before resuming full cadence. The agent itself should add a circuit-breaker: after 5 consecutive identical no_route errors, skip subsequent runs and log \"awaiting operator route fix\" rather than retrying indefinitely.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "1193.469368",
+    "dayNumber": 40,
+    "walletBalance": "485.750355724521874074",
+    "tags": [
+      "error-recovery",
+      "infrastructure-outage",
+      "no-route",
+      "EURC",
+      "circuit-breaker",
+      "operator-intervention",
+      "pacing",
+      "budget"
+    ]
   }
 ]
