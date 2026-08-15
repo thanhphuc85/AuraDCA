@@ -14109,5 +14109,34 @@
       "budget",
       "clamping"
     ]
+  },
+  {
+    "id": "ref-1786823899707",
+    "date": "2026-08-15",
+    "timestamp": "2026-08-15T19:58:19.708Z",
+    "runStatus": "skipped_guardrail_clamped",
+    "insight": "The cirBTC routing infrastructure outage has now persisted for 98 consecutive runs (outageDurationDays: 1 per run counter, but recurring across all 8 visible runs), making every real swap attempt fail with error_swap_failed while only micro-amount simulated runs ($0.000015–$0.000057) pass through — this is a total real-execution blockage requiring operator intervention, not a strategy or market issue.",
+    "patterns": [
+      "98 consecutive error_swap_failed on all real-amount cirBTC swap attempts — no single successful real execution in this window",
+      "Alternating pattern: error_swap_failed on ~$1.4–1.7 USDC runs paired with simulated passes on sub-$0.0001 runs, suggesting the routing issue is amount-threshold or route-availability related",
+      "group_zero_amount guardrail clamping micro-amounts to 0 USDC on the current run — allocation logic outputting near-zero amounts for some user slots",
+      "BTC price has been range-locked $62.5K–$65.2K for 40 days with ultra-low 0.04% volatility and all dip ladder tiers (nearest at 5.0%) consistently untriggered",
+      "Fear & Greed stuck at 34 (bearish) with mild +0.10% momentum and 4 consecutive up days — no trend breakout signal",
+      "69% capital concentration risk flagged consistently across all runs with no change",
+      "Allocation bias has been inconsistent across recent runs (alternating increase 10–15% and decrease 10–15%) despite near-identical market conditions, suggesting instability in the allocation decision logic"
+    ],
+    "strategyAdjustment": "Immediate priority: escalate the cirBTC routing outage to operator — 98 consecutive swap failures with 1193.47 USDC cumulative spent and 0 real executions completing represents a critical infrastructure failure. Until resolved, continue logging but do not treat swap failures as market or sizing signals. On allocation bias: the flip-flopping between increase/decrease 10–15% across identical market conditions (same Fear & Greed 34, same BTC range, same volatility) suggests the decision is noisy near the neutral threshold — consider implementing a hysteresis band so allocation bias only changes when conditions shift by a meaningful margin, preventing alternating signals within the same ranging regime. No dip-ladder adjustment needed since cirBTC drawdown remains at ~2.7% vs 5.0% nearest threshold.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "1193.469368",
+    "dayNumber": 40,
+    "walletBalance": "525.636742901378063422",
+    "tags": [
+      "error-recovery",
+      "infrastructure-outage",
+      "clamping",
+      "pacing",
+      "market-timing",
+      "allocation-bias-instability"
+    ]
   }
 ]
