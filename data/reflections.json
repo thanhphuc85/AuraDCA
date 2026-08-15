@@ -11476,5 +11476,37 @@
       "risk-escalation",
       "ranging-market"
     ]
+  },
+  {
+    "id": "ref-1786755736271",
+    "date": "2026-08-15",
+    "timestamp": "2026-08-15T01:02:16.271Z",
+    "runStatus": "error_swap_failed",
+    "insight": "The EURC no-route error has now persisted for 5 consecutive runs across ~1 day with no sign of self-resolution — this is a confirmed infrastructure outage, not a transient swap failure. Continued retries are burning x402 API fees (~0.001 USDC each) and producing zero DCA value.",
+    "patterns": [
+      "EURC no_route error streak now at 5 consecutive runs (outageConsecutiveRuns: 4 in latest run, now 5 including this one), spanning outageDurationDays: 1 — routing is structurally unavailable, not recovering",
+      "Dip ladder has been dormant for all 40 campaign days — the 5.0% mild threshold has never triggered in a sub-0.15% volatility ranging regime; this miscalibration is now a 40-day confirmed pattern",
+      "BTC price locked in tight $62,556–$65,286 range for 40 days (~4.4% range width), with drawdown stable at 3.52–3.76% — never reaching the 5.0% dip threshold",
+      "Fear & Greed oscillating in the 29–34 range (Extreme Fear) for multiple consecutive days, yet market shows slight positive momentum (+0.10%), indicating sentiment divergence from price action",
+      "71% capital concentration risk has persisted across all recent runs with no rebalancing signal triggered",
+      "x402 API fees being spent on every run including failed ones — cost without benefit during outage",
+      "Smart sizing multiplier held at 0.85 across all bearish runs, correctly reflecting the decrease 10-15% allocation bias signal"
+    ],
+    "strategyAdjustment": "Immediately halt EURC swap attempts and escalate to operator for route investigation — do not retry again until routing is confirmed restored. If operator cannot resolve within 24h, consider temporarily redirecting DCA allocation to an alternative token (e.g., USDC→BTC direct or another available route) to avoid campaign interruption. Additionally, the dip ladder mild threshold must be recalibrated: at 40 days with 0.05–0.15% daily volatility and a 4.4% price range, the threshold should be lowered to ~2.0–2.5% to actually engage the ladder in this regime. With cumulative spend at 1193.47 USDC and no campaign budget cap, pacing remains unconstrained, but zero-value error runs should be paused rather than continued.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "1193.469368",
+    "dayNumber": 40,
+    "walletBalance": "485.768393760439429354",
+    "tags": [
+      "error-recovery",
+      "eurc-outage",
+      "no-route",
+      "infrastructure",
+      "dip-ladder-miscalibration",
+      "market-timing",
+      "ranging-regime",
+      "pacing",
+      "x402-cost"
+    ]
   }
 ]
