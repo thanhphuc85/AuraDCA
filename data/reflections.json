@@ -13874,5 +13874,34 @@
       "routing-failure",
       "zero-deployment"
     ]
+  },
+  {
+    "id": "ref-1786818703109",
+    "date": "2026-08-15",
+    "timestamp": "2026-08-15T18:31:43.109Z",
+    "runStatus": "error_swap_failed",
+    "insight": "Infrastructure outage has now persisted for 90 consecutive runs with 100% error streak on cirBTC swaps. Strategy logic is sound (ranging regime correctly identified, no false dip signals, appropriate sizing), but execution is completely blocked by external routing failure requiring operator intervention.",
+    "patterns": [
+      "100% error streak across all 8 recent runs - cirBTC no-route infrastructure outage",
+      "outageConsecutiveRuns escalated from 83 to 90 within single day",
+      "BTC ranging regime (72% confidence) correctly identified - stuck in 40-day $62.5K-$65.2K channel",
+      "No false dip signals - drawdown only 2.94-3.27% vs 5% mild threshold",
+      "User schedule binding consistently - no clamping by other guardrails",
+      "Capital concentration stable at 69% - medium risk appropriately flagged",
+      "Requested amounts alternate 1.425/1.575 USDC following schedule pattern"
+    ],
+    "strategyAdjustment": "Strategy requires NO adjustment - market analysis, regime detection, dip ladder logic, and sizing are all functioning correctly. The blocker is purely infrastructural (cirBTC routing unavailable for 90+ runs). Operator must restore cirBTC swap route or switch target token to unblock execution. Continue monitoring for route restoration; if outage extends beyond 100 runs, consider automatic fallback to alternative stablecoin pairs (USDT/USDC direct swaps) to maintain DCA continuity.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "1193.469368",
+    "dayNumber": 40,
+    "walletBalance": "525.649679708953180894",
+    "tags": [
+      "error-recovery",
+      "infrastructure-outage",
+      "routing-failure",
+      "operator-intervention-required",
+      "strategy-validation",
+      "market-regime-ranging"
+    ]
   }
 ]
