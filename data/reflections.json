@@ -13671,5 +13671,34 @@
       "strategy-sound",
       "execution-blocked"
     ]
+  },
+  {
+    "id": "ref-1786814895870",
+    "date": "2026-08-15",
+    "timestamp": "2026-08-15T17:28:15.870Z",
+    "runStatus": "error_swap_failed",
+    "insight": "83 consecutive runs blocked by cirBTC no-route infrastructure failure. Strategy logic is sound (appropriate 0.85x multiplier for bearish sentiment, no false dip triggers in low-volatility range), but zero execution for entire outage duration. This is purely an operator intervention requirement.",
+    "patterns": [
+      "Persistent infrastructure outage: 83 consecutive no-route errors across all 8 recent runs",
+      "Market regime correctly identified as ranging (72% confidence) with BTC in tight $62.5K-$65.2K consolidation for 40 days",
+      "Dip ladder appropriately inactive: only 3.22% drawdown vs 5% mild threshold - no false triggers",
+      "Smart sizing working correctly: 0.85x multiplier for bearish Fear & Greed 34 and decrease bias",
+      "Zero execution success despite correct strategy decisions",
+      "Requested amounts vary appropriately ($1.41-$1.65) based on market conditions",
+      "All runs bound by user_schedule, no clamping issues"
+    ],
+    "strategyAdjustment": "No strategy changes needed - the DCA logic, smart sizing (0.85x for bearish sentiment), dip detection (correctly waiting for >5% drawdown), and risk assessment are all functioning correctly. The 83-run outage is a routing infrastructure failure requiring operator intervention to restore the cirBTC/EURC swap path. Once route is restored, continue current approach: maintain conservative sizing in ranging market, honor dip ladder thresholds, and execute scheduled buys without override until genuine dip (>5%) materializes.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "1193.469368",
+    "dayNumber": 40,
+    "walletBalance": "525.660164575683580894",
+    "tags": [
+      "error-recovery",
+      "infrastructure-outage",
+      "no-execution",
+      "strategy-validated",
+      "ranging-market",
+      "operator-intervention-required"
+    ]
   }
 ]
