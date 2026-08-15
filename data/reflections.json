@@ -14022,5 +14022,34 @@
       "concentration-risk",
       "pacing"
     ]
+  },
+  {
+    "id": "ref-1786822319914",
+    "date": "2026-08-15",
+    "timestamp": "2026-08-15T19:31:59.914Z",
+    "runStatus": "simulated",
+    "insight": "The cirBTC routing infrastructure outage has now persisted for 95+ consecutive runs (~1 day), producing a consistent alternating pattern of simulated fills (tiny amounts: $0.000056–$0.000057 USDC) and hard swap failures (normal-sized amounts: $1.43–$1.66 USDC) — real capital is protected but zero actual accumulation is occurring.",
+    "patterns": [
+      "Persistent alternating pattern: error_swap_failed (normal-sized ~$1.4–1.7 USDC) immediately followed by simulated (micro-sized ~$0.000056–0.000057 USDC) — suggests a fallback simulation path fires after each real failure",
+      "95+ consecutive run outage with no recovery — outageDurationDays: 1, outageConsecutiveRuns confirmed at 95 in latest run",
+      "Market regime stable and unchanged: BTC range-locked $62.5K–$65.2K for 40 days, Fear & Greed 34, ranging confidence 72%, 4 consecutive up days, +0.10% momentum — dip ladder completely dormant (nearest tier at 5.0% drawdown, actual only 2.72%)",
+      "All sizing logic functioning correctly: boundBy remains user_schedule throughout, no clamping by daily cap, risk score stable at 33/100 (down from 53/100 in earlier runs, suggesting error streak no longer inflating risk score)",
+      "Capital concentration risk persists at 69% — unchanged across all 8 recent runs",
+      "Day 40 cumulative: 1193.47 USDC spent, but effectively zero real cirBTC acquired during the outage period"
+    ],
+    "strategyAdjustment": "This is strictly an operator intervention issue — escalate immediately. The alternating simulated/error pattern confirms the fallback simulation is masking total execution failure. Concrete actions: (1) Operator must diagnose and restore the cirBTC swap route before any real accumulation can resume. (2) Consider whether the agent should hard-pause real USDC disbursement during confirmed outage streaks beyond a threshold (e.g., 10 consecutive failures) rather than continuing to attempt and fail. (3) The risk score inconsistency (53/100 in earlier runs vs 33/100 in later runs for identical conditions) suggests the error-streak component of the risk evaluator is being inconsistently applied — investigate the evaluator's streak detection logic. (4) Once routing is restored, verify the first live swap executes at expected size (~$1.4–1.7 USDC range) and that simulated fills are not double-counted in cumulative spend reporting.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "1193.469368",
+    "dayNumber": 40,
+    "walletBalance": "525.642267998301180894",
+    "tags": [
+      "error-recovery",
+      "infrastructure-outage",
+      "simulation-fallback",
+      "operator-intervention",
+      "pacing",
+      "risk-scoring-inconsistency",
+      "concentration-risk"
+    ]
   }
 ]
