@@ -14663,5 +14663,37 @@
       "budget",
       "pacing"
     ]
+  },
+  {
+    "id": "ref-1786834914222",
+    "date": "2026-08-15",
+    "timestamp": "2026-08-15T23:01:54.222Z",
+    "runStatus": "error_swap_failed",
+    "insight": "All 8 recent runs (and 116+ consecutive runs total) have failed with the same EURC/no_route error — this is a confirmed, prolonged infrastructure outage that has been unresolved for over 1 day, accumulating zero DCA execution despite correct sizing and market logic.",
+    "patterns": [
+      "116 consecutive error_swap_failed runs — outage has persisted for outageDurationDays: 1 with no sign of resolution",
+      "EURC swap route is consistently returning 'no_route' — the failure mode is identical across every run, confirming a single root cause: missing or broken liquidity route",
+      "Market analysis is stable and self-consistent: BTC at ~$63,074–$63,101, Fear & Greed 34, ranging regime (72% confidence), 40-day $62.5K–$65.2K channel, all dip tiers untriggered",
+      "Sizing varies slightly across runs ($1.425–$1.660 USDC) due to schedule-bound pacing logic, but is never clamped by daily cap or budget — guardrails are not the bottleneck",
+      "USDC balance ($525.61) and daily cap ($200) are both non-binding — liquidity is healthy, the problem is entirely on the swap routing layer",
+      "x402 payment is settling successfully on every run (transferId present, settleStatus: received) — cost is being incurred for market briefs with zero DCA output",
+      "69% capital concentration risk and maxed error-streak score are persistent flags but are not causal — they are artifacts of the outage duration, not independent risk signals"
+    ],
+    "strategyAdjustment": "Operator intervention is now critically overdue. At run 116 with outageDurationDays: 1, the agent should stop treating this as a transient failure and escalate with maximum urgency. Specific actions required: (1) Verify whether the EURC swap route has been deprecated or delisted on the underlying DEX/aggregator — check if EURC liquidity pools are still active on the target chain. (2) If EURC routing is permanently broken, switch tokenOut to an alternative (e.g., USDC→BTC direct, or a different stablecoin target) pending operator approval. (3) Consider suspending x402 market brief payments until the route is restored — the agent is spending on briefs it cannot act on. (4) Do not continue logging identical reflections — the reflection pattern itself is now stale. Next reflection should only fire if status changes or the operator confirms a structural decision.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "1193.469368",
+    "dayNumber": 40,
+    "walletBalance": "525.607580839488922222",
+    "tags": [
+      "error-recovery",
+      "outage",
+      "no-route",
+      "EURC",
+      "operator-intervention",
+      "swap-failed",
+      "stale-pattern",
+      "x402-cost",
+      "infrastructure"
+    ]
   }
 ]
