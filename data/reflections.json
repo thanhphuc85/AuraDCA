@@ -12643,5 +12643,33 @@
       "eurc-routing",
       "swap-failure-streak"
     ]
+  },
+  {
+    "id": "ref-1786789005655",
+    "date": "2026-08-15",
+    "timestamp": "2026-08-15T10:16:45.655Z",
+    "runStatus": "error_swap_failed",
+    "insight": "Structural infrastructure failure (EURC no-route) has persisted for 48 consecutive runs across 1+ day with 100% error rate. This is not a strategy problem—it's an operational blocker requiring immediate operator intervention to restore swap routing.",
+    "patterns": [
+      "48 consecutive swap failures with identical 'no_route' error for EURC",
+      "All requested amounts ($1.43-$1.67) bound only by user_schedule, no guardrail clamping",
+      "Market conditions stable: ranging regime (72% confidence), Fear & Greed at 34, BTC in tight $62.5k-$65.3k consolidation for 40 days",
+      "Drawdown extremely shallow (3.53-3.68%), far below 5% mild dip threshold—no dip signals triggered",
+      "Capital concentration at 69% driven by inability to execute buys, not by market risk",
+      "Wallet balance stable at $525.72, well above reserves—liquidity not the issue"
+    ],
+    "strategyAdjustment": "Strategy is correctly designed but cannot execute. Operator must restore EURC swap routing infrastructure immediately. If route cannot be restored within 24 hours, switch tokenOut to a working asset (WBTC, WETH) to resume accumulation during this ranging market regime. No strategy parameter changes needed—the DCA logic, sizing (smart sizing active with 1.34x multiplier for Fear & Greed 34), and guardrails are functioning correctly.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "1193.469368",
+    "dayNumber": 40,
+    "walletBalance": "525.71716945334924569",
+    "tags": [
+      "error-recovery",
+      "infrastructure",
+      "routing-failure",
+      "operator-intervention",
+      "eurc-outage",
+      "blocking-issue"
+    ]
   }
 ]
