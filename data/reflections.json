@@ -13306,5 +13306,35 @@
       "market-timing",
       "budget"
     ]
+  },
+  {
+    "id": "ref-1786805214524",
+    "date": "2026-08-15",
+    "timestamp": "2026-08-15T14:46:54.524Z",
+    "runStatus": "error_swap_failed",
+    "insight": "The cirBTC no-route outage has now persisted for 70 consecutive runs (outageConsecutiveRuns: 70) with a 0% execution success rate — every real swap attempt is failing, and the agent is burning x402 API fees (~0.001 USDC/run) on market briefs for runs that cannot execute. This is no longer a transient infrastructure issue; it is a prolonged structural blockage requiring immediate operator escalation.",
+    "patterns": [
+      "cirBTC no-route outage persistent across all 8 recent runs (outageConsecutiveRuns escalating 64→70) — 0% swap success rate",
+      "Simulated runs interspersed with failed real swap attempts, suggesting the agent is still attempting live swaps despite knowing the route is broken",
+      "Composite risk score escalating each run (33→38→43→48→53/100) due to accumulated 0% success rate weight, yet strategy remains unchanged",
+      "Market regime stable and narrow: BTC range $62,556–$65,286 for 40 days, Fear & Greed at 34, drawdown only 3.48–3.54% — no dip triggers firing",
+      "x402 briefs continue to settle (transferId present, settled: true) consuming budget on every run despite guaranteed swap failure",
+      "All 8 runs bound by user_schedule with no clamping — guardrails are not the constraint; infrastructure is",
+      "1,193 USDC spent over 40 days (~29.8 USDC/day average) with recent runs attempting 1.25–1.66 USDC each"
+    ],
+    "strategyAdjustment": "Halt live swap attempts for EURC/cirBTC until the no-route outage is resolved — do not continue spending x402 API fees on market briefs that feed into guaranteed-failure swaps. Specifically: (1) Escalate to operator immediately with outageConsecutiveRuns=70 as the critical metric — this has exceeded any reasonable auto-recovery window. (2) If the agent cannot halt autonomously, add a circuit-breaker condition: if outageConsecutiveRuns >= 10, skip the x402 brief purchase and log a structured alert instead of attempting a swap. (3) Do not adjust position sizing, dip thresholds, or market regime logic — those are working correctly and are not the issue. (4) Once the route is restored, verify with a single small test swap (e.g., 0.10 USDC) before resuming full-size scheduled runs.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "1193.469368",
+    "dayNumber": 40,
+    "walletBalance": "525.683894061405611614",
+    "tags": [
+      "error-recovery",
+      "infrastructure-outage",
+      "circuit-breaker",
+      "budget",
+      "operator-escalation",
+      "no-route",
+      "EURC"
+    ]
   }
 ]
