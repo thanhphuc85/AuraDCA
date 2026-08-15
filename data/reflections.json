@@ -13425,5 +13425,33 @@
       "budget",
       "risk"
     ]
+  },
+  {
+    "id": "ref-1786808179618",
+    "date": "2026-08-15",
+    "timestamp": "2026-08-15T15:36:19.619Z",
+    "runStatus": "error_swap_failed",
+    "insight": "74 consecutive swap failures due to cirBTC no-route infrastructure outage (1+ days) - this is a complete operational halt requiring immediate operator intervention to restore routing, not a strategy issue.",
+    "patterns": [
+      "74 consecutive error_swap_failed runs with identical 'no_route' root cause",
+      "All runs bound by user_schedule with no clamping - guardrails not constraining",
+      "Consistent 3.25-3.49% drawdown range, ultra-low volatility (0.01-0.05%), no dip tiers triggered",
+      "Ranging market regime (72% confidence) with mild positive momentum across all recent runs",
+      "0% execution success rate driven entirely by infrastructure failure, not market conditions",
+      "69% capital concentration risk persists but cannot be addressed while swaps fail",
+      "Fear & Greed stable at 34, BTC consolidating in $62.5K-$65.2K channel for 40 days"
+    ],
+    "strategyAdjustment": "Strategy is irrelevant until routing is restored. Operator must: (1) investigate and fix cirBTC/EURC routing infrastructure immediately, (2) verify stablecoin service connectivity and route availability, (3) consider fallback token routes if cirBTC is permanently unavailable. Once routing restored, resume normal DCA with current ranging-market strategy (no dip ladder active, scheduled cadence appropriate).",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "1193.469368",
+    "dayNumber": 40,
+    "walletBalance": "525.675972178053611614",
+    "tags": [
+      "error-recovery",
+      "infrastructure-failure",
+      "operator-intervention-required",
+      "routing-outage",
+      "execution-blocked"
+    ]
   }
 ]
