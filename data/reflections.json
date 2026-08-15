@@ -11411,5 +11411,38 @@
       "concentration-risk",
       "pacing"
     ]
+  },
+  {
+    "id": "ref-1786753910179",
+    "date": "2026-08-15",
+    "timestamp": "2026-08-15T00:31:50.179Z",
+    "runStatus": "error_swap_failed",
+    "insight": "EURC no-route failures have now produced 3 consecutive swap errors on 2026-08-15, confirming this is a persistent infrastructure outage, not a transient issue — the route has been unavailable for the entire day with no sign of recovery, and retrying without intervention is wasting runs.",
+    "patterns": [
+      "3 consecutive error_swap_failed on 2026-08-15 (outageConsecutiveRuns: 2 → now 3), all with identical 'no_route' failure for EURC — this is a sustained routing infrastructure outage, not a retry-recoverable error",
+      "Dip ladder has been untriggered for all 40 campaign days — mild threshold at 5.0% is structurally miscalibrated for a sub-0.15% volatility regime where BTC drawdown from high has never exceeded ~3.76% during the campaign",
+      "BTC has been rangebound in $62,556–$65,286 for 40 days at 72% confidence; Fear & Greed stuck in 29–34 (fear zone) with consistent bearish signals but no meaningful price movement",
+      "Capital concentration risk at 71% has been a persistent medium-risk driver for weeks with no reduction — this is a structural portfolio characteristic, not an actionable per-run concern",
+      "Smart sizing is applying a 1.2x multiplier despite bearish signals and fear readings; the multiplier logic may be counterproductive in a fear regime where allocation bias is explicitly 'decrease 10–15%'",
+      "Cumulative spend of $1,193.47 over 40 days averages ~$29.84/day, consistent with sub-cap execution — daily cap of $200 has never been approached"
+    ],
+    "strategyAdjustment": "For the EURC no-route outage: after 3 consecutive failures with the same error, the next run should NOT retry EURC immediately. Implement a hard skip or cooldown after 3 identical no-route errors — log the outage and wait for operator confirmation that the route is restored before attempting again. Retrying a known-broken infrastructure route wastes x402 payments (0.001 USDC each) and inflates the error streak risk score without any chance of success. For the dip ladder: at day 40 with zero triggers and max observed drawdown of ~3.76% vs a 5.0% mild threshold, the threshold needs to be lowered to 2.5–3.0% to be actionable in this volatility regime — or the ladder should be suspended entirely and replaced with range-position-aware sizing (buy more near range low $62,556, reduce near range high $65,286). For smart sizing: reconcile the 1.2x multiplier with the explicit 'decrease 10–15%' allocation bias — these are contradictory signals; the multiplier should reflect the bearish regime (≤1.0x) when allocation bias is negative.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "1193.469368",
+    "dayNumber": 40,
+    "walletBalance": "485.770504788330077358",
+    "tags": [
+      "error-recovery",
+      "eurc",
+      "no-route",
+      "outage",
+      "dip-ladder",
+      "miscalibration",
+      "smart-sizing",
+      "contradiction",
+      "pacing",
+      "market-timing",
+      "ranging"
+    ]
   }
 ]
