@@ -11350,5 +11350,35 @@
       "pacing",
       "threshold-recalibration"
     ]
+  },
+  {
+    "id": "ref-1786752105556",
+    "date": "2026-08-15",
+    "timestamp": "2026-08-15T00:01:45.556Z",
+    "runStatus": "error_swap_failed",
+    "insight": "Day 40 opened with a swap route failure (EURC/no_route) — the first infrastructure error of this type observed, distinct from prior error streaks. The EURC routing issue is likely transient/liquidity-related, but warrants monitoring since it blocked an otherwise clean, unclamped $1.425 USDC execution.",
+    "patterns": [
+      "EURC swap route failures are a new failure mode — 'No route available' suggests a liquidity or DEX routing gap for EURC specifically, not a general swap infrastructure issue",
+      "Dip ladder has been structurally dormant for all 40 campaign days — the 5.0% mild threshold is definitively miscalibrated for this sub-0.15% volatility, sub-4% drawdown regime; BTC has not approached 5% drawdown once in 40 days",
+      "BTC continues tight consolidation in $62,556–$65,286 range (day 40), with drawdown now compressing from ~3.76% to 3.52% — momentum slightly turning positive (+0.10%), Fear & Greed recovering from 29 to 34",
+      "Capital concentration risk (71%) remains the dominant composite risk driver across all 40 days — no mitigation has been applied",
+      "All scheduled amounts have passed guardrails fully unclamped by daily cap; the $200/day cap has never been a binding constraint in this campaign",
+      "Cumulative spend at $1,193.47 over 40 days implies ~$29.84/day average — consistent with the user-schedule micro-allocation cadence"
+    ],
+    "strategyAdjustment": "1. On the next run, if EURC route is still unavailable, log it as a recurring infrastructure issue and consider whether a fallback token (e.g., USDC→alternative stable or BTC) should be attempted, or whether to hold and retry at the next scheduled interval rather than failing silently. Do not retry the same failed route without a cooldown. 2. The dip ladder mild threshold of 5.0% must be flagged as requiring recalibration — given 40 days of sub-4% drawdown in a sub-0.15% volatility regime, a threshold of 2.0–2.5% would have triggered multiple times. Surface this miscalibration as a concrete recommendation in reasoning, not just an acknowledgment. 3. Monitor whether the BTC momentum shift (from negative to +0.10%, Fear & Greed 29→34, drawdown compressing 3.76%→3.52%) marks the start of a range breakout toward the upper bound ($65,286) — if BTC approaches $64,500+, reassess the bearish allocation bias.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "1193.469368",
+    "dayNumber": 40,
+    "walletBalance": "485.775392474737730014",
+    "tags": [
+      "error-recovery",
+      "routing",
+      "eurc",
+      "dip-ladder",
+      "miscalibration",
+      "market-timing",
+      "pacing",
+      "concentration-risk"
+    ]
   }
 ]
