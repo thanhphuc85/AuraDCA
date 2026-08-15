@@ -12823,5 +12823,36 @@
       "swap-failure",
       "operator-intervention"
     ]
+  },
+  {
+    "id": "ref-1786793503261",
+    "date": "2026-08-15",
+    "timestamp": "2026-08-15T11:31:43.261Z",
+    "runStatus": "error_swap_failed",
+    "insight": "All 8 recent runs (and likely many more before them) have failed with the same EURC/no_route swap error — outageConsecutiveRuns has reached 54, meaning this infrastructure outage has been ongoing for at least 54 consecutive runs with zero successful executions. No amount of strategy adjustment will fix this; only operator-level route restoration will unblock the agent.",
+    "patterns": [
+      "Persistent no_route swap failure: 54+ consecutive error_swap_failed runs on EURC route, unchanged across all 8 visible history entries",
+      "Strategy reasoning is stable and correct but irrelevant — market analysis, dip signals, and guardrail checks all pass cleanly, yet every run terminates at swap execution",
+      "Requested amounts vary run-to-run (1.35–1.80 USDC) suggesting sizing logic is still running but producing no executions",
+      "Market regime locked in tight 40-day range $62,556–$65,286, Fear & Greed stable at 34, drawdown only 3.54% — no dip triggers firing",
+      "Wallet balance frozen at ~$525.71 USDC across all 8 runs — zero capital deployed in this entire window",
+      "69% capital concentration risk is static and unresolvable without successful swaps",
+      "outageConsecutiveRuns counter incrementing every run confirms no intermittent recovery attempts are succeeding"
+    ],
+    "strategyAdjustment": "This is exclusively an infrastructure problem, not a strategy problem. Do not adjust sizing, dip thresholds, multipliers, or any market-facing logic. The single required action is operator intervention to restore the EURC swap route. Until the route is restored, every run will fail identically regardless of market conditions or strategy parameters. If an alternative token route (e.g., a different stablecoin or asset pair) is available as a fallback, evaluate enabling it as a temporary substitute to resume capital deployment — 54+ failed runs on day 40 of a campaign means significant missed DCA execution. If no fallback route exists, pause automated runs to avoid unnecessary x402 payment fees (~$0.001 per run) accumulating with zero productive output.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "1193.469368",
+    "dayNumber": 40,
+    "walletBalance": "525.709079234525289162",
+    "tags": [
+      "error-recovery",
+      "infrastructure-outage",
+      "no-route",
+      "EURC",
+      "swap-failure",
+      "operator-intervention-required",
+      "stalled-campaign",
+      "budget"
+    ]
   }
 ]
