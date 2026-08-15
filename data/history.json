@@ -23149,5 +23149,35 @@
       "transferId": "cdb40e0e-06a7-4893-9bb7-a88aaae19029",
       "settleStatus": "received"
     }
+  },
+  {
+    "date": "2026-08-15",
+    "timestamp": "2026-08-15T06:45:40.385Z",
+    "status": "error_swap_failed",
+    "requestedAmountUsdc": "1.600000",
+    "clampedAmountUsdc": "1.600000",
+    "boundBy": "user_schedule",
+    "tokenOut": "EURC",
+    "reasoning": "Market brief shows bearish sentiment with Fear & Greed at 34 (fear zone), BTC down 0.18% at $63,009 in its persistent 40-day $62.5k–$65.2k consolidation channel; ranging regime confirmed at 72% confidence with ultra-low 0.04% volatility and slight positive momentum. Real cirBTC feed (601 data points) shows 3.49% drawdown—all four dip ladder tiers remain untriggered (nearest threshold 5.0%), so no dip-buying signal overrides the scheduled cadence. Composite risk is medium (53/100) driven by the 32-consecutive-run EURC no-route infrastructure outage (outageDurationDays: 1, outageConsecutiveRuns: 32) and 71% capital concentration—past reflections confirm this is a persistent infrastructure failure requiring operator intervention, not a market-driven risk. No campaign budget is configured so pacing presents no constraint.",
+    "walletUsdcBalance": "485.73825163894038241",
+    "message": "Swap failed [EURC/no_route]: Swap failed [no_route]: Stablecoin Service createSwap failed: Route or resource not found. Details: No route available",
+    "smartSizing": {
+      "fearGreed": 34,
+      "drawdownPct": 0.0013313679806000666,
+      "multiplier": 1.2,
+      "source": "llm",
+      "proposedMultiplier": 1.2
+    },
+    "x402": {
+      "resource": "/api/x402-brief",
+      "amountUsdcAtomic": "1000",
+      "payer": "0x61e7Ae336F7Eb7F8517dE4F19963D88dFD9161eC",
+      "payTo": "0xcAf34080F47f576F923962AD04dD7ddd86d8d85f",
+      "settled": true,
+      "mode": "settled",
+      "via": "http",
+      "transferId": "a54e820b-3ba5-4ba7-9a91-5dfce439aa9a",
+      "settleStatus": "received"
+    }
   }
 ]

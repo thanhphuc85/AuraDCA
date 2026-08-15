@@ -12347,5 +12347,34 @@
       "escalation-needed",
       "budget-tracking-risk"
     ]
+  },
+  {
+    "id": "ref-1786776445100",
+    "date": "2026-08-15",
+    "timestamp": "2026-08-15T06:47:25.100Z",
+    "runStatus": "error_swap_failed",
+    "insight": "32 consecutive EURC no-route errors confirm complete infrastructure failure. Market conditions are irrelevant—no swaps are executing regardless of sizing or timing strategy.",
+    "patterns": [
+      "100% error rate across all 8 recent runs (32+ consecutive failures)",
+      "EURC routing has been broken for 1+ days with zero successful swaps",
+      "Requested amounts varying (1.45-1.60 USDC) but all fail identically with 'no_route' error",
+      "Market analysis is functioning normally: ranging regime (72% confidence), 3.37-3.52% drawdown, Fear & Greed at 34",
+      "No dip signals triggered—nearest threshold at 5.0% vs current 3.49% drawdown",
+      "Daily cap ($200) and wallet balance ($485.74) are healthy—not binding constraints",
+      "Smart sizing multipliers (1.2x) being calculated but irrelevant due to swap failure",
+      "Concentration risk at 71% cannot be addressed while swaps fail"
+    ],
+    "strategyAdjustment": "Halt DCA execution immediately until EURC routing infrastructure is restored. Current strategy adjustments (sizing, timing, dip detection) are meaningless when the swap layer is non-functional. Operator must fix the routing issue or switch to an alternative token/DEX. Once infrastructure is restored, resume with base amounts in the ranging market regime—the 3.49% drawdown is too shallow to trigger dip-buying (need 5%+ for mild tier).",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "1193.469368",
+    "dayNumber": 40,
+    "walletBalance": "485.73825163894038241",
+    "tags": [
+      "error-recovery",
+      "infrastructure-failure",
+      "swap-routing",
+      "eurc-outage",
+      "execution-blocked"
+    ]
   }
 ]
