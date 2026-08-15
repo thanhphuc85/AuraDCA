@@ -11380,5 +11380,36 @@
       "pacing",
       "concentration-risk"
     ]
+  },
+  {
+    "id": "ref-1786753011919",
+    "date": "2026-08-15",
+    "timestamp": "2026-08-15T00:16:51.919Z",
+    "runStatus": "error_swap_failed",
+    "insight": "Two consecutive EURC swap failures on 2026-08-15 with \"no_route\" errors indicate a persistent routing infrastructure issue, not a transient glitch — the same swap that succeeded repeatedly on 2026-08-14 is now consistently failing, suggesting a liquidity or route availability problem specific to the EURC pair that requires investigation before retrying.",
+    "patterns": [
+      "Two consecutive error_swap_failed on 2026-08-15 both citing 'no_route' for EURC — this is a structural routing failure, not a one-off",
+      "EURC swaps succeeded across multiple runs on 2026-08-14 at $1.425–$1.700 USDC, then abruptly broke on 2026-08-15, suggesting a time-correlated route availability outage",
+      "Dip ladder has been dormant for all 40 campaign days — nearest mild threshold at 5.0% remains untriggered while actual drawdown sits at ~3.5–3.8%, a persistent miscalibration",
+      "BTC consolidating in $62,552–$65,286 range for 40 days at sub-0.15% volatility — ranging regime at 71–73% confidence is stable and consistent",
+      "71% capital concentration risk has been flagged in every run for weeks without change — this is a structural portfolio condition, not a transient risk signal",
+      "Fear & Greed slightly recovered from 29 to 34 between 2026-08-14 and 2026-08-15 while BTC price is essentially unchanged (~$62,900), confirming sideways ranging"
+    ],
+    "strategyAdjustment": "Do not retry the EURC swap blindly on the next run. First check whether a EURC route is available via the routing API before attempting the swap — if no route is found, either skip the run and log a pending_route_unavailable status, or switch to an alternative token-out (e.g., USDC-denominated asset) temporarily. If two consecutive no_route errors have occurred, treat this as a hard signal to pause EURC buys and alert for manual intervention. Additionally, on day 41, the dip ladder mild threshold should be re-evaluated: with 40 days of sub-0.15% volatility and a maximum observed drawdown of ~3.8%, the 5.0% mild threshold will never trigger in this regime — consider lowering mild tier to 2.5% and moderate tier to 4.0% to make the ladder functional given actual market conditions.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "1193.469368",
+    "dayNumber": 40,
+    "walletBalance": "485.772050678067677358",
+    "tags": [
+      "error-recovery",
+      "no-route",
+      "eurc",
+      "routing-failure",
+      "dip-ladder",
+      "miscalibration",
+      "ranging-regime",
+      "concentration-risk",
+      "pacing"
+    ]
   }
 ]
