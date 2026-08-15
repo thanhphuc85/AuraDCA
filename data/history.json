@@ -25075,5 +25075,35 @@
       "transferId": "86c78556-868f-4d99-8c59-596785feabdf",
       "settleStatus": "received"
     }
+  },
+  {
+    "date": "2026-08-15",
+    "timestamp": "2026-08-15T18:45:35.336Z",
+    "status": "error_swap_failed",
+    "requestedAmountUsdc": "1.440000",
+    "clampedAmountUsdc": "1.440000",
+    "boundBy": "user_schedule",
+    "tokenOut": "EURC",
+    "reasoning": "Market brief is bearish (Fear & Greed 34, BTC at $62,991, +0.12% 24h) with elevated stablecoin on-chain activity (11.7M USDC volume, 35.8k transfers in 3h) suggesting defensive positioning and a 10-15% decrease allocation bias as BTC remains range-locked in its persistent 40-day $62.5K–$65.2K consolidation channel. The real cirBTC price feed (601 data points, ground truth) confirms only a 2.89% drawdown from high with ultra-low 0.03% volatility—all four dip ladder tiers remain untriggered (nearest mild threshold at 5.0%), so no dip-buying override applies and the market regime is confirmed ranging (72% confidence) with mild positive momentum (+0.10%, 4 consecutive up days). Composite risk is medium (53/100) driven by 69% capital concentration and a 100% error streak (91 consecutive runs) reflecting the persistent cirBTC no-route infrastructure outage (outageDurationDays: 1, outageConsecutiveRuns: 91) rather than adverse market conditions; past reflections unanimously confirm this is a structural operator-intervention issue with DCA sizing logic functioning correctly, and no campaign budget is configured so pacing presents no constraint.",
+    "walletUsdcBalance": "525.648362562073180894",
+    "message": "Swap failed [EURC/no_route]: Swap failed [no_route]: Stablecoin Service createSwap failed: Route or resource not found. Details: No route available",
+    "smartSizing": {
+      "fearGreed": 34,
+      "drawdownPct": 0.0010625138761140537,
+      "multiplier": 0.88,
+      "source": "llm",
+      "proposedMultiplier": 0.88
+    },
+    "x402": {
+      "resource": "/api/x402-brief",
+      "amountUsdcAtomic": "1000",
+      "payer": "0x61e7Ae336F7Eb7F8517dE4F19963D88dFD9161eC",
+      "payTo": "0xcAf34080F47f576F923962AD04dD7ddd86d8d85f",
+      "settled": true,
+      "mode": "settled",
+      "via": "http",
+      "transferId": "6caa6dff-f100-4e15-a40d-df4601f070d3",
+      "settleStatus": "received"
+    }
   }
 ]
