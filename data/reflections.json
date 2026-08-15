@@ -12200,5 +12200,35 @@
       "fee-drain",
       "operator-alert"
     ]
+  },
+  {
+    "id": "ref-1786772605933",
+    "date": "2026-08-15",
+    "timestamp": "2026-08-15T05:43:25.933Z",
+    "runStatus": "error_swap_failed",
+    "insight": "The EURC no-route outage has now reached 27 consecutive failed runs (all 8 visible in history, spanning the entire current session on 2026-08-15) with a 0% session success rate — this is a confirmed, persistent infrastructure outage that no amount of strategy adjustment can fix; operator intervention to diagnose the EURC routing path or switch to an alternative token out is the only effective action.",
+    "patterns": [
+      "27-consecutive error streak on EURC no_route — every single run this session has failed, pattern unchanged across all 8 recent history entries",
+      "Error count is strictly incrementing (+1 per run) with no recovery, confirming the outage is not transient/intermittent",
+      "Market conditions have been stable and non-contributory: BTC flat at ~$63,004–$63,093 in a tight 40-day $62,556–$65,286 range, F&G steady at 34, drawdown ~3.4–3.5% — market is not the issue",
+      "No dip signals triggered across all recent runs (activeTier: null, nearest threshold 5.0% still out of reach)",
+      "Wallet balance barely moving ($485.74–$485.75) because all swaps fail — capital is accumulating unused rather than being deployed",
+      "Requested amounts vary slightly run-to-run ($1.375–$1.600) but all fail identically regardless of size — amount is irrelevant to the error",
+      "x402 payment settled successfully (transferId confirmed) on this run — the payment layer is working but the swap routing layer is broken"
+    ],
+    "strategyAdjustment": "Escalate immediately: do not continue running EURC swaps. After 27 consecutive no_route failures over ~1 day, the agent should either (1) automatically pause EURC runs and alert the operator, or (2) attempt a fallback tokenOut (e.g., USDC-to-BTC direct or another available route) rather than burning x402 payments on a known-broken path. Concretely: operator must check EURC liquidity/routing on the Stablecoin Service, verify the route exists via a manual API call, and either restore the route or reconfigure tokenOut. Until the route is confirmed live, each run is wasting x402 payment fees ($0.001 USDC atomic settled per run) with zero DCA progress. Consider adding a circuit-breaker: if outageConsecutiveRuns >= 10 and outageDurationDays >= 1, pause automated runs and require manual override to resume.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "1193.469368",
+    "dayNumber": 40,
+    "walletBalance": "485.744092390546275034",
+    "tags": [
+      "error-recovery",
+      "outage",
+      "circuit-breaker",
+      "eurc",
+      "no-route",
+      "operator-intervention",
+      "pacing"
+    ]
   }
 ]
