@@ -12078,5 +12078,36 @@
       "pacing",
       "wasted-spend"
     ]
+  },
+  {
+    "id": "ref-1786769365172",
+    "date": "2026-08-15",
+    "timestamp": "2026-08-15T04:49:25.172Z",
+    "runStatus": "error_swap_failed",
+    "insight": "The EURC no-route infrastructure outage has now persisted for 23 consecutive runs across a full day (2026-08-15) with a 0% success rate — every run is burning x402 payment fees (~$0.001 USDC each) while executing zero actual swaps. This is not a transient error; operator intervention to pause the EURC leg or switch to an alternative route/token is the only resolution path.",
+    "patterns": [
+      "23 consecutive error_swap_failed runs on EURC/no_route — outage has been continuous for the entire session on 2026-08-15",
+      "BTC locked in a 40-day $62,552–$65,286 consolidation channel with 72% ranging-regime confidence — no breakout signal across all 8 visible runs",
+      "Fear & Greed stable at 34 (fear territory) for the entire visible run history — market sentiment unchanged",
+      "All four dip ladder tiers remain untriggered across every run (nearest threshold 5.0%, current drawdown ~3.4–3.5%) — dip signals consistently dormant",
+      "Wallet balance static at ~$485.75 despite 23 runs — confirms zero USDC is being deployed, only x402 fees are being consumed",
+      "Requested amounts vary ($1.40–$1.575) suggesting smart sizing jitter, but this is irrelevant while the swap route is broken",
+      "0% session success rate — no recovery observed, no intermittent successes that would suggest a flapping route"
+    ],
+    "strategyAdjustment": "HALT EURC swap attempts immediately — do not continue executing runs against a confirmed no-route outage. Specifically: (1) Escalate to operator to investigate EURC liquidity routing on-chain or contact the stablecoin service provider. (2) If an alternative stablecoin (e.g., USDC-direct hold, USDT, or another EUR-pegged asset) is available via a working route, consider temporarily rerouting the DCA leg to that token until EURC routing is restored. (3) If no alternative is available, suspend the EURC DCA schedule and preserve the $485.75 wallet balance rather than burning x402 fees on guaranteed-fail runs. (4) Once routing is restored, do not need to catch up aggressively — the ranging market (BTC at $63,093, 40-day channel) means missed entries are likely at similar prices, so resume at base cadence rather than inflated amounts.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "1193.469368",
+    "dayNumber": 40,
+    "walletBalance": "485.748108464386715338",
+    "tags": [
+      "error-recovery",
+      "infrastructure-outage",
+      "eurc",
+      "no-route",
+      "operator-intervention-required",
+      "budget",
+      "pacing",
+      "market-timing"
+    ]
   }
 ]
