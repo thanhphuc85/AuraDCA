@@ -23617,5 +23617,35 @@
       "transferId": "c5f581fb-7fd8-479c-b0e0-8fed4f5a53bd",
       "settleStatus": "received"
     }
+  },
+  {
+    "date": "2026-08-15",
+    "timestamp": "2026-08-15T09:42:05.283Z",
+    "status": "error_swap_failed",
+    "requestedAmountUsdc": "1.600000",
+    "clampedAmountUsdc": "1.600000",
+    "boundBy": "user_schedule",
+    "tokenOut": "EURC",
+    "reasoning": "Market brief is bearish-cautious (Fear & Greed 34, BTC ~$62,950, +0.41% 24h) with high on-chain activity but no directional conviction, suggesting a modest decrease bias. The real cirBTC feed shows only a 3.58% drawdown from high with ultra-low 0.06% volatility, leaving all four dip ladder tiers untriggered (nearest mild threshold at 5.0%), so no dip-buying signal is present. Market regime is confirmed ranging (72% confidence) with mild positive momentum, and composite risk is medium (53/100), driven primarily by an 8-run error streak and 69% capital concentration rather than adverse market conditions. Past reflections unanimously confirm the persistent cirBTC/EURC no-route infrastructure outage (outageDurationDays: 1, outageConsecutiveRuns: 45) is a structural operator-intervention issue, not a signal to alter strategy, so proceeding at the scheduled cadence remains appropriate.",
+    "walletUsdcBalance": "525.721158201046752778",
+    "message": "Swap failed [EURC/no_route]: Swap failed [no_route]: Stablecoin Service createSwap failed: Route or resource not found. Details: No route available",
+    "smartSizing": {
+      "fearGreed": 34,
+      "drawdownPct": 0.0022664954907834467,
+      "multiplier": 1.2,
+      "source": "llm",
+      "proposedMultiplier": 1.2
+    },
+    "x402": {
+      "resource": "/api/x402-brief",
+      "amountUsdcAtomic": "1000",
+      "payer": "0x61e7Ae336F7Eb7F8517dE4F19963D88dFD9161eC",
+      "payTo": "0xcAf34080F47f576F923962AD04dD7ddd86d8d85f",
+      "settled": true,
+      "mode": "settled",
+      "via": "http",
+      "transferId": "05511479-5196-4a15-b783-4dd499932879",
+      "settleStatus": "received"
+    }
   }
 ]
