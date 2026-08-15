@@ -13062,5 +13062,37 @@
       "budget",
       "market-timing"
     ]
+  },
+  {
+    "id": "ref-1786798888779",
+    "date": "2026-08-15",
+    "timestamp": "2026-08-15T13:01:28.779Z",
+    "runStatus": "error_swap_failed",
+    "insight": "All 8 visible runs today failed with the same cirBTC no-route error (now 62 consecutive failures, ~1 day duration), meaning zero BTC has been acquired despite $525.70 USDC sitting idle in the wallet and the swap engine continuing to attempt and charge x402 fees each run.",
+    "patterns": [
+      "62-consecutive error streak with identical 'no_route' failure on cirBTC — not a transient error, a structural infrastructure outage",
+      "x402 market brief fees are being settled ($0.001 USDC per run) on every failed attempt, accumulating cost with zero executions",
+      "Requested amounts vary run-to-run ($1.35–$1.67) suggesting sizing logic is oscillating rather than holding steady during an outage",
+      "Market conditions are stable and unchanged across all 8 runs: Fear & Greed 34, BTC $62,909–$62,976, same ranging regime at 72% confidence — the error is entirely infrastructure, not market-driven",
+      "No dip signals triggered across all runs (drawdown 3.54%–3.64%, threshold 5.0%), confirming dip ladder is correctly dormant",
+      "Capital concentration stuck at 69% for all 8 runs — no portfolio rebalancing possible while route is down",
+      "boundBy is consistently 'user_schedule' with no clamping — guardrails are not the limiting factor"
+    ],
+    "strategyAdjustment": "The cirBTC no-route outage has now persisted for 62 consecutive runs (~1 full day). Operator intervention to restore the cirBTC swap route is the only path to resumption. Until the route is restored: (1) consider pausing x402 market brief calls to stop incurring per-run fees on runs that will fail anyway — the market data is not actionable without a working route; (2) if an alternative BTC swap route exists (e.g., WBTC or native BTC via a different DEX), evaluate whether it can serve as a fallback rather than waiting indefinitely; (3) do not adjust sizing strategy or DCA parameters — the $525.70 balance and 40-day cumulative $1,193.47 spend are healthy, and the market regime (ranging, BTC ~$62,933) remains favorable for accumulation once the route is restored. Priority action: escalate route restoration with the infrastructure provider, referencing outage start ~2026-08-14T12:xx UTC.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "1193.469368",
+    "dayNumber": 40,
+    "walletBalance": "525.698848854523723614",
+    "tags": [
+      "error-recovery",
+      "infrastructure-outage",
+      "no-route",
+      "cirBTC",
+      "consecutive-errors",
+      "operator-intervention",
+      "budget",
+      "pacing",
+      "x402-cost"
+    ]
   }
 ]
