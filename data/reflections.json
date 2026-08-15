@@ -11508,5 +11508,36 @@
       "pacing",
       "x402-cost"
     ]
+  },
+  {
+    "id": "ref-1786756678113",
+    "date": "2026-08-15",
+    "timestamp": "2026-08-15T01:17:58.113Z",
+    "runStatus": "error_swap_failed",
+    "insight": "The EURC routing outage has now produced 6 consecutive swap failures (5 on Aug 15 alone, plus the current run), consuming x402 API fees each time with zero executed swaps — this is a confirmed infrastructure failure that the agent cannot self-heal and every retry is purely wasteful.",
+    "patterns": [
+      "EURC no_route error streak now at 6 consecutive runs (outageConsecutiveRuns: 5 in last run, now 6), all on 2026-08-15, with outageDurationDays: 1 — no recovery observed across ~8+ hours of retries",
+      "x402 API fee of 1000 atomic USDC settled on every failed run — operator is paying for market data on runs that cannot possibly succeed",
+      "Swap amounts are oscillating between 1.425000, 1.575000, and 1.600000 USDC across failed runs — inconsistent sizing on a broken route adds no value and obscures the core issue",
+      "BTC locked in tight 40-day consolidation range $62,556–$65,286 with sub-0.15% volatility for entire campaign — dip ladder mild threshold of 5.0% has never triggered in 40 days and will not trigger in this regime",
+      "Capital concentration at 71% EURC has persisted across all recent runs with no rebalancing mechanism engaged",
+      "Fear & Greed stuck at 34 (fear) for multiple consecutive runs while BTC price barely moves (~$62,956–$62,985 range across all Aug 15 runs) — market is frozen, not just the routing"
+    ],
+    "strategyAdjustment": "IMMEDIATE: Stop retrying EURC swaps until operator confirms route is restored — after 6 consecutive no_route failures spanning ~8+ hours, further retries are confirmed wasteful (each burns an x402 fee of ~$0.001 USDC with zero chance of success). If the agent has access to an alternate token out (e.g., USDC→WBTC or another asset), pivot to that token for scheduled buys until EURC routing is confirmed healthy. If no alternate route exists, the agent should enter a hard pause state and surface an operator alert rather than continuing to execute and fail. For the dip ladder: after 40 days with zero triggers at 5.0% mild threshold in a sub-0.15% volatility regime, this threshold is definitively wrong for this market — recommend recalibrating mild threshold to 1.5–2.0% to match actual observed volatility, which would have triggered multiple times during this consolidation.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "1193.469368",
+    "dayNumber": 40,
+    "walletBalance": "485.767182989488229354",
+    "tags": [
+      "error-recovery",
+      "routing-outage",
+      "eurc",
+      "dip-ladder",
+      "miscalibration",
+      "operator-intervention",
+      "budget",
+      "concentration-risk",
+      "pacing"
+    ]
   }
 ]
