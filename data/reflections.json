@@ -14199,5 +14199,38 @@
       "budget",
       "simulation"
     ]
+  },
+  {
+    "id": "ref-1786825919260",
+    "date": "2026-08-15",
+    "timestamp": "2026-08-15T20:31:59.260Z",
+    "runStatus": "error_swap_failed",
+    "insight": "The cirBTC no-route infrastructure outage has now persisted for 101 consecutive failed runs with 0% real execution success rate — this is a complete infrastructure blockage, not a transient error, and no amount of DCA logic adjustment will resolve it without operator intervention to restore the swap route.",
+    "patterns": [
+      "101 consecutive error_swap_failed runs on cirBTC (no_route) — outage duration spans the entire recent history",
+      "Simulated runs and real runs are interleaved, suggesting the system is correctly falling back to simulation mode for some tokens but still attempting and failing real EURC/cirBTC swaps",
+      "BTC price range-locked at $62.5K–$65.2K for 40 days straight — ranging regime confirmed at 72% confidence with ultra-low volatility (0.03–0.04%)",
+      "All four dip ladder tiers remain untriggered — nearest mild threshold at 5.0% vs actual drawdown of only 2.39–2.72%",
+      "Fear & Greed index stable at 34 (Fear) for entire recent history window — no sentiment shift",
+      "69% capital concentration risk unchanged — no rebalancing occurring due to swap route failure",
+      "Allocation bias signal is inconsistent run-to-run (oscillating between 'increase 10-15%' and 'decrease 10-15%') for nearly identical market conditions — signal quality appears noisy",
+      "x402 payments are settling successfully (settled: true) meaning API costs are being incurred without any corresponding swap execution value",
+      "Cumulative spend of 1193.47 USDC over 40 days with no successful cirBTC swaps in the last 101 runs — capital deployed into EURC only (simulated runs) or lost to failed attempts"
+    ],
+    "strategyAdjustment": "Operator must restore the cirBTC swap route before any further real swap attempts on that token — 101 consecutive no_route failures confirm this is not self-healing. Until the route is restored: (1) cease real swap attempts for cirBTC entirely to stop incurring x402 API costs (~$0.001 per run) with zero execution value; (2) investigate why allocation bias signal oscillates between increase and decrease on identical market data within the same day — if the LLM multiplier source is producing contradictory signals (1.3x with both increase and decrease bias), the signal should be treated as neutral/unreliable in flat ranging markets; (3) consider halting the campaign or redirecting the $1.65 USDC/run budget to EURC exclusively until cirBTC route is confirmed restored; (4) add a circuit-breaker that suspends real swap attempts after 10 consecutive no_route errors for a specific token rather than continuing indefinitely.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "1193.469368",
+    "dayNumber": 40,
+    "walletBalance": "525.632677892327224686",
+    "tags": [
+      "error-recovery",
+      "infrastructure-outage",
+      "circuit-breaker",
+      "no-route",
+      "signal-quality",
+      "budget",
+      "pacing",
+      "operator-intervention"
+    ]
   }
 ]
