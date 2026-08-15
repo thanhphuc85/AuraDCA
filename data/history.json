@@ -24269,5 +24269,61 @@
       "transferId": "744fc268-4475-42b7-b422-b2d51c14d2e0",
       "settleStatus": "received"
     }
+  },
+  {
+    "date": "2026-08-15",
+    "timestamp": "2026-08-15T13:44:28.733Z",
+    "status": "error_swap_failed",
+    "requestedAmountUsdc": "1.250000",
+    "clampedAmountUsdc": "1.250000",
+    "boundBy": "user_schedule",
+    "tokenOut": "EURC",
+    "reasoning": "Market brief is bearish (Fear & Greed 34, BTC at $62,977, +0.56% 24h) with the market locked in its persistent 40-day $62,556–$65,286 consolidation channel, high on-chain stablecoin activity, and a standard allocation bias reflecting no directional conviction. The real cirBTC feed (601 data points) confirms only a 3.54% drawdown from high with ultra-low 0.05% volatility — all four dip ladder tiers remain untriggered (nearest mild threshold at 5.0%), so no dip-buying override applies and the ranging regime (72% confidence, mild positive momentum +0.10%) supports sticking to the scheduled cadence. Composite risk is medium (33/100), driven by 69% capital concentration and a 0% historical success rate reflecting the persistent cirBTC no-route infrastructure outage (outageDurationDays: 1, outageConsecutiveRuns: 65) rather than adverse market conditions; past reflections unanimously identify this as a structural operator-intervention issue requiring route restoration, not a strategy deviation, and no campaign budget is configured so pacing presents no constraint.",
+    "walletUsdcBalance": "525.693652909637083614",
+    "message": "Swap failed [EURC/no_route]: Swap failed [no_route]: Stablecoin Service createSwap failed: Route or resource not found. Details: No route available",
+    "smartSizing": {
+      "fearGreed": 34,
+      "drawdownPct": 0.0007774569225399042,
+      "multiplier": 0.5,
+      "source": "llm",
+      "proposedMultiplier": 0.5
+    },
+    "x402": {
+      "resource": "/api/x402-brief",
+      "amountUsdcAtomic": "1000",
+      "payer": "0x61e7Ae336F7Eb7F8517dE4F19963D88dFD9161eC",
+      "payTo": "0xcAf34080F47f576F923962AD04dD7ddd86d8d85f",
+      "settled": true,
+      "mode": "settled",
+      "via": "http",
+      "transferId": "593415f7-4b0c-4ad4-b085-4f7d76c30b2c",
+      "settleStatus": "received"
+    }
+  },
+  {
+    "date": "2026-08-15",
+    "timestamp": "2026-08-15T13:44:28.733Z",
+    "status": "simulated",
+    "simulated": true,
+    "requestedAmountUsdc": "0.000051",
+    "clampedAmountUsdc": "0.000051",
+    "boundBy": "user_schedule",
+    "tokenOut": "cirBTC",
+    "reasoning": "Market brief is bearish (Fear & Greed 34, BTC at $62,977, +0.56% 24h) with the market locked in its persistent 40-day $62,556–$65,286 consolidation channel, high on-chain stablecoin activity, and a standard allocation bias reflecting no directional conviction. The real cirBTC feed (601 data points) confirms only a 3.54% drawdown from high with ultra-low 0.05% volatility — all four dip ladder tiers remain untriggered (nearest mild threshold at 5.0%), so no dip-buying override applies and the ranging regime (72% confidence, mild positive momentum +0.10%) supports sticking to the scheduled cadence. Composite risk is medium (33/100), driven by 69% capital concentration and a 0% historical success rate reflecting the persistent cirBTC no-route infrastructure outage (outageDurationDays: 1, outageConsecutiveRuns: 65) rather than adverse market conditions; past reflections unanimously identify this as a structural operator-intervention issue requiring route restoration, not a strategy deviation, and no campaign budget is configured so pacing presents no constraint.",
+    "amountOut": "0.00000000",
+    "priceUsd": 62977,
+    "walletUsdcBalance": "525.693652909637083614",
+    "message": "[SIMULATED] Arc cirBTC route offline — paper-filled 0.00000000 cirBTC for 0.000051 USDC at $62977.00/cirBTC (no on-chain swap; real funds untouched)",
+    "x402": {
+      "resource": "/api/x402-brief",
+      "amountUsdcAtomic": "1000",
+      "payer": "0x61e7Ae336F7Eb7F8517dE4F19963D88dFD9161eC",
+      "payTo": "0xcAf34080F47f576F923962AD04dD7ddd86d8d85f",
+      "settled": true,
+      "mode": "settled",
+      "via": "http",
+      "transferId": "593415f7-4b0c-4ad4-b085-4f7d76c30b2c",
+      "settleStatus": "received"
+    }
   }
 ]
