@@ -12290,5 +12290,35 @@
       "pacing",
       "zero-execution"
     ]
+  },
+  {
+    "id": "ref-1786774603691",
+    "date": "2026-08-15",
+    "timestamp": "2026-08-15T06:16:43.691Z",
+    "runStatus": "error_swap_failed",
+    "insight": "All 8 visible runs today have failed with the identical EURC no-route error (now at 30 consecutive failures, ~1 full day of outage), and zero USDC has been deployed this session despite $485.74 available — this is a confirmed infrastructure outage that market logic cannot resolve and requires immediate operator intervention to either fix the EURC routing or switch the target token.",
+    "patterns": [
+      "30-consecutive EURC no_route error streak spanning at least 1 full day — routing infrastructure is fully broken for this token pair",
+      "0% session success rate: every single run today failed identically, no partial recoveries",
+      "Amounts vary run-to-run (1.375–1.600 USDC) suggesting smart sizing is still computing multipliers against a market that cannot be reached — wasted computation",
+      "BTC tightly range-bound for 40 days in $62,552–$65,286 channel with 72% ranging confidence and ultra-low 0.05% volatility — market is stable but irrelevant given routing failure",
+      "Fear & Greed consistently at 34 (fear zone) throughout the day — no meaningful change in sentiment signal",
+      "71% capital concentration risk unchanged — no diversification occurring because all swaps are failing",
+      "Wallet balance effectively frozen at ~$485.74 USDC: $1,193.47 cumulative spent but zero progress today"
+    ],
+    "strategyAdjustment": "Do not continue retrying EURC swaps. The routing has been broken for 30+ consecutive runs (~1 day). Future runs should either: (1) pause EURC DCA entirely and alert the operator that manual intervention is required to restore the EURC/USDC route, or (2) automatically fall back to an alternative token (e.g., USDC→BTC or USDC→ETH) when EURC has failed more than 5 consecutive times. Continuing to fire swaps at $1.40–$1.60/run while paying x402 fees ($0.001 each) for market briefs on every failed attempt is wasteful. If a fallback token is not configurable, the agent should suppress further swap attempts and emit a single escalation flag rather than retrying every scheduled interval.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "1193.469368",
+    "dayNumber": 40,
+    "walletBalance": "485.740252610290275034",
+    "tags": [
+      "error-recovery",
+      "infrastructure-outage",
+      "eurc-no-route",
+      "pacing",
+      "budget",
+      "operator-escalation",
+      "token-fallback"
+    ]
   }
 ]
