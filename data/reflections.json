@@ -11984,5 +11984,37 @@
       "pacing",
       "budget"
     ]
+  },
+  {
+    "id": "ref-1786767407541",
+    "date": "2026-08-15",
+    "timestamp": "2026-08-15T04:16:47.541Z",
+    "runStatus": "error_swap_failed",
+    "insight": "The EURC no-route outage has now persisted for 20 consecutive runs across a full day — this is a confirmed infrastructure failure, not a transient routing issue. Zero USDC has been deployed this entire session; the wallet is idle at $485.75 while the agent keeps attempting and failing.",
+    "patterns": [
+      "20 consecutive error_swap_failed runs on EURC, 0% session success rate — longest error streak observed",
+      "Wallet balance static at ~$485.75 across all 8 runs, confirming zero execution despite repeated attempts",
+      "BTC locked in 40-day $62,556–$65,286 consolidation channel with 72% ranging confidence — market regime unchanged for many days",
+      "Fear & Greed stable at 34 (fear zone), BTC mildly declining ~0.4–0.6% intraday but no major moves",
+      "All four dip ladder tiers untriggered throughout; activeTier: null consistently, nearest threshold at 5.0% drawdown vs actual ~3.47%",
+      "Multiplier stuck at 1.15 (smart sizing using F&G=34 fear discount) but irrelevant given execution failure",
+      "Requested amounts vary run-to-run (1.35–1.575 USDC) suggesting no stable base amount — inconsistency with 'stick close to base' reasoning",
+      "Cumulative spend of 1193.47 USDC at day 40 implies ~29.8 USDC/day average historically, but today's contribution is $0"
+    ],
+    "strategyAdjustment": "Halt further EURC swap attempts immediately — after 20 consecutive no-route failures spanning 1 full day, continuing to attempt is pure waste of compute and x402 payment fees. Escalate to operator with specific error detail: \"EURC/no_route: Route or resource not found\" on Stablecoin Service createSwap. Investigate whether the EURC liquidity pool or routing contract has been deprecated or paused. In parallel, evaluate a fallback token (e.g., USDC→WETH or another available asset) so DCA execution can resume while the EURC route is investigated. If no fallback is available, the agent should enter a hard pause state and skip runs rather than burning x402 fees on known-failing routes. The x402 payment of 1000 atomic USDC is being settled each run despite swap failure — confirm whether this fee is recoverable or being burned; if it is not recoverable, each failed run has a real cost.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "1193.469368",
+    "dayNumber": 40,
+    "walletBalance": "485.751304190505874074",
+    "tags": [
+      "error-recovery",
+      "outage",
+      "eurc",
+      "no-route",
+      "operator-intervention",
+      "budget",
+      "pacing",
+      "x402-cost"
+    ]
   }
 ]
