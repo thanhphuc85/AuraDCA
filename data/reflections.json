@@ -14138,5 +14138,36 @@
       "market-timing",
       "allocation-bias-instability"
     ]
+  },
+  {
+    "id": "ref-1786824117322",
+    "date": "2026-08-15",
+    "timestamp": "2026-08-15T20:01:57.322Z",
+    "runStatus": "error_swap_failed",
+    "insight": "The cirBTC no-route outage has now reached 99 consecutive failed runs with 0% real execution success rate — this is a complete infrastructure blockage, not a transient issue, and no amount of DCA strategy refinement will produce executions until the route is restored by the operator.",
+    "patterns": [
+      "cirBTC swap route has been dead for 99 consecutive runs (outageConsecutiveRuns: 99), producing error_swap_failed on every real attempt",
+      "Alternating pattern of error_swap_failed (~1.4–1.6 USDC real attempts) and simulated micro-runs (~0.00004–0.00006 USDC) persists across all 8 recent runs",
+      "One skipped_guardrail_clamped (group_zero_amount) in recent history, indicating some runs are being zeroed before reaching the swap layer",
+      "Market regime is stable and unchanged: BTC range-locked $62.5K–$65.2K for 40 days, Fear & Greed at 34, drawdown only 2.69% from high, all dip ladder tiers untriggered (nearest at 5.0%)",
+      "Smart sizing multiplier holding at 0.9 (bearish bias), amounts bound by user_schedule with no clamping from budget/daily caps",
+      "69% capital concentration risk is persistent but unchanged — no new concentration accumulating due to outage",
+      "x402 payments are settling successfully (transferId confirmed, settleStatus: received) meaning the agent is paying for market briefs but unable to execute swaps — cost leakage with zero DCA progress"
+    ],
+    "strategyAdjustment": "Do not retry the cirBTC swap route again until operator confirms route restoration — 99 consecutive failures at this point constitute a known-dead route, not a transient error. Consider suspending real swap attempts entirely (not just logging the outage) to stop burning x402 brief fees (~$0.001 per run) with zero execution upside. If an alternative route or token pair (e.g., EURC via a different DEX/bridge path) becomes available, test with a minimal amount before resuming full sizing. On route restoration, resume at normal sizing immediately — market conditions (ranging, low volatility, no dip triggers) are favorable for DCA accumulation and 40 days of missed buys represent significant opportunity cost. Cumulative spend is $1,193.47 USDC; if the campaign had a target, flag how far behind pacing is due to the outage.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "1193.469368",
+    "dayNumber": 40,
+    "walletBalance": "525.635471241043224686",
+    "tags": [
+      "error-recovery",
+      "infrastructure-outage",
+      "no-route",
+      "pacing",
+      "operator-intervention",
+      "cost-leakage",
+      "cirBTC",
+      "market-timing"
+    ]
   }
 ]
