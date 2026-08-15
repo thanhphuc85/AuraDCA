@@ -12527,5 +12527,35 @@
       "opportunity-cost",
       "market-timing"
     ]
+  },
+  {
+    "id": "ref-1786785111159",
+    "date": "2026-08-15",
+    "timestamp": "2026-08-15T09:11:51.159Z",
+    "runStatus": "error_swap_failed",
+    "insight": "The EURC no-route outage has now persisted for 42 consecutive runs across at least 8 hours on day 40, consuming x402 fees and burning scheduled DCA slots without executing a single swap — this is a complete infrastructure failure requiring immediate operator intervention, not a strategy issue.",
+    "patterns": [
+      "EURC no_route error has now hit 42 consecutive runs with zero successful swaps — every run in recent history is error_swap_failed",
+      "x402 briefs are still being paid and settled (transferId confirmed) on every failed run, meaning real USDC is being spent on market data with zero DCA execution value",
+      "Market regime is locked in a stable 40-day ranging channel ($62,556–$65,286) with Fear & Greed steady at 34 and BTC oscillating narrowly — conditions are benign and consistent, not the cause of failures",
+      "Smart sizing consistently applies 1.3x multiplier due to Fear & Greed 34, but this is irrelevant since no swaps are executing",
+      "Requested amounts vary run-to-run (1.425–1.666 USDC) despite identical market conditions, suggesting jitter or scheduling artifact in base amount calculation",
+      "Capital concentration remains elevated at 69–71% throughout, flagged as primary risk driver but unchanged",
+      "One anomalous simulated run (0.000052 USDC requested) appeared mid-stream — likely a test or misconfiguration that slipped into production history"
+    ],
+    "strategyAdjustment": "STOP all live runs until the EURC routing issue is resolved at the infrastructure/operator level — continuing to execute runs wastes x402 fees (~$0.001 per settled brief) and logs noise without any DCA benefit. If a fallback token (e.g., USDC→BTC direct, or USDC→USDT) is available, configure it as a temporary swap target while EURC route is restored. Once routing is fixed, audit why base amounts fluctuate (1.425–1.666 USDC) across runs with identical market conditions and standardize or explain the variance. Also investigate the simulated 0.000052 USDC run to confirm it was intentional and not a scheduling bug.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "1193.469368",
+    "dayNumber": 40,
+    "walletBalance": "525.724194474499936778",
+    "tags": [
+      "error-recovery",
+      "infrastructure-outage",
+      "eurc",
+      "no-route",
+      "budget",
+      "x402-cost",
+      "operator-intervention-required"
+    ]
   }
 ]
