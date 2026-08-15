@@ -13700,5 +13700,35 @@
       "ranging-market",
       "operator-intervention-required"
     ]
+  },
+  {
+    "id": "ref-1786815101255",
+    "date": "2026-08-15",
+    "timestamp": "2026-08-15T17:31:41.255Z",
+    "runStatus": "error_swap_failed",
+    "insight": "84 consecutive swap failures due to cirBTC no-route infrastructure outage. Strategy, sizing (1.15x multiplier on bearish sentiment), and reasoning are functioning correctly—this is purely an external routing/infrastructure blockage requiring operator intervention to restore execution capability.",
+    "patterns": [
+      "100% error rate across all 8 recent runs with identical 'no_route' failure",
+      "outageConsecutiveRuns escalating from 77 to 84 within single day",
+      "requested amounts vary (1.425-1.65 USDC) based on smart sizing but all fail identically",
+      "all runs correctly identify this as structural operator-intervention issue not strategy problem",
+      "69% capital concentration persists (cumulative spent 1193.47 USDC, wallet balance 525.66 USDC)",
+      "market regime stable: ranging 72% confidence, BTC $63k consolidating in 40-day $62.5K-$65.2K channel",
+      "Fear & Greed stuck at 34 (bearish) with no dip ladder triggers (only 3.2% drawdown vs 5% mild threshold)",
+      "smart sizing multipliers appropriate (1.15x increase bias) given market conditions but cannot execute"
+    ],
+    "strategyAdjustment": "No strategy adjustment warranted—DCA logic, smart sizing (1.15x on fear), and risk assessment are all functioning correctly. The agent should continue attempting scheduled runs to maintain data continuity and immediately execute accumulated intent once the cirBTC routing infrastructure is restored by operators. Monitor outageConsecutiveRuns counter and flag if it exceeds 100 runs, indicating prolonged service degradation requiring escalation beyond routine operator intervention.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "1193.469368",
+    "dayNumber": 40,
+    "walletBalance": "525.658987808931580894",
+    "tags": [
+      "error-recovery",
+      "infrastructure-outage",
+      "routing-failure",
+      "no-action-needed",
+      "smart-sizing-working",
+      "market-ranging"
+    ]
   }
 ]
