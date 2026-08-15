@@ -12320,5 +12320,32 @@
       "operator-escalation",
       "token-fallback"
     ]
+  },
+  {
+    "id": "ref-1786775615647",
+    "date": "2026-08-15",
+    "timestamp": "2026-08-15T06:33:35.647Z",
+    "runStatus": "error_swap_failed",
+    "insight": "31 consecutive runs (100% of visible history) have failed with EURC/no_route error — this is a total, unresolved infrastructure outage, not a transient blip, and the agent has been re-verifying the same conclusion every run without any escalation or behavioral change.",
+    "patterns": [
+      "100% session failure rate across all 8+ recent runs, all identical EURC/no_route error",
+      "Error streak counter has climbed monotonically from 24 to 31 within this single day's runs, confirming outage is ongoing and unresolved",
+      "Every run reproduces near-identical market analysis (F&G 34, ranging regime, 3.4-3.5% drawdown, no dip triggers) — market conditions are stable/irrelevant, so all decision cycles are being spent re-deriving the same null conclusion",
+      "Requested amounts vary run to run (1.375 to 1.6 USDC) due to smart-sizing multiplier ~1.15, but this is moot since none execute",
+      "No campaign budget cap is configured, so 'pacing' framing is meaningless here — the real constraint is 100% infra failure, not budget or schedule"
+    ],
+    "strategyAdjustment": "Stop re-running full market/dip analysis every cycle when the EURC route has failed on every single attempt — this wastes compute reproducing identical conclusions. Instead: (1) after 5+ consecutive identical no_route errors, flag this as requiring operator intervention rather than continuing routine cycles, (2) check if an alternative route/DEX/token pair for EURC exists or if tokenOut should be temporarily reconsidered, (3) consider whether continuing to accumulate 'requested but unexecuted' amounts is inflating apparent cumulative spend tracking incorrectly (the 1193.47 USDC cumulative figure should be checked against actual settled swaps, not requested amounts, since 31+ swaps have failed). Reflections should stop repeating 'past reflections unanimously confirm this is infrastructure outage' as if that's a satisfying conclusion — it should trigger an actual halt-and-alert state rather than a normal logged reflection.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "1193.469368",
+    "dayNumber": 40,
+    "walletBalance": "485.73925332254038241",
+    "tags": [
+      "error-recovery",
+      "outage",
+      "infrastructure",
+      "no-route",
+      "escalation-needed",
+      "budget-tracking-risk"
+    ]
   }
 ]
