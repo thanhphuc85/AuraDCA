@@ -23467,5 +23467,35 @@
       "transferId": "ba19cb80-c51f-4cf5-848b-a9ba9be64d32",
       "settleStatus": "received"
     }
+  },
+  {
+    "date": "2026-08-15",
+    "timestamp": "2026-08-15T08:45:31.907Z",
+    "status": "error_swap_failed",
+    "requestedAmountUsdc": "1.550000",
+    "clampedAmountUsdc": "1.550000",
+    "boundBy": "user_schedule",
+    "tokenOut": "EURC",
+    "reasoning": "Market brief shows bearish sentiment (Fear & Greed 34, fear zone) with BTC at $62,963 (+0.32% 24h), locked in its persistent 40-day $62,556–$65,286 consolidation channel with high on-chain activity but no directional conviction. The real cirBTC feed (601 data points) confirms only a 3.56% drawdown from high with ultra-low 0.04% volatility — all four dip ladder tiers remain untriggered (nearest mild threshold at 5.0%), so no dip-buying signal overrides the scheduled cadence. Market regime is confirmed ranging (72% confidence) with mild positive momentum, composite risk is medium (48/100) driven primarily by 69% capital concentration and the persistent EURC no-route infrastructure outage (outageDurationDays: 1, outageConsecutiveRuns: 40) rather than market conditions; past reflections unanimously confirm this outage requires operator intervention, and no campaign budget is configured so pacing presents no constraint.",
+    "walletUsdcBalance": "525.727187498725575178",
+    "message": "Swap failed [EURC/no_route]: Swap failed [no_route]: Stablecoin Service createSwap failed: Route or resource not found. Details: No route available",
+    "smartSizing": {
+      "fearGreed": 34,
+      "drawdownPct": 0.00206045044616677,
+      "multiplier": 1.1,
+      "source": "llm",
+      "proposedMultiplier": 1.1
+    },
+    "x402": {
+      "resource": "/api/x402-brief",
+      "amountUsdcAtomic": "1000",
+      "payer": "0x61e7Ae336F7Eb7F8517dE4F19963D88dFD9161eC",
+      "payTo": "0xcAf34080F47f576F923962AD04dD7ddd86d8d85f",
+      "settled": true,
+      "mode": "settled",
+      "via": "http",
+      "transferId": "5360096d-fe53-45e5-9040-0304504bc0fe",
+      "settleStatus": "received"
+    }
   }
 ]
