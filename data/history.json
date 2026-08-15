@@ -22517,5 +22517,35 @@
       "transferId": "4c798cb6-9d01-4ddd-949d-df67ac6e8af3",
       "settleStatus": "received"
     }
+  },
+  {
+    "date": "2026-08-15",
+    "timestamp": "2026-08-15T02:30:47.377Z",
+    "status": "error_swap_failed",
+    "requestedAmountUsdc": "1.425000",
+    "clampedAmountUsdc": "1.425000",
+    "boundBy": "user_schedule",
+    "tokenOut": "EURC",
+    "reasoning": "Market brief is bearish (Fear & Greed 34, BTC -0.61% at $63,042) with high on-chain activity (23k+ USDC transfers) and a decrease 10–15% allocation bias, as BTC continues its 40-day consolidation in the $62,556–$65,286 range with slight positive momentum (+0.10%, four consecutive up periods) and 72% ranging-regime confidence. The real cirBTC feed confirms a 3.44% drawdown from high with ultra-low 0.04% volatility — all four dip ladder tiers remain untriggered (activeTier: null, nearest mild threshold at 5.0%), the swap-history fallback's stale 22.59% drawdown artifact is disregarded per established protocol, and the regime is ranging with no directional edge; composite risk is medium (53/100) driven by the 11-consecutive-run EURC no-route error streak (outageDurationDays: 1, outageConsecutiveRuns: 11), 71% capital concentration, and a 0% session success rate — though past reflections unanimously confirm this is a confirmed infrastructure outage requiring operator intervention, not a market-driven risk. No campaign budget is configured so pacing presents no constraint, and the scheduled 1.425000 USDC amount passes guardrails fully unclamped (full $200 daily cap available, wallet balance $485.76).",
+    "walletUsdcBalance": "485.760956511948549354",
+    "message": "Swap failed [EURC/no_route]: Swap failed [no_route]: Stablecoin Service createSwap failed: Route or resource not found. Details: No route available",
+    "smartSizing": {
+      "fearGreed": 34,
+      "drawdownPct": 0,
+      "multiplier": 0.85,
+      "source": "llm",
+      "proposedMultiplier": 0.85
+    },
+    "x402": {
+      "resource": "/api/x402-brief",
+      "amountUsdcAtomic": "1000",
+      "payer": "0x61e7Ae336F7Eb7F8517dE4F19963D88dFD9161eC",
+      "payTo": "0xcAf34080F47f576F923962AD04dD7ddd86d8d85f",
+      "settled": true,
+      "mode": "settled",
+      "via": "http",
+      "transferId": "598e4d1c-9c88-4201-9e88-955dcff884b3",
+      "settleStatus": "received"
+    }
   }
 ]

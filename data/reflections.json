@@ -11699,5 +11699,37 @@
       "dip-ladder-miscalibration",
       "halt-condition"
     ]
+  },
+  {
+    "id": "ref-1786761126190",
+    "date": "2026-08-15",
+    "timestamp": "2026-08-15T02:32:06.190Z",
+    "runStatus": "error_swap_failed",
+    "insight": "The EURC no-route outage has now persisted for 11 consecutive runs with a 0% session success rate — this is a hard infrastructure failure, not a transient error, and continuing to attempt swaps is burning x402 payment fees (~$0.001 per run) with zero capital deployed. Operator intervention is the only path to resolution.",
+    "patterns": [
+      "EURC no_route error streak now at 11 consecutive runs (outageConsecutiveRuns: 11, outageDurationDays: 1), 0% session success rate — outage is confirmed persistent infrastructure failure",
+      "Wallet balance has remained essentially flat at ~$485.76–$485.77 across all 8 recent runs, confirming zero USDC is being deployed despite each run executing",
+      "x402 brief fee is being paid each run (settled: true, 1000 USDC atomic = $0.001) — accumulating cost with no benefit while outage persists",
+      "Market regime has been stable ranging throughout: BTC locked in $62,556–$65,286 range (4.3% bandwidth), Fear & Greed 34, 72% ranging-regime confidence — no market volatility driving the errors",
+      "All four dip ladder tiers remain untriggered across all 8 runs (activeTier: null); 5.0% mild threshold structurally too wide for sub-0.05% volatility regime",
+      "Smart sizing multiplier oscillating between 0.85–1.0 based on market mood, but irrelevant when swap always fails",
+      "Capital concentration stuck at 71% across all runs — no diversification occurring due to outage",
+      "Requested amounts vary slightly run-to-run (1.425–1.600 USDC) suggesting multiplier logic is active but producing no executed trades"
+    ],
+    "strategyAdjustment": "1. HALT further EURC swap attempts immediately — after 11 consecutive no_route failures over ~1 day, continued retries waste x402 fees with 0% probability of success. 2. Escalate to operator: the EURC routing infrastructure requires manual investigation and fix before the agent resumes. 3. Consider a fallback token route (e.g., USDC→WETH or another available asset) as a temporary alternative if EURC routing cannot be restored within the next 2–3 runs. 4. Once routing is restored, recalibrate the dip ladder mild threshold from 5.0% down to ~1.5–2.0% given the confirmed sub-0.05% daily volatility regime that has persisted for the full 40-day campaign. 5. Day 40 of campaign with $1,193.47 cumulative spent — confirm whether campaign should continue past Day 40 or if this is terminal; if continuing, operator should resolve EURC routing before the next session.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "1193.469368",
+    "dayNumber": 40,
+    "walletBalance": "485.760956511948549354",
+    "tags": [
+      "error-recovery",
+      "infrastructure-outage",
+      "eurc-no-route",
+      "operator-intervention-required",
+      "pacing",
+      "dip-ladder-miscalibration",
+      "budget",
+      "campaign-day-40"
+    ]
   }
 ]
