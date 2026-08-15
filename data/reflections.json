@@ -12376,5 +12376,33 @@
       "eurc-outage",
       "execution-blocked"
     ]
+  },
+  {
+    "id": "ref-1786777311252",
+    "date": "2026-08-15",
+    "timestamp": "2026-08-15T07:01:51.252Z",
+    "runStatus": "error_swap_failed",
+    "insight": "33-consecutive-run EURC infrastructure failure (no_route error) has created a complete operational deadlock—0% success rate across all 8 recent runs with no market execution despite proper sizing and guardrail logic.",
+    "patterns": [
+      "Complete infrastructure outage: 33 consecutive EURC no_route errors spanning 1+ days",
+      "Zero execution success: 0% trade completion rate across entire recent history",
+      "Sizing logic functioning correctly: all requests passing guardrails unclamped, bounded by user_schedule as intended",
+      "Market regime stable: bearish-ranging for 40 days in $62.5k-$65.3k channel, Fear & Greed 34, no dip signals triggered (3.39-3.52% drawdown below 5% mild threshold)",
+      "High concentration risk persisting: 71% capital in EURC due to inability to diversify via swaps",
+      "No operator intervention: outage duration growing (outageDurationDays: 1, consecutiveRuns: 26→33) without resolution"
+    ],
+    "strategyAdjustment": "Agent strategy is sound but blocked by infrastructure—no strategy adjustment can fix a persistent no_route error. Operator must investigate EURC swap routing (check liquidity pools, DEX integrations, RPC endpoints, or token contract status). If EURC remains unavailable, operator should either configure alternative stablecoin targets (USDC, DAI) or pause DCA until routing is restored. Agent should continue attempting scheduled buys to detect when service recovers.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "1193.469368",
+    "dayNumber": 40,
+    "walletBalance": "485.73714081206038241",
+    "tags": [
+      "error-recovery",
+      "infrastructure-failure",
+      "operator-intervention-required",
+      "concentration-risk",
+      "routing-outage",
+      "zero-execution"
+    ]
   }
 ]
