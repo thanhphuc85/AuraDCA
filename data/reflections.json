@@ -13993,5 +13993,34 @@
       "infrastructure",
       "accounting"
     ]
+  },
+  {
+    "id": "ref-1786821409517",
+    "date": "2026-08-15",
+    "timestamp": "2026-08-15T19:16:49.517Z",
+    "runStatus": "simulated",
+    "insight": "The cirBTC routing infrastructure outage has now persisted for 94+ consecutive runs with zero successful on-chain swaps; all \"executed\" amounts are either paper-filled simulations or failed error_swap_failed entries, meaning no real BTC has been accumulated despite 1,193 USDC committed over 40 days.",
+    "patterns": [
+      "Persistent cirBTC no-route outage spanning 94+ consecutive runs — structural infrastructure failure, not market or strategy issue",
+      "Wildly inconsistent requested amounts in the same session: same market conditions trigger allocations ranging from $0.000056 to $1.650000 USDC, suggesting a sizing logic bug or misconfiguration",
+      "Simulated runs consistently show near-zero amounts ($0.000056, $0.001192) while error_swap_failed runs show normal amounts ($1.425–$1.650), implying simulation mode and live mode are using different sizing parameters",
+      "Market regime has been range-locked $62.5K–$65.2K for the full 40-day campaign with ultra-low cirBTC volatility (0.02–0.03%) — no dip ladder tier has ever triggered",
+      "Fear & Greed stuck at 34 (bearish) with mild positive momentum — a contradiction that has persisted without resolution for multiple days",
+      "69% capital concentration risk has been flagged every run with no action taken"
+    ],
+    "strategyAdjustment": "Three concrete actions required: (1) STOP spending USDC on error_swap_failed runs — if the cirBTC route has been offline for 94+ consecutive runs, the agent must halt live allocation attempts until operator confirms the route is restored, not keep submitting 1.4–1.65 USDC transactions that fail; (2) Investigate the sizing discrepancy immediately — simulated runs are sizing at $0.000056 while live runs size at $1.425–$1.650; these should be using the same schedule logic and the 4-order-of-magnitude gap is a bug, not a feature; (3) Escalate the infrastructure outage to the operator with a hard deadline — after 94 consecutive failures, automated retries have zero expected value and the agent should surface an explicit \"DCA paused pending route restoration\" status rather than continuing to log failures silently.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "1193.469368",
+    "dayNumber": 40,
+    "walletBalance": "525.644296412749180894",
+    "tags": [
+      "error-recovery",
+      "infrastructure-outage",
+      "sizing-bug",
+      "simulation",
+      "budget",
+      "concentration-risk",
+      "pacing"
+    ]
   }
 ]
