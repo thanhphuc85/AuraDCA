@@ -13481,5 +13481,32 @@
       "operator-intervention-required",
       "execution-blocked"
     ]
+  },
+  {
+    "id": "ref-1786809509608",
+    "date": "2026-08-15",
+    "timestamp": "2026-08-15T15:58:29.608Z",
+    "runStatus": "error_swap_failed",
+    "insight": "Infrastructure outage has now persisted for 76 consecutive runs (all 8 recent runs failing with no_route error). Strategy execution is completely blocked by external infrastructure issue, not market conditions or guardrails.",
+    "patterns": [
+      "100% error rate across all recent runs with identical no_route failure",
+      "Outage duration: 1 day, 76 consecutive failed runs - suggests high-frequency execution schedule",
+      "No clamping occurring - all amounts bound by user_schedule only (1.25-1.68 USDC range)",
+      "Market conditions stable: BTC ranging $62.5K-$65.2K for 40 days, Fear & Greed locked at 34, no dip triggers activated",
+      "69% capital concentration risk persists but cannot be addressed due to execution failure",
+      "Smart sizing producing 0.82x multipliers but irrelevant given infrastructure blockage"
+    ],
+    "strategyAdjustment": "No strategy adjustment can resolve this - this is a critical infrastructure failure requiring operator intervention to restore cirBTC routing. Agent should halt execution attempts until route is restored to avoid burning resources on guaranteed failures. Once restored, resume standard DCA with current ranging-market strategy (no dip ladder triggers at 3.2% drawdown).",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "1193.469368",
+    "dayNumber": 40,
+    "walletBalance": "525.672890128629611614",
+    "tags": [
+      "error-recovery",
+      "infrastructure-outage",
+      "critical-blocker",
+      "operator-intervention-required",
+      "routing-failure"
+    ]
   }
 ]
