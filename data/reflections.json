@@ -14296,5 +14296,40 @@
       "budget",
       "clamping"
     ]
+  },
+  {
+    "id": "ref-1786827657323",
+    "date": "2026-08-15",
+    "timestamp": "2026-08-15T21:00:57.323Z",
+    "runStatus": "error_swap_failed",
+    "insight": "The cirBTC no-route outage has now persisted for 104 consecutive runs with 0% execution success — this is a critical infrastructure failure requiring immediate operator intervention, not a market or strategy issue. All DCA logic is functioning correctly but producing zero real outcomes.",
+    "patterns": [
+      "104 consecutive error_swap_failed runs due to cirBTC no-route infrastructure outage — all swap attempts fail at routing layer",
+      "0% real execution success rate across entire visible history; no trades have settled despite correct sizing and market analysis",
+      "Error streak score maxed at 100/100 for multiple consecutive runs (runs 101-104+)",
+      "Market regime locked in ranging (72% confidence) for 40+ days, BTC consolidating $62.5K–$65.2K; no dip ladder tiers triggered (nearest at 5.0%, actual drawdown only ~2.1–2.7%)",
+      "Fear & Greed stable at 34 (fear) across all 8 runs — sentiment unchanged, not deteriorating",
+      "Composite risk oscillating 33–53/100, driven by concentration (69%) and error streak, not market conditions",
+      "Capital concentration at 69% unchanged — no rebalancing occurring due to execution failure",
+      "One guardrail skip (group_zero_amount) for a negligibly small $0.000044 request — normal behavior",
+      "Sizing varies run-to-run ($1.40–$1.65) reflecting correct smart sizing logic with 1.2x multiplier on fear signal, but none of it matters while route is broken",
+      "x402 payments are settling correctly (transferId confirmed, settleStatus: received) — cost is being incurred with zero executions"
+    ],
+    "strategyAdjustment": "Escalate to operator with urgency: the cirBTC swap route has been broken for 104 consecutive runs (outageDurationDays: 1 is stale — actual outage duration spans the full visible 8-run window and likely far longer). Operator must restore the cirBTC/EURC route or redirect to an alternative swap path before any further runs are meaningful. In the interim, consider whether the agent should suspend execution attempts entirely to avoid burning x402 payment fees on API calls that will always fail — each run is paying for a market brief that cannot be acted upon. If a fallback token or route is configurable, activate it now. Do not adjust DCA sizing, market analysis, or pacing — those are working correctly. The only actionable change is infrastructure-level route restoration.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "1193.469368",
+    "dayNumber": 40,
+    "walletBalance": "525.628006989088824686",
+    "tags": [
+      "error-recovery",
+      "infrastructure-outage",
+      "no-route",
+      "operator-intervention-required",
+      "execution-failure",
+      "x402-cost-leak",
+      "cirBTC",
+      "ranging-market",
+      "concentration-risk"
+    ]
   }
 ]
