@@ -12404,5 +12404,36 @@
       "routing-outage",
       "zero-execution"
     ]
+  },
+  {
+    "id": "ref-1786781802878",
+    "date": "2026-08-15",
+    "timestamp": "2026-08-15T08:16:42.878Z",
+    "runStatus": "error_swap_failed",
+    "insight": "The EURC no-route outage has now reached 38+ consecutive failed runs on Day 40, completely blocking all real swap execution — 100% of USDC-sized runs are failing while only tiny simulated runs succeed, meaning zero actual DCA capital is being deployed despite a $485.73 USDC balance.",
+    "patterns": [
+      "EURC no_route outage now at 38 consecutive failed runs (outageDurationDays: 1, but clearly multi-day given 38 runs) — every real swap attempt fails identically",
+      "All 8 recent runs show the same pattern: alternating error_swap_failed (real amounts ~$1.4–$1.7) and simulated (tiny amounts ~$0.00006–$0.003) — no successful real execution",
+      "Market regime has been locked in the same 40-day $62,556–$65,286 consolidation channel the entire campaign; Fear & Greed stuck at 34 for multiple consecutive days",
+      "Dip ladder entirely untriggered — drawdown only 3.44–3.50%, well below the 5.0% mild threshold; no dip-buying opportunity has materialized",
+      "Smart sizing multiplier stable at 1.15x (Fear & Greed 34 driving slight upward bias) but irrelevant while swap route is broken",
+      "71% capital concentration risk persists as a background concern but is secondary to the infrastructure outage",
+      "cumulative spend of 1,193.47 USDC over 40 days suggests the outage is a recent development — earlier runs were succeeding"
+    ],
+    "strategyAdjustment": "This is purely an infrastructure/operator intervention issue — no strategy adjustment will fix it. The agent should: (1) Stop treating this as a recoverable transient error; after 38 consecutive identical no_route failures, the route is structurally broken and will not self-heal. (2) Flag this as a CRITICAL blocker requiring operator action: the EURC swap route on the Stablecoin Service must be investigated and restored. (3) Consider whether the agent should attempt an alternative tokenOut (e.g., USDC→WBTC or another available token) as a fallback rather than repeatedly attempting the broken EURC route — check if the operator has configured permitted fallback tokens. (4) Do not continue burning x402 API fees ($0.001 per run via settled payments) on runs that will deterministically fail — if no fallback token is available, consider skipping execution entirely until the route is restored rather than logging 38+ identical failures.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "1193.469368",
+    "dayNumber": 40,
+    "walletBalance": "485.729238758099916634",
+    "tags": [
+      "error-recovery",
+      "infrastructure-outage",
+      "eurc",
+      "no-route",
+      "operator-intervention",
+      "budget",
+      "pacing",
+      "market-timing"
+    ]
   }
 ]
