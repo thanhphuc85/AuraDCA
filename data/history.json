@@ -22367,5 +22367,35 @@
       "transferId": "61dc4b84-c999-4873-9bda-fb0404d3ece5",
       "settleStatus": "received"
     }
+  },
+  {
+    "date": "2026-08-15",
+    "timestamp": "2026-08-15T01:30:43.481Z",
+    "status": "error_swap_failed",
+    "requestedAmountUsdc": "1.550000",
+    "clampedAmountUsdc": "1.550000",
+    "boundBy": "user_schedule",
+    "tokenOut": "EURC",
+    "reasoning": "Market brief is bearish (Fear & Greed 34, BTC -0.73% at $62,978) with standard allocation bias and high on-chain activity (27.3K USDC transfers), as BTC continues its 40-day consolidation in the tight $62,556–$65,286 range (4.3% bandwidth) with no clear breakout direction. The real cirBTC feed confirms a 3.54% drawdown from high with ultra-low 0.02% volatility — all four dip ladder tiers remain untriggered (activeTier: null, nearest mild threshold at 5.0%), the swap-history fallback's stale 22.59% drawdown artifact is disregarded per established protocol, the regime is ranging at 72% confidence with four consecutive up periods and slight positive momentum (+0.10%), and composite risk is medium (47/100) driven by the 6-consecutive-run EURC no-route error streak spanning outageDurationDays: 1 and outageConsecutiveRuns: 6 plus persistent 71% capital concentration. No campaign budget is configured so pacing presents no constraint, the 1.550000 USDC amount passes guardrails fully unclamped (full $200 daily cap available, wallet balance $485.77), and past reflections unanimously confirm the EURC routing outage is a confirmed infrastructure failure requiring operator intervention and that the dip ladder mild threshold of 5.0% remains structurally miscalibrated for this sub-0.15% volatility regime across all 40 campaign days.",
+    "walletUsdcBalance": "485.766168934941029354",
+    "message": "Swap failed [EURC/no_route]: Swap failed [no_route]: Stablecoin Service createSwap failed: Route or resource not found. Details: No route available",
+    "smartSizing": {
+      "fearGreed": 34,
+      "drawdownPct": 0.00011113757243788204,
+      "multiplier": 1.1,
+      "source": "llm",
+      "proposedMultiplier": 1.1
+    },
+    "x402": {
+      "resource": "/api/x402-brief",
+      "amountUsdcAtomic": "1000",
+      "payer": "0x61e7Ae336F7Eb7F8517dE4F19963D88dFD9161eC",
+      "payTo": "0xcAf34080F47f576F923962AD04dD7ddd86d8d85f",
+      "settled": true,
+      "mode": "settled",
+      "via": "http",
+      "transferId": "d518c117-3702-407d-a968-d53d71df6ec8",
+      "settleStatus": "received"
+    }
   }
 ]
