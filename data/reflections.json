@@ -13508,5 +13508,32 @@
       "operator-intervention-required",
       "routing-failure"
     ]
+  },
+  {
+    "id": "ref-1786809716313",
+    "date": "2026-08-15",
+    "timestamp": "2026-08-15T16:01:56.313Z",
+    "runStatus": "error_swap_failed",
+    "insight": "Infrastructure outage has persisted for 77 consecutive runs with 0% execution success rate. This is not a strategy problem—the cirBTC route remains unavailable and requires operator intervention to restore swap functionality.",
+    "patterns": [
+      "77 consecutive error_swap_failed status with identical 'no_route' message",
+      "All requested amounts pass guardrails cleanly (boundBy: user_schedule), no clamping occurring",
+      "Market regime stable: ranging (72% confidence), 40-day consolidation $62.5K-$65.2K, no dip triggers (3.2% drawdown vs 5% threshold)",
+      "Requested amounts varying randomly (1.25-1.675 USDC) with no pattern or correlation to market conditions",
+      "69% capital concentration risk persists, cannot be addressed until swaps execute",
+      "Fear & Greed index stable at 34 (bearish) across all 8 runs, BTC price tight range $62,979-$63,058"
+    ],
+    "strategyAdjustment": "No strategy adjustment possible—this is an infrastructure failure requiring operator action to restore the cirBTC swap route. Strategy layer is functioning correctly: sizing logic responds appropriately to market conditions, guardrails pass without clamping, and risk assessment is accurate. Once route is restored, resume normal DCA execution and monitor whether the 69% concentration risk begins to diversify through successful EURC purchases.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "1193.469368",
+    "dayNumber": 40,
+    "walletBalance": "525.671377390389611614",
+    "tags": [
+      "infrastructure-failure",
+      "error-recovery",
+      "route-unavailable",
+      "operator-intervention-required",
+      "no-strategy-change-needed"
+    ]
   }
 ]
