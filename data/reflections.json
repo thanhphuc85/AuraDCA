@@ -11638,5 +11638,35 @@
       "x402-cost",
       "concentration-risk"
     ]
+  },
+  {
+    "id": "ref-1786759318951",
+    "date": "2026-08-15",
+    "timestamp": "2026-08-15T02:01:58.951Z",
+    "runStatus": "error_swap_failed",
+    "insight": "All 8 recent runs (and growing) have failed with the same EURC no-route error — this is a confirmed, persistent infrastructure outage now at 10 consecutive failures across ~1 day, with a 10% session success rate. The agent continues executing attempts without any backoff or circuit-breaker logic, burning x402 fees ($0.001 each) and producing zero EURC purchases.",
+    "patterns": [
+      "10 consecutive error_swap_failed runs for EURC no-route — outage spans at least 1 full day with no sign of recovery",
+      "Agent continues retrying at full scheduled cadence despite confirmed infrastructure outage, no backoff or circuit-breaker triggered",
+      "Wallet balance static at ~$485.76 across all 8 runs — no capital deployed, ~$0.01 in x402 fees paid per run with zero output",
+      "BTC price stable in tight $62,956–$62,978 range across all 8 runs — market is not the issue, this is purely an infrastructure problem",
+      "Dip ladder mild threshold (5.0%) remains untriggered for all 40 campaign days given sub-0.15% realized volatility — structurally miscalibrated throughout entire campaign",
+      "Composite risk score creeping up run-over-run (37→42→47→47→47→48→50→51) driven solely by the error streak counter, not market risk",
+      "Smart sizing multiplier locked at 1.15 across all recent runs — Fear & Greed 34 is stable, no market volatility"
+    ],
+    "strategyAdjustment": "Implement a circuit-breaker: after 5+ consecutive no-route errors for the same token, suspend retries for that token and either (a) switch to an alternate token (e.g., USDC→cirBTC direct if available) or (b) enter a hard pause state and stop consuming x402 fees entirely until the operator resolves the route. At 10 consecutive failures with outageDurationDays=1, the agent should NOT continue scheduling swap attempts — it should log a critical alert and halt EURC purchases. Additionally, lower the dip ladder mild threshold from 5.0% to ~1.5–2.0% given the confirmed 40-day sub-0.15% volatility regime; the current threshold has never triggered in the entire campaign.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "1193.469368",
+    "dayNumber": 40,
+    "walletBalance": "485.763154559399429354",
+    "tags": [
+      "error-recovery",
+      "circuit-breaker",
+      "infrastructure-outage",
+      "eurc-no-route",
+      "dip-ladder-miscalibration",
+      "budget",
+      "pacing"
+    ]
   }
 ]
