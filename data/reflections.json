@@ -13818,5 +13818,32 @@
       "strategy-working",
       "execution-blocked"
     ]
+  },
+  {
+    "id": "ref-1786816912294",
+    "date": "2026-08-15",
+    "timestamp": "2026-08-15T18:01:52.294Z",
+    "runStatus": "error_swap_failed",
+    "insight": "88 consecutive routing failures confirm this is a permanent infrastructure issue, not a transient error. DCA logic is sound (smart sizing responding correctly to Fear & Greed 34, ranging regime, 3.08% drawdown), but zero capital is being deployed despite 40 days of campaign execution.",
+    "patterns": [
+      "100% error rate across all 8 recent runs with identical 'no_route' failure for EURC swaps",
+      "outageConsecutiveRuns increased from 81 to 88 over these 8 runs, confirming sustained infrastructure failure",
+      "Smart sizing multipliers oscillating between 0.85-1.15x based on sentiment shifts, showing strategy logic is functioning",
+      "No dip ladder triggers despite 3.08-3.27% drawdown (all thresholds start at 5%), confirming conservative dip-buying parameters",
+      "Capital concentration at 69% (high but stable), no execution to reduce it",
+      "Requested amounts vary appropriately ($1.425-$1.575) based on market signals, but zero actual deployment"
+    ],
+    "strategyAdjustment": "Operator must restore EURC routing infrastructure immediately—this is not a strategy problem. If EURC route cannot be fixed, switch tokenOut to an alternative stablecoin (USDT, DAI) or direct BTC purchase to resume capital deployment. Strategy adjustments are meaningless when execution is blocked at the infrastructure layer for 88+ consecutive runs.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "1193.469368",
+    "dayNumber": 40,
+    "walletBalance": "525.652387467075580894",
+    "tags": [
+      "error-recovery",
+      "infrastructure",
+      "routing-failure",
+      "execution-blocked",
+      "operator-intervention-required"
+    ]
   }
 ]
