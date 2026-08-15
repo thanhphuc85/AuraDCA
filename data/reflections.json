@@ -14169,5 +14169,35 @@
       "cirBTC",
       "market-timing"
     ]
+  },
+  {
+    "id": "ref-1786825016963",
+    "date": "2026-08-15",
+    "timestamp": "2026-08-15T20:16:56.963Z",
+    "runStatus": "error_swap_failed",
+    "insight": "The cirBTC no-route outage has now persisted for 100+ consecutive runs across the full day of 2026-08-15, making this a critical infrastructure failure — all real swap attempts return \"no_route\" while simulated runs succeed, confirming the routing layer itself is broken, not market conditions or sizing logic.",
+    "patterns": [
+      "100+ consecutive error_swap_failed runs on EURC/cirBTC route — outageConsecutiveRuns has been incrementing all day with no recovery",
+      "0% real execution success rate persists across all 8 visible runs; simulated runs interleaved at ~$0.000015–$0.000040 succeed trivially but contribute nothing meaningful to DCA goals",
+      "Requested amounts vary between $1.425–$1.650 (bound by user_schedule) with 1.3x fear/greed multiplier consistently applied — sizing logic is correct but irrelevant while route is down",
+      "BTC locked in $62.5K–$65.2K range for 40 days: Fear & Greed stable at 34, volatility ultra-low (0.02–0.04%), drawdown from high only 2.4–2.7% — all dip tiers untriggered, no dip-buying opportunity exists",
+      "69% capital concentration risk flag has been static for many runs — no position rebalancing is occurring because no trades execute",
+      "Cumulative spend of $1,193.47 USDC by day 40 implies ~$29.84/day average historically, but today's spend is effectively $0 real execution",
+      "group_zero_amount guardrail clamped one simulated run to 0 — tiny simulation amounts are hitting the minimum threshold guardrail, indicating the simulation sizing is unnecessarily small and generating noise"
+    ],
+    "strategyAdjustment": "This is purely a structural outage requiring operator intervention — no DCA parameter change will resolve it. However, the agent should: (1) Stop logging outageDurationDays as \"1\" when the outage has clearly spanned 100+ runs across a full calendar day — the duration counter appears miscalibrated and should reflect actual elapsed time more accurately. (2) Consider whether continuing to pay x402 fees (~$0.001 USDC per brief) on every run during a known outage is justified — if the route is confirmed down, x402 briefs are wasted spend until restoration is confirmed. (3) When the route is restored, execute at the full scheduled amount immediately without waiting for dip signals, as ~100 missed buys during a ranging market at $63K represents a meaningful DCA gap with BTC still in the consolidation zone. (4) The interleaved simulated runs at $0.000015–$0.000040 provide no useful signal and clutter history — they should either be suppressed during known outage periods or sized to reflect the actual intended DCA amount for simulation fidelity.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "1193.469368",
+    "dayNumber": 40,
+    "walletBalance": "525.633778877743224686",
+    "tags": [
+      "error-recovery",
+      "outage",
+      "infrastructure",
+      "no-route",
+      "pacing",
+      "budget",
+      "simulation"
+    ]
   }
 ]
