@@ -23209,5 +23209,61 @@
       "transferId": "c9fbeeb0-5900-442d-8ae7-74834ec4ca45",
       "settleStatus": "received"
     }
+  },
+  {
+    "date": "2026-08-15",
+    "timestamp": "2026-08-15T07:15:36.488Z",
+    "status": "error_swap_failed",
+    "requestedAmountUsdc": "1.425000",
+    "clampedAmountUsdc": "1.425000",
+    "boundBy": "user_schedule",
+    "tokenOut": "EURC",
+    "reasoning": "Market brief signals bearish sentiment (Fear & Greed 34, fear zone) with BTC flat at $63,041 (+0.04% 24h) in its 40-day $62.6k–$65.3k consolidation channel; ranging regime confirmed at 72% confidence with ultra-low 0.04% volatility and slight positive momentum (+0.10%, four consecutive up periods). Real cirBTC feed shows only 3.44% drawdown—all four dip ladder tiers remain untriggered (nearest mild threshold at 5.0%), so no dip-buying signal overrides scheduled cadence. Composite risk is medium (53/100), driven almost entirely by the 34-consecutive-run EURC no-route infrastructure outage (outageDurationDays: 1, outageConsecutiveRuns: 34) and 71% capital concentration rather than market conditions; past reflections unanimously confirm this is a persistent operator-intervention issue, not a market-driven risk. No campaign budget is configured so pacing presents no constraint.",
+    "walletUsdcBalance": "485.735153300242943674",
+    "message": "Swap failed [EURC/no_route]: Swap failed [no_route]: Stablecoin Service createSwap failed: Route or resource not found. Details: No route available",
+    "smartSizing": {
+      "fearGreed": 34,
+      "drawdownPct": 0.0008241801784667079,
+      "multiplier": 0.85,
+      "source": "llm",
+      "proposedMultiplier": 0.85
+    },
+    "x402": {
+      "resource": "/api/x402-brief",
+      "amountUsdcAtomic": "1000",
+      "payer": "0x61e7Ae336F7Eb7F8517dE4F19963D88dFD9161eC",
+      "payTo": "0xcAf34080F47f576F923962AD04dD7ddd86d8d85f",
+      "settled": true,
+      "mode": "settled",
+      "via": "http",
+      "transferId": "aa9565cc-abd9-43c7-9038-e949952f6fda",
+      "settleStatus": "received"
+    }
+  },
+  {
+    "date": "2026-08-15",
+    "timestamp": "2026-08-15T07:15:36.488Z",
+    "status": "simulated",
+    "simulated": true,
+    "requestedAmountUsdc": "0.002600",
+    "clampedAmountUsdc": "0.002600",
+    "boundBy": "user_schedule",
+    "tokenOut": "cirBTC",
+    "reasoning": "Market brief signals bearish sentiment (Fear & Greed 34, fear zone) with BTC flat at $63,041 (+0.04% 24h) in its 40-day $62.6k–$65.3k consolidation channel; ranging regime confirmed at 72% confidence with ultra-low 0.04% volatility and slight positive momentum (+0.10%, four consecutive up periods). Real cirBTC feed shows only 3.44% drawdown—all four dip ladder tiers remain untriggered (nearest mild threshold at 5.0%), so no dip-buying signal overrides scheduled cadence. Composite risk is medium (53/100), driven almost entirely by the 34-consecutive-run EURC no-route infrastructure outage (outageDurationDays: 1, outageConsecutiveRuns: 34) and 71% capital concentration rather than market conditions; past reflections unanimously confirm this is a persistent operator-intervention issue, not a market-driven risk. No campaign budget is configured so pacing presents no constraint.",
+    "amountOut": "0.00000004",
+    "priceUsd": 63041,
+    "walletUsdcBalance": "485.735153300242943674",
+    "message": "[SIMULATED] Arc cirBTC route offline — paper-filled 0.00000004 cirBTC for 0.002600 USDC at $63041.00/cirBTC (no on-chain swap; real funds untouched)",
+    "x402": {
+      "resource": "/api/x402-brief",
+      "amountUsdcAtomic": "1000",
+      "payer": "0x61e7Ae336F7Eb7F8517dE4F19963D88dFD9161eC",
+      "payTo": "0xcAf34080F47f576F923962AD04dD7ddd86d8d85f",
+      "settled": true,
+      "mode": "settled",
+      "via": "http",
+      "transferId": "aa9565cc-abd9-43c7-9038-e949952f6fda",
+      "settleStatus": "received"
+    }
   }
 ]
