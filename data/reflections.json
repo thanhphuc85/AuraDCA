@@ -12260,5 +12260,35 @@
       "stablecoin-routing",
       "zero-execution"
     ]
+  },
+  {
+    "id": "ref-1786773718123",
+    "date": "2026-08-15",
+    "timestamp": "2026-08-15T06:01:58.123Z",
+    "runStatus": "error_swap_failed",
+    "insight": "The EURC no-route outage has now persisted for 29+ consecutive runs across a full day (outageDurationDays: 1), with 0% session success rate and $0 executed on day 40 — every run is spending ~$0.001 on x402 market briefs while burning compute cycles without any trades completing. Operator intervention is the only path to resolution; the agent cannot self-heal this.",
+    "patterns": [
+      "29-consecutive error streak (error_swap_failed/no_route) with no recovery — streak grew from run 22 to run 29 across this session with zero successful swaps",
+      "0% session success rate on day 40 despite $485.74 wallet balance and fully unclamped guardrails — capital is available but infrastructure is blocking execution",
+      "x402 brief cost (~$0.001 per run) is being incurred every run with no corresponding trade value — pure cost burn with no capital deployment",
+      "BTC locked in 40-day $62,556–$65,286 consolidation channel (72% ranging confidence), Fear & Greed stable at 34, ultra-low volatility 0.04–0.06% — market conditions are benign and not the cause of failure",
+      "Requested amounts vary run-to-run ($1.375–$1.600) despite same market conditions and error outcome — amount randomization is irrelevant when route is unavailable",
+      "Cumulative spend of $1,193.47 over 40 days suggests solid prior execution history; today's full outage is an anomaly, not a systemic campaign issue"
+    ],
+    "strategyAdjustment": "Immediately halt further run attempts until the EURC/no_route infrastructure issue is resolved by the operator — continuing to fire runs wastes x402 brief fees (~$0.001/run) with zero chance of execution. If the agent cannot halt autonomously, it should reduce run frequency to the minimum possible (e.g., 1 probe per hour instead of continuous) and log a hard escalation flag. Once the route is restored, resume at base amount ($1.50) without any catch-up accumulation, as the missed volume during outage is not worth chasing at elevated risk in a bearish-ranging market.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "1193.469368",
+    "dayNumber": 40,
+    "walletBalance": "485.742113575426275034",
+    "tags": [
+      "error-recovery",
+      "infrastructure-outage",
+      "no-route",
+      "EURC",
+      "operator-escalation",
+      "budget",
+      "pacing",
+      "zero-execution"
+    ]
   }
 ]
