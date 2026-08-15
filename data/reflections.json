@@ -12615,5 +12615,33 @@
       "operator-intervention",
       "budget"
     ]
+  },
+  {
+    "id": "ref-1786788034984",
+    "date": "2026-08-15",
+    "timestamp": "2026-08-15T10:00:34.984Z",
+    "runStatus": "error_swap_failed",
+    "insight": "10 consecutive swap failures due to persistent EURC no-route infrastructure outage (47 consecutive runs, 1+ day duration). Strategy and sizing logic are functioning correctly but completely blocked by operator-level infrastructure issue.",
+    "patterns": [
+      "47 consecutive runs with EURC no-route error - infrastructure outage not strategy failure",
+      "All recent runs bound by user_schedule with no guardrail clamping",
+      "Market regime stable: ranging 72% confidence, BTC consolidating $62.5k-$65.3k for 40 days",
+      "Drawdown consistently 3.5-3.7% - no dip ladder triggers (nearest at 5%)",
+      "Requested amounts varying $1.43-$1.65 show smart sizing active but irrelevant given swap failures",
+      "69% capital concentration persists but no new capital deployment possible",
+      "Wallet balance stable at $525.72 - no funds being consumed due to swap failures"
+    ],
+    "strategyAdjustment": "Strategy requires NO adjustment - this is purely an infrastructure/operator intervention issue. The DCA logic, sizing multipliers, dip detection, and risk assessment are all functioning correctly. Operator must restore EURC routing or switch tokenOut target to a functioning asset (e.g., USDC→WBTC, USDC→ETH). Until route is fixed, continuing to attempt swaps wastes compute and x402 payments without accumulating any assets. Recommend: halt automated runs and alert operator to fix routing configuration.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "1193.469368",
+    "dayNumber": 40,
+    "walletBalance": "525.719173146809952778",
+    "tags": [
+      "error-recovery",
+      "infrastructure-outage",
+      "operator-intervention-required",
+      "eurc-routing",
+      "swap-failure-streak"
+    ]
   }
 ]
