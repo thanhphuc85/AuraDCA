@@ -12793,5 +12793,35 @@
       "budget",
       "pacing"
     ]
+  },
+  {
+    "id": "ref-1786792609315",
+    "date": "2026-08-15",
+    "timestamp": "2026-08-15T11:16:49.315Z",
+    "runStatus": "error_swap_failed",
+    "insight": "The EURC swap route has been broken for 53 consecutive runs (outageDurationDays: 1 per run label, but clearly multi-day given 53 runs), with zero successful executions in the entire visible history — this is a complete infrastructure failure that has now wasted $0 of capital but burned x402 payment fees on every single failed run.",
+    "patterns": [
+      "53 consecutive error_swap_failed runs — no successful EURC swap in entire recent history",
+      "x402 market brief fee settled on every run (~$0.001 USDC atomic = $0.001 per run) while swaps fail, accumulating unnecessary costs",
+      "Wallet balance static at ~$525.71 for all 8 visible runs — no capital deployed, no progress on DCA goal",
+      "BTC price pinned in narrow $62,556–$65,286 range for 40 days with Fear & Greed at 34 — persistent ranging regime, no dip triggers firing (nearest tier at 5.0%, actual drawdown only 3.55%)",
+      "Requested amounts vary run-to-run ($1.35–$1.67) suggesting smart sizing multiplier fluctuating slightly but all amounts are irrelevant since swaps never execute",
+      "outageDurationDays counter reads '1' in every run's reasoning but consecutive run count is at 53 — the duration metric is likely not updating correctly or resets each run",
+      "Day 40 of campaign, $1193.47 cumulative spent — but no spending has occurred in any of the last 8 runs, so all $1193.47 was spent before the outage began"
+    ],
+    "strategyAdjustment": "This is not a strategy problem — it is a broken infrastructure problem requiring operator intervention. The EURC/no_route error on the stablecoin swap service must be resolved by the operator before any DCA activity can resume. Specific actions needed: (1) Verify the EURC swap route is restored on the stablecoin service before continuing to run; (2) Add a circuit-breaker: after 5 consecutive swap failures on the same route, pause automated runs and alert the operator rather than continuing to fire runs that burn x402 fees and log identical failures; (3) Once route is restored, confirm with a test swap before resuming full cadence; (4) The outageDurationDays counter appears stuck at '1' — fix the outage duration tracking so it accurately reflects the true elapsed time (53 runs worth of failures). Do not adjust market strategy, sizing, or pacing until the route is functional.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "1193.469368",
+    "dayNumber": 40,
+    "walletBalance": "525.710081277122089162",
+    "tags": [
+      "error-recovery",
+      "infrastructure-outage",
+      "circuit-breaker",
+      "no-route",
+      "EURC",
+      "swap-failure",
+      "operator-intervention"
+    ]
   }
 ]

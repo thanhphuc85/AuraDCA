@@ -23857,5 +23857,35 @@
       "transferId": "6b269c00-9156-49f3-8c3f-66e277a0136d",
       "settleStatus": "received"
     }
+  },
+  {
+    "date": "2026-08-15",
+    "timestamp": "2026-08-15T11:15:35.249Z",
+    "status": "error_swap_failed",
+    "requestedAmountUsdc": "1.669194",
+    "clampedAmountUsdc": "1.669194",
+    "boundBy": "user_schedule",
+    "tokenOut": "EURC",
+    "reasoning": "Market brief is bearish (Fear & Greed 34, BTC at $62,968, +0.27% 24h) locked in its persistent 40-day $62,556–$65,286 consolidation channel with high on-chain activity but no directional conviction, supporting a modest decrease bias. The real cirBTC feed (601 data points) confirms only a 3.55% drawdown from high with ultra-low 0.01% volatility — all four dip ladder tiers remain untriggered (nearest mild threshold at 5.0%), so no dip-buying signal overrides the scheduled cadence. Market regime is confirmed ranging (72% confidence) with mild positive momentum (+0.10% score, 4 consecutive up), composite risk is medium (53/100) driven primarily by the 10-run error streak and 69% capital concentration reflecting the persistent cirBTC no-route infrastructure outage (outageDurationDays: 1, outageConsecutiveRuns: 53) rather than adverse market conditions; past reflections unanimously confirm this is a structural operator-intervention issue requiring route restoration, not a strategy deviation. No campaign budget is configured so pacing presents no constraint, the $525.71 wallet balance comfortably clears the $0.50 minimum reserve with the daily cap fully unused, and the guardrail preview confirms 1.669194 USDC passes without clamping.",
+    "walletUsdcBalance": "525.710081277122089162",
+    "message": "Swap failed [EURC/no_route]: Swap failed [no_route]: Stablecoin Service createSwap failed: Route or resource not found. Details: No route available",
+    "smartSizing": {
+      "fearGreed": 34,
+      "drawdownPct": 0.0018388180838247415,
+      "multiplier": 1.3383881808382474,
+      "source": "formula",
+      "proposedMultiplier": null
+    },
+    "x402": {
+      "resource": "/api/x402-brief",
+      "amountUsdcAtomic": "1000",
+      "payer": "0x61e7Ae336F7Eb7F8517dE4F19963D88dFD9161eC",
+      "payTo": "0xcAf34080F47f576F923962AD04dD7ddd86d8d85f",
+      "settled": true,
+      "mode": "settled",
+      "via": "http",
+      "transferId": "0ffc21fd-97b9-4c0b-b1f6-7696eadc0d25",
+      "settleStatus": "received"
+    }
   }
 ]
