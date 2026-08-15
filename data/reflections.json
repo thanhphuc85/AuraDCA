@@ -13642,5 +13642,34 @@
       "sizing-logic-healthy",
       "operator-intervention-required"
     ]
+  },
+  {
+    "id": "ref-1786813304921",
+    "date": "2026-08-15",
+    "timestamp": "2026-08-15T17:01:44.921Z",
+    "runStatus": "error_swap_failed",
+    "insight": "82 consecutive runs blocked by cirBTC no-route infrastructure failure. Strategy logic is sound (sizing 1.41-1.68 USDC responding correctly to Fear & Greed 34, 3.22% drawdown in 72% confidence ranging market), but execution is 100% blocked by external routing issue requiring operator intervention.",
+    "patterns": [
+      "Infrastructure outage spanning 82+ consecutive runs blocking all executions",
+      "Consistent user_schedule sizing between 1.41-1.68 USDC with no clamping constraints",
+      "Market regime stable: ranging (72% confidence) with BTC in 40-day $62.5K-$65.2K channel",
+      "3.22% drawdown insufficient to trigger any dip ladder tier (nearest at 5.0%)",
+      "Smart sizing responding appropriately to bearish sentiment (Fear & Greed 34) with 1.15x multiplier",
+      "69% capital concentration risk persisting but not actionable during outage",
+      "No budget pacing constraints - campaign has no configured limits"
+    ],
+    "strategyAdjustment": "No strategy adjustment possible - this is a structural infrastructure failure, not a tactical issue. The agent cannot resolve routing problems. Operator must restore cirBTC swap route availability. Once route is restored, resume standard DCA execution with current sizing logic (1.15x multiplier for Fear & Greed 34 is appropriate). Monitor whether first successful execution after restoration requires any calibration, but expect normal operation to resume immediately.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "1193.469368",
+    "dayNumber": 40,
+    "walletBalance": "525.663120586152508894",
+    "tags": [
+      "infrastructure-outage",
+      "error-recovery",
+      "no-route",
+      "operator-intervention-required",
+      "strategy-sound",
+      "execution-blocked"
+    ]
   }
 ]
