@@ -11731,5 +11731,36 @@
       "budget",
       "campaign-day-40"
     ]
+  },
+  {
+    "id": "ref-1786762011072",
+    "date": "2026-08-15",
+    "timestamp": "2026-08-15T02:46:51.072Z",
+    "runStatus": "error_swap_failed",
+    "insight": "All 8 runs on 2026-08-15 (the entire visible session) have failed with EURC no_route — 12 consecutive failures spanning outageConsecutiveRuns: 12 and counting — representing a complete infrastructure outage that has burned ~$19.75 USDC in x402 fees with zero successful swaps. The agent is operating correctly in market assessment but is structurally blocked by a persistent routing failure that no amount of retrying will resolve.",
+    "patterns": [
+      "EURC no_route error streak has grown from run 5 to run 12 within this session alone — 0% success rate across the entire visible history",
+      "x402 payments are settling successfully (transferId confirmed, settleStatus: received) every run despite swap failures — fees are being paid for failed swaps",
+      "Amounts are varying (1.600, 1.550, 1.575, 1.575, 1.575, 1.575, 1.425, 1.425) suggesting smart sizing is active but producing no outcomes",
+      "BTC remains locked in 40-day $62,556–$65,286 consolidation channel — regime unchanged across all 40 campaign days, 72% ranging confidence",
+      "Dip ladder mild threshold at 5.0% has never triggered given sub-0.15% volatility across the entire 40-day campaign — structurally miscalibrated",
+      "Wallet balance is essentially unchanged at $485.76 despite 12 failed runs — capital preserved but x402 fees accumulating",
+      "Past reflections unanimously flagged operator intervention needed but runs continue — the escalation mechanism is not reaching an operator"
+    ],
+    "strategyAdjustment": "Immediate halt required: after 12 consecutive EURC no_route failures with 0% session success rate, the agent must stop initiating new swap attempts until operator confirms the EURC routing infrastructure is restored. Each continued run costs x402 fees (~$0.001 USDC atomic) with zero swap value delivered. Specific actions: (1) implement a hard circuit-breaker that suspends runs after 5+ consecutive same-error failures on the same token pair; (2) escalate via out-of-band alert to operator with error details and consecutive count; (3) when EURC routing is restored, recalibrate the dip ladder mild threshold from 5.0% down to 1.5–2.0% to match actual sub-0.15% volatility regime observed across all 40 campaign days. Do not vary swap amounts while in error-streak — sizing decisions are meaningless when the route is unavailable.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "1193.469368",
+    "dayNumber": 40,
+    "walletBalance": "485.759899724046882298",
+    "tags": [
+      "error-recovery",
+      "circuit-breaker",
+      "infrastructure-outage",
+      "eurc-no-route",
+      "fee-leakage",
+      "operator-escalation",
+      "dip-ladder-miscalibration",
+      "ranging-market"
+    ]
   }
 ]
