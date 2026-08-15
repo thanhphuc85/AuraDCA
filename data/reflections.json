@@ -11668,5 +11668,36 @@
       "budget",
       "pacing"
     ]
+  },
+  {
+    "id": "ref-1786760216768",
+    "date": "2026-08-15",
+    "timestamp": "2026-08-15T02:16:56.768Z",
+    "runStatus": "error_swap_failed",
+    "insight": "The EURC no-route outage has now persisted for 11 consecutive runs (10 prior + this one) across a full day with a 0% session success rate — this is a complete routing infrastructure failure, not a transient issue, and the agent continuing to attempt swaps is burning x402 API fees (~$0.001/call) with zero executions.",
+    "patterns": [
+      "EURC no-route error streak has grown from 1 → 11 consecutive failures across all 8 visible runs today, with outageConsecutiveRuns tracking from 3 to 10+ — the outage has not self-resolved at any point",
+      "Agent correctly identifies the outage as infrastructure-requiring-operator-intervention in every reasoning block, yet continues to attempt swaps regardless — reflection acknowledgment is not translating into execution behavior change",
+      "x402 API fees are being settled (transferId confirmed, mode: settled) on every failed run, meaning real USDC is being spent on market briefs that produce no swap outcome",
+      "BTC market regime is stable and unchanged: Fear & Greed 34, ranging at 72% confidence, $62,552–$65,286 band, 3.5–3.57% drawdown, sub-0.15% volatility — market conditions are not the variable causing failures",
+      "Dip ladder remains fully untriggered across all 40 campaign days; mild threshold at 5.0% has never fired in this sub-0.15% volatility regime — structurally miscalibrated threshold confirmed by full campaign history",
+      "Amount sizing is inconsistent run-to-run (1.425 → 1.550 → 1.575 → 1.600 → 1.575) with no clear logic driving the variation, suggesting the LLM sizing is noisy rather than signal-driven in this stable regime",
+      "Cumulative spend is $1,193.47 over 40 days with wallet at $485.76 — execution is behind schedule if any daily target exists, and every failed run widens that gap further"
+    ],
+    "strategyAdjustment": "Immediate action required — do NOT attempt another EURC swap until operator confirms the routing issue is resolved. At 11 consecutive failures over 1 full day, further retries waste x402 API fees with zero probability of success. If the agent must run, it should: (1) skip the swap attempt entirely and log a 'halted_pending_operator' status rather than error_swap_failed, (2) suppress x402 market brief purchases during confirmed outage periods to stop burning API fees, and (3) once routing is restored, consider consolidating missed runs into a catch-up amount capped by the daily $200 limit rather than resuming normal cadence — at $1,193.47 cumulative over 40 days that's ~$29.84/day average, and today's 0 executions create a meaningful shortfall. For dip ladder recalibration: lower the mild threshold from 5.0% to 2.0–2.5% to match the actual sub-0.15% volatility regime where 3.5% drawdown already represents a significant move.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "1193.469368",
+    "dayNumber": 40,
+    "walletBalance": "485.761952885697029354",
+    "tags": [
+      "error-recovery",
+      "outage",
+      "infrastructure",
+      "pacing",
+      "budget",
+      "x402-cost",
+      "dip-ladder-miscalibration",
+      "halt-condition"
+    ]
   }
 ]
