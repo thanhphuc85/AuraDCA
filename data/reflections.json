@@ -11888,5 +11888,38 @@
       "pacing",
       "market-ranging"
     ]
+  },
+  {
+    "id": "ref-1786765610405",
+    "date": "2026-08-15",
+    "timestamp": "2026-08-15T03:46:50.405Z",
+    "runStatus": "error_swap_failed",
+    "insight": "The EURC no-route outage has now persisted for 17+ consecutive runs across a full calendar day with 0% success rate — this is a confirmed, extended infrastructure outage that the agent cannot resolve through any strategy adjustment; every USDC spent on x402 API calls is being consumed without producing any swaps.",
+    "patterns": [
+      "17 consecutive error_swap_failed runs, all with identical 'no_route' error for EURC — streak is growing, not recovering",
+      "0% session success rate sustained across the entire observed history window (all 8 visible runs + current)",
+      "Wallet balance barely changing ($485.76 → $485.75) because swaps fail, but x402 micro-payments (0.001 USDC each) are still settling on-chain — minor but real cost leakage",
+      "BTC locked in tight 40-day range $62,552–$65,286 with 72% ranging-regime confidence; market regime has been stable/unchanged for multiple days",
+      "All runs unclamped by user_schedule with amounts varying 1.35–1.575 USDC — sizing variation has no effect on the core error",
+      "Fear & Greed stable at 34 (fear territory), drawdown consistently ~3.4–3.5% from high — no dip signals triggered across all 17 runs",
+      "Smart sizing multiplier locked at 0.8 (bearish bias) but irrelevant given no swaps are executing",
+      "Cumulative spend of 1193.47 USDC on day 40 implies ~29.8 USDC/day average, but current day is all failures — capital is being preserved involuntarily"
+    ],
+    "strategyAdjustment": "Operator intervention is mandatory and overdue. The agent should: (1) Stop attempting EURC swaps entirely until the route is confirmed restored — consider switching tokenOut to an alternative asset (e.g., USDC→BTC or another routable token) as a temporary fallback to keep the DCA campaign progressing rather than accumulating a growing backlog of missed buys. (2) If no alternative token is viable, implement a hard circuit-breaker after 10 consecutive no-route errors that suspends swap attempts and alerts the operator rather than continuing to burn x402 API fees (currently ~$0.001 per failed run but the pattern compounds). (3) When EURC routing is restored, evaluate whether to catch up on missed buys or accept the gap — 17 missed runs at ~$1.40 average = ~$23.80 of missed EURC purchases during the outage; a catch-up burst could be considered if operator confirms route is stable.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "1193.469368",
+    "dayNumber": 40,
+    "walletBalance": "485.75445147912567281",
+    "tags": [
+      "error-recovery",
+      "outage",
+      "circuit-breaker",
+      "eurc",
+      "no-route",
+      "operator-intervention",
+      "pacing",
+      "market-timing",
+      "budget"
+    ]
   }
 ]
