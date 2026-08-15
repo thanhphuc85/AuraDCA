@@ -12854,5 +12854,36 @@
       "stalled-campaign",
       "budget"
     ]
+  },
+  {
+    "id": "ref-1786793727182",
+    "date": "2026-08-15",
+    "timestamp": "2026-08-15T11:35:27.182Z",
+    "runStatus": "error_swap_failed",
+    "insight": "The EURC no-route outage has now persisted for 55+ consecutive runs (outageConsecutiveRuns: 48–55 across the last 8 runs), making 100% of today's swap attempts fail — this is a pure infrastructure blockage with zero market-strategy relevance and requires urgent operator intervention to restore the route.",
+    "patterns": [
+      "100% error rate across all 8 visible recent runs — every single attempt is error_swap_failed on the same EURC no_route error",
+      "outageConsecutiveRuns climbing from 48 to 55 within this single day's window, with outageDurationDays stuck at 1 — counter appears to be tracking runs, not calendar days",
+      "Wallet balance frozen at ~$525.71 across all runs — no capital is being deployed despite the agent continuing to attempt swaps each run",
+      "BTC price is remarkably stable: $62,957–$62,976 across 8 runs, effectively flat, confirming the 40-day $62,556–$65,286 range is holding with sub-0.05% intra-day volatility",
+      "Fear & Greed index locked at 34 (fear) for the entire observation window — sentiment stagnant",
+      "Requested amounts vary run-to-run (1.35–1.80 USDC) with no clear pattern, suggesting sizing logic is still cycling normally but all attempts are wasted on a broken route",
+      "Cumulative spend at $1,193.47 on Day 40 with no new capital deployed today — daily contribution rate has effectively dropped to zero"
+    ],
+    "strategyAdjustment": "The agent should stop burning x402 API fees ($0.10/call) on swap attempts that are guaranteed to fail. After 10+ consecutive no_route errors on the same token/route, implement a circuit-breaker: skip the swap execution entirely, log the outage, and do NOT call the swap API until the route is confirmed restored. The x402 market brief is still being paid for and settled each run (transferId present, settled: true) — if the route is known-broken, consider skipping the brief purchase too to conserve funds. Additionally, flag this explicitly in the reflection output: outageConsecutiveRuns has now exceeded 55 — this requires human/operator action to restore the EURC swap route before any further runs can execute successfully.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "1193.469368",
+    "dayNumber": 40,
+    "walletBalance": "525.70808053032007337",
+    "tags": [
+      "error-recovery",
+      "circuit-breaker",
+      "infrastructure-outage",
+      "no-route",
+      "EURC",
+      "budget",
+      "wasted-fees",
+      "operator-intervention-required"
+    ]
   }
 ]
