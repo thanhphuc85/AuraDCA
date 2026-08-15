@@ -14051,5 +14051,34 @@
       "risk-scoring-inconsistency",
       "concentration-risk"
     ]
+  },
+  {
+    "id": "ref-1786822563349",
+    "date": "2026-08-15",
+    "timestamp": "2026-08-15T19:36:03.349Z",
+    "runStatus": "simulated",
+    "insight": "The cirBTC routing outage has now reached 96 consecutive failed runs with 0% real execution success — all \"simulated\" fills are paper-only and no real USDC is being deployed into cirBTC. This is a complete infrastructure blockage, not a market or strategy issue.",
+    "patterns": [
+      "96 consecutive outageConsecutiveRuns with error_swap_failed on every real execution attempt — the outage is persistent and shows no sign of self-resolving",
+      "Run pairs consistently alternate: error_swap_failed (large amount ~1.5–1.7 USDC) followed by simulated (tiny amount 0.000015–0.001192 USDC) — suggesting a fallback simulation path triggers after each real failure",
+      "Requested amounts on error runs vary significantly (1.575 to 1.661 USDC) with no clear pattern, indicating the sizing logic is active but irrelevant given the route is always offline",
+      "Market regime has been locked in a tight $62.5K–$65.2K range for the full 40-day campaign with ultra-low volatility (0.03–0.04%) and Fear & Greed at 34 — bearish sentiment but no directional move",
+      "All four dip ladder tiers remain untriggered for the entire observation window — the -2.72% drawdown is well below the 5.0% mild threshold",
+      "Capital concentration at 69% has been flagged as the primary risk driver across every recent run, unchanged",
+      "1,193.47 USDC spent over 40 days with 0 real cirBTC acquired during the outage period — capital is being consumed by simulation overhead and fees (x402 at $0.001/run) without deployment"
+    ],
+    "strategyAdjustment": "Immediate operator intervention is required — do not wait for the route to self-heal. Specific actions: (1) Escalate the cirBTC routing outage to the infrastructure team with the run count (96 consecutive failures) and outage duration as evidence; (2) Consider pausing the DCA schedule entirely until the route is confirmed live to avoid continued x402 fee burn (~$0.001 per run × high frequency = meaningful waste over time); (3) If pausing is not possible, implement a circuit breaker that stops scheduling new runs after N consecutive error_swap_failed results (suggest threshold of 5–10) and alerts the operator rather than continuing indefinitely; (4) Do not adjust DCA sizing, dip thresholds, or market strategy — those are functioning correctly and the market regime (ranging, low vol, BTC ~$63K) is actually a reasonable DCA entry environment if execution were available.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "1193.469368",
+    "dayNumber": 40,
+    "walletBalance": "525.640214289021180894",
+    "tags": [
+      "error-recovery",
+      "infrastructure-outage",
+      "circuit-breaker",
+      "budget",
+      "pacing",
+      "operator-intervention"
+    ]
   }
 ]
