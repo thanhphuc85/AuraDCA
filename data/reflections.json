@@ -14265,5 +14265,36 @@
       "market-timing",
       "concentration-risk"
     ]
+  },
+  {
+    "id": "ref-1786826814826",
+    "date": "2026-08-15",
+    "timestamp": "2026-08-15T20:46:54.826Z",
+    "runStatus": "error_swap_failed",
+    "insight": "The cirBTC no-route outage has now persisted for 103 consecutive runs with 0% execution success — this is a complete infrastructure blockage, not a transient error, and no amount of DCA strategy adjustment can resolve it without operator intervention to restore the swap route.",
+    "patterns": [
+      "103 consecutive error_swap_failed runs on cirBTC with identical 'no_route' message — outage is structural and ongoing",
+      "EURC swap also failing with no_route in this run, suggesting the routing issue may be broader than just cirBTC",
+      "Error streak score maxed at 100/100 for multiple consecutive runs, yet sizing logic continues attempting ~$1.40–1.65 USDC swaps unchanged",
+      "BTC locked in $62.5K–$65.2K range for 40 days with ultra-low volatility (0.02–0.04%), all dip ladder tiers untriggered",
+      "Fear & Greed stable at 34 (fear) for the entire recent window — no sentiment shift observed",
+      "69% capital concentration risk persists without change across all 8 sampled runs",
+      "One simulated run (status: simulated, $0.000040) and one guardrail skip (group_zero_amount) interspersed among failures — suggesting fallback/sim logic is triggering but real execution is universally blocked",
+      "Cumulative spend of $1,193.47 over 40 days implies ~$29.84/day average, but actual execution has been zero for an extended period"
+    ],
+    "strategyAdjustment": "Escalate outage alert urgency: this is run 103 of a complete no-route failure — operator must investigate and restore the cirBTC (and now apparently EURC) swap route before any further runs are meaningful. In the interim, consider: (1) pausing automated run attempts entirely to avoid wasted x402 payments (~$0.001 per brief call still settling, as confirmed by the settled x402 in this run) while the route is down; (2) if an alternative token/route exists (e.g., direct BTC, WBTC, or a different DEX path), configure it as a fallback; (3) do not adjust DCA sizing or market strategy — those are functioning correctly. The single actionable item is route restoration or a configured fallback route.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "1193.469368",
+    "dayNumber": 40,
+    "walletBalance": "525.629336473904824686",
+    "tags": [
+      "error-recovery",
+      "infrastructure-outage",
+      "no-route",
+      "operator-intervention-required",
+      "pacing",
+      "budget",
+      "clamping"
+    ]
   }
 ]
