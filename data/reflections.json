@@ -13535,5 +13535,32 @@
       "operator-intervention-required",
       "no-strategy-change-needed"
     ]
+  },
+  {
+    "id": "ref-1786810595029",
+    "date": "2026-08-15",
+    "timestamp": "2026-08-15T16:16:35.029Z",
+    "runStatus": "error_swap_failed",
+    "insight": "Infrastructure outage has persisted for 78 consecutive runs with 0% execution success rate—this is a complete system failure requiring immediate operator intervention to restore EURC routing, not a DCA strategy issue.",
+    "patterns": [
+      "78 consecutive error_swap_failed runs all showing 'no_route' for EURC",
+      "All recent runs bounded by user_schedule with requested amounts 1.25-1.675 USDC passing guardrails cleanly",
+      "BTC ranging in $62.5K-$65.2K channel for 40 days with only 3.2-3.4% drawdown—no dip tiers triggered",
+      "Fear & Greed stable at 34, ultra-low volatility (0.01-0.04%), mild positive momentum but no directional conviction",
+      "69% capital concentration risk remains constant, no successful executions to diversify",
+      "Market regime confirmed ranging at 72% confidence across all runs"
+    ],
+    "strategyAdjustment": "Halt all DCA execution attempts until EURC routing infrastructure is restored by operator. The agent is correctly sizing orders (1.25-1.675 USDC range with 1.15x smart sizing multiplier for Fear & Greed 34) and accurately reading market conditions (ranging regime, no dip signals), but 78 consecutive failed swaps prove the infrastructure is broken. Resume normal DCA operations only after confirming a successful test swap to EURC. No strategy changes needed—this is purely an infrastructure problem.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "1193.469368",
+    "dayNumber": 40,
+    "walletBalance": "525.669824834886908894",
+    "tags": [
+      "infrastructure-failure",
+      "error-recovery",
+      "routing-outage",
+      "operator-intervention-required",
+      "execution-blocked"
+    ]
   }
 ]
