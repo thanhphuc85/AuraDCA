@@ -12557,5 +12557,37 @@
       "x402-cost",
       "operator-intervention-required"
     ]
+  },
+  {
+    "id": "ref-1786785410976",
+    "date": "2026-08-15",
+    "timestamp": "2026-08-15T09:16:50.976Z",
+    "runStatus": "error_swap_failed",
+    "insight": "The EURC no-route outage has now persisted for 43 consecutive runs (all on 2026-08-15), representing a complete infrastructure failure for the target token — every single swap attempt today has failed, burning x402 API fees (~$0.001 USDC each) with zero executed volume while the wallet sits idle at $525.72 USDC.",
+    "patterns": [
+      "43 consecutive error_swap_failed runs for EURC with identical 'no_route' error — this is not transient, it is a structural infrastructure outage",
+      "All 8 recent runs show the same error message: 'Route or resource not found. Details: No route available' — zero variation suggesting the route is fully down, not intermittently degraded",
+      "x402 API fees are being settled (settled: true) on every run despite swap failure — the agent is paying for market briefs but executing zero volume",
+      "BTC has been range-bound in $62,556–$65,286 for 40 days with Fear & Greed locked at 34 — market conditions are stable and benign, the outage is the sole blocker",
+      "No dip signal has triggered in any recent run — drawdown from high never exceeded 3.68%, all four ladder tiers (nearest at 5.0%) remain untriggered",
+      "Requested amounts vary run-to-run (1.50–1.67 USDC) but are never the bottleneck — guardrails are not binding, budget is not constraining",
+      "The one 'simulated' run early in the day (requested: 0.000052 USDC) suggests a test or scheduling anomaly at session start"
+    ],
+    "strategyAdjustment": "This outage requires operator intervention, not strategy adjustment — however, the agent should implement a circuit breaker: after 10+ consecutive no_route failures for a specific token, suspend further attempts for that token for a configurable cooldown window (e.g., 4–6 hours) to stop burning x402 fees on guaranteed failures. The agent should also flag this as a P0 alert to the operator: EURC has been unreachable for 43 runs across a full calendar day, and 1193.47 USDC in cumulative campaign spend is sitting undeployed while the wallet holds $525.72 USDC idle. If EURC route is not restored within 24 hours, the operator should consider switching tokenOut to an alternative (e.g., USDC→BTC directly, or another available asset) rather than continuing to exhaust API budget on dead routes.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "1193.469368",
+    "dayNumber": 40,
+    "walletBalance": "525.723215293974752778",
+    "tags": [
+      "error-recovery",
+      "infrastructure-outage",
+      "circuit-breaker",
+      "no-route",
+      "EURC",
+      "operator-intervention",
+      "budget",
+      "x402-fees",
+      "pacing"
+    ]
   }
 ]
