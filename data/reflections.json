@@ -13788,5 +13788,35 @@
       "sizing-functional",
       "routing-failure"
     ]
+  },
+  {
+    "id": "ref-1786816759129",
+    "date": "2026-08-15",
+    "timestamp": "2026-08-15T17:59:19.129Z",
+    "runStatus": "error_swap_failed",
+    "insight": "87 consecutive runs blocked by EURC routing infrastructure failure. Strategy logic is sound (proper ranging regime detection, appropriate sizing multipliers 0.85-1.15x), but zero execution for entire outage period. This is purely an operator intervention issue, not a DCA strategy problem.",
+    "patterns": [
+      "100% error rate for 87+ consecutive runs due to no_route failure on EURC swaps",
+      "All runs bound by user_schedule with no clamping - sizing logic working correctly",
+      "Market regime correctly identified as ranging (72% confidence) with BTC in $62.5K-$65.2K channel for 40 days",
+      "Fear & Greed stable at 34 (fear territory) with minimal BTC volatility (~0.02%)",
+      "Smart sizing appropriately adjusting between 0.85x-1.15x based on sentiment shifts",
+      "No dip ladder triggers (only 3.2% drawdown, nearest threshold 5.0%)",
+      "69% capital concentration risk acknowledged but not actionable during outage",
+      "Cumulative spend 1193.47 USDC over 40 days suggests ~29.8 USDC/day average when operational"
+    ],
+    "strategyAdjustment": "No strategy changes needed - DCA logic, regime detection, and smart sizing are all functioning correctly. Required action is external: operator must restore EURC routing infrastructure or switch tokenOut target to a functioning route (e.g., WBTC, WETH). If routing cannot be fixed, consider temporary pivot to alternative stablecoin pairs with working routes. Monitor for route restoration and resume normal execution immediately when available.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "1193.469368",
+    "dayNumber": 40,
+    "walletBalance": "525.653906064803580894",
+    "tags": [
+      "error-recovery",
+      "infrastructure-outage",
+      "routing-failure",
+      "operator-intervention-required",
+      "strategy-working",
+      "execution-blocked"
+    ]
   }
 ]
