@@ -13246,5 +13246,34 @@
       "idle-capital",
       "budget"
     ]
+  },
+  {
+    "id": "ref-1786804329744",
+    "date": "2026-08-15",
+    "timestamp": "2026-08-15T14:32:09.744Z",
+    "runStatus": "error_swap_failed",
+    "insight": "Run 68 of a continuous no-route outage on cirBTC: 100% of real swap attempts are failing, while simulated runs with negligible amounts (~$0.001–$0.06) interleave with failed real runs (~$1.25–$1.66), suggesting the simulation path bypasses the broken route but actual execution does not. No strategy adjustment can fix this — operator must restore the cirBTC/EURC swap route.",
+    "patterns": [
+      "cirBTC no-route outage persists at 68 consecutive failed runs (outageConsecutiveRuns: 63–68 across last 8 runs), unchanged from prior reflections",
+      "Alternating simulated (tiny amounts: $0.000051–$0.001246) and error_swap_failed (real amounts: $1.25–$1.66) runs suggest two execution paths — simulation succeeds, live swap fails",
+      "Market regime stable and ranging for 40 days ($62,556–$65,286 channel), Fear & Greed steady at 34, BTC ~$62,973–$63,002 — market conditions are irrelevant to the failure",
+      "Dip ladder untriggered for entire campaign — nearest threshold (mild, 5.0%) never reached given only 3.49–3.54% drawdown from high",
+      "Wallet holds $525.69 USDC with 69% capital concentration risk; $1,193.47 spent across 40 days with zero successful cirBTC executions",
+      "Smart sizing multiplier ~1.32x applied correctly but wasted on every real run due to route outage"
+    ],
+    "strategyAdjustment": "This is exclusively an infrastructure issue, not a strategy issue. The agent should stop attempting live cirBTC swaps entirely until the route is confirmed restored — continued attempts waste x402 payment fees ($0.001 USDC per /api/x402-brief call, settled 68+ times) and add noise to history. If an alternative target token with a working route exists (e.g., WBTC or cbBTC on the same chain), the agent should flag it for operator consideration as a temporary substitute. At minimum, after 10 consecutive identical no-route failures, the agent should reduce run frequency or enter a degraded-mode hold state rather than retrying at full cadence.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "1193.469368",
+    "dayNumber": 40,
+    "walletBalance": "525.686584780095643614",
+    "tags": [
+      "error-recovery",
+      "infrastructure-outage",
+      "no-route",
+      "clamping",
+      "pacing",
+      "budget",
+      "operator-intervention-required"
+    ]
   }
 ]
