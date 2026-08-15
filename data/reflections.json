@@ -13453,5 +13453,33 @@
       "routing-outage",
       "execution-blocked"
     ]
+  },
+  {
+    "id": "ref-1786808815830",
+    "date": "2026-08-15",
+    "timestamp": "2026-08-15T15:46:55.830Z",
+    "runStatus": "error_swap_failed",
+    "insight": "75 consecutive swap failures due to persistent cirBTC no-route infrastructure outage. Strategy and sizing are irrelevant until operator restores routing—no execution has occurred for 75+ runs despite healthy $525 wallet balance and appropriate $1.25-1.68 USDC allocation requests.",
+    "patterns": [
+      "75 consecutive error_swap_failed with identical 'no_route' root cause",
+      "0% execution success rate across all recent history",
+      "No clamping issues—all requests pass guardrails cleanly (boundBy: user_schedule)",
+      "Consistent market analysis showing ranging regime (72% confidence), Fear & Greed 34, BTC in $62.5K-$65.2K channel",
+      "All dip ladder tiers untriggered (3.19-3.49% drawdown vs 5% mild threshold)",
+      "Capital concentration risk stable at 69%, composite risk medium (43-53/100)",
+      "Smart sizing multipliers (1.35x) and allocation variations ($1.25-1.68) have zero impact—infrastructure blocks all swaps"
+    ],
+    "strategyAdjustment": "HALT all strategy adjustments. The DCA agent is functioning correctly—market analysis, risk assessment, sizing logic, and guardrails are all working as designed. The blocker is external infrastructure (cirBTC routing). Operator must restore the EURC swap route. Once routing is restored, resume normal operations with current ranging-market strategy: no dip-buying (drawdown <5%), standard-to-slightly-elevated allocations ($1.25-1.68 range appropriate for Fear & Greed 34), and continue monitoring for regime shifts.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "1193.469368",
+    "dayNumber": 40,
+    "walletBalance": "525.674419991429611614",
+    "tags": [
+      "error-recovery",
+      "infrastructure-outage",
+      "routing-failure",
+      "operator-intervention-required",
+      "execution-blocked"
+    ]
   }
 ]
