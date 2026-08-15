@@ -11823,5 +11823,38 @@
       "budget",
       "market-timing"
     ]
+  },
+  {
+    "id": "ref-1786763808462",
+    "date": "2026-08-15",
+    "timestamp": "2026-08-15T03:16:48.462Z",
+    "runStatus": "error_swap_failed",
+    "insight": "All 8 visible runs on 2026-08-15 have failed with the same EURC no-route error (now 15+ consecutive failures, ~1+ full day outage); the agent is burning x402 fees and compute on every run with zero chance of success until operator intervention restores the EURC routing infrastructure.",
+    "patterns": [
+      "EURC no_route error has persisted for 15+ consecutive runs spanning at least 1 full day — this is a confirmed, prolonged infrastructure outage, not a transient routing blip",
+      "0% session success rate across all 8 visible runs on 2026-08-15; every attempt is failing identically",
+      "x402 payments are being settled (mode: settled, settleStatus: received) on each failed run, meaning real USDC cost is being incurred with zero executed swaps",
+      "Requested amounts vary run-to-run (1.350–1.575 USDC) suggesting smart-sizing multiplier is fluctuating slightly (bearish bias, Fear & Greed 34, 0.7 multiplier) but this variation is irrelevant while swaps are failing entirely",
+      "BTC is in a tight 40-day consolidation channel ($62,556–$65,286, 72% ranging confidence) with ultra-low cirBTC volatility (0.01–0.07%); all four dip ladder tiers remain untriggered — no dip signal opportunity being missed",
+      "71% capital concentration risk flagged consistently across all runs",
+      "Dip ladder mild threshold at 5.0% is structurally miscalibrated for this sub-0.15% volatility regime — has never triggered in 40 campaign days"
+    ],
+    "strategyAdjustment": "IMMEDIATE: Halt further EURC swap attempts until operator confirms the no-route routing issue is resolved — continuing to run wastes x402 fees (each settled payment is a real cost) with guaranteed failure. Do not retry the same failing route. On resume: (1) validate EURC routing with a test query before committing a swap attempt; (2) consider a fallback token (e.g., USDC hold or alternative stablecoin) if EURC remains unavailable beyond 24h; (3) recalibrate the dip ladder mild threshold downward from 5.0% to ~1.5–2.0% given persistent sub-0.15% cirBTC volatility over all 40 campaign days — the current threshold has never fired and provides no value. At day 40 with 1193.47 USDC cumulative spend, review whether the campaign target is still achievable given the outage gap.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "1193.469368",
+    "dayNumber": 40,
+    "walletBalance": "485.756368203677618746",
+    "tags": [
+      "error-recovery",
+      "outage",
+      "eurc",
+      "no-route",
+      "infrastructure",
+      "dip-ladder-miscalibration",
+      "x402-cost",
+      "operator-intervention-required",
+      "ranging-market",
+      "concentration-risk"
+    ]
   }
 ]
