@@ -13336,5 +13336,34 @@
       "no-route",
       "EURC"
     ]
+  },
+  {
+    "id": "ref-1786806096005",
+    "date": "2026-08-15",
+    "timestamp": "2026-08-15T15:01:36.005Z",
+    "runStatus": "error_swap_failed",
+    "insight": "The cirBTC swap route has been broken for 71 consecutive runs (outageConsecutiveRuns: 71) — every single run in the last 8 is error_swap_failed. This is a complete infrastructure blockage, not a market or strategy issue. Zero USDC has been successfully deployed despite $525.68 sitting idle in the wallet.",
+    "patterns": [
+      "71 consecutive error_swap_failed runs — 100% failure rate, structural no-route outage persisting across the entire visible history",
+      "Market regime has been range-bound for the full 40-day campaign at $62,552–$65,234, with Fear & Greed stuck at 34 (bearish) and near-zero volatility (0.01–0.05%)",
+      "All four dip ladder tiers remain untriggered across all 8 recent runs — drawdown consistently 3.39–3.54%, well below the 5.0% mild threshold",
+      "Smart sizing multiplier locked at 1.3x driven by Fear & Greed 34, but multiplier is irrelevant when no swap can execute",
+      "Requested amounts vary run-to-run (1.25–1.66 USDC) with no apparent logic — inconsistent sizing adds noise without benefit given the outage",
+      "Capital concentration at 69% flagged as risk driver, but wallet balance ($525.68 USDC) is growing idle due to failed execution, not deliberate hold",
+      "The one 'simulated' run (0.000051 USDC) in the recent history appears to be a test or anomaly — not a real allocation attempt"
+    ],
+    "strategyAdjustment": "Stop executing swap attempts until the cirBTC route is restored by the operator — 71 consecutive failures confirm this is not a transient issue that retrying will resolve. If the agent cannot pause itself, it should at minimum log a hard escalation flag rather than continuing to pay x402 fees (~0.001 USDC/run) for briefs on runs that will deterministically fail. Once the route is restored, resume with a consistent base amount (e.g., 1.50 USDC) rather than varying 1.25–1.66 with no clear rationale — the varying amounts create reflection noise. On route restoration, consider a modest catch-up allocation given 40 days of missed execution in a ranging market, but cap it at 2x the base to avoid concentration risk.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "1193.469368",
+    "dayNumber": 40,
+    "walletBalance": "525.682269270773611614",
+    "tags": [
+      "error-recovery",
+      "infrastructure-outage",
+      "no-route",
+      "pacing",
+      "budget",
+      "escalation"
+    ]
   }
 ]
