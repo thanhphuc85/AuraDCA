@@ -13964,5 +13964,34 @@
       "execution-blocked",
       "escalation"
     ]
+  },
+  {
+    "id": "ref-1786820527608",
+    "date": "2026-08-15",
+    "timestamp": "2026-08-15T19:02:07.608Z",
+    "runStatus": "simulated",
+    "insight": "Run 93 marks the transition from error_swap_failed to simulated mode — the agent has paper-filled 0.00000002 cirBTC at $62,994 with a drastically reduced allocation of $0.001192 USDC (down from the ~$1.40–$1.65 range in prior runs), confirming the outage fallback path is active but the sizing drop is dramatic and unexplained by market conditions alone.",
+    "patterns": [
+      "100% error streak persisting at 93 consecutive runs — cirBTC no-route outage ongoing for 1+ day with zero recovery signal",
+      "Allocation size collapsed from $1.425–$1.650 range to $0.001192 in the simulated run — a ~1300x reduction with no corresponding market trigger",
+      "Market regime locked at ranging 72% confidence for 8+ consecutive runs with identical Fear & Greed 34, BTC ~$62,989–$63,009 — signal inputs are essentially static",
+      "Simulated paper-fill is masking real execution failure — cumulative USDC spent is $1,193.47 but actual cirBTC accumulation is frozen",
+      "Dip ladder untriggered for 40 days — all four tiers dormant, nearest threshold (mild 5%) never breached in a 2.89–3.27% drawdown range",
+      "Allocation sizing shows inconsistency: runs 87–93 vary between $1.425 and $1.650 with no clear directional logic, then drops to $0.001192 on simulated mode"
+    ],
+    "strategyAdjustment": "Three concrete actions needed: (1) Investigate why the simulated fallback uses $0.001192 instead of the scheduled ~$1.50 allocation — if simulation is supposed to mirror the intended DCA size, the paper-fill amount should match the planned allocation, not a near-zero value; this discrepancy means cumulative tracking is diverging from intent. (2) At 93 consecutive failed runs (~1 full day of outage), escalate beyond reflection logging — trigger an operator alert or dead-man's-switch notification if not already done, as no amount of strategy refinement can resolve a routing infrastructure failure. (3) Freeze cumulative USDC accounting at the last successful on-chain execution to avoid conflating paper-fill totals with real deployment; $1,193.47 reported spent should be audited against actual on-chain transactions to confirm true capital deployed.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "1193.469368",
+    "dayNumber": 40,
+    "walletBalance": "525.645986586189180894",
+    "tags": [
+      "error-recovery",
+      "outage",
+      "simulation",
+      "sizing",
+      "budget",
+      "infrastructure",
+      "accounting"
+    ]
   }
 ]
