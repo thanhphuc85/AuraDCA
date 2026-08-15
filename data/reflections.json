@@ -14331,5 +14331,36 @@
       "ranging-market",
       "concentration-risk"
     ]
+  },
+  {
+    "id": "ref-1786828605383",
+    "date": "2026-08-15",
+    "timestamp": "2026-08-15T21:16:45.383Z",
+    "runStatus": "error_swap_failed",
+    "insight": "The cirBTC no-route outage has now persisted for 105 consecutive runs with 0% execution success rate — this is a critical infrastructure failure, not a market or strategy issue, and continued automated retries are burning x402 fees (~$0.001/run) with zero productive output.",
+    "patterns": [
+      "105 consecutive error_swap_failed runs on cirBTC route — outage is structural and unresolved",
+      "All 8 recent runs are error_swap_failed or skipped_guardrail_clamped, zero successful executions today",
+      "Error streak score maxed at 100/100 for multiple consecutive runs with no recovery signal",
+      "Market regime locked: BTC ranging $62.5K–$65.2K for 40 days, Fear & Greed stable at 34, drawdown only 2.11% from high",
+      "All four dip ladder tiers remain untriggered (nearest mild threshold at 5.0%) — no dip-buying opportunity has materialized",
+      "Sizing is variable each run (1.400–1.650 USDC) despite identical market conditions, suggesting noise in LLM sizing rather than meaningful signal",
+      "x402 fees being settled on every run despite swap never executing — cost leakage with no return",
+      "69% capital concentration risk persists unchanged — no diversification occurring due to outage"
+    ],
+    "strategyAdjustment": "Escalate outage to operator immediately — 105 consecutive failures on the same route confirm this requires manual intervention, not further automated retries. Until the cirBTC route is restored, consider halting swap attempts entirely to stop x402 fee leakage (each failed run still settles ~$0.001 in x402 fees). If an alternative route to BTC or cirBTC becomes available, switch to it. On the market side: BTC has been range-locked $62.5K–$65.2K for the full 40-day campaign duration; if/when the route is restored, prioritize accumulation if BTC breaks below $62.5K support, as that would trigger the mild dip ladder at ~5% drawdown for the first time this campaign.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "1193.469368",
+    "dayNumber": 40,
+    "walletBalance": "525.62413233207504675",
+    "tags": [
+      "error-recovery",
+      "infrastructure-outage",
+      "no-route",
+      "clamping",
+      "budget",
+      "pacing",
+      "concentration-risk"
+    ]
   }
 ]
