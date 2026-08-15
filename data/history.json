@@ -25359,5 +25359,65 @@
       "transferId": "fd2523ae-a5a1-4f29-afa2-333526424601",
       "settleStatus": "received"
     }
+  },
+  {
+    "date": "2026-08-15",
+    "timestamp": "2026-08-15T19:45:37.228Z",
+    "status": "error_swap_failed",
+    "requestedAmountUsdc": "1.425000",
+    "clampedAmountUsdc": "1.425000",
+    "boundBy": "user_schedule",
+    "tokenOut": "EURC",
+    "reasoning": "Market brief is bearish (Fear & Greed 34, BTC at $63,053, +0.22% 24h) with a \"decrease 10-15%\" allocation bias as BTC remains range-locked in its persistent 40-day $62.5K–$65.2K consolidation channel with high on-chain activity (35.2k USDC transfers in 3h) suggesting defensive repositioning rather than accumulation. The real cirBTC price feed (601 data points, ground truth) confirms only a 2.70% drawdown from high with ultra-low 0.04% volatility — all four dip ladder tiers remain untriggered (nearest mild threshold at 5.0%), so no dip-buying override applies, and the market regime is confirmed ranging (72% confidence) with mild positive momentum (+0.10%, 4 consecutive up days). Composite risk is medium (33/100) driven primarily by 69% capital concentration and a 0% real execution success rate reflecting the persistent cirBTC no-route infrastructure outage (outageDurationDays: 1, outageConsecutiveRuns: 97) rather than adverse market conditions; no campaign budget is configured so pacing presents no constraint, and past reflections unanimously confirm this is a structural operator-intervention issue with DCA sizing and market analysis logic functioning correctly throughout.",
+    "walletUsdcBalance": "525.638488603782822158",
+    "message": "Swap failed [EURC/no_route]: Swap failed [no_route]: Stablecoin Service createSwap failed: Route or resource not found. Details: No route available",
+    "smartSizing": {
+      "fearGreed": 34,
+      "drawdownPct": 0.00007929208030701894,
+      "multiplier": 0.85,
+      "source": "llm",
+      "proposedMultiplier": 0.85
+    },
+    "x402": {
+      "resource": "/api/x402-brief",
+      "amountUsdcAtomic": "1000",
+      "payer": "0x61e7Ae336F7Eb7F8517dE4F19963D88dFD9161eC",
+      "payTo": "0xcAf34080F47f576F923962AD04dD7ddd86d8d85f",
+      "settled": true,
+      "mode": "settled",
+      "via": "http",
+      "transferId": "21e9c5c9-5c50-4b7d-9857-813db76d5acd",
+      "settleStatus": "completed",
+      "txHash": "0x1c8c45ca81ee649e2e7841e7728e18dc6624294b7733b6809585fdf8ce6c1f3d",
+      "explorerUrl": "https://testnet.arcscan.app/tx/0x1c8c45ca81ee649e2e7841e7728e18dc6624294b7733b6809585fdf8ce6c1f3d"
+    }
+  },
+  {
+    "date": "2026-08-15",
+    "timestamp": "2026-08-15T19:45:37.228Z",
+    "status": "simulated",
+    "simulated": true,
+    "requestedAmountUsdc": "0.000040",
+    "clampedAmountUsdc": "0.000040",
+    "boundBy": "user_schedule",
+    "tokenOut": "cirBTC",
+    "reasoning": "Market brief is bearish (Fear & Greed 34, BTC at $63,053, +0.22% 24h) with a \"decrease 10-15%\" allocation bias as BTC remains range-locked in its persistent 40-day $62.5K–$65.2K consolidation channel with high on-chain activity (35.2k USDC transfers in 3h) suggesting defensive repositioning rather than accumulation. The real cirBTC price feed (601 data points, ground truth) confirms only a 2.70% drawdown from high with ultra-low 0.04% volatility — all four dip ladder tiers remain untriggered (nearest mild threshold at 5.0%), so no dip-buying override applies, and the market regime is confirmed ranging (72% confidence) with mild positive momentum (+0.10%, 4 consecutive up days). Composite risk is medium (33/100) driven primarily by 69% capital concentration and a 0% real execution success rate reflecting the persistent cirBTC no-route infrastructure outage (outageDurationDays: 1, outageConsecutiveRuns: 97) rather than adverse market conditions; no campaign budget is configured so pacing presents no constraint, and past reflections unanimously confirm this is a structural operator-intervention issue with DCA sizing and market analysis logic functioning correctly throughout.",
+    "amountOut": "0.00000000",
+    "priceUsd": 63053,
+    "walletUsdcBalance": "525.638488603782822158",
+    "message": "[SIMULATED] Arc cirBTC route offline — paper-filled 0.00000000 cirBTC for 0.000040 USDC at $63053.00/cirBTC (no on-chain swap; real funds untouched)",
+    "x402": {
+      "resource": "/api/x402-brief",
+      "amountUsdcAtomic": "1000",
+      "payer": "0x61e7Ae336F7Eb7F8517dE4F19963D88dFD9161eC",
+      "payTo": "0xcAf34080F47f576F923962AD04dD7ddd86d8d85f",
+      "settled": true,
+      "mode": "settled",
+      "via": "http",
+      "transferId": "21e9c5c9-5c50-4b7d-9857-813db76d5acd",
+      "settleStatus": "completed",
+      "txHash": "0x1c8c45ca81ee649e2e7841e7728e18dc6624294b7733b6809585fdf8ce6c1f3d",
+      "explorerUrl": "https://testnet.arcscan.app/tx/0x1c8c45ca81ee649e2e7841e7728e18dc6624294b7733b6809585fdf8ce6c1f3d"
+    }
   }
 ]

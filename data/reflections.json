@@ -14080,5 +14080,34 @@
       "pacing",
       "operator-intervention"
     ]
+  },
+  {
+    "id": "ref-1786823208851",
+    "date": "2026-08-15",
+    "timestamp": "2026-08-15T19:46:48.851Z",
+    "runStatus": "simulated",
+    "insight": "The cirBTC routing outage has now persisted for 97 consecutive runs (outageConsecutiveRuns: 97) with a 0% real execution success rate — every \"executed\" trade in recent history is either a simulation or a swap failure, meaning zero actual BTC has been accumulated despite 1,193.47 USDC nominally spent over 40 days.",
+    "patterns": [
+      "cirBTC no-route outage is structural and persistent: 97 consecutive failed/simulated runs, unchanged for the entire visible history window",
+      "Alternating error_swap_failed / simulated pairs in every run — the system correctly falls back to simulation but real funds remain untouched",
+      "Requested amounts are wildly inconsistent across runs: ranging from $0.000040 to $1.661 USDC in the same day, suggesting sizing logic instability or test artifacts rather than coherent DCA sizing",
+      "Market regime has been frozen in description: identical Fear & Greed (34), identical BTC range ($62.5K–$65.2K), identical 72% ranging confidence, identical +0.10% momentum and 4 consecutive up days — across all 8 recent runs, suggesting stale or cached market data",
+      "All four dip ladder tiers remain untriggered across every run; dip-buying logic is effectively dormant and contributes nothing",
+      "Allocation bias is inconsistently oscillating (decrease 10-15% → standard → decrease → increase → decrease) with no apparent market trigger, implying noise rather than signal",
+      "Capital concentration at 69% is the dominant risk factor and has not changed"
+    ],
+    "strategyAdjustment": "Three concrete actions are needed: (1) Operator intervention on the cirBTC route is overdue — after 97 consecutive failures, escalate immediately; do not continue burning simulated cycles. (2) Audit the requested amount calculation — sizes swinging from $0.000040 to $1.661 USDC within the same day are not a coherent DCA strategy; the sizing logic needs a diagnostic run to confirm it isn't ingesting stale or corrupt schedule data. (3) Verify market data freshness — if Fear & Greed, BTC price, momentum, and regime confidence are identical across 8+ consecutive runs spanning hours, the data feed is likely cached or stuck; reflections based on stale data produce no signal value. Until the route is restored, suppress redundant reflections that repeat the same outage diagnosis — they add no new information.",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "1193.469368",
+    "dayNumber": 40,
+    "walletBalance": "525.638488603782822158",
+    "tags": [
+      "error-recovery",
+      "infrastructure-outage",
+      "pacing",
+      "market-timing",
+      "budget",
+      "clamping"
+    ]
   }
 ]
