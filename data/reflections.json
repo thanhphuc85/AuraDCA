@@ -13589,5 +13589,32 @@
       "route-unavailable",
       "strategy-functional"
     ]
+  },
+  {
+    "id": "ref-1786812209147",
+    "date": "2026-08-15",
+    "timestamp": "2026-08-15T16:43:29.147Z",
+    "runStatus": "error_swap_failed",
+    "insight": "80 consecutive runs blocked by cirBTC no-route infrastructure failure. Strategy logic is sound (0.85x multiplier for bearish ranging market, no dip triggers at 3.22% drawdown), but execution remains impossible—operator intervention required.",
+    "patterns": [
+      "100% error rate over 80+ consecutive runs due to cirBTC route outage",
+      "All runs bound by user_schedule with no clamping—guardrails not constraining",
+      "Consistent 0.85x sizing multiplier reflecting bearish sentiment (F&G 34) and ranging regime (72% confidence)",
+      "BTC locked in 40-day $62.5K-$65.2K range with 3.19-3.32% drawdown—no dip ladder triggers",
+      "69% capital concentration and $525 USDC balance available but unusable",
+      "Requested amounts vary ($1.25-$1.68) but all fail at swap execution, not sizing"
+    ],
+    "strategyAdjustment": "No strategy change needed—DCA logic, risk assessment, and sizing are functioning correctly. The blocker is external infrastructure (cirBTC route unavailable for EURC swaps). Operator must restore routing or switch to alternative stablecoin pair. Continue monitoring for route restoration; if outage persists beyond 100 runs, escalate or implement fallback asset (USDC→other stablecoin with working route).",
+    "confidenceLevel": "high",
+    "cumulativeSpentUsdc": "1193.469368",
+    "dayNumber": 40,
+    "walletBalance": "525.666150275686908894",
+    "tags": [
+      "error-recovery",
+      "infrastructure-outage",
+      "routing-failure",
+      "operator-intervention-required",
+      "strategy-intact"
+    ]
   }
 ]
