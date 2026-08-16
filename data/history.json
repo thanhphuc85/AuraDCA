@@ -28158,5 +28158,61 @@
       "transferId": "c51248e6-8a93-4e78-9b8b-a265eaad7474",
       "settleStatus": "received"
     }
+  },
+  {
+    "date": "2026-08-16",
+    "timestamp": "2026-08-16T13:00:43.356Z",
+    "status": "error_swap_failed",
+    "requestedAmountUsdc": "1.664681",
+    "clampedAmountUsdc": "1.664681",
+    "boundBy": "user_schedule",
+    "tokenOut": "EURC",
+    "reasoning": "Rate-based DCA: 8 active user(s), executing ~1.665868 USDC this run (1.664681 live + 0.001187 paper).",
+    "walletUsdcBalance": "525.512025679016236638",
+    "message": "Swap failed [EURC/no_route]: Swap failed [no_route]: Stablecoin Service createSwap failed: Route or resource not found. Details: No route available",
+    "smartSizing": {
+      "fearGreed": 34,
+      "drawdownPct": 0.0009361661615600653,
+      "multiplier": 1.3293616616156005,
+      "source": "formula",
+      "proposedMultiplier": null
+    },
+    "x402": {
+      "resource": "/api/x402-brief",
+      "amountUsdcAtomic": "1000",
+      "payer": "0x61e7Ae336F7Eb7F8517dE4F19963D88dFD9161eC",
+      "payTo": "0xcAf34080F47f576F923962AD04dD7ddd86d8d85f",
+      "settled": true,
+      "mode": "settled",
+      "via": "http",
+      "transferId": "0bf841f2-1163-43b4-8a3f-c2caf8266463",
+      "settleStatus": "received"
+    }
+  },
+  {
+    "date": "2026-08-16",
+    "timestamp": "2026-08-16T13:00:43.356Z",
+    "status": "simulated",
+    "simulated": true,
+    "requestedAmountUsdc": "0.001187",
+    "clampedAmountUsdc": "0.001187",
+    "boundBy": "user_schedule",
+    "tokenOut": "cirBTC",
+    "reasoning": "Rate-based DCA: 8 active user(s), executing ~1.665868 USDC this run (1.664681 live + 0.001187 paper).",
+    "amountOut": "0.00000002",
+    "priceUsd": 62964,
+    "walletUsdcBalance": "525.512025679016236638",
+    "message": "[SIMULATED] Arc cirBTC route offline — paper-filled 0.00000002 cirBTC for 0.001187 USDC at $62964.00/cirBTC (no on-chain swap; real funds untouched)",
+    "x402": {
+      "resource": "/api/x402-brief",
+      "amountUsdcAtomic": "1000",
+      "payer": "0x61e7Ae336F7Eb7F8517dE4F19963D88dFD9161eC",
+      "payTo": "0xcAf34080F47f576F923962AD04dD7ddd86d8d85f",
+      "settled": true,
+      "mode": "settled",
+      "via": "http",
+      "transferId": "0bf841f2-1163-43b4-8a3f-c2caf8266463",
+      "settleStatus": "received"
+    }
   }
 ]
