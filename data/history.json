@@ -27124,5 +27124,35 @@
       "transferId": "249d4252-f8b9-4994-bec8-a3e6e3388c8e",
       "settleStatus": "received"
     }
+  },
+  {
+    "date": "2026-08-16",
+    "timestamp": "2026-08-16T06:45:36.657Z",
+    "status": "error_swap_failed",
+    "requestedAmountUsdc": "1.666974",
+    "clampedAmountUsdc": "1.666974",
+    "boundBy": "user_schedule",
+    "tokenOut": "EURC",
+    "reasoning": "Rate-based DCA: 3 active user(s), executing ~1.666974 USDC this run (1.666974 live + 0.000000 paper).",
+    "walletUsdcBalance": "525.55584080632693547",
+    "message": "Swap failed [EURC/no_route]: Swap failed [no_route]: Stablecoin Service createSwap failed: Route or resource not found. Details: No route available",
+    "smartSizing": {
+      "fearGreed": 34,
+      "drawdownPct": 0.001394700139470014,
+      "multiplier": 1.3339470013947001,
+      "source": "formula",
+      "proposedMultiplier": null
+    },
+    "x402": {
+      "resource": "/api/x402-brief",
+      "amountUsdcAtomic": "1000",
+      "payer": "0x61e7Ae336F7Eb7F8517dE4F19963D88dFD9161eC",
+      "payTo": "0xcAf34080F47f576F923962AD04dD7ddd86d8d85f",
+      "settled": true,
+      "mode": "settled",
+      "via": "http",
+      "transferId": "e84c3c02-9948-4ce0-914f-3f96a0508220",
+      "settleStatus": "received"
+    }
   }
 ]
