@@ -39100,5 +39100,54 @@
       "transferId": "4e9a057c-1dc4-47eb-b91c-1248ccc4136d",
       "settleStatus": "received"
     }
+  },
+  {
+    "date": "2026-08-19",
+    "timestamp": "2026-08-19T13:15:42.790Z",
+    "status": "error_swap_failed",
+    "requestedAmountUsdc": "1.000000",
+    "clampedAmountUsdc": "1.000000",
+    "boundBy": "user_schedule",
+    "tokenOut": "EURC",
+    "reasoning": "Rate-based DCA: 8 active user(s), executing ~1.000031 USDC this run (1.000000 live + 0.000031 paper).",
+    "walletUsdcBalance": "525.033893915465420686",
+    "message": "Swap failed [EURC/no_route]: Swap failed [no_route]: Stablecoin Service createSwap failed: Route or resource not found. Details: No route available",
+    "x402": {
+      "resource": "/api/x402-brief",
+      "amountUsdcAtomic": "1000",
+      "payer": "0x61e7Ae336F7Eb7F8517dE4F19963D88dFD9161eC",
+      "payTo": "0xcAf34080F47f576F923962AD04dD7ddd86d8d85f",
+      "settled": true,
+      "mode": "settled",
+      "via": "http",
+      "transferId": "2d31be9a-6e07-4733-9adc-6ccf7925351c",
+      "settleStatus": "received"
+    }
+  },
+  {
+    "date": "2026-08-19",
+    "timestamp": "2026-08-19T13:15:42.790Z",
+    "status": "simulated",
+    "simulated": true,
+    "requestedAmountUsdc": "0.000031",
+    "clampedAmountUsdc": "0.000031",
+    "boundBy": "user_schedule",
+    "tokenOut": "cirBTC",
+    "reasoning": "Rate-based DCA: 8 active user(s), executing ~1.000031 USDC this run (1.000000 live + 0.000031 paper).",
+    "amountOut": "0.00000000",
+    "priceUsd": 64922,
+    "walletUsdcBalance": "525.033893915465420686",
+    "message": "[SIMULATED] Arc cirBTC route offline — paper-filled 0.00000000 cirBTC for 0.000031 USDC at $64922.00/cirBTC (no on-chain swap; real funds untouched)",
+    "x402": {
+      "resource": "/api/x402-brief",
+      "amountUsdcAtomic": "1000",
+      "payer": "0x61e7Ae336F7Eb7F8517dE4F19963D88dFD9161eC",
+      "payTo": "0xcAf34080F47f576F923962AD04dD7ddd86d8d85f",
+      "settled": true,
+      "mode": "settled",
+      "via": "http",
+      "transferId": "2d31be9a-6e07-4733-9adc-6ccf7925351c",
+      "settleStatus": "received"
+    }
   }
 ]
