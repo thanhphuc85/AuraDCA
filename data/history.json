@@ -43610,5 +43610,58 @@
       "transferId": "3fbc9b18-6dfd-4611-bd87-da5a890e1d2b",
       "settleStatus": "received"
     }
+  },
+  {
+    "date": "2026-08-20",
+    "timestamp": "2026-08-20T18:00:45.142Z",
+    "status": "error_swap_failed",
+    "requestedAmountUsdc": "1.000000",
+    "clampedAmountUsdc": "1.000000",
+    "boundBy": "user_schedule",
+    "tokenOut": "EURC",
+    "reasoning": "Rate-based DCA: 3 active user(s), executing ~2.000000 USDC this run (1.000000 live + 1.000000 paper).",
+    "walletUsdcBalance": "524.820599097072056506",
+    "message": "Swap failed [EURC/no_route]: Swap failed [no_route]: Stablecoin Service createSwap failed: Route or resource not found. Details: No route available",
+    "x402": {
+      "resource": "/api/x402-brief",
+      "amountUsdcAtomic": "1000",
+      "payer": "0x61e7Ae336F7Eb7F8517dE4F19963D88dFD9161eC",
+      "payTo": "0xcAf34080F47f576F923962AD04dD7ddd86d8d85f",
+      "settled": true,
+      "mode": "settled",
+      "via": "http",
+      "transferId": "c0829f83-0cb0-44bf-8b2d-34af9db39236",
+      "settleStatus": "completed",
+      "txHash": "0x4fe01e854a08866e653282ca87f53c7e4e0924c74c1ea10d9a8f488f5dc46828",
+      "explorerUrl": "https://testnet.arcscan.app/tx/0x4fe01e854a08866e653282ca87f53c7e4e0924c74c1ea10d9a8f488f5dc46828"
+    }
+  },
+  {
+    "date": "2026-08-20",
+    "timestamp": "2026-08-20T18:00:45.142Z",
+    "status": "simulated",
+    "simulated": true,
+    "requestedAmountUsdc": "1.000000",
+    "clampedAmountUsdc": "1.000000",
+    "boundBy": "user_schedule",
+    "tokenOut": "cirBTC",
+    "reasoning": "Rate-based DCA: 3 active user(s), executing ~2.000000 USDC this run (1.000000 live + 1.000000 paper).",
+    "amountOut": "0.00001373",
+    "priceUsd": 72853,
+    "walletUsdcBalance": "524.820599097072056506",
+    "message": "[SIMULATED] Arc cirBTC route offline — paper-filled 0.00001373 cirBTC for 1.000000 USDC at $72853.00/cirBTC (no on-chain swap; real funds untouched)",
+    "x402": {
+      "resource": "/api/x402-brief",
+      "amountUsdcAtomic": "1000",
+      "payer": "0x61e7Ae336F7Eb7F8517dE4F19963D88dFD9161eC",
+      "payTo": "0xcAf34080F47f576F923962AD04dD7ddd86d8d85f",
+      "settled": true,
+      "mode": "settled",
+      "via": "http",
+      "transferId": "c0829f83-0cb0-44bf-8b2d-34af9db39236",
+      "settleStatus": "completed",
+      "txHash": "0x4fe01e854a08866e653282ca87f53c7e4e0924c74c1ea10d9a8f488f5dc46828",
+      "explorerUrl": "https://testnet.arcscan.app/tx/0x4fe01e854a08866e653282ca87f53c7e4e0924c74c1ea10d9a8f488f5dc46828"
+    }
   }
 ]
