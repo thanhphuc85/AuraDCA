@@ -47028,5 +47028,28 @@
       "transferId": "f17f5afa-9142-43cc-ace8-a174b0274e46",
       "settleStatus": "received"
     }
+  },
+  {
+    "date": "2026-08-22",
+    "timestamp": "2026-08-22T02:30:43.219Z",
+    "status": "error_swap_failed",
+    "requestedAmountUsdc": "1.000000",
+    "clampedAmountUsdc": "1.000000",
+    "boundBy": "user_schedule",
+    "tokenOut": "EURC",
+    "reasoning": "Rate-based DCA: 2 active user(s), executing ~1.000000 USDC this run (1.000000 live + 0.000000 paper).",
+    "walletUsdcBalance": "502.115940320550956252",
+    "message": "Swap failed [EURC/unknown]: Swap failed [unknown]: Transaction reverted on Arc Testnet: 0x931997cf",
+    "x402": {
+      "resource": "/api/x402-brief",
+      "amountUsdcAtomic": "1000",
+      "payer": "0x61e7Ae336F7Eb7F8517dE4F19963D88dFD9161eC",
+      "payTo": "0xcAf34080F47f576F923962AD04dD7ddd86d8d85f",
+      "settled": true,
+      "mode": "settled",
+      "via": "http",
+      "transferId": "85d909cd-de0b-4069-af8c-d506232a9fc0",
+      "settleStatus": "batched"
+    }
   }
 ]
