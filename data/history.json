@@ -50147,5 +50147,57 @@
       "transferId": "8c855775-2fdd-4308-9516-7963bba8fd8e",
       "settleStatus": "received"
     }
+  },
+  {
+    "date": "2026-08-24",
+    "timestamp": "2026-08-24T07:00:45.884Z",
+    "status": "success",
+    "requestedAmountUsdc": "1.000000",
+    "clampedAmountUsdc": "1.000000",
+    "boundBy": "user_schedule",
+    "tokenOut": "EURC",
+    "reasoning": "Rate-based DCA: 10 active user(s), executing ~2.003391 USDC this run (1.000000 live + 1.003391 paper).",
+    "txHash": "0xf42c0e961cc67562802eb3d09f90b1f993bb74796b87e6e7207b1938d63e3bb3",
+    "explorerUrl": "https://testnet.arcscan.app/tx/0xf42c0e961cc67562802eb3d09f90b1f993bb74796b87e6e7207b1938d63e3bb3",
+    "amountOut": "0.842364",
+    "walletUsdcBalance": "445.866972998701881076",
+    "message": "Swapped 1.000000 USDC -> EURC across 2 user(s)",
+    "x402": {
+      "resource": "/api/x402-brief",
+      "amountUsdcAtomic": "1000",
+      "payer": "0x61e7Ae336F7Eb7F8517dE4F19963D88dFD9161eC",
+      "payTo": "0xcAf34080F47f576F923962AD04dD7ddd86d8d85f",
+      "settled": true,
+      "mode": "settled",
+      "via": "http",
+      "transferId": "eca9e98e-cc6f-4c62-b727-d010a2b5bec1",
+      "settleStatus": "received"
+    }
+  },
+  {
+    "date": "2026-08-24",
+    "timestamp": "2026-08-24T07:00:45.884Z",
+    "status": "simulated",
+    "simulated": true,
+    "requestedAmountUsdc": "1.003391",
+    "clampedAmountUsdc": "1.003391",
+    "boundBy": "user_schedule",
+    "tokenOut": "cirBTC",
+    "reasoning": "Rate-based DCA: 10 active user(s), executing ~2.003391 USDC this run (1.000000 live + 1.003391 paper).",
+    "amountOut": "0.00001295",
+    "priceUsd": 77465,
+    "walletUsdcBalance": "445.866972998701881076",
+    "message": "[SIMULATED] Arc cirBTC route offline — paper-filled 0.00001295 cirBTC for 1.003391 USDC at $77465.00/cirBTC (no on-chain swap; real funds untouched)",
+    "x402": {
+      "resource": "/api/x402-brief",
+      "amountUsdcAtomic": "1000",
+      "payer": "0x61e7Ae336F7Eb7F8517dE4F19963D88dFD9161eC",
+      "payTo": "0xcAf34080F47f576F923962AD04dD7ddd86d8d85f",
+      "settled": true,
+      "mode": "settled",
+      "via": "http",
+      "transferId": "eca9e98e-cc6f-4c62-b727-d010a2b5bec1",
+      "settleStatus": "received"
+    }
   }
 ]
