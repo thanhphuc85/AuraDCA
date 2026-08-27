@@ -56264,5 +56264,33 @@
       "transferId": "a0da9bae-6383-4de9-a8e7-b7c6b72e1df5",
       "settleStatus": "received"
     }
+  },
+  {
+    "date": "2026-08-27",
+    "timestamp": "2026-08-27T19:30:38.132Z",
+    "status": "simulated",
+    "simulated": true,
+    "requestedAmountUsdc": "0.000076",
+    "clampedAmountUsdc": "0.000076",
+    "boundBy": "user_schedule",
+    "tokenOut": "cirBTC",
+    "reasoning": "Rate-based DCA: 7 active user(s), executing ~0.000076 USDC this run (0.000000 live + 0.000076 paper).",
+    "amountOut": "0.00000000",
+    "priceUsd": 80071,
+    "walletUsdcBalance": "357.446962356621433301",
+    "message": "[SIMULATED] Arc cirBTC route offline — paper-filled 0.00000000 cirBTC for 0.000076 USDC at $80071.00/cirBTC (no on-chain swap; real funds untouched)",
+    "x402": {
+      "resource": "/api/x402-brief",
+      "amountUsdcAtomic": "1000",
+      "payer": "0x61e7Ae336F7Eb7F8517dE4F19963D88dFD9161eC",
+      "payTo": "0xcAf34080F47f576F923962AD04dD7ddd86d8d85f",
+      "settled": true,
+      "mode": "settled",
+      "via": "http",
+      "transferId": "2fc202b2-048b-4534-a56d-53cf6f4ad349",
+      "settleStatus": "completed",
+      "txHash": "0x085bb20a7952b4cf988572cc6328ab7baaada06ad8d6a6a39bc6c3985433f8e9",
+      "explorerUrl": "https://testnet.arcscan.app/tx/0x085bb20a7952b4cf988572cc6328ab7baaada06ad8d6a6a39bc6c3985433f8e9"
+    }
   }
 ]
