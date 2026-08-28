@@ -56842,5 +56842,57 @@
       "txHash": "0xe2a1896990068f707a6bf64f4d3c2bcae3f9f031a3600f44297d3505455f0300",
       "explorerUrl": "https://testnet.arcscan.app/tx/0xe2a1896990068f707a6bf64f4d3c2bcae3f9f031a3600f44297d3505455f0300"
     }
+  },
+  {
+    "date": "2026-08-28",
+    "timestamp": "2026-08-28T06:00:43.644Z",
+    "status": "success",
+    "requestedAmountUsdc": "1.000000",
+    "clampedAmountUsdc": "1.000000",
+    "boundBy": "user_schedule",
+    "tokenOut": "EURC",
+    "reasoning": "Rate-based DCA: 3 active user(s), executing ~2.000000 USDC this run (1.000000 live + 1.000000 paper).",
+    "txHash": "0x9291927a7469520b88375474108e794a54d0f1551be57dfd35acf6c53747e6c9",
+    "explorerUrl": "https://testnet.arcscan.app/tx/0x9291927a7469520b88375474108e794a54d0f1551be57dfd35acf6c53747e6c9",
+    "amountOut": "0.858901",
+    "walletUsdcBalance": "347.173384192555397893",
+    "message": "Swapped 1.000000 USDC -> EURC across 2 user(s)",
+    "x402": {
+      "resource": "/api/x402-brief",
+      "amountUsdcAtomic": "1000",
+      "payer": "0x61e7Ae336F7Eb7F8517dE4F19963D88dFD9161eC",
+      "payTo": "0xcAf34080F47f576F923962AD04dD7ddd86d8d85f",
+      "settled": true,
+      "mode": "settled",
+      "via": "http",
+      "transferId": "f6863b8e-1e58-4981-8d4d-a6a01ce6c868",
+      "settleStatus": "received"
+    }
+  },
+  {
+    "date": "2026-08-28",
+    "timestamp": "2026-08-28T06:00:43.644Z",
+    "status": "simulated",
+    "simulated": true,
+    "requestedAmountUsdc": "1.000000",
+    "clampedAmountUsdc": "1.000000",
+    "boundBy": "user_schedule",
+    "tokenOut": "cirBTC",
+    "reasoning": "Rate-based DCA: 3 active user(s), executing ~2.000000 USDC this run (1.000000 live + 1.000000 paper).",
+    "amountOut": "0.00001255",
+    "priceUsd": 79680,
+    "walletUsdcBalance": "347.173384192555397893",
+    "message": "[SIMULATED] Arc cirBTC route offline — paper-filled 0.00001255 cirBTC for 1.000000 USDC at $79680.00/cirBTC (no on-chain swap; real funds untouched)",
+    "x402": {
+      "resource": "/api/x402-brief",
+      "amountUsdcAtomic": "1000",
+      "payer": "0x61e7Ae336F7Eb7F8517dE4F19963D88dFD9161eC",
+      "payTo": "0xcAf34080F47f576F923962AD04dD7ddd86d8d85f",
+      "settled": true,
+      "mode": "settled",
+      "via": "http",
+      "transferId": "f6863b8e-1e58-4981-8d4d-a6a01ce6c868",
+      "settleStatus": "received"
+    }
   }
 ]
