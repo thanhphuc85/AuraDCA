@@ -60932,5 +60932,61 @@
       "transferId": "d6e7dd1b-3b2f-4979-a125-49afa0df3557",
       "settleStatus": "received"
     }
+  },
+  {
+    "date": "2026-08-30",
+    "timestamp": "2026-08-30T22:00:49.434Z",
+    "status": "success",
+    "requestedAmountUsdc": "1.000000",
+    "clampedAmountUsdc": "1.000000",
+    "boundBy": "user_schedule",
+    "tokenOut": "EURC",
+    "reasoning": "Rate-based DCA: 3 active user(s), executing ~2.000000 USDC this run (1.000000 live + 1.000000 paper).",
+    "txHash": "0xbdb50c990f7ec8088c40293d3e8af19c50278b48eb179c37b157aa9c27b322bf",
+    "explorerUrl": "https://testnet.arcscan.app/tx/0xbdb50c990f7ec8088c40293d3e8af19c50278b48eb179c37b157aa9c27b322bf",
+    "amountOut": "0.811315",
+    "walletUsdcBalance": "281.40699604169074237",
+    "message": "Swapped 1.000000 USDC -> EURC across 2 user(s)",
+    "x402": {
+      "resource": "/api/x402-brief",
+      "amountUsdcAtomic": "1000",
+      "payer": "0x61e7Ae336F7Eb7F8517dE4F19963D88dFD9161eC",
+      "payTo": "0xcAf34080F47f576F923962AD04dD7ddd86d8d85f",
+      "settled": true,
+      "mode": "settled",
+      "via": "http",
+      "transferId": "a2462f81-bfe0-4877-9ddd-86d8f8853a4a",
+      "settleStatus": "completed",
+      "txHash": "0x620cb523cd13487fecb2f94a1f4c2a3619697e105326bf43461ebbd2a7aaa330",
+      "explorerUrl": "https://testnet.arcscan.app/tx/0x620cb523cd13487fecb2f94a1f4c2a3619697e105326bf43461ebbd2a7aaa330"
+    }
+  },
+  {
+    "date": "2026-08-30",
+    "timestamp": "2026-08-30T22:00:49.434Z",
+    "status": "simulated",
+    "simulated": true,
+    "requestedAmountUsdc": "1.000000",
+    "clampedAmountUsdc": "1.000000",
+    "boundBy": "user_schedule",
+    "tokenOut": "cirBTC",
+    "reasoning": "Rate-based DCA: 3 active user(s), executing ~2.000000 USDC this run (1.000000 live + 1.000000 paper).",
+    "amountOut": "0.00001272",
+    "priceUsd": 78637,
+    "walletUsdcBalance": "281.40699604169074237",
+    "message": "[SIMULATED] Arc cirBTC route offline — paper-filled 0.00001272 cirBTC for 1.000000 USDC at $78637.00/cirBTC (no on-chain swap; real funds untouched)",
+    "x402": {
+      "resource": "/api/x402-brief",
+      "amountUsdcAtomic": "1000",
+      "payer": "0x61e7Ae336F7Eb7F8517dE4F19963D88dFD9161eC",
+      "payTo": "0xcAf34080F47f576F923962AD04dD7ddd86d8d85f",
+      "settled": true,
+      "mode": "settled",
+      "via": "http",
+      "transferId": "a2462f81-bfe0-4877-9ddd-86d8f8853a4a",
+      "settleStatus": "completed",
+      "txHash": "0x620cb523cd13487fecb2f94a1f4c2a3619697e105326bf43461ebbd2a7aaa330",
+      "explorerUrl": "https://testnet.arcscan.app/tx/0x620cb523cd13487fecb2f94a1f4c2a3619697e105326bf43461ebbd2a7aaa330"
+    }
   }
 ]
