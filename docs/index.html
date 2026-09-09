@@ -31,7 +31,7 @@
     <a class="sb-link" data-target="settingsDrawer"><span class="ic">⚙️</span> <span data-t="navSettings">Settings</span></a>
     <div class="sb-sep"></div>
     <a class="sb-link" href="https://github.com/thanhphuc85/AuraDCA" target="_blank" rel="noopener"><span class="ic">💻</span> <span data-t="navGithub">GitHub Source</span></a>
-    <a class="sb-link" href="https://testnet.arcscan.app" target="_blank" rel="noopener"><span class="ic">🔎</span> <span data-t="navExplorer">Arc Explorer ↗</span></a>
+    <a class="sb-link" data-arc="explorer" href="https://testnet.arcscan.app" target="_blank" rel="noopener"><span class="ic">🔎</span> <span data-t="navExplorer">Arc Explorer ↗</span></a>
   </nav>
   <div class="sb-foot" data-t="sbFoot">Autonomous DCA on Arc Testnet</div>
 </aside>
@@ -639,7 +639,7 @@
     <div>
       <a href="https://github.com/thanhphuc85/AuraDCA" target="_blank" rel="noopener">GitHub</a> ·
       <a href="https://github.com/thanhphuc85/AuraDCA/blob/main/SUBMISSION.md" target="_blank" rel="noopener">Submission</a> ·
-      <a href="https://testnet.arcscan.app" target="_blank" rel="noopener">ArcScan</a>
+      <a data-arc="explorer" href="https://testnet.arcscan.app" target="_blank" rel="noopener">ArcScan</a>
     </div>
   </footer>
 </div>
@@ -648,6 +648,7 @@
 import { makeQR } from "./js/qr.js";
 import { T } from "./js/i18n.js";
 import { initCharts } from "./js/charts.js";
+import { ARC } from "./js/network.js";
 (function () {
   "use strict";
 
@@ -970,17 +971,13 @@ import { initCharts } from "./js/charts.js";
   }
 
 
-  var ARC = {
-    chainIdHex: "0x4cef52",           // 5042002
-    chainName: "Arc Testnet",
-    rpc: "https://rpc.testnet.arc.network",
-    explorer: "https://testnet.arcscan.app",
-    faucet: "https://faucet.circle.com",
-    usdc: "0x3600000000000000000000000000000000000000",   // ERC-20 USDC, 6 decimals
-    cirbtc: "0xf0c4a4ce82a5746abaad9425360ab04fbba432bf", // cirBTC, 8 decimals
-    eurc: "0x89b50855aa3be2f677cd6303cec089b5f319d72a",   // EURC, 6 decimals (verified on-chain)
-    agent: "0x00Ebbd3aFCCaD08970ED8FdaE591244c8475a0aC",  // the agent's Circle wallet (DCA treasury)
-  };
+  // ARC network config is imported from ./js/network.js (single source of truth,
+  // overridable via window.ARC_NET for a mainnet static deploy).
+  // Point the generic "explorer root" links at the configured explorer so they
+  // track the network too (specific historical-tx links stay as-is).
+  Array.prototype.forEach.call(document.querySelectorAll('[data-arc="explorer"]'), function (a) {
+    a.href = ARC.explorer;
+  });
   var state = { account: null, loginType: null, provider: null, showAllRuns: false };
 
   // Every signed action runs on a serverless function that exists only on the
