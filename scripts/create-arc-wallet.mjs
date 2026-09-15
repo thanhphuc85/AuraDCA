@@ -37,7 +37,7 @@ if (!walletSetId) {
 }
 
 const walletsResponse = await client.createWallets({
-  blockchains: ["ARC-TESTNET"],
+  blockchains: [(process.env.ARC_CIRCLE_BLOCKCHAIN || "ARC-TESTNET").trim()],
   count: 1,
   walletSetId,
 });

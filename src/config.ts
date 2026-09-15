@@ -3,7 +3,9 @@ import { z } from "zod";
 import type { GuardrailConfig, DcaStrategy } from "./types.js";
 
 export const ARC_TESTNET_NAME = "Arc_Testnet";
-export const ARC_TESTNET_EXPLORER = "https://testnet.arcscan.app";
+// Block-explorer base. Env-overridable (defaults to Arc public testnet) so the
+// tx links point at the right explorer once ARC_EXPLORER_URL is set for mainnet.
+export const ARC_TESTNET_EXPLORER = process.env.ARC_EXPLORER_URL?.trim() || "https://testnet.arcscan.app";
 
 const decimalString = z.string().regex(/^\d+(\.\d+)?$/, "must be a non-negative decimal string");
 // Empty-string env vars (e.g. "FOO=" in .env or an unset GitHub Actions
