@@ -4,8 +4,13 @@
 // printed address from faucet.circle.com before running the bot.
 //
 // Usage (reads from .env, or pass inline):
-//   npm run create-wallet
+//   npm run create-wallet                    # Arc Testnet wallet (default)
+//   npm run create-wallet -- --mainnet       # Arc MAINNET wallet (blockchain "ARC")
 //   CIRCLE_API_KEY=... CIRCLE_ENTITY_SECRET=... node scripts/create-arc-wallet.mjs
+//
+// The network is Arc Testnet unless --mainnet is passed (or ARC_CIRCLE_BLOCKCHAIN=ARC
+// is set). Creating a wallet moves no funds — it only provisions the address.
+// MAINNET note: use your Circle PRODUCTION api key + entity secret (not sandbox).
 //
 // CIRCLE_API_KEY: from https://console.circle.com/api-keys
 // CIRCLE_ENTITY_SECRET: the hex secret you generated + registered in the
@@ -26,10 +31,19 @@ if (!apiKey || !entitySecret) {
   process.exit(1);
 }
 
+// Network: --mainnet (or ARC_CIRCLE_BLOCKCHAIN=ARC) selects Arc mainnet; else testnet.
+// "ARC" / "ARC-TESTNET" are Circle Developer-Controlled-Wallet blockchain ids.
+const blockchain = process.argv.slice(2).includes("--mainnet")
+  ? "ARC"
+  : (process.env.ARC_CIRCLE_BLOCKCHAIN || "ARC-TESTNET").trim();
+const isMainnet = blockchain === "ARC";
+
+console.log(`Creating a Circle DCW wallet on: ${blockchain}${isMainnet ? "  ⚠️  MAINNET (real funds)" : ""}`);
+
 const client = initiateDeveloperControlledWalletsClient({ apiKey, entitySecret });
 
 const walletSetResponse = await client.createWalletSet({
-  name: `auradca-${new Date().toISOString().slice(0, 10)}`,
+  name: `auradca-${isMainnet ? "mainnet" : "testnet"}-${new Date().toISOString().slice(0, 10)}`,
 });
 const walletSetId = walletSetResponse.data?.walletSet?.id;
 if (!walletSetId) {
@@ -37,7 +51,7 @@ if (!walletSetId) {
 }
 
 const walletsResponse = await client.createWallets({
-  blockchains: [(process.env.ARC_CIRCLE_BLOCKCHAIN || "ARC-TESTNET").trim()],
+  blockchains: [blockchain],
   count: 1,
   walletSetId,
 });
@@ -47,7 +61,15 @@ if (!wallet) {
   throw new Error("Failed to create wallet: no wallet returned");
 }
 
+console.log(`Network:       ${blockchain}${isMainnet ? " (MAINNET)" : " (Testnet)"}`);
 console.log(`Wallet Set ID: ${walletSetId}`);
 console.log(`Wallet ID:     ${wallet.id}`);
 console.log(`Wallet Address: ${wallet.address}`);
-console.log(`\nGo to https://faucet.circle.com, select Arc Testnet, and fund ${wallet.address}`);
+console.log(`\nPut this in .env:  WALLET_ID=${wallet.id}`);
+if (isMainnet) {
+  console.log(`\n⚠️  MAINNET wallet — no faucet. Fund ${wallet.address} with REAL USDC`);
+  console.log(`   (bridge/CCTP from another chain, or via your Circle point of contact).`);
+  console.log(`   Then prove one tx:  npm run prove-swap -- --mainnet`);
+} else {
+  console.log(`\nGo to https://faucet.circle.com, select Arc Testnet, and fund ${wallet.address}`);
+}
