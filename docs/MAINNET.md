@@ -15,6 +15,28 @@ prerequisites below are met.**
 
 ---
 
+## Quick path: prove ONE mainnet transaction
+
+If all you need is a **single real tx proving the dapp runs on Arc mainnet** (not a
+full production migration), use the proof script — no ledger changes, no
+`TOKEN_OUT`/strategy change. You need a Circle DCW wallet on Arc mainnet
+(blockchain `ARC`) funded with a little real USDC, plus your Circle credentials
+(`CIRCLE_API_KEY`, `CIRCLE_ENTITY_SECRET`, `WALLET_ID`, `KIT_KEY`) in `.env`.
+
+```bash
+# 1. Dry run first — quotes only, spends nothing, confirms the route is live:
+npm run prove-swap -- --mainnet
+
+# 2. Execute ONE real swap — spends real USDC (this is the money step, your call):
+npm run prove-swap -- --mainnet --execute 0.5 EURC
+```
+
+The printed tx hash / `https://explorer.arc.io/tx/…` link is your proof. The
+script does **not** touch `data/ledger.json` or `data/history.json`. Full
+production DCA on mainnet is the larger effort described below.
+
+---
+
 ## 1. Prerequisites (all required before mainnet is even reachable)
 
 - [ ] **Private-mainnet access + RPC credentials** from Circle (request via the Arc
