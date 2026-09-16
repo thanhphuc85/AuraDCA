@@ -13,6 +13,9 @@ const envStr = (v: string | undefined, fallback: string): string => {
 // Typed to the two Arc ids the project targets (testnet now, "ARC" for mainnet);
 // both are members of Circle's transfer / createWallets blockchain unions.
 export const ARC_CIRCLE_BLOCKCHAIN = envStr(process.env.ARC_CIRCLE_BLOCKCHAIN, "ARC-TESTNET") as "ARC-TESTNET" | "ARC";
+// Circle Swap Kit chain id — a DIFFERENT format from the DCW blockchain id above:
+// "Arc_Testnet" today, "Arc" for mainnet. Used by @circle-fin/swap-kit (from.chain).
+export const ARC_SWAP_CHAIN = envStr(process.env.ARC_SWAP_CHAIN, "Arc_Testnet");
 /** JSON-RPC endpoint (may hold a mainnet URL once ARC_RPC_URL is set). */
 export const ARC_TESTNET_RPC = envStr(process.env.ARC_RPC_URL, "https://rpc.testnet.arc.network");
 /** Numeric EVM chain id (5042002 = Arc public testnet). */
