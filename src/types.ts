@@ -163,6 +163,9 @@ export interface UserAccount {
   totalSwapped: string;
   totalWithdrawnCirBtc: string;
   totalWithdrawnUsdc: string;
+  // Cumulative withdrawn per token (symbol → amount string), generic for any DCA
+  // target (e.g. EURC). totalWithdrawnUsdc/CirBtc are kept as legacy mirrors.
+  totalWithdrawn?: Record<string, string>;
   // --- Simulated (paper) position, for tokens whose real Arc route is offline
   //     (cirBTC). Kept strictly separate from the real balances above: the agent
   //     never swaps or debits real USDC for these, it only records what a real
@@ -249,7 +252,9 @@ export interface DistributionRecord {
 }
 
 export type WithdrawalStatus = "pending" | "processing" | "completed" | "failed";
-export type WithdrawalToken = "USDC" | "cirBTC";
+// Tokens a user can withdraw: USDC (the deposited input) or any DCA target they
+// hold. cirBTC + EURC are the current targets; extend as SUPPORTED_DCA_TOKENS grows.
+export type WithdrawalToken = "USDC" | "cirBTC" | "EURC";
 
 export interface WithdrawalRequest {
   id: string;
