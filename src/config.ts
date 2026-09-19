@@ -1,6 +1,6 @@
 import "dotenv/config";
 import { z } from "zod";
-import type { GuardrailConfig, DcaStrategy } from "./types.js";
+import type { GuardrailConfig, DcaStrategy, WithdrawalToken } from "./types.js";
 
 export const ARC_TESTNET_NAME = "Arc_Testnet";
 // Block-explorer base. Env-overridable (defaults to Arc public testnet) so the
@@ -56,13 +56,13 @@ const envSchema = z.object({
     .preprocess(emptyToUndefined, z.string().default("false"))
     .transform((v) => v.toLowerCase() === "true"),
   WITHDRAWAL_ADDRESS: z.preprocess(emptyToUndefined, z.string().regex(/^0x[a-fA-F0-9]{40}$/).optional()),
-  WITHDRAWAL_TOKEN: z.preprocess(emptyToUndefined, z.enum(["USDC", "cirBTC"]).optional()),
+  WITHDRAWAL_TOKEN: z.preprocess(emptyToUndefined, z.enum(["USDC", "cirBTC", "EURC"]).optional()),
   WITHDRAWAL_AMOUNT: z.preprocess(emptyToUndefined, decimalString.optional()),
 });
 
 export interface WithdrawalInput {
   address: string;
-  token: "USDC" | "cirBTC";
+  token: WithdrawalToken;
   amount: string;
 }
 

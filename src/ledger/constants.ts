@@ -58,6 +58,20 @@ export function dcaTokenInfo(symbol: string | undefined | null): DcaTokenInfo {
 export function isSupportedDcaToken(symbol: string | undefined | null): boolean {
   return !!symbol && SUPPORTED_DCA_TOKENS.some((t) => t.symbol === symbol);
 }
+/**
+ * Resolve the on-chain contract address for a withdrawable token symbol. USDC is
+ * the deposited input; cirBTC/EURC are DCA targets. Throws for an unknown symbol
+ * so a mis-typed withdrawal fails loudly instead of sending to the zero address.
+ */
+export function tokenContract(symbol: string): string {
+  switch (symbol) {
+    case "USDC": return ARC_USDC_CONTRACT;
+    case "cirBTC": return ARC_CIRBTC_CONTRACT;
+    case "EURC": return ARC_EURC_CONTRACT;
+    default: throw new Error(`No contract address configured for token "${symbol}"`);
+  }
+}
+
 export const ERC20_TRANSFER_TOPIC = "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef";
 export const DEPOSIT_SCAN_CHUNK_SIZE = 9999;
 export const DEPOSIT_SCAN_LOOKBACK = 200_000;
