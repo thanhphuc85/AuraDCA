@@ -13,8 +13,8 @@
 import { ARC_TESTNET_EXPLORER } from "../config.js";
 import { logger } from "../logger.js";
 
-/** CAIP-2 network id Circle Gateway uses for Arc Testnet. */
-export const ARC_TESTNET_CAIP2 = "eip155:5042002";
+/** CAIP-2 network id Circle Gateway uses for Arc (env-overridable; testnet default). */
+export const ARC_TESTNET_CAIP2 = process.env.ARC_X402_CAIP2?.trim() || "eip155:5042002";
 
 /** Circle Gateway x402 facilitator for testnet (verify + settle endpoints). */
 const DEFAULT_FACILITATOR_URL = "https://gateway-api-testnet.circle.com";

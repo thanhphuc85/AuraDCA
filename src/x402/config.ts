@@ -2,9 +2,10 @@ import type { PaymentRequirements } from "./types.js";
 import { usdcToAtomic } from "./payment.js";
 import { ARC_USDC_CONTRACT } from "../ledger/constants.js";
 
-// Arc Testnet — verified in contracts/README.md.
-export const ARC_TESTNET_CHAIN_ID = 5042002;
-export const X402_NETWORK = "arc-testnet";
+// Arc network ids — env-overridable (defaults = Arc public testnet, verified in
+// contracts/README.md). Set ARC_CHAIN_ID / ARC_X402_NETWORK for mainnet.
+export const ARC_TESTNET_CHAIN_ID = Number(process.env.ARC_CHAIN_ID?.trim() || "5042002");
+export const X402_NETWORK = process.env.ARC_X402_NETWORK?.trim() || "arc-testnet";
 
 // EIP-712 domain of Arc Testnet USDC. Carried in requirements.extra so the payer
 // signs — and the server verifies — under identical domain params. Overridable by

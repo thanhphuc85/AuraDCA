@@ -9,9 +9,9 @@ const nodeRequire = createRequire(import.meta.url);
 
 // Where user deposits land. Server-fixed so a client can never redirect a
 // deposit challenge to an arbitrary address. Env override for other deployments.
-const AGENT_ADDRESS = (process.env.AGENT_WALLET_ADDRESS || "0x00Ebbd3aFCCaD08970ED8FdaE591244c8475a0aC").trim();
-const USDC_CONTRACT = "0x3600000000000000000000000000000000000000"; // USDC on Arc Testnet, 6 decimals
-const ARC_BLOCKCHAIN = "ARC-TESTNET";
+const AGENT_ADDRESS = (process.env.AGENT_WALLET_ADDRESS || process.env.ARC_AGENT_ADDRESS || "0x00Ebbd3aFCCaD08970ED8FdaE591244c8475a0aC").trim();
+const USDC_CONTRACT = (process.env.ARC_USDC_CONTRACT || "0x3600000000000000000000000000000000000000").trim(); // USDC on Arc (testnet default), 6 decimals
+const ARC_BLOCKCHAIN = (process.env.ARC_CIRCLE_BLOCKCHAIN || "ARC-TESTNET").trim();
 
 // Lazily construct the user-controlled-wallets client so a missing key only
 // fails the actions that actually need it (not the public `config` probe).
