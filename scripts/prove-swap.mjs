@@ -11,22 +11,32 @@
 // is a proof artifact, not a strategy change.
 //
 // Usage:
-//   npm run prove-swap                 # dry run — quotes only, spends nothing
-//   npm run prove-swap -- --execute    # REAL swap of the default 0.50 USDC
-//   npm run prove-swap -- --execute 1.5 EURC
+//   npm run prove-swap                          # testnet dry run — quotes only, spends nothing
+//   npm run prove-swap -- --execute             # REAL testnet swap of the default 0.50 USDC
+//   npm run prove-swap -- --mainnet             # MAINNET dry run — quotes only, spends nothing
+//   npm run prove-swap -- --mainnet --execute   # REAL MAINNET swap (spends real USDC) — 1-tx proof
+//   npm run prove-swap -- --mainnet --execute 0.5 EURC
+//
+// Mainnet needs WALLET_ID pointing at a Circle DCW wallet on Arc mainnet
+// (blockchain "ARC") funded with real USDC, plus a mainnet KIT_KEY.
 
 import "dotenv/config";
 import { SwapKit } from "@circle-fin/swap-kit";
 import { createCircleWalletsAdapter } from "@circle-fin/adapter-circle-wallets";
 import { initiateDeveloperControlledWalletsClient } from "@circle-fin/developer-controlled-wallets";
 
-const EXPLORER = "https://testnet.arcscan.app";
-
 const args = process.argv.slice(2);
 const execute = args.includes("--execute");
+const mainnet = args.includes("--mainnet");
 const positional = args.filter((a) => !a.startsWith("--"));
 const amountIn = positional[0] ?? "0.50";
 const tokenOut = positional[1] ?? "EURC";
+
+// Network is chosen by --mainnet; defaults to testnet so existing usage is
+// unchanged. Arc's Swap Kit chain id is "Arc" for mainnet, "Arc_Testnet" for testnet.
+const chain = mainnet ? "Arc" : "Arc_Testnet";
+const netLabel = mainnet ? "Arc Mainnet" : "Arc Testnet";
+const EXPLORER = mainnet ? "https://explorer.arc.io" : "https://testnet.arcscan.app";
 
 const apiKey = process.env.CIRCLE_API_KEY?.trim();
 const entitySecret = process.env.CIRCLE_ENTITY_SECRET?.trim();
@@ -67,7 +77,7 @@ if (!address) {
 const adapter = createCircleWalletsAdapter({ apiKey, entitySecret });
 const kit = new SwapKit();
 const swapArgs = {
-  from: { adapter, chain: "Arc_Testnet", address },
+  from: { adapter, chain, address },
   tokenIn: "USDC",
   tokenOut,
   amountIn,
@@ -75,11 +85,11 @@ const swapArgs = {
 };
 
 console.log(`\n${"─".repeat(58)}`);
-console.log(`  Pipeline proof — USDC → ${tokenOut} on Arc Testnet`);
+console.log(`  Pipeline proof — USDC → ${tokenOut} on ${netLabel}`);
 console.log(`${"─".repeat(58)}`);
 console.log(`  wallet : ${address}`);
 console.log(`  amount : ${amountIn} USDC`);
-console.log(`  mode   : ${execute ? "⚠️  REAL SWAP (spends testnet USDC)" : "dry run (quote only, spends nothing)"}`);
+console.log(`  mode   : ${execute ? `⚠️  REAL SWAP (spends real ${mainnet ? "MAINNET" : "testnet"} USDC)` : "dry run (quote only, spends nothing)"}`);
 console.log(`${"─".repeat(58)}\n`);
 
 // Always quote first, so a dead route fails before we move anything.
@@ -109,8 +119,8 @@ try {
   console.log(`   received : ${result?.amountOut ?? "?"} ${tokenOut}`);
   console.log(`   tx       : ${txHash ?? "(no hash returned)"}`);
   if (url) console.log(`   explorer : ${url}`);
-  console.log(`\nThis tx proves the execution path (Circle wallet → Swap Kit → Arc Testnet)`);
-  console.log(`is live right now. cirBTC remains unavailable at the liquidity layer.\n`);
+  console.log(`\nThis tx proves the execution path (Circle wallet → Swap Kit → ${netLabel})`);
+  console.log(`is live right now.\n`);
 } catch (err) {
   console.error(`\n❌ Swap failed: ${(err?.message ?? String(err)).slice(0, 300)}\n`);
   process.exit(1);
