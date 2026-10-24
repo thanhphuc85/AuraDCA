@@ -1,12 +1,6 @@
 [
   {
     "date": "2026-10-19",
-    "timestamp": "2026-10-19T01:00:43.086Z",
-    "priceUsd": 82226,
-    "source": "coingecko_btc_spot"
-  },
-  {
-    "date": "2026-10-19",
     "timestamp": "2026-10-19T01:15:35.133Z",
     "priceUsd": 82404,
     "source": "coingecko_btc_spot"
@@ -3597,6 +3591,12 @@
     "date": "2026-10-24",
     "timestamp": "2026-10-24T23:00:42.030Z",
     "priceUsd": 80499,
+    "source": "coingecko_btc_spot"
+  },
+  {
+    "date": "2026-10-24",
+    "timestamp": "2026-10-24T23:15:41.282Z",
+    "priceUsd": 80538,
     "source": "coingecko_btc_spot"
   }
 ]
