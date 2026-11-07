@@ -9,15 +9,17 @@ import { createRequire } from "node:module";
 // native Node resolution — the same path that works locally.
 const nodeRequire = createRequire(import.meta.url);
 
-const USDC_CONTRACT = "0x3600000000000000000000000000000000000000";
-const CIRBTC_CONTRACT = "0xf0c4a4ce82a5746abaad9425360ab04fbba432bf";
+const USDC_CONTRACT = (process.env.ARC_USDC_CONTRACT || "0x3600000000000000000000000000000000000000").trim();
+const ARC_BLOCKCHAIN = ((process.env.ARC_CIRCLE_BLOCKCHAIN || "ARC-TESTNET").trim()) as "ARC-TESTNET" | "ARC";
+const CIRBTC_CONTRACT = (process.env.ARC_CIRBTC_CONTRACT || "0xf0c4a4ce82a5746abaad9425360ab04fbba432bf").trim();
 const USDC_DECIMALS = 6;
 const CIRBTC_DECIMALS = 8;
 const EURC_DECIMALS = 6;
 // EURC's ERC-20 address on Arc Testnet. Verified on-chain from the prove-swap tx
 // (0xe54ee0…): it's the token delivered to the agent wallet as 0.402303 EURC, and
-// its symbol()/decimals() read "EURC" / 6. Env var still wins if ever set.
-const EURC_CONTRACT = process.env.EURC_CONTRACT?.trim() || "0x89b50855aa3be2f677cd6303cec089b5f319d72a";
+// its symbol()/decimals() read "EURC" / 6. ARC_EURC_CONTRACT (the agent's env var)
+// wins for mainnet; EURC_CONTRACT kept as a legacy fallback.
+const EURC_CONTRACT = (process.env.ARC_EURC_CONTRACT || process.env.EURC_CONTRACT || "0x89b50855aa3be2f677cd6303cec089b5f319d72a").trim();
 
 interface TokenSpec { contract: string | undefined; decimals: number; min: number; max: number }
 const TOKENS: Record<string, TokenSpec> = {
@@ -255,7 +257,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse): 
     const tokenAddress = spec.contract; // guaranteed defined by the contract gate above
     const txRes = await client.createTransaction({
       walletAddress,
-      blockchain: "ARC-TESTNET",
+      blockchain: ARC_BLOCKCHAIN,
       tokenAddress,
       destinationAddress: address,
       // Normalize to the token's own decimals rather than passing the client's

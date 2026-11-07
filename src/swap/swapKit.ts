@@ -1,6 +1,7 @@
-import { SwapKit } from "@circle-fin/swap-kit";
+import { SwapKit, type SwapChainIdentifier } from "@circle-fin/swap-kit";
 import { createCircleWalletsAdapter } from "@circle-fin/adapter-circle-wallets";
 import { ARC_TESTNET_EXPLORER } from "../config.js";
+import { ARC_SWAP_CHAIN } from "../ledger/constants.js";
 
 export type SwapErrorCategory =
   | "no_route"
@@ -75,7 +76,11 @@ export async function executeSwap(params: SwapParamsInput): Promise<SwapExecutio
     // advances lastChargedAt on a successful distribution, so a failed run is
     // simply re-attempted next hour with fresh on-chain state.
     const result = await kit.swap({
-      from: { adapter, chain: "Arc_Testnet", address: params.walletAddress },
+      // NOTE: @circle-fin/swap-kit@1.3.2's SwapChain enum has ONLY "Arc_Testnet"
+      // — Arc mainnet is not in the SDK yet. ARC_SWAP_CHAIN is env-driven and cast
+      // here so the code is mainnet-ready, but ARC_SWAP_CHAIN=Arc will only route
+      // once swap-kit ships a version whose SwapChain includes Arc mainnet.
+      from: { adapter, chain: ARC_SWAP_CHAIN as SwapChainIdentifier, address: params.walletAddress },
       tokenIn: "USDC",
       tokenOut: params.tokenOut,
       amountIn: params.amountUsdc,
