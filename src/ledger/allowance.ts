@@ -1,7 +1,7 @@
 import { initiateDeveloperControlledWalletsClient } from "@circle-fin/developer-controlled-wallets";
 import type { Ledger } from "../types.js";
 import { withRetry } from "../retry.js";
-import { USDC_DECIMALS } from "./constants.js";
+import { USDC_DECIMALS, ARC_CIRCLE_BLOCKCHAIN } from "./constants.js";
 
 const MAX_CATCHUP_DAYS = 2;
 
@@ -184,7 +184,7 @@ export async function sendTokenToUser(params: {
   if (!walletAddress) throw new Error("Could not resolve agent wallet address");
   const res = await client.createTransaction({
     walletAddress,
-    blockchain: "ARC-TESTNET",
+    blockchain: ARC_CIRCLE_BLOCKCHAIN,
     tokenAddress: params.tokenContract,
     destinationAddress: params.user,
     amount: [params.amount],
