@@ -1,8 +1,35 @@
-import type { Ledger, WithdrawalRequest, WithdrawalToken } from "../types.js";
+import type { Ledger, UserAccount, WithdrawalRequest, WithdrawalToken } from "../types.js";
 import type { Wallet } from "../wallet.js";
 import { normalizeAddress } from "./store.js";
-import { ARC_USDC_CONTRACT, ARC_CIRBTC_CONTRACT, USDC_DECIMALS, CIRBTC_DECIMALS } from "./constants.js";
+import { USDC_DECIMALS, dcaTokenInfo, tokenContract } from "./constants.js";
 import { logger } from "../logger.js";
+
+// USDC is the deposited input (usdcBalance); every DCA target (cirBTC, EURC, …)
+// lives in tokenBalances[symbol], with cirBtcBalance kept as the legacy mirror
+// for cirBTC so older ledgers and the dashboard keep working unchanged.
+function tokenDecimals(token: WithdrawalToken): number {
+  return token === "USDC" ? USDC_DECIMALS : dcaTokenInfo(token).decimals;
+}
+
+function readBalance(user: UserAccount, token: WithdrawalToken): number {
+  if (token === "USDC") return parseFloat(user.usdcBalance ?? "0");
+  if (token === "cirBTC") return parseFloat(user.tokenBalances?.cirBTC ?? user.cirBtcBalance ?? "0");
+  return parseFloat(user.tokenBalances?.[token] ?? "0");
+}
+
+function writeBalance(user: UserAccount, token: WithdrawalToken, value: string): void {
+  if (token === "USDC") { user.usdcBalance = value; return; }
+  (user.tokenBalances ??= {})[token] = value;
+  if (token === "cirBTC") user.cirBtcBalance = value; // keep legacy mirror in sync
+}
+
+function creditWithdrawn(user: UserAccount, token: WithdrawalToken, amount: number, decimals: number): void {
+  (user.totalWithdrawn ??= {});
+  user.totalWithdrawn[token] = (parseFloat(user.totalWithdrawn[token] ?? "0") + amount).toFixed(decimals);
+  // Legacy per-token mirrors so older readers / the dashboard keep working.
+  if (token === "USDC") user.totalWithdrawnUsdc = (parseFloat(user.totalWithdrawnUsdc ?? "0") + amount).toFixed(USDC_DECIMALS);
+  if (token === "cirBTC") user.totalWithdrawnCirBtc = (parseFloat(user.totalWithdrawnCirBtc ?? "0") + amount).toFixed(decimals);
+}
 
 export function requestWithdrawal(
   ledger: Ledger,
@@ -17,15 +44,14 @@ export function requestWithdrawal(
   const requested = parseFloat(amount);
   if (requested <= 0) throw new Error("Withdrawal amount must be positive");
 
-  const balanceField = token === "USDC" ? "usdcBalance" : "cirBtcBalance";
-  const available = parseFloat(user[balanceField]);
+  const decimals = tokenDecimals(token);
+  const available = readBalance(user, token);
   if (requested > available) {
     throw new Error(`Insufficient ${token} balance: requested ${amount}, available ${available}`);
   }
 
-  // Deduct immediately to prevent double-spend
-  const decimals = token === "USDC" ? USDC_DECIMALS : CIRBTC_DECIMALS;
-  user[balanceField] = (available - requested).toFixed(decimals);
+  // Deduct immediately to prevent double-spend.
+  writeBalance(user, token, (available - requested).toFixed(decimals));
   user.lastActivity = new Date().toISOString();
 
   const request: WithdrawalRequest = {
@@ -53,9 +79,8 @@ export async function processPendingWithdrawals(
   for (const req of pending) {
     req.status = "processing";
     try {
-      const tokenAddress = req.token === "USDC" ? ARC_USDC_CONTRACT : ARC_CIRBTC_CONTRACT;
       const result = await wallet.sendTokens({
-        tokenAddress,
+        tokenAddress: tokenContract(req.token),
         destinationAddress: req.address,
         amount: req.amount,
       });
@@ -64,15 +89,8 @@ export async function processPendingWithdrawals(
       req.txHash = result.txHash;
       processed++;
 
-      // Update cumulative withdrawal totals
       const user = ledger.users[req.address];
-      if (user) {
-        if (req.token === "USDC") {
-          user.totalWithdrawnUsdc = (parseFloat(user.totalWithdrawnUsdc) + parseFloat(req.amount)).toFixed(USDC_DECIMALS);
-        } else {
-          user.totalWithdrawnCirBtc = (parseFloat(user.totalWithdrawnCirBtc) + parseFloat(req.amount)).toFixed(CIRBTC_DECIMALS);
-        }
-      }
+      if (user) creditWithdrawn(user, req.token, parseFloat(req.amount), tokenDecimals(req.token));
 
       logger.info(`Withdrawal ${req.id} completed: ${req.amount} ${req.token} → ${req.address}`);
     } catch (err) {

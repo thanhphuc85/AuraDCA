@@ -1,5 +1,6 @@
 import { initiateDeveloperControlledWalletsClient } from "@circle-fin/developer-controlled-wallets";
 import { withRetry } from "./retry.js";
+import { ARC_CIRCLE_BLOCKCHAIN } from "./ledger/constants.js";
 
 export interface Wallet {
   address: `0x${string}`;
@@ -37,7 +38,7 @@ export async function createWallet(apiKey: string, entitySecret: string, walletI
       const txResponse = await withRetry(
         () => client.createTransaction({
           walletAddress: address,
-          blockchain: "ARC-TESTNET",
+          blockchain: ARC_CIRCLE_BLOCKCHAIN,
           tokenAddress: params.tokenAddress,
           destinationAddress: params.destinationAddress,
           amount: [params.amount],
