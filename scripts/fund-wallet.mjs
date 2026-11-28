@@ -27,7 +27,7 @@ console.log(`Requesting testnet USDC for ${address} on Arc Testnet...`);
 
 const response = await client.requestTestnetTokens({
   address,
-  blockchain: "ARC-TESTNET",
+  blockchain: (process.env.ARC_CIRCLE_BLOCKCHAIN || "ARC-TESTNET").trim(),
   usdc: true,
 });
 
